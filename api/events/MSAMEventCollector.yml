@@ -1,0 +1,33 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >-
+  Media Services Application Mapper (MSAM) event capture (ID: DEV_0_0_0)
+Resources:
+  Collector:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Description: >-
+        MSAM Lambda for handling CloudWatch event notifications
+      Runtime: python3.6
+      CodeUri: .
+      MemorySize: 2560
+      Timeout: 60
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchFullAccess
+      Environment:
+        Variables:
+          BUILD_STAMP: DEV_0_0_0,
+          EVENTS_TABLE_REGION: us-west-2
+          EVENTS_TABLE_NAME: media-services-application-mapper-events
+          ITEM_TTL: 86400
+      Events:
+        MediaEvents:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - aws.medialive
+                - aws.mediapackage
+                - aws.mediastore
