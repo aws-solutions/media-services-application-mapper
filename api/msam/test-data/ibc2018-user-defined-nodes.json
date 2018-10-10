@@ -1,0 +1,121 @@
+[{
+        "arn": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5",
+        "data": "{ \"Arn\": \"arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5\", \"NodeType\": \"Elemental Live Encoder\", \"Id\": \"mktlivelab-4.elementalad.com\" }",
+        "expires": 1599011015,
+        "region": "global",
+        "service": "user-defined-node",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-04029b1d248b799c3",
+        "data": "{ \"Arn\": \"arn:msam:user-defined-node:global:0:i-04029b1d248b799c3\", \"NodeType\": \"Firewall\", \"Id\": \"ec2-34-220-164-136.us-west-2.compute.amazonaws.com\" }",
+        "expires": 1599011015,
+        "region": "global",
+        "service": "user-defined-node",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-0d23ae0709dfbc6ff",
+        "data": "{ \"Arn\": \"arn:msam:user-defined-node:global:0:i-0d23ae0709dfbc6ff\", \"NodeType\": \"Firewall\", \"Id\": \"ec2-54-149-123-64.us-west-2.compute.amazonaws.com\" }",
+        "expires": 1599011015,
+        "region": "global",
+        "service": "user-defined-node",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-04ffb72216c86754d",
+        "data": "{ \"Arn\": \"arn:msam:user-defined-node:global:0:i-04ffb72216c86754d\", \"NodeType\": \"Firewall\", \"Id\": \"ec2-54-190-14-24.us-west-2.compute.amazonaws.com\" }",
+        "expires": 1599011015,
+        "region": "global",
+        "service": "user-defined-node",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-08bd0e1f10bffb5b5",
+        "data": "{ \"Arn\": \"arn:msam:user-defined-node:global:0:i-08bd0e1f10bffb5b5\", \"NodeType\": \"Firewall\", \"Id\": \"ec2-54-244-153-173.us-west-2.compute.amazonaws.com\" }",
+        "expires": 1599011015,
+        "region": "global",
+        "service": "user-defined-node",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5:arn:msam:user-defined-node:global:0:i-04029b1d248b799c3",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:msam:user-defined-node:global:0:i-04029b1d248b799c3",
+        "label": "HLS",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5:arn:msam:user-defined-node:global:0:i-0d23ae0709dfbc6ff",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:msam:user-defined-node:global:0:i-0d23ae0709dfbc6ff",
+        "label": "HLS",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5:arn:msam:user-defined-node:global:0:i-04ffb72216c86754d",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:msam:user-defined-node:global:0:i-04ffb72216c86754d",
+        "label": "RTMP",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5:arn:msam:user-defined-node:global:0:i-08bd0e1f10bffb5b5",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:8AD511937971B49156AB8E1ADFF40F9376D7D9B4D2CF2810FDFCD134E92486D5",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:msam:user-defined-node:global:0:i-08bd0e1f10bffb5b5",
+        "label": "RTMP",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-04029b1d248b799c3:arn:aws:mediapackage:us-west-2:658937807431:channels/7333989b702e499db200d0359f0f3770",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:i-04029b1d248b799c3",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:aws:mediapackage:us-west-2:658937807431:channels/7333989b702e499db200d0359f0f3770",
+        "label": "HLS",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-0d23ae0709dfbc6ff:arn:aws:mediapackage:us-west-2:658937807431:channels/7333989b702e499db200d0359f0f3770",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:i-0d23ae0709dfbc6ff",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:aws:mediapackage:us-west-2:658937807431:channels/7333989b702e499db200d0359f0f3770",
+        "label": "HLS",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-04ffb72216c86754d:arn:aws:medialive:us-west-2:658937807431:input:9263340",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:i-04ffb72216c86754d",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:aws:medialive:us-west-2:658937807431:input:9263340",
+        "label": "RTMP",
+        "updated": 1535852642
+    },
+    {
+        "arn": "arn:msam:user-defined-node:global:0:i-08bd0e1f10bffb5b5:arn:aws:medialive:us-west-2:658937807431:input:9263340",
+        "expires": 1599011015,
+        "from": "arn:msam:user-defined-node:global:0:i-08bd0e1f10bffb5b5",
+        "region": "global",
+        "service": "user-defined-connection",
+        "to": "arn:aws:medialive:us-west-2:658937807431:input:9263340",
+        "label": "RTMP",
+        "updated": 1535852642
+    }
+]

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+<!-- 
+Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+       SPDX-License-Identifier: Apache-2.0
+-->
+
+<head>
+    <title>Media Services Application Mapper</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/css/tabulator.min.css" integrity="sha256-1Vp4oxoEzAzvtn5E/5F521YMBGV+pdccFHKf1DsoDds=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/css/bootstrap/tabulator_bootstrap4.min.css" integrity="sha256-o/svxfJ0M56+ECF6Bz0rJ0GxnavrS/OZdpxE2OQNlFo=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js" integrity="sha256-EGs9T1xMHdvM1geM8jPpoo8EZ1V1VRsmcJz8OByENLA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/js/tabulator.min.js" integrity="sha256-BrBFz+XwIzN4wrdqXBcorBFrO2+tUj94GEnHHDT4ZGM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js" integrity="sha256-qlku5J3WO/ehJpgXYoJWC2px3+bZquKChi4oIWrAKoI=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.6/svg.min.js" integrity="sha256-M8IkAPnXdVChgPQwts/KeepRP4ogs+hzBtPmVhUj5YA=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.19.1/URI.min.js" integrity="sha256-D3tK9Rf/fVqBf6YDM8Q9NCNf/6+F2NOKnYSXHcl0keU=" crossorigin="anonymous"></script>
+    <script data-main="js/app" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" crossorigin="anonymous"></script>
+    <style>
+        .borderless td,
+        .borderless th {
+            border: none;
+        }
+        
+        .selected-channel-tile {
+            /* border-width: 5px !important; */
+            border: dashed;
+        }
+        
+        .unselected-channel-tile {
+            border-width: 3px !important;
+        }
+        
+        .vis-network:focus {
+            outline: none;
+        }
+        
+        .hidden-div {
+            display: none;
+        }
+        
+        .visible-div {
+            display: inherit;
+        }
+    </style>
+</head>
+
+<body style="height: 100%; width: 100%; position: absolute;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand my-0 py-0" href="#" style="font-size: small;">
+            <b>
+                <div class="my-0 py-0">Media Services</div>
+                <div class="my-0 py-0">Application Mapper</div>
+            </b>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="settings_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Settings
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="settings_dropdown">
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#endpoint_connection_modal">Connection
+                            Settings</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#region_selection_modal">Regions
+                            Displayed</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="advanced_settings_button">Advanced
+                            Settings</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="nodes_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Nodes
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="nodes_dropdown">
+                        <a class="dropdown-item" href="#" id="nodes_select_downstream">Expand Selection to All
+                            Downstream</a>
+                        <a class="dropdown-item" href="#" id="nodes_select_upstream">Expand Selection to All Upstream</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="nodes_align_vertical">Align Selected Vertically</a>
+                        <a class="dropdown-item" href="#" id="nodes_align_horizontal">Align Selected Horizontally</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="nodes_layout_vertical">Layout Vertical</a>
+                        <a class="dropdown-item" href="#" id="nodes_layout_horizontal">Layout Horizontal</a>
+                        <a class="dropdown-item" href="#" id="nodes_layout_isolated">Layout Isolated Nodes</a>
+                        <a class="dropdown-item" href="#" id="nodes_save_layout">Save Entire Layout Now</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Channels
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="channels_dropdown">
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_create_channel_button" data-target="#channel_definition_modal">Create New Channel Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_add_to_channel_button" data-target="#channel_add_node_modal">Add to Existing Channel Tile</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="alarms_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Alarms
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="alarms_dropdown">
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="alarms_subscribe_button">Subscribe to
+                            Alarms</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="alarms_manage_subscriptions_button">Manage
+                            Alarm Subscriptions</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="tools_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tools
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="tools_dropdown" id="tools-dropdown-menu">
+                    </div>
+                </li>
+            </ul>
+            <div id="alert_div" class="alert alert-dark my-0 py-1 px-5 mx-5" role="alert" style="display: none;">
+                Something happened.
+            </div>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" id="search_input" type="search" placeholder="Search" aria-label="Search">
+                <button type="button" id="only-show-matches-button" class="btn btn-outline-info mr-2" data-toggle="button" aria-pressed="false" autocomplete="off">Only Show Matches</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="search-reset-button" type="submit">Clear</button>
+            </form>
+        </div>
+    </nav>
+    <nav>
+        <div class="nav nav-tabs" id="diagram-tab" role="tablist">
+            <a class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab" href="#channel-tiles-diagram" role="tab" aria-controls="channel-tiles-diagram" aria-selected="false">Channel Tiles</a>
+            <a class="nav-item nav-link" id="global-model-tab" data-toggle="tab" href="#global-model-diagram" role="tab" aria-controls="global-model-diagram" aria-selected="false">Global Model</a>
+        </div>
+    </nav>
+    <div id="diagram" style="height: 60%; width: 100%;">
+        <div class="tab-content" id="nav-tabContent" style="height: 100%; width: 100%;">
+            <div id="global-model-diagram" class="tab-pane fade" role="tabpanel" aria-labelledby="global-model-tab" style="height: inherit; width: inherit;">
+            </div>
+            <div id="channel-tiles-diagram" class="tab-pane fade" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit; overflow-x: hidden; overflow-y: scroll;">
+            </div>
+        </div>
+    </div>
+    <hr class="m-0 p-0">
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
+            <a class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
+            <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
+            <a class="nav-item nav-link" id="nav-monitor-tab" data-toggle="tab" href="#nav-monitor" role="tab" aria-controls="nav-monitor" aria-selected="false">Monitor</a>
+        </div>
+    </nav>
+    <div id="information" style="height: 35%; width: 100%;">
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade mt-3" id="nav-status" role="tabpanel" aria-labelledby="nav-status-tab">
+            </div>
+            <div class="tab-pane fade mt-0 px-0" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
+                <div id="accordion" class="m-0 p-0">
+                    <div class="card">
+                        <div class="card-header py-0 my-0" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#global-model-collapse" aria-expanded="false" aria-controls="global-model-collapse">
+                                    Global Model Matches
+                                    <span id="global-model-search-text"></span>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="global-model-collapse" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <small>
+                                <div id="global-model-search" class="card-body my-0 py-1">
+                                </div>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header py-0 my-0" id="headingTwo">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#channel-tile-collapse" aria-expanded="false" aria-controls="channel-tile-collapse">
+                                    Channel Tile Matches
+                                    <span id="channel-tile-search-text"></span>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="channel-tile-collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <small>
+                                <div id="channel-tile-search" class="card-body my-0 py-1">
+                                </div>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade mt-3 px-3" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
+                <h6 class="card-subtitle mb-2 text-muted" id="nav-data-subtitle"></h6>
+                <p class="card-text small" id="nav-data-text"></p>
+            </div>
+            <div class="tab-pane fade  mt-3 px-3" id="nav-monitor" role="tabpanel" aria-labelledby="nav-monitor-tab">
+                <h6 class="mb-2 text-muted" id="nav-monitor-selected-item"></h6>
+                <b>
+                    <p class="mb-2 text-muted" id="nav-monitor-alarms-subtitle">Subscribed Alarms</p>
+                </b>
+                <p class="small" style="max-width: 100%;" id="nav-monitor-alarms-text"></p>
+                <b>
+                    <p class="mb-2 text-muted" id="nav-monitor-alerts-subtitle">Pipeline Alerts</p>
+                </b>
+                <p class="small" style="max-width: 100%;" id="nav-monitor-alerts-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Region Selections -->
+    <div class="modal fade" id="region_selection_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="region_selection_modal_title" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="region_selection_modal_title">AWS Region Selections</h5>
+                </div>
+                <div id="region_selection_alert">
+                </div>
+                <div class="modal-body">
+                    <div id="region_toggles">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save_region_selections" class="btn btn-primary">Save</button>
+                        <button type="button" id="cancel_region_selections" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Endpoint Connections -->
+    <div class="modal fade" id="endpoint_connection_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="endpoint_connection_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="endpoint_connection_modal_title">API Endpoint Connection</h5>
+                </div>
+                <div id="endpoint_connection_alert">
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div class="form-group row">
+                                <label for="input_endpoint_url" class="col-2 col-form-label">Endpoint URL</label>
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="input_endpoint_url" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="input_endpoint_key" class="col-2 col-form-label">API Key</label>
+                                <div class="col-10">
+                                    <input type="password" class="form-control" id="input_endpoint_key" placeholder="">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="connectionHistoryMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">History</button>
+                            <div id="connectionHistoryDropdownMenu" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            </div>
+                        </div>
+                        <button type="button" id="save_endpoint_connection" class="btn btn-success">Save</button>
+                        <button type="button" id="cancel_endpoint_connection" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Channel Definition -->
+    <div class="modal fade" id="channel_definition_modal" tabindex="-1" role="dialog" aria-labelledby="channel_definition_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="channel_definition_modal_title">Create a Channel Tile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div class="form-group row">
+                                <label for="channel_definition_name" class="col-2 col-form-label">Name</label>
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="channel_definition_name" placeholder="">
+                                </div>
+                            </div>
+                            <div id="channel_definition_modal_items" class="form-group">
+                                <!-- show selected items here as the channel inventory -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save_channel_definition" class="btn btn-success" data-dismiss="modal">Save</button>
+                        <button type="button" id="cancel_channel_definition" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Channel Edit -->
+    <div class="modal fade" id="channel_edit_modal" tabindex="-1" role="dialog" aria-labelledby="channel_edit_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="channel_edit_modal_title">Edit a Channel Tile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div class="form-group row">
+                                <label for="channel_edit_name" class="col-2 col-form-label">Name</label>
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="channel_edit_name" placeholder="">
+                                </div>
+                            </div>
+                            <div id="channel_edit_modal_items" class="form-group">
+                                <!-- show selected items here as the channel inventory -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save_channel_edit" class="btn btn-success" data-dismiss="modal">Save</button>
+                        <button type="button" id="cancel_channel_edit" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Node to Channel -->
+    <div class="modal fade" id="channel_add_node_modal" tabindex="-1" role="dialog" aria-labelledby="channel_add_node_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="channel_add_node_modal_title">Add to an Existing Channel Tile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div id="channel_add_node_modal_items" class="form-group">
+                                <!-- show selected items here -->
+                            </div>
+                            <div id="channel_add_node_modal_channels" class="form-group">
+                                <!-- show channels to choose here -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="save_channel_add_node" class="btn btn-success" data-dismiss="modal">Save</button>
+                        <button type="button" id="cancel_channel_add_node" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic confirmation dialog -->
+    <!-- Modal -->
+    <div class="modal fade" id="confirmation_dialog" tabindex="-1" role="dialog" aria-labelledby="confirmation_dialog_title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmation_dialog_title">Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="confirmation_dialog_body" class="modal-body">
+                    Really, really?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmation_dialog_proceed" class="btn btn-primary" data-dismiss="modal">Proceed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscribe to Alarms -->
+    <div class="modal fade" id="subscribe_to_alarms_modal" tabindex="-1" role="dialog" aria-labelledby="subscribe_to_alarms_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subscribe_to_alarms_modal_title">Subscribe to Alarms</h5>
+                </div>
+                <div id="subscribe_to_alarms_alert">
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown text-right mb-1">
+                        Alarms from Region:&nbsp;
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Region
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="subscribe_to_alarms_region_dropdown">
+                        </div>
+                    </div>
+                    <div class="mt-2" id="subscribe_to_alarms_modal_alarm_selection_header"><b>Select one or more
+                            alarms</b>&nbsp;(<span id="subscribe_to_alarms_modal_alarm_selection_count"></span>&nbsp;selected)</div>
+                    <div class="my-0 small" id="subscribe_to_alarms_modal_alarm_selection"></div>
+                    <div class="mt-4" id="subscribe_to_alarms_modal_selected_items_header"><b>Subscribing selected
+                            alarms above to these model items</b></div>
+                    <div class="my-0 small" id="subscribe_to_alarms_modal_selected_items"></div>
+                    <div class="modal-footer">
+                        <button type="button" id="subscribe_to_alarms_save" class="btn btn-success">Save</button>
+                        <button type="button" id="subscribe_to_alarms_cancel" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tool Output Dialog -->
+    <div class="modal fade" id="tool_output_modal" tabindex="-1" role="dialog" aria-labelledby="tool_output_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="tool_output_modal_title" style="width: 100%; text-align: center;">Tool Output
+                    </div>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                                <span aria-hidden="true">&times;</span>
+                            </button> -->
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div id="tool_output_modal_message" class="form-group p-2 border" style="height: 500px;">
+                                <!-- show tool output here -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="tool_output_model_close" class="btn btn-success" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Settings -->
+    <div class="modal fade" id="advanced_settings_modal" tabindex="-1" role="dialog" aria-labelledby="advanced_settings_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="advanced_settings_modal_title">Advanced Settings</h5>
+                </div>
+                <div id="advanced_settings_modal_alert">
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">CloudWatch Alarm Update Interval</span>
+                        </div>
+                        <input id="advanced-alarm-update-interval" type="text" class="form-control" style="text-align: right;" aria-label="Interval in Seconds">
+                        <div class="input-group-append">
+                            <span class="input-group-text">seconds</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">CloudWatch Event Update Interval</span>
+                        </div>
+                        <input id="advanced-event-update-interval" type="text" class="form-control" style="text-align:right;" aria-label="Interval in Seconds">
+                        <div class="input-group-append">
+                            <span class="input-group-text">seconds</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Refresh Channel Tiles Interval</span>
+                        </div>
+                        <input id="advanced-tiles-refresh-interval" type="text" class="form-control" style="text-align:right;" aria-label="Interval in Seconds">
+                        <div class="input-group-append">
+                            <span class="input-group-text">seconds</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Never Cache Regions</span>
+                        </div>
+                        <textarea rows="5" cols="40" id="advanced-never-cache-regions" class="form-control" aria-label="With textarea"></textarea>
+                        <div class="input-group-append">
+                            <span class="input-group-text">Delimit region names with spaces</span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="advanced_settings_modal_save" class="btn btn-success">Save</button>
+                        <button type="button" id="advanced_settings_modal_cancel" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

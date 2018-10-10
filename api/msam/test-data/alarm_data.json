@@ -1,0 +1,15 @@
+[{
+        "AlarmArn": "arn:aws:cloudwatch:us-east-1:658937807431:alarm:Tech Marketing Web 4xx",
+        "AlarmName": "Tech Marketing Web 4xx",
+        "MetricName": "HTTPCode_Target_4XX_Count",
+        "Namespace": "AWS/ApplicationELB",
+        "StateValue": "OK"
+    },
+    {
+        "AlarmArn": "arn:aws:cloudwatch:us-east-1:658937807431:alarm:TargetTracking-table/nab2018-catfinder5003-summary/index/rekog_type-timestamp_updated-index-ProvisionedCapacityHigh-acf08455-eefb-46a8-8e88-3718f8c36c4d",
+        "AlarmName": "TargetTracking-table/nab2018-catfinder5003-summary/index/rekog_type-timestamp_updated-index-ProvisionedCapacityHigh-acf08455-eefb-46a8-8e88-3718f8c36c4d",
+        "MetricName": "ProvisionedReadCapacityUnits",
+        "Namespace": "AWS/DynamoDB",
+        "StateValue": "OK"
+    }
+]

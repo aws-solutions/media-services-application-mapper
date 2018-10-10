@@ -1,0 +1,6 @@
+[
+    "arn:aws:medialive:us-west-2:658937807431:channel:2515200",
+    "arn:aws:medialive:us-west-2:658937807431:input:4453087",
+    "arn:aws:mediapackage:us-west-2:658937807431:channels/38dfcb24f17745dc85cdebe24b5601f5",
+    "arn:aws:mediapackage:us-west-2:658937807431:origin_endpoints/5991376ef93642c5a47611a0a7f8d023"
+]

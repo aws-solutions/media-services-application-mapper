@@ -1,0 +1,17 @@
+[{
+        "arn": "arn:aws:fakeresource:us-west-2:658937807431:thing/A00037DB-700F-4F26-8530-9F8E4D148C6A",
+        "data": "{\"Arn\": \"arn:aws:mediapackage:us-west-2:658937807431:channels/6a96fd7923844e91954fcdaceceda697\", \"Description\": \"Actual video is passed through this channel. \", \"HlsIngest\": {\"IngestEndpoints\": [{\"Password\": \"XXXXXXXXXXXX\", \"Url\": \"https://626e3c9e793c034c.mediapackage.us-west-2.amazonaws.com/in/v1/6a96fd7923844e91954fcdaceceda697/channel\", \"Username\": \"6136b3aacdfe453aa3a05ec8bf9b5736\"}]}, \"Id\": \"CES_Live_Camera_Demo_End_to_End\"}",
+        "expires": 1535566933,
+        "region": "us-west-2",
+        "service": "fakeresource",
+        "updated": 1532972150.0
+    },
+    {
+        "arn": "arn:aws:fakeresource:us-west-2:658937807431:thing/DA150F0A-4012-4E2D-AAEB-C4C272C2A398",
+        "data": "{\"Arn\": \"arn:aws:mediapackage:us-west-2:658937807431:channels/b7c17e1a367440c194006e4cabdd2d8a\", \"Description\": \"demo stream for customers and partners to test with\", \"HlsIngest\": {\"IngestEndpoints\": [{\"Password\": \"XXXXXXXXXXXX\", \"Url\": \"https://0f93cc871749ad5b.mediapackage.us-west-2.amazonaws.com/in/v1/b7c17e1a367440c194006e4cabdd2d8a/channel\", \"Username\": \"8c291276591244088e6ab7e4361b491a\"}]}, \"Id\": \"24x7_4K-SD_HEVC\"}",
+        "expires": 1535566933,
+        "region": "us-west-2",
+        "service": "fakeresource",
+        "updated": 1532972150.0
+    }
+]
