@@ -6,10 +6,10 @@ MSAM is removed from an AWS account using CloudFormation.
 
 The order in which to delete the stacks are as follows:
 
-1. Create MSAM Web stack 
-1. Create Event Handler stack
-1. Create Core stack
-1. Create DynamoDB stack
+1. Delete MSAM Web stack 
+1. Delete Event Handler stack
+1. Delete Core stack
+1. Delete DynamoDB stack
 
 To delete a stack:
 
