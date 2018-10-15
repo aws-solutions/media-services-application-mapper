@@ -27,7 +27,7 @@ During the installation of the different CloudFormation stacks you may be prompt
 
 For each of the four stacks listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URLs as provided.
 
-**After installing the DynamoDB stack, you can run the remaining stacks concurrently. There is no need to wait for each to finish before starting the next.**
+**After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
 
 ### Template 1: CloudFormation for the DynamoDB Tables
 
