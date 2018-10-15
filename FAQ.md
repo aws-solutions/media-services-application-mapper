@@ -31,6 +31,7 @@ The MSAM web bucket is created with public GetObject permissions. This means som
 }
 ```
 
+Additional bucket policy examples are here https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html.
 
 
 ## Navigate
