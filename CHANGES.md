@@ -20,4 +20,4 @@
 
 ## Navigate
 
-Navigate to [README](README.md) | [INSTALL](INSTALL.md) | [USAGE](USAGE.md) | [UNINSTALL](UNINSTALL.md)
+Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [FAQ](FAQ.md)
