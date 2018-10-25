@@ -28,7 +28,10 @@ Review [README](README.md)
 ## Part 2: Install MSAM
 
 * MSAM uses CloudFormation for installation and updates
-* Install all four MSAM templates into the same region 
+* Install all four MSAM templates into the same region
+
+**After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
+
 * Use the same region (us-west-2) used for the live workflow
 * Create at least one API key for browser access
 
