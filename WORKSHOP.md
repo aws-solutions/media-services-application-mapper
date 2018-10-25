@@ -32,7 +32,7 @@ Review [README](README.md)
 
 **After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
 
-* Use the same region (us-west-2) used for the live workflow
+* Use the same region where your Media Services workflow is running
 * Create at least one API key for browser access
 
 Navigate to the [Install](INSTALL.md) document and follow the instructions to install all four MSAM CloudFormation templates into your AWS account.
@@ -45,8 +45,8 @@ Before you start using the browser application. The following instructions will 
 
 1. Open the application with your browser
 2. Connect with endpoint URL and API key
-1. Select regions when prompted (only us-west-2)
-1. Copy the following list of regions exactly as shown: 
+3. Select regions when prompted (only us-west-2)
+4. Copy the following list of regions exactly as shown: 
 `ap-south-1 eu-west-3 eu-west-2 eu-west-1 ap-northeast-3 ap-northeast-2 ap-northeast-1 sa-east-1 ca-central-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1`
 1. Open Settings/Advanced Settings menu in MSAM
 1. Paste the list of regions into the Never Cache Regions field
