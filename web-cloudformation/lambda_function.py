@@ -1,14 +1,17 @@
+"""
+This module is the custom resource used by the MSAM's CloudFormation
+templates to populate the web bucket with contents of the MSAM web archive.
+"""
+
 # Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import boto3
 import json
 import os
-import random
-import resource_tools
-import string
-import time
 from subprocess import call
+import boto3
+from botocore.exceptions import ClientError
+import resource_tools
 
 WEB_FOLDER = "/tmp/msam"
 
@@ -41,14 +44,14 @@ def lambda_handler(event, context):
         elif event["RequestType"] == "Delete":
             print(event["RequestType"])
             delete_bucket_contents(bucket_name)
-    except Exception as exp:
-        print("Exception: %s" % exp)
+    except ClientError as client_error:
+        print("Exception: %s" % client_error)
         result = {
             'Status': 'FAILED',
             "StackId": event["StackId"],
             "RequestId": event["RequestId"],
             "LogicalResourceId": event["LogicalResourceId"],
-            'Data': {"Exception": str(exp)},
+            'Data': {"Exception": str(client_error)},
             'ResourceId': None
         }
     resource_tools.send(
@@ -61,6 +64,10 @@ def lambda_handler(event, context):
 
 
 def replace_bucket_contents(bucket_name):
+    """
+    This function is responsible for removing any existing contents
+    in the specified bucket, and adding contents from the zip archive.
+    """
     client = boto3.client("s3")
     source = "https://rodeolabz-{region}.s3.amazonaws.com/msam/msam-web.zip".format(
         region=os.environ["AWS_REGION"])
@@ -81,7 +88,7 @@ def replace_bucket_contents(bucket_name):
         print(call(command, shell=True))
 
     # upload each local file to the bucket, preserve folders
-    for dirpath, dirnames, filenames in os.walk(WEB_FOLDER):
+    for dirpath, _, filenames in os.walk(WEB_FOLDER):
         for name in filenames:
             local = "{}/{}".format(dirpath, name)
             remote = local.replace("{}/".format(WEB_FOLDER), "")
@@ -92,13 +99,21 @@ def replace_bucket_contents(bucket_name):
                 content_type = "text/html"
             else:
                 content_type = "binary/octet-stream"
-            client.put_object(Bucket=bucket_name, Key=remote,
-                              Body=open(local, 'rb'), ContentType=content_type)
+            client.put_object(
+                Bucket=bucket_name,
+                Key=remote,
+                ACL='public-read',
+                Body=open(
+                    local,
+                    'rb'),
+                ContentType=content_type)
     return
 
 
 def delete_bucket_contents(bucket_name):
-    # empty the bucket
+    """
+    This function is responsible for removing all contents from the specified bucket.
+    """
     client = boto3.client("s3")
     response = client.list_objects_v2(
         Bucket=bucket_name
