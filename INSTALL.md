@@ -82,7 +82,7 @@ None
 
 ### Template 4: CloudFormation for the Browser Application
 
-This template will install a copy of the MSAM browser application into a publicly accessible S3 bucket. 
+This template will install a copy of the MSAM browser application into an S3 bucket. Files added by the CloudFormation template will have their ACL set to `public-read` to allow access over HTTPS.
 
 `https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-browser-app-release.json`
 
@@ -172,4 +172,4 @@ This file can be extracted into a web server or another type of hosting environm
 
 ## Navigate
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [FAQ](FAQ.md)
+Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md)
