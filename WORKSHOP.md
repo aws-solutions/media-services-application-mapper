@@ -46,13 +46,13 @@ Before you start using the browser application. The following instructions will 
 
 1. Open the application with your browser
 2. Connect with endpoint URL and API key
-3. Select regions when prompted (only us-west-2)
+3. Select regions when prompted (only eu-west-1)
 4. Copy the following list of regions exactly as shown: 
-`ap-south-1 eu-west-3 eu-west-2 eu-west-1 ap-northeast-3 ap-northeast-2 ap-northeast-1 sa-east-1 ca-central-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1`
+`ap-south-1 eu-west-3 eu-west-2 ap-northeast-3 ap-northeast-2 ap-northeast-1 sa-east-1 ca-central-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1 us-west-2`
 1. Open Settings/Advanced Settings menu in MSAM
-1. Paste the list of regions into the Never Cache Regions field
-1. Click Save
-1. After a few minutes refresh the browser to see any new nodes cached by the API
+2. Paste the list of regions into the Never Cache Regions field
+3. Click Save
+4. After a few minutes refresh the browser to see any new nodes cached by the API
 
 ### Basic Navigation and Usage
 
