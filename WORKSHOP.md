@@ -3,7 +3,7 @@
 This workshop guides the user through basic understanding of MSAM including installation, configuration, tuning, and resource monitoring.
 
 
-## Workshop Agenda
+## Workshop Agenda (re:Invent 2018)
 
 * Overview of Media Services Application Mapper
 * Install MSAM into your AWS account using CloudFormation
