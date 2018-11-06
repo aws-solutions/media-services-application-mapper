@@ -60,7 +60,6 @@ def lambda_handler(event, context):
         result['Status'],
         result['Data'],
         result["PhysicalResourceId"])
-    return
 
 
 def replace_bucket_contents(bucket_name):
@@ -107,7 +106,6 @@ def replace_bucket_contents(bucket_name):
                     local,
                     'rb'),
                 ContentType=content_type)
-    return
 
 
 def delete_bucket_contents(bucket_name):
@@ -121,4 +119,3 @@ def delete_bucket_contents(bucket_name):
     if "Contents" in response:
         for item in response["Contents"]:
             client.delete_object(Bucket=bucket_name, Key=item["Key"])
-    return
