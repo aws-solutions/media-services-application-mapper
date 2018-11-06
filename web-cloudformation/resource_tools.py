@@ -44,8 +44,6 @@ def send(event, context, response_status, response_data, physical_resource_id):
     except ClientError as client_error:
         print("send(..) failed executing requests.put(..): " + str(client_error))
 
-    return
-
 
 def stack_name(event):
     """

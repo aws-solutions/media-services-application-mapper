@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/06a827f5349823b70639198ba12fe5dd",
+                    "Key": "msam/ebe91da779eb21d216754e70bf1485b4",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -69,6 +69,7 @@
         },
         "ItemTTL": {
             "Description": "The number of seconds before a record in the MSAM events table automatically expires and is removed (3600 = 1 hour, 86400 = 1 day, 604800 = 1 week).",
+            "Default": "604800",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

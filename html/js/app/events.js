@@ -35,26 +35,6 @@ define(["app/server", "app/connections", "app/settings"],
             });
         };
 
-        var retrieve_for_arn_state = function(arn, state) {
-            var current_connection = connections.get_current();
-            var url = current_connection[0];
-            var api_key = current_connection[1];
-            var current_endpoint = `${url}/cloudwatch/events/arn`;
-            var data = {
-                "arn": arn,
-                "state": state
-            };
-            // console.log(current_endpoint);
-            return new Promise(function(resolve, reject) {
-                server.post(current_endpoint, api_key, data).then(function(response) {
-                    resolve(response);
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        };
-
         var cache_update = function() {
             retrieve_for_state("set").then(function(response) {
                 // console.log("updated set event cache");
