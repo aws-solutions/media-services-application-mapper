@@ -96,27 +96,16 @@ Go to the Outputs section of the created stack and copy the MSAMBrowserURL to a 
 
 ![Browser URL](images/cfn-browser-url.jpeg)
 
-## Configure API Key Authentication
+## Retrieve the Authentication Key for the REST API
 
-MSAM is secure after installation because it requires an API key to access any of the REST API endpoints, and the CloudFormation template doesn't create API keys automatically. **By default, no access is possible until the following steps are performed.**
+The MSAM back-end requires an API key to access any of the REST endpoints. The Core API CloudFormation template creates a default API key automatically. The key is not displayed in Outputs section of the created stack. You can retrieve the key from the AWS console. **By default, no access is possible until the following steps are performed.**
 
-1. Go to the API Gateway console
-1. In the left-hand tree view, click on Usage Plans and create a new usage plan. Give it a descriptive name, e.g. MSAMUsagePlan
-1. Disable Throttling and Quota for now and considering activing one or both later depending on your environment and users
-1. Click on the newly created usage plan and then click on the **Add API Stage** button
-1. From the API dropdown select **msam**
-1. From the Stage dropdown select **msam**
-1. Click the checkbox to save the stage to the usage plan
-
-![Usage Plan API Stage](images/usage-plan-stage.jpeg)
-
-1. Click Next
-1. On the next page, click **Create API Key and add to Usage Plan** button
-1. Give the new key a name and description, and leave **Auto Generate** selected
-1. Click Save, and click Done on the API key page
-1. Select the API Keys tab
-1. Click on the API Key and click the **Show** option to see the actual API Key
-1. Copy the API Key
+1. Take note of the APIKeyID in the Outputs section of the Core API stack
+2. Go to the API Gateway console
+3. In the left-hand tree view, click on API Keys
+4. Find the API key matching the ID of the key in the CloudFormation stack
+5. Click on the API Key and click the **Show** link to see the actual API Key
+6. Copy the API Key and keep it with the Endpoint URL
   
 ![API Key Value](images/api-key.jpeg)
 
@@ -124,9 +113,7 @@ MSAM is secure after installation because it requires an API key to access any o
 
 **You can create multiple API keys, each with different names that are provided to separate groups.**
 
-Note that if you want to share the UI with a colleague you can do so easily by providing the browser application URL, core endpoint URL and an API key. If an API key is compromised, or lost, create a new API key and delete the previous one. All users that require access can be sent the updated API key that they will have to update in the browser application under the Settings menu and Connections Settings menu item.
-
-MSAM will prompt the user to update a connection if it fails to contact the API successfully.
+Note that if you want to share the UI with a colleague you can do so easily by providing the browser application URL, core endpoint URL and an API key. If an API key is stolen or lost, create a new API key and delete the previous one. All users that require access can be sent the updated API key that they will have to update in the browser application. MSAM will prompt the user to update the endpoint and key if the previously used settings are unable to access the back-end.
 
 ## Start the MSAM UI 
 
