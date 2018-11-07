@@ -7,7 +7,6 @@ completion response from a custom resource.
 # SPDX-License-Identifier: Apache-2.0
 
 import json
-import time
 from botocore.exceptions import ClientError
 from botocore.vendored import requests
 
@@ -25,21 +24,17 @@ def send(event, context, response_status, response_data, physical_resource_id):
         'StackId': event['StackId'],
         'RequestId': event['RequestId'],
         'LogicalResourceId': event['LogicalResourceId'],
-        'Data': response_data}
+        'Data': response_data
+    }
 
     json_response_body = json.dumps(response_body)
 
     print("Response body:\n" + json_response_body)
 
-    headers = {
-        'content-type': '',
-        'content-length': str(len(json_response_body))
-    }
+    headers = {'content-type': '', 'content-length': str(len(json_response_body))}
 
     try:
-        response = requests.put(response_url,
-                                data=json_response_body,
-                                headers=headers)
+        response = requests.put(response_url, data=json_response_body, headers=headers)
         print("Status code: " + response.reason)
     except ClientError as client_error:
         print("send(..) failed executing requests.put(..): " + str(client_error))
@@ -54,26 +49,3 @@ def stack_name(event):
     except ClientError:
         response = None
     return response
-
-
-def wait_for_channel_states(medialive, channel_id, states):
-    """
-    Wait for a MediaLive channel to be in a specified state.
-    """
-    current_state = ''
-    while current_state not in states:
-        time.sleep(5)
-        current_state = medialive.describe_channel(
-            ChannelId=channel_id)['State']
-    return current_state
-
-
-def wait_for_input_states(medialive, input_id, states):
-    """
-    Wait for a MediaLive input to be in a specified state.
-    """
-    current_state = ''
-    while current_state not in states:
-        time.sleep(5)
-        current_state = medialive.describe_input(InputId=input_id)['State']
-    return current_state

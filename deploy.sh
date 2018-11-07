@@ -37,13 +37,16 @@ SHATEXT="`sha1sum $STAGE/msam-web.zip | awk '{ print $1 }'`"
 echo web content archive SHA1 is $SHATEXT
 
 # rename web content archive, place into staging
-cp -f web-cloudformation/webcontent_resource.zip $STAGE/webcontent_resource_$STAMP.zip
+cp -f $ORIGIN/web-cloudformation/webcontent_resource.zip $STAGE/webcontent_resource_$STAMP.zip
+
+# place DynamoDB default settings resource into staging
+cp -f $ORIGIN/api/msam/db/dynamodb_resource.zip $STAGE/dynamodb_resource.zip
 
 # update symbols in templates
 echo "updating template symbols"
-sed -e "s/DEV_0_0_0/$STAMP/g" api/msam/build/msam-core-release.json >$STAGE/msam-core-release.json
-sed -e "s/DEV_0_0_0/$STAMP/g" api/msam/build/msam-dynamodb-release.json >$STAGE/msam-dynamodb-release.json
-sed -e "s/DEV_0_0_0/$STAMP/g" api/events/msam-events-release.json >$STAGE/msam-events-release.json
+sed -e "s/DEV_0_0_0/$STAMP/g" $ORIGIN/api/msam/build/msam-core-release.json >$STAGE/msam-core-release.json
+sed -e "s/DEV_0_0_0/$STAMP/g" $ORIGIN/api/msam/build/msam-dynamodb-release.json >$STAGE/msam-dynamodb-release.json
+sed -e "s/DEV_0_0_0/$STAMP/g" $ORIGIN/api/events/msam-events-release.json >$STAGE/msam-events-release.json
 
 # update symbols in msam-browser-app-release.json
 sed -e "s/CUSTOM_RESOURCE_FILE/webcontent_resource_$STAMP.zip/g" web-cloudformation/msam-browser-app-release.json | \
