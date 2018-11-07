@@ -31,7 +31,7 @@ For each of the four stacks listed below, from Choose a Template select "Specify
 
 ### Template 1: CloudFormation for the DynamoDB Tables
 
-This template will create a stack for the tables, indices, and capacity autoscaling rules.
+This template will create a stack for the tables, indices, and capacity autoscaling rules. The first time a stack is created from this template, defaults are added to scan and display cloud resources in the current region only. These settings can be updated in the tool to expand the inventory coverage to other regions.
 
 `https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-dynamodb-release.json`
 

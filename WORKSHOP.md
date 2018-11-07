@@ -40,24 +40,10 @@ Navigate to the [Install](INSTALL.md) document and follow the instructions to in
 
 ## Part 3: Browser Application
 
-### Workshop Tuning
+### Essential Diagram and Channel Tile Usage
 
-Before you start using the browser application. The following instructions will help tune the cache collection in the cloud.
-
-1. Open the application with your browser
-2. Connect with endpoint URL and API key
-3. Select regions when prompted (only eu-west-1)
-4. Copy the following list of regions exactly as shown: 
-`ap-south-1 eu-west-3 eu-west-2 ap-northeast-3 ap-northeast-2 ap-northeast-1 sa-east-1 ca-central-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1 us-west-2`
-1. Open Settings/Advanced Settings menu in MSAM
-2. Paste the list of regions into the Never Cache Regions field
-3. Click Save
-4. After a few minutes refresh the browser to see any new nodes cached by the API
-
-### Basic Navigation and Usage
-
-2. Navigate to the [Usage](USAGE.md) document
-3. Read and follow the First Run instructions
+1. Navigate to the [Usage](USAGE.md) document
+2. Read and follow the First Run instructions
 3. Practice navigation, layout, and search
 4. Create one or more channel tiles
 
