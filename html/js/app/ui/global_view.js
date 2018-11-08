@@ -115,9 +115,17 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
             }
         };
 
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+        }
+
         var vertical_layout = function() {
             layout_mode = LAYOUT_AUTO;
-            network.setOptions(vis_options.vertical_layout);
+            var options = vis_options.vertical_layout;
+            options.randomSeed = getRandomInt(1, 1000);
+            network.setOptions(options);
             setTimeout(function() {
                 console.log("vertical layout finished");
                 network.setOptions(vis_options.without_layout);
@@ -130,7 +138,9 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
 
         var horizontal_layout = function() {
             layout_mode = LAYOUT_AUTO;
-            network.setOptions(vis_options.horizontal_layout);
+            var options = vis_options.horizontal_layout;
+            options.randomSeed = getRandomInt(1, 1000);
+            network.setOptions(options);
             setTimeout(function() {
                 console.log("horizontal layout finished");
                 network.setOptions(vis_options.without_layout);
