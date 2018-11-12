@@ -65,6 +65,24 @@ def make_default_settings(settings_table):
     print("never-cache-regions are {}".format(json.dumps(never_cache_regions)))
     # update the DynamoDB table
     table = dynamodb_resource.Table(settings_table)
+    # default app-alarm-update-interval
+    try:
+        table.put_item(Item={"id": "app-alarm-update-interval", "value": 10}, ConditionExpression="attribute_not_exists(id)")
+        print("added default app-alarm-update-interval setting")
+    except ClientError:
+        print("app-alarm-update-interval setting exists")
+    # default app-event-update-interval
+    try:
+        table.put_item(Item={"id": "app-event-update-interval", "value": 10}, ConditionExpression="attribute_not_exists(id)")
+        print("added default app-event-update-interval setting")
+    except ClientError:
+        print("app-event-update-interval setting exists")
+    # default app-tile-update-interval
+    try:
+        table.put_item(Item={"id": "app-tile-update-interval", "value": 300}, ConditionExpression="attribute_not_exists(id)")
+        print("added default app-tile-update-interval setting")
+    except ClientError:
+        print("app-tile-update-interval setting exists")
     # default displayed regions
     try:
         table.put_item(Item={"id": "regions", "value": [current_region]}, ConditionExpression="attribute_not_exists(id)")

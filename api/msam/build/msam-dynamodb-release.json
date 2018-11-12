@@ -46,7 +46,7 @@
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
-                        "ID": "DEV_0_0_0"
+                        "BUILD_STAMP": "DEV_0_0_0"
                     }
                 },
                 "Role": {
@@ -71,7 +71,7 @@
                 "SettingsTable": {
                     "Ref": "Settings"
                 },
-                "ID": "DEV_0_0_0",
+                "BUILD_STAMP": "DEV_0_0_0",
                 "StackName": {
                     "Ref": "AWS::StackName"
                 }

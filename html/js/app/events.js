@@ -12,9 +12,9 @@ define(["app/server", "app/connections", "app/settings"],
         var current_set_events = [];
         var previous_set_events = [];
 
-        // interval in millis to update the cache; 10 seconds
+        // interval in millis to update the cache
 
-        var update_interval = 10000;
+        var update_interval;
 
         var intervalID;
 
@@ -52,16 +52,8 @@ define(["app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 settings.get(settings_key).then(function(value) {
                     seconds = Number.parseInt(value);
-                    if (Number.isInteger(seconds)) {
-                        update_interval = seconds * 1000;
-                        resolve();
-                    } else {
-                        // create a default
-                        seconds = Math.round(update_interval / 1000);
-                        set_update_interval(seconds).then(function() {
-                            resolve();
-                        });
-                    }
+                    update_interval = seconds * 1000;
+                    resolve();
                 });
             });
         };

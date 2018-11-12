@@ -13,7 +13,8 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
 
         var content_div = "channel-tiles-diagram";
 
-        var update_interval = 300 * 1000;
+        // interval in millis to check the cloud for tile changes
+        var update_interval;
 
         var intervalID;
 
@@ -326,16 +327,8 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             return new Promise(function(resolve, reject) {
                 settings.get(settings_key).then(function(value) {
                     seconds = Number.parseInt(value);
-                    if (Number.isInteger(seconds)) {
-                        update_interval = seconds * 1000;
-                        resolve();
-                    } else {
-                        // create a default
-                        seconds = Math.round(update_interval / 1000);
-                        set_update_interval(seconds).then(function() {
-                            resolve();
-                        });
-                    }
+                    update_interval = seconds * 1000;
+                    resolve();
                 });
             });
         };
