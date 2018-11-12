@@ -289,7 +289,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 set_never_cache_regions(regions_array);
                 // save layout method
                 var method = $("#layout-method-select").val();
-                console.log("layout-method is now " + method);
+                console.log("layout-method is " + method);
                 settings.put("layout-method", { "method": method });
                 // hide it
                 $("#advanced_settings_modal").modal('hide');

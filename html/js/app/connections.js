@@ -69,9 +69,15 @@ define(["jquery", "cookie", "app/window"], function($, cookie, window) {
         var current = get_current();
         connection_history.clear();
         set_current(current[0], current[1]);
-    }
-
-
+    };
+    // is there a connection override on the URL parameters?
+    var current_url = new URL(window.location);
+    var endpoint = current_url.searchParams.get("endpoint");
+    var key = current_url.searchParams.get("key");
+    if (endpoint && key) {
+        console.log("Connection override with URL paramteres");
+        set_current(endpoint, key);
+    };
     return {
         "get_history": get_history,
         "set_current": set_current,

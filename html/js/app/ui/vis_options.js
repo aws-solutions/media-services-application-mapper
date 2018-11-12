@@ -13,8 +13,7 @@ define({
         },
         edges: {
             "smooth": {
-                enabled: false,
-                "forceDirection": "none"
+                enabled: false
             }
         },
         "physics": {
@@ -52,8 +51,7 @@ define({
         },
         edges: {
             "smooth": {
-                enabled: false,
-                "forceDirection": "none"
+                enabled: false
             }
         },
         "physics": {
@@ -73,8 +71,7 @@ define({
         },
         edges: {
             "smooth": {
-                enabled: false,
-                "forceDirection": "none"
+                enabled: false
             }
         },
         "physics": {
