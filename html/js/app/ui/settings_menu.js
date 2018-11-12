@@ -254,6 +254,10 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 $("#advanced-event-update-interval").val(Math.round(event_interval / 1000));
                 $("#advanced-tiles-refresh-interval").val(Math.round(tiles_interval / 1000));
                 $("#advanced-never-cache-regions").text(regions.sort().join(" "));
+                // get the layout method
+                return settings.get("layout-method");
+            }).then(function(value) {
+                $("#layout-method-select option[value='" + value.method + "']").prop("selected", true);
                 // show it
                 $("#advanced_settings_modal").modal('show');
             });
@@ -283,6 +287,10 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 require("app/events").set_update_interval(event_interval);
                 require("app/ui/tile_view").set_update_interval(tiles_interval);
                 set_never_cache_regions(regions_array);
+                // save layout method
+                var method = $("#layout-method-select").val();
+                console.log("layout-method is now " + method);
+                settings.put("layout-method", { "method": method });
                 // hide it
                 $("#advanced_settings_modal").modal('hide');
             }

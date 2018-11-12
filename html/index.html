@@ -493,7 +493,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             <span class="input-group-text">seconds</span>
                         </div>
                     </div>
-                    <div class="input-group">
+                    <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Never Cache Regions</span>
                         </div>
@@ -502,7 +502,18 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             <span class="input-group-text">Delimit region names with spaces</span>
                         </div>
                     </div>
-
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Layout Method</span>
+                        </div>
+                        <select id="layout-method-select" class="form-control">
+                            <option value="directed">Directed</option>
+                            <option value="hubsize">Hub Size</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">Controls how nodes are arranged during layout</span>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" id="advanced_settings_modal_save" class="btn btn-success">Save</button>
                         <button type="button" id="advanced_settings_modal_cancel" class="btn btn-danger">Cancel</button>

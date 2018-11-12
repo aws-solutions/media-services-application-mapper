@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "app/ui/alert"],
-    function($, vis, model, vis_options, layout, alert) {
+define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "app/ui/alert", "app/settings"],
+    function($, vis, model, vis_options, layout, alert, settings) {
 
         var click_listeners = [];
 
@@ -115,40 +115,41 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
             }
         };
 
-        function getRandomInt(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-        }
-
         var vertical_layout = function() {
-            layout_mode = LAYOUT_AUTO;
-            var options = vis_options.vertical_layout;
-            options.randomSeed = getRandomInt(1, 1000);
-            network.setOptions(options);
-            setTimeout(function() {
-                console.log("vertical layout finished");
-                network.setOptions(vis_options.without_layout);
-                layout_mode = LAYOUT_MANUAL;
-                isolated_item_layout();
-                fit();
-                layout.save_layout(view_name);
-            }, 1000);
+            settings.get("layout-method").then(function(response) {
+                var method = response.method;
+                layout_mode = LAYOUT_AUTO;
+                var options = vis_options.vertical_layout;
+                console.log(options);
+                options.layout.hierarchical.sortMethod = method;
+                network.setOptions(options);
+                setTimeout(function() {
+                    console.log("vertical layout finished");
+                    network.setOptions(vis_options.without_layout);
+                    layout_mode = LAYOUT_MANUAL;
+                    isolated_item_layout();
+                    fit();
+                    layout.save_layout(view_name);
+                }, 1500);
+            });
         };
 
         var horizontal_layout = function() {
-            layout_mode = LAYOUT_AUTO;
-            var options = vis_options.horizontal_layout;
-            options.randomSeed = getRandomInt(1, 1000);
-            network.setOptions(options);
-            setTimeout(function() {
-                console.log("horizontal layout finished");
-                network.setOptions(vis_options.without_layout);
-                layout_mode = LAYOUT_MANUAL;
-                isolated_item_layout();
-                fit();
-                layout.save_layout(view_name);
-            }, 1000);
+            settings.get("layout-method").then(function(response) {
+                var method = response.method;
+                layout_mode = LAYOUT_AUTO;
+                var options = vis_options.horizontal_layout;
+                options.layout.hierarchical.sortMethod = method;
+                network.setOptions(options);
+                setTimeout(function() {
+                    console.log("horizontal layout finished");
+                    network.setOptions(vis_options.without_layout);
+                    layout_mode = LAYOUT_MANUAL;
+                    isolated_item_layout();
+                    fit();
+                    layout.save_layout(view_name);
+                }, 1500);
+            });
         };
 
         var node_dimensions = function() {

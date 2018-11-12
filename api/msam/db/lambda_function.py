@@ -65,13 +65,21 @@ def make_default_settings(settings_table):
     print("never-cache-regions are {}".format(json.dumps(never_cache_regions)))
     # update the DynamoDB table
     table = dynamodb_resource.Table(settings_table)
+    # default displayed regions
     try:
         table.put_item(Item={"id": "regions", "value": [current_region]}, ConditionExpression="attribute_not_exists(id)")
         print("added default regions setting")
     except ClientError:
         print("regions setting exists")
+    # never-cache-regions
     try:
         table.put_item(Item={"id": "never-cache-regions", "value": never_cache_regions}, ConditionExpression="attribute_not_exists(id)")
         print("added default never-cache-regions setting")
     except ClientError:
         print("never-cache-regions setting exists")
+    # layout-method
+    try:
+        table.put_item(Item={"id": "layout-method", "value": {"method": "directed"}}, ConditionExpression="attribute_not_exists(id)")
+        print("added default layout-method setting")
+    except ClientError:
+        print("layout-method setting exists")

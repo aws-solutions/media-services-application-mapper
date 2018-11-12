@@ -1,54 +1,31 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model"], function($, model) {
+define(["jquery", "app/model", "app/server", "app/connections"], function($, model, server, connections) {
 
     var update_connections = function() {
-        var nodes = model.nodes;
-        var edges = model.edges;
+        var current = connections.get_current();
+        var url = current[0];
+        var api_key = current[1];
         return new Promise((resolve, reject) => {
-            var bucket_regexp_list = [
-                /http\:\/\/(\S+)\.s3\-website.+/,
-                /https\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\//,
-                /https\:\/\/(\S+)\.s3\.amazonaws\.com\//
-            ]
-            var medialive_arn_regex = /.*medialive.*input.*/;
-            $.each(nodes.getIds(), function(index, ml_arn) {
-                if (medialive_arn_regex.test(ml_arn)) {
-                    var ml_node = nodes.get(ml_arn);
-                    var ml_input = ml_node.data;
-                    $.each(ml_input.Sources, function(index, source) {
-                        var url = source.Url;
-                        $.each(bucket_regexp_list, function(index, re) {
-                            var match = re.exec(url);
-                            if (match) {
-                                var input_bucket_name = match[1];
-                                var bucket_arn = "arn:aws:s3:::" + input_bucket_name;
-                                // find the bucket in our list
-                                var bucket_node = nodes.get(bucket_arn);
-                                // one of our buckets?
-                                if (bucket_node != null) {
-                                    var protocol = new URL(url).protocol;
-                                    edges.update({
-                                        "id": bucket_node.id + ":" + ml_node.id,
-                                        "from": bucket_node.id,
-                                        "to": ml_node.id,
-                                        "arrows": "to",
-                                        "label": protocol,
-                                        "color": {
-                                            "color": "black"
-                                        }
-                                    });
-                                }
-                                return false;
-                            }
-                        });
+            server.get(url + "/cached/s3-bucket-medialive-input/global", api_key).then((connections) => {
+                $.each(connections, function(index, connection) {
+                    var data = JSON.parse(connection.data);
+                    model.edges.update({
+                        "id": connection.arn,
+                        "to": connection.to,
+                        "from": connection.from,
+                        "label": data.scheme,
+                        "arrows": "to",
+                        "color": {
+                            "color": "black"
+                        }
                     });
-                }
+                });
             });
             resolve();
         });
-    };
+    }
 
     var update = function() {
         return new Promise((resolve, reject) => {
@@ -59,7 +36,7 @@ define(["jquery", "app/model"], function($, model) {
                 reject(error);
             });
         });
-    };
+    }
 
     return {
         "name": "S3 Buckets to MediaLive Inputs",

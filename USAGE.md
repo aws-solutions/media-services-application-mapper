@@ -55,7 +55,12 @@ A typical process for diagram layout involves:
 * Settings
     * Connection Settings
     * Regions Displayed
-    * Advanced Settings -- use this dialog to tune the various update intervals and set the regions that should never be cached in the DynamoDB tables in the cloud.
+    * Advanced Settings
+    	* CloudWatch Alarm Update Interval -- query the REST API for alarm changes at this internal
+    	* CloudWatch Event Update Interval -- query the REST API for event changes at this internal
+    	* Refresh Channel Tiles Interval -- query the REST API for new channel tiles at this interval
+    	* Never Cache Regions -- a list of regions to never inventory in the cloud
+    	* Layout Method -- affects how diagram nodes are arranged during horizontal or vertical layout (default is **Directed**)
 
 ![Image of Advanced Settings dialog](images/advanced-settings.jpeg)
 

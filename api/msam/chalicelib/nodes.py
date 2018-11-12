@@ -4,15 +4,18 @@
 This is the file contains helper functions for building the node cache.
 """
 
+import hashlib
 import json
 import os
 import time
+from urllib.parse import urlparse
 
 import boto3
 from botocore.exceptions import ClientError
 from jsonpath_ng import parse
 
 from chalicelib import content
+from chalicelib import cache
 
 # TTL provided via CloudFormation
 CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
@@ -43,6 +46,10 @@ def update_regional_ddb_items(region_name):
         print(error)
     try:
         content.put_ddb_items(mediastore_container_ddb_items(region_name))
+    except ClientError as error:
+        print(error)
+    try:
+        content.put_ddb_items(speke_server_ddb_items(region_name))
     except ClientError as error:
         print(error)
 
@@ -131,6 +138,31 @@ def mediastore_container_ddb_items(region):
     return items
 
 
+def speke_server_ddb_items(region):
+    """
+    Find the SPEKE key servers based on MediaPackage endpoint configurations
+    """
+    items = []
+    # create an expression to find speke server urls
+    jsonpath_expr = parse('$..SpekeKeyProvider.Url')
+    # get MediaPackage origin endpoints
+    mediapackage_ep_cached = cache.cached_by_service_region("mediapackage-origin-endpoint", region)
+    for endpoint in mediapackage_ep_cached:
+        # decode the endpoint configuration
+        endpoint_data = json.loads(endpoint["data"])
+        for server_url in [match.value for match in jsonpath_expr.find(endpoint_data)]:
+            parsed = urlparse(server_url)
+            sha = hashlib.sha1()
+            sha.update(server_url.encode('utf-8'))
+            url_digest = sha.hexdigest()
+            arn = "arn:oss:speke:::{}".format(url_digest)
+            config = {"arn": arn, "endpoint": server_url, "scheme": parsed.scheme}
+            service = "speke-keyserver"
+            print(config)
+            items.append(node_to_ddb_item(arn, service, "global", config))
+    return items
+
+
 def node_to_ddb_item(arn, service, region, config):
     """
     Restructure an item from a List or Describe API call into a cache item.
@@ -152,6 +184,9 @@ def cloudfront_distributions():
         items = items + response["DistributionList"]["Items"]
     for item in items:
         item['LastModifiedTime'] = str(item['LastModifiedTime'])
+        # get Tags
+        response = service.list_tags_for_resource(Resource=item["ARN"])
+        item["Tags"] = response["Tags"]
     return items
 
 

@@ -1,41 +1,28 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model"], function($, model) {
+define(["jquery", "app/model", "app/server", "app/connections"], function($, model, server, connections) {
 
     var update_connections = function() {
-        var nodes = model.nodes;
-        var edges = model.edges;
+        var current = connections.get_current();
+        var url = current[0];
+        var api_key = current[1];
         return new Promise((resolve, reject) => {
-            var medialive_channel_arn_regex = /.*medialive.*channel.*/;
-            var medialive_input_arn_regex = /.*medialive.*input.*/;
-            $.each(nodes.getIds(), function(index, channel_arn) {
-                if (medialive_channel_arn_regex.test(channel_arn)) {
-                    var channel_node = nodes.get(channel_arn);
-                    var ml_channel = channel_node.data;
-                    $.each(nodes.getIds(), function(index, input_arn) {
-                        if (medialive_input_arn_regex.test(input_arn)) {
-                            var input_node = nodes.get(input_arn);
-                            var ml_input = input_node.data;
-                            $.each(ml_input.AttachedChannels, (i, attached) => {
-                                if (attached == ml_channel.Id) {
-                                    var id = ml_input.Arn + ":" + ml_channel.Arn;
-                                    if (edges.get(id) == null) {
-                                        edges.update({
-                                            "id": id,
-                                            "from": ml_input.Arn,
-                                            "to": ml_channel.Arn,
-                                            "arrows": "to",
-                                            "color": {
-                                                "color": "black"
-                                            }
-                                        })
-                                    }
-                                }
-                            });
+            server.get(url + "/cached/medialive-input-medialive-channel/global", api_key).then((connections) => {
+                $.each(connections, function(index, connection) {
+                    var data = JSON.parse(connection.data);
+                    var human_type = data.type.replace(/\_/, " ");
+                    model.edges.update({
+                        "id": data.arn,
+                        "to": data.to,
+                        "from": data.from,
+                        "label": human_type,
+                        "arrows": "to",
+                        "color": {
+                            "color": "black"
                         }
                     });
-                }
+                });
             });
             resolve();
         });
@@ -50,7 +37,7 @@ define(["jquery", "app/model"], function($, model) {
                 reject(error);
             });
         });
-    };
+    }
 
     return {
         "name": "MediaLive Input to Channel Connections",

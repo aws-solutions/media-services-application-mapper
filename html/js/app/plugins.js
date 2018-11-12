@@ -8,6 +8,7 @@ define({
         "app/mappers/nodes/mediapackage",
         "app/mappers/nodes/mediastore",
         "app/mappers/nodes/s3",
+        "app/mappers/nodes/speke",
         "app/mappers/nodes/user_defined_node"
     ],
     "connections": [

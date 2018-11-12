@@ -65,7 +65,7 @@ define({
             hierarchical: {
                 enabled: true,
                 direction: "UD",
-                sortMethod: "directed",
+                sortMethod: "hubsize",
                 nodeSpacing: 250,
                 treeSpacing: 250,
                 levelSeparation: 250
@@ -86,7 +86,7 @@ define({
             hierarchical: {
                 enabled: true,
                 direction: "LR",
-                sortMethod: "directed",
+                sortMethod: "hubsize",
                 nodeSpacing: 250,
                 treeSpacing: 250,
                 levelSeparation: 350

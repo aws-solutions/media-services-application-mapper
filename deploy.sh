@@ -40,7 +40,7 @@ echo web content archive SHA1 is $SHATEXT
 cp -f $ORIGIN/web-cloudformation/webcontent_resource.zip $STAGE/webcontent_resource_$STAMP.zip
 
 # place DynamoDB default settings resource into staging
-cp -f $ORIGIN/api/msam/db/dynamodb_resource.zip $STAGE/dynamodb_resource.zip
+cp -f $ORIGIN/api/msam/db/dynamodb_resource.zip $STAGE/dynamodb_resource_$STAMP.zip
 
 # update symbols in templates
 echo "updating template symbols"

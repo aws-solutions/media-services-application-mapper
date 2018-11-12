@@ -39,11 +39,16 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/dynamodb_resource.zip"
+                    "S3Key": "msam/dynamodb_resource_DEV_0_0_0.zip"
                 },
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for adding defaults to the Settings table",
                 "MemorySize": 2560,
+                "Environment": {
+                    "Variables": {
+                        "ID": "DEV_0_0_0"
+                    }
+                },
                 "Role": {
                     "Fn::GetAtt": [
                         "DefaultSettingsResourceRole",

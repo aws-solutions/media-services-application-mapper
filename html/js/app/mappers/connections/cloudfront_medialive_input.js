@@ -1,55 +1,28 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model"], function($, model) {
+define(["jquery", "app/model", "app/server", "app/connections"], function($, model, server, connections) {
 
     var update_connections = function() {
-        var nodes = model.nodes;
-        var edges = model.edges;
+        var current = connections.get_current();
+        var url = current[0];
+        var api_key = current[1];
         return new Promise((resolve, reject) => {
-            var cloudfront_regexp_list = [
-                /\:\/\/(\S+\.cloudfront\.net)\/.*/
-            ]
-            var medialive_arn_regex = /.*medialive.*input.*/;
-            var cloudfront_arn_regex = /.*cloudfront.*distribution.*/;
-            for (var ml_arn of nodes.getIds()) {
-                if (medialive_arn_regex.test(ml_arn)) {
-                    var ml_node = nodes.get(ml_arn);
-                    var ml_input = ml_node.data;
-                    for (var source of ml_input.Sources) {
-                        var url = source.Url;
-                        for (var re of cloudfront_regexp_list) {
-                            var match = re.exec(url);
-                            if (match) {
-                                var domain_name = match[1];
-                                // look for the distribution 
-                                $.each(nodes.getIds(), (index, value) => {
-                                    if (cloudfront_arn_regex.test(value)) {
-                                        var cf_node = nodes.get(value);
-                                        if (cf_node.data.DomainName == domain_name) {
-                                            // connect these nodes
-                                            var id = value + ":" + ml_node.id;
-                                            if (null == edges.get(id)) {
-                                                var protocol = new URL(url).protocol;
-                                                edges.add({
-                                                    "id": value + ":" + ml_node.id,
-                                                    "from": value,
-                                                    "to": ml_node.id,
-                                                    "arrows": "to",
-                                                    "label": protocol,
-                                                    "color": {
-                                                        "color": "black"
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    }
-                                });
-                            }
+            server.get(url + "/cached/cloudfront-distribution-medialive-input/global", api_key).then((connections) => {
+                $.each(connections, function(index, connection) {
+                    var data = JSON.parse(connection.data);
+                    model.edges.update({
+                        "id": connection.arn,
+                        "to": connection.to,
+                        "from": connection.from,
+                        "label": data.scheme,
+                        "arrows": "to",
+                        "color": {
+                            "color": "black"
                         }
-                    }
-                }
-            }
+                    });
+                });
+            });
             resolve();
         });
     }
@@ -63,7 +36,7 @@ define(["jquery", "app/model"], function($, model) {
                 reject(error);
             });
         });
-    };
+    }
 
     return {
         "name": "CloudFront Distribution to MediaLive Input",
