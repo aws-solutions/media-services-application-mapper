@@ -34,7 +34,7 @@ Review [README](README.md)
 **After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
 
 * Use the same region where your Media Services workflow is running
-* Create at least one API key for browser access
+* Retrieve the API key for browser access
 
 Navigate to the [Install](INSTALL.md) document and follow the instructions to install all four MSAM CloudFormation templates into your AWS account.
 

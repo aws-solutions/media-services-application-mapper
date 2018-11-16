@@ -4,7 +4,7 @@
 
 Each time the MSAM web application is launched, the browser's locally stored cookies are checked for any previous API connection information. If a previous connection is found, it is used by the browser automatically on the next launch.
 
-**Did you create at least one API key in the installation instructions?** If not, go back to [Install](INSTALL.md) and review *Configure API Key Authentication.*
+**Did you retrieve the default API key in the installation instructions?** If not, go back to [Install](INSTALL.md) and review *Retrieve the Authentication Key for the REST API.*
 
 If a previous connection is not found, the user is prompted for an endpoint URL and API key. The tool will confirm the connection information is valid before continuing.
 
@@ -46,9 +46,9 @@ Any node on the diagram can be dragged to a new position. Use the layout tools d
 A typical process for diagram layout involves:
 
 1. Perform a vertical or horizontal layout of the entire diagram
-1. Organize the hierarchical groups on the diagram surface using various selection tools and dragging the groups nearby
-1. Use the Fit button (bottom-right corner) periodically to zoom out and see everything
-1. After using the Fit button, you may need to zoom back in to an area to select and move a group of nodes closer together
+2. Organize the hierarchical groups on the diagram surface using various selection tools and dragging the groups nearby
+3. Use the Fit button (bottom-right corner) periodically to zoom out and see everything
+4. After using the Fit button, you may need to zoom back in to an area to select and move a group of nodes closer together
 
 ## Menus
 
