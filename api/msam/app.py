@@ -1,7 +1,7 @@
 # Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
-This is the file contains the REST API and CloudWatch entry-points for the MSAM backend.
+This file contains the REST API and CloudWatch entry-points for the MSAM backend.
 """
 
 import os
