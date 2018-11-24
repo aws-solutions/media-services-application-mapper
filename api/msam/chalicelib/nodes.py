@@ -30,27 +30,27 @@ def update_regional_ddb_items(region_name):
     """
     try:
         content.put_ddb_items(medialive_input_ddb_items(region_name))
-    except ClientError as error:
+    except Exception as error:
         print(error)
     try:
         content.put_ddb_items(medialive_channel_ddb_items(region_name))
-    except ClientError as error:
+    except Exception as error:
         print(error)
     try:
         content.put_ddb_items(mediapackage_channel_ddb_items(region_name))
-    except ClientError as error:
+    except Exception as error:
         print(error)
     try:
         content.put_ddb_items(mediapackage_origin_endpoint_ddb_items(region_name))
-    except ClientError as error:
+    except Exception as error:
         print(error)
     try:
         content.put_ddb_items(mediastore_container_ddb_items(region_name))
-    except ClientError as error:
+    except Exception as error:
         print(error)
     try:
         content.put_ddb_items(speke_server_ddb_items(region_name))
-    except ClientError as error:
+    except Exception as error:
         print(error)
 
 
