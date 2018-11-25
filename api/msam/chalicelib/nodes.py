@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 import boto3
 from botocore.exceptions import ClientError
+from botocore.exceptions import EndpointConnectionError
 from jsonpath_ng import parse
 
 from chalicelib import content
@@ -30,27 +31,27 @@ def update_regional_ddb_items(region_name):
     """
     try:
         content.put_ddb_items(medialive_input_ddb_items(region_name))
-    except Exception as error:
+    except (ClientError, EndpointConnectionError) as error:
         print(error)
     try:
         content.put_ddb_items(medialive_channel_ddb_items(region_name))
-    except Exception as error:
+    except (ClientError, EndpointConnectionError) as error:
         print(error)
     try:
         content.put_ddb_items(mediapackage_channel_ddb_items(region_name))
-    except Exception as error:
+    except (ClientError, EndpointConnectionError) as error:
         print(error)
     try:
         content.put_ddb_items(mediapackage_origin_endpoint_ddb_items(region_name))
-    except Exception as error:
+    except (ClientError, EndpointConnectionError) as error:
         print(error)
     try:
         content.put_ddb_items(mediastore_container_ddb_items(region_name))
-    except Exception as error:
+    except (ClientError, EndpointConnectionError) as error:
         print(error)
     try:
         content.put_ddb_items(speke_server_ddb_items(region_name))
-    except Exception as error:
+    except (ClientError, EndpointConnectionError) as error:
         print(error)
 
 
@@ -158,7 +159,7 @@ def speke_server_ddb_items(region):
             arn = "arn:oss:speke:::{}".format(url_digest)
             config = {"arn": arn, "endpoint": server_url, "scheme": parsed.scheme}
             service = "speke-keyserver"
-            print(config)
+            # print(config)
             items.append(node_to_ddb_item(arn, service, "global", config))
     return items
 
