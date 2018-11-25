@@ -9,16 +9,22 @@ import sys
 
 import boto3
 
-CONNECTION_TYPES = ["cloudfront-distribution-medialive-input", "medialive-channel-mediapackage-channel", "medialive-channel-mediastore-container", "medialive-input-medialive-channel", "mediapackage-channel-mediapackage-origin-endpoint","mediapackage-origin-endpoint-cloudfront-distribution","mediastore-container-medialive-input", "s3-bucket-cloudfront-distribution", "s3-bucket-medialive-input","mediapackage-origin-endpoint-speke-keyserver","user-defined-connection"]
+CONNECTION_TYPES = [
+    "cloudfront-distribution-medialive-input", "medialive-channel-mediapackage-channel", "medialive-channel-mediastore-container", "medialive-input-medialive-channel",
+    "mediapackage-channel-mediapackage-origin-endpoint", "mediapackage-origin-endpoint-cloudfront-distribution", "mediastore-container-medialive-input", "s3-bucket-cloudfront-distribution",
+    "s3-bucket-medialive-input", "mediapackage-origin-endpoint-speke-keyserver", "user-defined-connection"
+]
 NODE_TYPES = ["s3", "cloudfront-distribution"]
 
 #
 # CONTENT_TABLE_NAME="IBC2018-DynamoDB-Content-17I5MRXA2FBF7" CACHE_ITEM_TTL=7200 python delete-disconnected.py
 #
 
-if __name__ == "__main__":
-    sys.path.insert(0, '../api/msam')
-    from chalicelib.cache import cached_by_service
+
+def delete_disconnected():
+    """
+    This function will clean nodes without connections from the content database table.
+    """
     node_type = "S3"
     nodes = []
     connections = []
@@ -41,3 +47,9 @@ if __name__ == "__main__":
     for node in remove_nodes:
         print(node)
         table.delete_item(Key={"arn": node["arn"]})
+
+
+if __name__ == "__main__":
+    sys.path.insert(0, '../api/msam')
+    from chalicelib.cache import cached_by_service
+    delete_disconnected()
