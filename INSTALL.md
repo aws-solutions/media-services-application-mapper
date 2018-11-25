@@ -25,7 +25,7 @@ During the installation of the different CloudFormation stacks you may be prompt
 * Login to CloudFormation using the account used for creating / managing the MediaServices.
 * Click on Create Stack
 
-For each of the four stacks listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URLs as provided. The URLs shown below for us-west-2 region can be used to install any MSAM-supported regions.
+For each of the four stacks listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URLs below exactly as provided for any MSAM-supported region.
 
 **After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
 
@@ -33,7 +33,7 @@ For each of the four stacks listed below, from Choose a Template select "Specify
 
 This template will create a stack for the tables, indices, and capacity autoscaling rules. The first time a stack is created from this template, defaults are added to scan and display cloud resources in the current region only. These settings can be updated in the tool to expand the inventory coverage to other regions.
 
-`https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-dynamodb-release.json`
+`https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release.json`
 
 #### Input Parameters
 
@@ -49,7 +49,7 @@ Go to the Outputs section of the stack and copy the six table names to a notepad
 
 This template will create a stack for the MSAM REST API, and periodic tasks used to refresh the content cache and discover logical resource connections.
 
-`https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-core-release.json`
+`https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release.json`
 
 #### Input Parameters
 
@@ -67,7 +67,7 @@ Go to the Outputs section after the stack if created and copy the EndpointUrl to
 
 This template is used to create a stack with the Lambda responsible for receiving events from Media Services resources, such as MediaLive pipeline alerts. Create a stack for this template in every region you will be creating Media Services resources.
 
-`https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-events-release.json`
+`https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release.json`
 
 #### Input Parameters
 
@@ -84,7 +84,7 @@ None
 
 This template will install a copy of the MSAM browser application into an S3 bucket. Files added by the CloudFormation template will have their ACL set to `public-read` to allow access over HTTPS.
 
-`https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-browser-app-release.json`
+`https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release.json`
 
 ### Input Parameters
 
