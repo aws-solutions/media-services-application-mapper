@@ -25,7 +25,7 @@ During the installation of the different CloudFormation stacks you may be prompt
 * Login to CloudFormation using the account used for creating / managing the MediaServices.
 * Click on Create Stack
 
-For each of the four stacks listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URLs as provided.
+For each of the four stacks listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URLs as provided. The URLs shown below for us-west-2 region can be used to install any MSAM-supported regions.
 
 **After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
 

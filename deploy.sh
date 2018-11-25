@@ -54,15 +54,18 @@ sed -e "s/CUSTOM_RESOURCE_FILE/webcontent_resource_$STAMP.zip/g" web-cloudformat
     sed -e "s/DEV_0_0_0/$STAMP/g" >$STAGE/msam-browser-app-release.json
 
 # sync staging to us-west-2
-aws s3 sync $STAGE/ s3://rodeolabz-us-west-2/msam
+aws s3 sync $STAGE/ s3://rodeolabz-us-west-2/msam --acl public-read
 
 # sync us-west-2 content to other S3 regional buckets
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-northeast-1/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-northeast-2/msam --delete   
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-southeast-1/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-southeast-2/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-eu-central-1/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-eu-west-1/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-eu-west-3/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-sa-east-1/msam --delete
-aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-us-east-1/msam --delete
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-northeast-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-northeast-2/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-south-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-southeast-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-ap-southeast-2/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-eu-central-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-eu-west-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-eu-west-3/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-sa-east-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-us-east-1/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-us-east-2/msam --delete --acl public-read
+aws s3 sync s3://rodeolabz-us-west-2/msam s3://rodeolabz-us-west-1/msam --delete --acl public-read
