@@ -9,7 +9,7 @@
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/ddbbe966641f9ad0bd0bda3b044a8896",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/dc8f3b04d4e75eec33687fb8bdc84323",
                 "MemorySize": 2560,
                 "Timeout": 60,
                 "Policies": [
