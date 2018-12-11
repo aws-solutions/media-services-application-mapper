@@ -13,6 +13,7 @@ from chalicelib import cache
 import chalicelib.channels as channel_tiles
 import chalicelib.cloudwatch as cloudwatch_data
 import chalicelib.layout as node_layout
+import chalicelib.metrics as template_metrics
 import chalicelib.periodic as periodic_handlers
 import chalicelib.settings as msam_settings
 
@@ -233,3 +234,11 @@ def update_alarms(_):
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
     return periodic_handlers.update_alarms()
+
+
+@app.lambda_function()
+def send_template_launch_metric(event, context):
+    """
+    Entry point for recording anonymous launch metrics for the CFN template.
+    """
+    return template_metrics.handler(event, context)

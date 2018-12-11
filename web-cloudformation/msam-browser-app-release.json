@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: DEV_0_0_0)",
+    "Description": "SO0048 Media Services Application Mapper (MSAM) browser application (ID: DEV_0_0_0)",
     "Resources": {
         "MSAMBrowserAppBucket": {
             "Type": "AWS::S3::Bucket",
@@ -79,6 +79,7 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
+                "BUILD_STAMP": "DEV_0_0_0",
                 "ZIP_DIGEST": "ZIP_DIGEST_VALUE"
             }
         }

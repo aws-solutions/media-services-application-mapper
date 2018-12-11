@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: DEV_0_0_0)",
+    "Description": "SO0048 Media Services Application Mapper (MSAM) DynamoDB tables (ID: DEV_0_0_0)",
     "Resources": {
         "DefaultSettingsResourceRole": {
             "Type": "AWS::IAM::Role",
