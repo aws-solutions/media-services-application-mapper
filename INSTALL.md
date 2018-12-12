@@ -157,19 +157,6 @@ The MSAM browser application in zipped form is available from the following URL.
 
 This file can be extracted into a web server or another type of hosting environment. Take this approach if you prefer not to use the CloudFormation template to host the application in an S3 bucket.
 
-## CloudFormation Usage Metrics
-
-The Core API template will send metrics to AWS Solutions Builders to track use of the template during stack creation, updates, and deletion. These metrics are used to help understand the vitality and popularity of the GitHub project with each release.
-
-The metrics sent to AWS when the Core API template runs are:
-
-* Solution ID SO0048
-* Current Timestamp
-* Template Build ID
-* AWS Region deployed
-* Account ID
-
-
 ## Navigate
 
 Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md)

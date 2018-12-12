@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "SO0048 Media Services Application Mapper (MSAM) cloud API (ID: DEV_0_0_0)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: DEV_0_0_0)",
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -223,7 +223,7 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/d1a309dddabf5e8fa11ce167dfd6d90a",
+                    "Key": "msam/4aa08fafae8568e0d7d1612086352092",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -262,226 +262,6 @@
                 "Role": {
                     "Fn::GetAtt": [
                         "IncomingCloudwatchAlarmRole",
-                        "Arn"
-                    ]
-                }
-            }
-        },
-        "SendTemplateLaunchMetricRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                        "Sid": "",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }]
-                },
-                "Policies": [{
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Action": [
-                                    "mediapackage:List*",
-                                    "mediapackage:Describe*",
-                                    "medialive:List*",
-                                    "medialive:Describe*",
-                                    "mediastore:List*",
-                                    "mediastore:Get*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "ec2:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "elasticloadbalancing:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:Describe*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "autoscaling:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "dynamodb:*",
-                                    "dax:*",
-                                    "application-autoscaling:DeleteScalingPolicy",
-                                    "application-autoscaling:DeregisterScalableTarget",
-                                    "application-autoscaling:DescribeScalableTargets",
-                                    "application-autoscaling:DescribeScalingActivities",
-                                    "application-autoscaling:DescribeScalingPolicies",
-                                    "application-autoscaling:PutScalingPolicy",
-                                    "application-autoscaling:RegisterScalableTarget",
-                                    "cloudwatch:DeleteAlarms",
-                                    "cloudwatch:DescribeAlarmHistory",
-                                    "cloudwatch:DescribeAlarms",
-                                    "cloudwatch:DescribeAlarmsForMetric",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:PutMetricAlarm",
-                                    "datapipeline:ActivatePipeline",
-                                    "datapipeline:CreatePipeline",
-                                    "datapipeline:DeletePipeline",
-                                    "datapipeline:DescribeObjects",
-                                    "datapipeline:DescribePipelines",
-                                    "datapipeline:GetPipelineDefinition",
-                                    "datapipeline:ListPipelines",
-                                    "datapipeline:PutPipelineDefinition",
-                                    "datapipeline:QueryObjects",
-                                    "ec2:DescribeVpcs",
-                                    "ec2:DescribeSubnets",
-                                    "ec2:DescribeSecurityGroups",
-                                    "iam:GetRole",
-                                    "iam:ListRoles",
-                                    "sns:CreateTopic",
-                                    "sns:DeleteTopic",
-                                    "sns:ListSubscriptions",
-                                    "sns:ListSubscriptionsByTopic",
-                                    "sns:ListTopics",
-                                    "sns:Subscribe",
-                                    "sns:Unsubscribe",
-                                    "sns:SetTopicAttributes",
-                                    "lambda:CreateFunction",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:CreateEventSourceMapping",
-                                    "lambda:DeleteEventSourceMapping",
-                                    "lambda:GetFunctionConfiguration",
-                                    "lambda:DeleteFunction"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "iam:PassRole"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringLike": {
-                                        "iam:PassedToService": [
-                                            "application-autoscaling.amazonaws.com",
-                                            "dax.amazonaws.com"
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "iam:CreateServiceLinkedRole"
-                                ],
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringEquals": {
-                                        "iam:AWSServiceName": [
-                                            "replication.dynamodb.amazonaws.com",
-                                            "dax.amazonaws.com",
-                                            "dynamodb.application-autoscaling.amazonaws.com"
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "s3:Get*",
-                                    "s3:List*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "logs:*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "acm:ListCertificates",
-                                    "cloudfront:Get*",
-                                    "cloudfront:List*",
-                                    "iam:ListServerCertificates",
-                                    "route53:List*",
-                                    "waf:ListWebACLs",
-                                    "waf:GetWebACL"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            }
-                        ]
-                    },
-                    "PolicyName": "SendTemplateLaunchMetricRolePolicy"
-                }]
-            }
-        },
-        "SendTemplateLaunchMetric": {
-            "Type": "AWS::Serverless::Function",
-            "Properties": {
-                "Runtime": "python3.6",
-                "Handler": "app.send_template_launch_metric",
-                "Description": "MSAM Lambda custom resource for sending template launch metrics",
-                "CodeUri": {
-                    "Key": "msam/d1a309dddabf5e8fa11ce167dfd6d90a",
-                    "Bucket": {
-                        "Fn::Sub": "rodeolabz-${AWS::Region}"
-                    }
-                },
-                "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
-                },
-                "Timeout": 300,
-                "MemorySize": 2560,
-                "Environment": {
-                    "Variables": {
-                        "ALARMS_TABLE_NAME": {
-                            "Ref": "AlarmsTableName"
-                        },
-                        "BUILD_STAMP": "DEV_0_0_0",
-                        "CACHE_ITEM_TTL": {
-                            "Ref": "CacheItemTTL"
-                        },
-                        "CHANNELS_TABLE_NAME": {
-                            "Ref": "ChannelsTableName"
-                        },
-                        "CONTENT_TABLE_NAME": {
-                            "Ref": "ContentTableName"
-                        },
-                        "EVENTS_TABLE_NAME": {
-                            "Ref": "EventsTableName"
-                        },
-                        "LAYOUT_TABLE_NAME": {
-                            "Ref": "LayoutTableName"
-                        },
-                        "SETTINGS_TABLE_NAME": {
-                            "Ref": "SettingsTableName"
-                        }
-                    }
-                },
-                "Role": {
-                    "Fn::GetAtt": [
-                        "SendTemplateLaunchMetricRole",
                         "Arn"
                     ]
                 }
@@ -663,7 +443,7 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/d1a309dddabf5e8fa11ce167dfd6d90a",
+                    "Key": "msam/4aa08fafae8568e0d7d1612086352092",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -891,7 +671,7 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/d1a309dddabf5e8fa11ce167dfd6d90a",
+                    "Key": "msam/4aa08fafae8568e0d7d1612086352092",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -1119,7 +899,7 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/d1a309dddabf5e8fa11ce167dfd6d90a",
+                    "Key": "msam/4aa08fafae8568e0d7d1612086352092",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3321,7 +3101,7 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling API Gateway REST calls",
                 "CodeUri": {
-                    "Key": "msam/d1a309dddabf5e8fa11ce167dfd6d90a",
+                    "Key": "msam/4aa08fafae8568e0d7d1612086352092",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3383,21 +3163,6 @@
                         }
                     ]
                 }
-            }
-        },
-        "SendTemplateLaunchMetricResource": {
-            "Type": "AWS::CloudFormation::CustomResource",
-            "Properties": {
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "SendTemplateLaunchMetric",
-                        "Arn"
-                    ]
-                },
-                "StackName": {
-                    "Ref": "AWS::StackName"
-                },
-                "BUILD_STAMP": "DEV_0_0_0"
             }
         }
     },
