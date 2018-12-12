@@ -110,7 +110,14 @@
                                 "cloudwatch:SetAlarmState",
                                 "cloudwatch:DeleteAlarms"
                             ],
-                            "Resource": "*"
+                            "Resource": [
+                                { "Fn::GetAtt": ["Alarms", "Arn"] },
+                                { "Fn::GetAtt": ["Channels", "Arn"] },
+                                { "Fn::GetAtt": ["Content", "Arn"] },
+                                { "Fn::GetAtt": ["Events", "Arn"] },
+                                { "Fn::GetAtt": ["Layout", "Arn"] },
+                                { "Fn::GetAtt": ["Settings", "Arn"] }
+                            ]
                         }]
                     }
                 }]

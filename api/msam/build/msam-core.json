@@ -82,51 +82,35 @@
                             },
                             {
                                 "Action": [
-                                    "dynamodb:*",
-                                    "dax:*",
-                                    "application-autoscaling:DeleteScalingPolicy",
-                                    "application-autoscaling:DeregisterScalableTarget",
+                                    "dynamodb:Query",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:GetItem"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
                                     "application-autoscaling:DescribeScalableTargets",
                                     "application-autoscaling:DescribeScalingActivities",
                                     "application-autoscaling:DescribeScalingPolicies",
-                                    "application-autoscaling:PutScalingPolicy",
-                                    "application-autoscaling:RegisterScalableTarget",
-                                    "cloudwatch:DeleteAlarms",
                                     "cloudwatch:DescribeAlarmHistory",
                                     "cloudwatch:DescribeAlarms",
                                     "cloudwatch:DescribeAlarmsForMetric",
                                     "cloudwatch:GetMetricStatistics",
                                     "cloudwatch:ListMetrics",
-                                    "cloudwatch:PutMetricAlarm",
-                                    "datapipeline:ActivatePipeline",
-                                    "datapipeline:CreatePipeline",
-                                    "datapipeline:DeletePipeline",
-                                    "datapipeline:DescribeObjects",
-                                    "datapipeline:DescribePipelines",
-                                    "datapipeline:GetPipelineDefinition",
-                                    "datapipeline:ListPipelines",
-                                    "datapipeline:PutPipelineDefinition",
-                                    "datapipeline:QueryObjects",
                                     "ec2:DescribeVpcs",
                                     "ec2:DescribeSubnets",
                                     "ec2:DescribeSecurityGroups",
                                     "iam:GetRole",
                                     "iam:ListRoles",
-                                    "sns:CreateTopic",
-                                    "sns:DeleteTopic",
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "sns:Subscribe",
-                                    "sns:Unsubscribe",
-                                    "sns:SetTopicAttributes",
-                                    "lambda:CreateFunction",
                                     "lambda:ListFunctions",
                                     "lambda:ListEventSourceMappings",
-                                    "lambda:CreateEventSourceMapping",
-                                    "lambda:DeleteEventSourceMapping",
-                                    "lambda:GetFunctionConfiguration",
-                                    "lambda:DeleteFunction"
+                                    "lambda:GetFunctionConfiguration"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -201,9 +185,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/4aa08fafae8568e0d7d1612086352092",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/cec93df8a168eea1ffb174497aa7fb6d",
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -282,51 +266,35 @@
                             },
                             {
                                 "Action": [
-                                    "dynamodb:*",
-                                    "dax:*",
-                                    "application-autoscaling:DeleteScalingPolicy",
-                                    "application-autoscaling:DeregisterScalableTarget",
+                                    "dynamodb:Query",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:GetItem"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
                                     "application-autoscaling:DescribeScalableTargets",
                                     "application-autoscaling:DescribeScalingActivities",
                                     "application-autoscaling:DescribeScalingPolicies",
-                                    "application-autoscaling:PutScalingPolicy",
-                                    "application-autoscaling:RegisterScalableTarget",
-                                    "cloudwatch:DeleteAlarms",
                                     "cloudwatch:DescribeAlarmHistory",
                                     "cloudwatch:DescribeAlarms",
                                     "cloudwatch:DescribeAlarmsForMetric",
                                     "cloudwatch:GetMetricStatistics",
                                     "cloudwatch:ListMetrics",
-                                    "cloudwatch:PutMetricAlarm",
-                                    "datapipeline:ActivatePipeline",
-                                    "datapipeline:CreatePipeline",
-                                    "datapipeline:DeletePipeline",
-                                    "datapipeline:DescribeObjects",
-                                    "datapipeline:DescribePipelines",
-                                    "datapipeline:GetPipelineDefinition",
-                                    "datapipeline:ListPipelines",
-                                    "datapipeline:PutPipelineDefinition",
-                                    "datapipeline:QueryObjects",
                                     "ec2:DescribeVpcs",
                                     "ec2:DescribeSubnets",
                                     "ec2:DescribeSecurityGroups",
                                     "iam:GetRole",
                                     "iam:ListRoles",
-                                    "sns:CreateTopic",
-                                    "sns:DeleteTopic",
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "sns:Subscribe",
-                                    "sns:Unsubscribe",
-                                    "sns:SetTopicAttributes",
-                                    "lambda:CreateFunction",
                                     "lambda:ListFunctions",
                                     "lambda:ListEventSourceMappings",
-                                    "lambda:CreateEventSourceMapping",
-                                    "lambda:DeleteEventSourceMapping",
-                                    "lambda:GetFunctionConfiguration",
-                                    "lambda:DeleteFunction"
+                                    "lambda:GetFunctionConfiguration"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -401,9 +369,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/4aa08fafae8568e0d7d1612086352092",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/cec93df8a168eea1ffb174497aa7fb6d",
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -490,51 +458,35 @@
                             },
                             {
                                 "Action": [
-                                    "dynamodb:*",
-                                    "dax:*",
-                                    "application-autoscaling:DeleteScalingPolicy",
-                                    "application-autoscaling:DeregisterScalableTarget",
+                                    "dynamodb:Query",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:GetItem"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
                                     "application-autoscaling:DescribeScalableTargets",
                                     "application-autoscaling:DescribeScalingActivities",
                                     "application-autoscaling:DescribeScalingPolicies",
-                                    "application-autoscaling:PutScalingPolicy",
-                                    "application-autoscaling:RegisterScalableTarget",
-                                    "cloudwatch:DeleteAlarms",
                                     "cloudwatch:DescribeAlarmHistory",
                                     "cloudwatch:DescribeAlarms",
                                     "cloudwatch:DescribeAlarmsForMetric",
                                     "cloudwatch:GetMetricStatistics",
                                     "cloudwatch:ListMetrics",
-                                    "cloudwatch:PutMetricAlarm",
-                                    "datapipeline:ActivatePipeline",
-                                    "datapipeline:CreatePipeline",
-                                    "datapipeline:DeletePipeline",
-                                    "datapipeline:DescribeObjects",
-                                    "datapipeline:DescribePipelines",
-                                    "datapipeline:GetPipelineDefinition",
-                                    "datapipeline:ListPipelines",
-                                    "datapipeline:PutPipelineDefinition",
-                                    "datapipeline:QueryObjects",
                                     "ec2:DescribeVpcs",
                                     "ec2:DescribeSubnets",
                                     "ec2:DescribeSecurityGroups",
                                     "iam:GetRole",
                                     "iam:ListRoles",
-                                    "sns:CreateTopic",
-                                    "sns:DeleteTopic",
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "sns:Subscribe",
-                                    "sns:Unsubscribe",
-                                    "sns:SetTopicAttributes",
-                                    "lambda:CreateFunction",
                                     "lambda:ListFunctions",
                                     "lambda:ListEventSourceMappings",
-                                    "lambda:CreateEventSourceMapping",
-                                    "lambda:DeleteEventSourceMapping",
-                                    "lambda:GetFunctionConfiguration",
-                                    "lambda:DeleteFunction"
+                                    "lambda:GetFunctionConfiguration"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -609,9 +561,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/4aa08fafae8568e0d7d1612086352092",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/cec93df8a168eea1ffb174497aa7fb6d",
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -698,51 +650,35 @@
                             },
                             {
                                 "Action": [
-                                    "dynamodb:*",
-                                    "dax:*",
-                                    "application-autoscaling:DeleteScalingPolicy",
-                                    "application-autoscaling:DeregisterScalableTarget",
+                                    "dynamodb:Query",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:GetItem"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
                                     "application-autoscaling:DescribeScalableTargets",
                                     "application-autoscaling:DescribeScalingActivities",
                                     "application-autoscaling:DescribeScalingPolicies",
-                                    "application-autoscaling:PutScalingPolicy",
-                                    "application-autoscaling:RegisterScalableTarget",
-                                    "cloudwatch:DeleteAlarms",
                                     "cloudwatch:DescribeAlarmHistory",
                                     "cloudwatch:DescribeAlarms",
                                     "cloudwatch:DescribeAlarmsForMetric",
                                     "cloudwatch:GetMetricStatistics",
                                     "cloudwatch:ListMetrics",
-                                    "cloudwatch:PutMetricAlarm",
-                                    "datapipeline:ActivatePipeline",
-                                    "datapipeline:CreatePipeline",
-                                    "datapipeline:DeletePipeline",
-                                    "datapipeline:DescribeObjects",
-                                    "datapipeline:DescribePipelines",
-                                    "datapipeline:GetPipelineDefinition",
-                                    "datapipeline:ListPipelines",
-                                    "datapipeline:PutPipelineDefinition",
-                                    "datapipeline:QueryObjects",
                                     "ec2:DescribeVpcs",
                                     "ec2:DescribeSubnets",
                                     "ec2:DescribeSecurityGroups",
                                     "iam:GetRole",
                                     "iam:ListRoles",
-                                    "sns:CreateTopic",
-                                    "sns:DeleteTopic",
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "sns:Subscribe",
-                                    "sns:Unsubscribe",
-                                    "sns:SetTopicAttributes",
-                                    "lambda:CreateFunction",
                                     "lambda:ListFunctions",
                                     "lambda:ListEventSourceMappings",
-                                    "lambda:CreateEventSourceMapping",
-                                    "lambda:DeleteEventSourceMapping",
-                                    "lambda:GetFunctionConfiguration",
-                                    "lambda:DeleteFunction"
+                                    "lambda:GetFunctionConfiguration"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -817,9 +753,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/4aa08fafae8568e0d7d1612086352092",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/cec93df8a168eea1ffb174497aa7fb6d",
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -906,51 +842,35 @@
                             },
                             {
                                 "Action": [
-                                    "dynamodb:*",
-                                    "dax:*",
-                                    "application-autoscaling:DeleteScalingPolicy",
-                                    "application-autoscaling:DeregisterScalableTarget",
+                                    "dynamodb:Query",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:GetItem"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
                                     "application-autoscaling:DescribeScalableTargets",
                                     "application-autoscaling:DescribeScalingActivities",
                                     "application-autoscaling:DescribeScalingPolicies",
-                                    "application-autoscaling:PutScalingPolicy",
-                                    "application-autoscaling:RegisterScalableTarget",
-                                    "cloudwatch:DeleteAlarms",
                                     "cloudwatch:DescribeAlarmHistory",
                                     "cloudwatch:DescribeAlarms",
                                     "cloudwatch:DescribeAlarmsForMetric",
                                     "cloudwatch:GetMetricStatistics",
                                     "cloudwatch:ListMetrics",
-                                    "cloudwatch:PutMetricAlarm",
-                                    "datapipeline:ActivatePipeline",
-                                    "datapipeline:CreatePipeline",
-                                    "datapipeline:DeletePipeline",
-                                    "datapipeline:DescribeObjects",
-                                    "datapipeline:DescribePipelines",
-                                    "datapipeline:GetPipelineDefinition",
-                                    "datapipeline:ListPipelines",
-                                    "datapipeline:PutPipelineDefinition",
-                                    "datapipeline:QueryObjects",
                                     "ec2:DescribeVpcs",
                                     "ec2:DescribeSubnets",
                                     "ec2:DescribeSecurityGroups",
                                     "iam:GetRole",
                                     "iam:ListRoles",
-                                    "sns:CreateTopic",
-                                    "sns:DeleteTopic",
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "sns:Subscribe",
-                                    "sns:Unsubscribe",
-                                    "sns:SetTopicAttributes",
-                                    "lambda:CreateFunction",
                                     "lambda:ListFunctions",
                                     "lambda:ListEventSourceMappings",
-                                    "lambda:CreateEventSourceMapping",
-                                    "lambda:DeleteEventSourceMapping",
-                                    "lambda:GetFunctionConfiguration",
-                                    "lambda:DeleteFunction"
+                                    "lambda:GetFunctionConfiguration"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -2999,9 +2919,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.app",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/4aa08fafae8568e0d7d1612086352092",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/cec93df8a168eea1ffb174497aa7fb6d",
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
