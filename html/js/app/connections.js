@@ -5,8 +5,8 @@ define(["jquery", "cookie", "app/window"], function($, cookie, window) {
     var cookie_name = "connections";
     // keep last 10 connections
     var max_history = 10;
-    // keep for 90 days
-    var max_age = 90;
+    // keep for 30 days
+    var max_age = 30;
     var connection_history;
     // check if the cookie has a persisted value
     var encoded = cookie.get(cookie_name);
