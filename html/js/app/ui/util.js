@@ -1,7 +1,7 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/ui/global_view"], function($, global_view) {
+define([], function() {
 
     var makeid = function(id_len = 10) {
         var text = "";

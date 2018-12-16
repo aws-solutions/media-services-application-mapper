@@ -29,7 +29,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
         };
 
         var updateConnectionDialog = function() {
-            var history = Array.from(connections.get_history());
+            var history = Array.from(connections.get_remembered());
             // clear the existing dropdown items
             $("#connectionHistoryDropdownMenu").empty();
             // replace with current history items
@@ -38,6 +38,11 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 history_to_buttons(history);
             } else {
                 $("#connectionHistoryMenuButton").addClass("disabled");
+            }
+            var current = connections.get_current();
+            if (current) {
+                $("#input_endpoint_url").val(current[0]);
+                $("#input_endpoint_key").val(current[1]);
             }
         };
 
@@ -64,11 +69,13 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 endpoint = new URI($("#input_endpoint_url").val().trim()).normalize().toString().replace(/\/+$/, "");
                 console.log("normalized to " + endpoint);
                 apiKey = $("#input_endpoint_key").val().trim();
+                store_locally = $("#connectionRemember").prop("checked");
+                console.log("store locally = " + store_locally);
                 // test the provided info before saving
                 api_check.ping(endpoint, apiKey).then(function(response) {
                     // test worked
                     console.log(response);
-                    connections.set_current(endpoint, apiKey);
+                    connections.set_current(endpoint, apiKey, store_locally);
                     hideConnectionDialog();
                     updateConnectionDialog();
                     require("app/statemachine").getToolStateMachine().connectionChanged();
@@ -82,7 +89,15 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             }
             return true;
         });
-
+        $("#connectionRemember").on("change", function() {
+            store_locally = $("#connectionRemember").prop("checked");
+            console.log("store locally = " + store_locally);
+            if (store_locally) {
+                $("#connectionRememberText").text("Remember");
+            } else {
+                $("#connectionRememberText").text("Do Not Remember");
+            }
+        });
         $("#cancel_endpoint_connection").on("click", () => {
             console.log("cancel connection");
             var current_connection = connections.get_current();

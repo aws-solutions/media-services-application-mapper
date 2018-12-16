@@ -1,87 +1,96 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "cookie", "app/window"], function($, cookie, window) {
-    var cookie_name = "connections";
-    // keep last 10 connections
-    var max_history = 10;
-    // keep for 30 days
-    var max_age = 30;
-    var connection_history;
-    // check if the cookie has a persisted value
-    var encoded = cookie.get(cookie_name);
-    if (encoded != undefined) {
-        // yes
-        connection_history = new Map(JSON.parse(window.atob(encoded)));
-    } else {
-        // no, start with empty
-        connection_history = new Map();
-    }
-    // return the recent connection objects
-    var get_history = function() {
-        return connection_history.values();
-    };
-    // update the history with another connection
-    var set_current = function(url, api_key) {
-        latest = [url, api_key];
-        // seek through the map looking for the same endpoint
-        connection_history.forEach(function(value, key, map) {
-            if (value[0] == latest[0] && value[1] == latest[1]) {
-                // delete it
-                map.delete(key);
+define(["jquery", "cookie", "app/window", "object_hash"], function($, cookie, window, hash) {
+    // Cookie: MSAM_CURRENT = "Cookie Name" or missing (not saved)
+    // Cookie: MSAM_ENDPOINT_<ID> = "{ URL, Key, Last }"
+
+    var cookie_name_current = "MSAM_CURRENT";
+    var cookie_name_prefix = "MSAM_ENDPOINT_";
+    var session_current = "MSAM_CURRENT";
+
+    // keep for 7 days
+    var max_age = 7;
+
+    // return the stored connection objects
+    var get_remembered = function() {
+        var history = [];
+        var cookies = cookie.get();
+        for (var name of Object.keys(cookies)) {
+            if (name.startsWith(cookie_name_prefix)) {
+                var payload = cookies[name];
+                var content = JSON.parse(window.atob(payload));
+                history.push(content);
             }
-        });
-        // add the new one with current time
-        connection_history.set(new Date().getTime(), latest);
-        // sort based on time
-        connection_history = new Map([...connection_history.entries()].sort(function(a, b) {
-            if (a < b) {
-                return 1;
-            }
-            if (a > b) {
-                return -1;
-            }
-            // equal
-            return 0;
-        }));
-        var size = 0;
-        connection_history.forEach(function(value, key, map) {
-            size++;
-            if (size > max_history) {
-                map.delete(key);
-            }
-        });
-        var encoded_history = window.btoa(JSON.stringify([...connection_history]));
-        cookie.set(cookie_name, encoded_history, {
-            expires: max_age
-        });
-    };
-    var get_current = function() {
-        var r;
-        if (connection_history.size > 0) {
-            r = connection_history.values().next().value;
-        } else {
-            r = null;
         }
-        return r;
+        return history;
     };
-    var clear_history = function() {
-        var current = get_current();
-        connection_history.clear();
-        set_current(current[0], current[1]);
+
+    // update the history with another connection
+    var set_current = function(url, api_key, store = true) {
+        var current = [url, api_key];
+        window.sessionStorage.setItem(session_current, window.btoa(JSON.stringify(current)));
+        var cookie_name = cookie_name_prefix + hash.sha1(url);
+        var encoded = window.btoa(JSON.stringify(current));
+        if (store) {
+            // add or update MSAM_ENDPOINT_<ID> cookie
+            cookie.set(cookie_name, encoded, {
+                expires: max_age
+            });
+            // rewrite MSAM_CURRENT cookie
+            cookie.set(cookie_name_current, cookie_name, {
+                expires: max_age
+            });
+        } else {
+            cookie.remove(cookie_name_current);
+            cookie.remove(cookie_name);
+        }
     };
+
+    // return the session copy or the cookie copy, or null
+    var get_current = function() {
+        var current = null;
+        var encoded = window.sessionStorage.getItem(session_current);
+        if (encoded) {
+            current = JSON.parse(window.atob(encoded));
+        }
+        // get the cookie and refresh the expiration
+        var payload = cookie.get(cookie_name_current);
+        if (payload) {
+            // set the cookie again for expiration
+            cookie.set(cookie_name_current, payload, {
+                expires: max_age
+            });
+            var name = payload;
+            payload = cookie.get(name);
+            // something?
+            if (payload) {
+                // set the cookie again for expiration
+                cookie.set(name, payload, {
+                    expires: max_age
+                });
+                // set the session storage if not already
+                if (!current) {
+                    window.sessionStorage.setItem(session_current, payload);
+                    current = JSON.parse(window.atob(payload));
+                }
+            }
+        }
+        return current;
+    };
+
     // is there a connection override on the URL parameters?
     var current_url = new URL(window.location);
     var endpoint = current_url.searchParams.get("endpoint");
     var key = current_url.searchParams.get("key");
     if (endpoint && key) {
         console.log("Connection override with URL paramteres");
-        set_current(endpoint, key);
+        set_current(endpoint, key, false);
     };
+
     return {
-        "get_history": get_history,
+        "get_remembered": get_remembered,
         "set_current": set_current,
-        "get_current": get_current,
-        "clear_history": clear_history
+        "get_current": get_current
     };
 });

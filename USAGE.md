@@ -6,7 +6,13 @@ Each time the MSAM web application is launched, the browser's locally stored coo
 
 **Did you retrieve the default API key in the installation instructions?** If not, go back to [Install](INSTALL.md) and review *Retrieve the Authentication Key for the REST API.*
 
-If a previous connection is not found, the user is prompted for an endpoint URL and API key. The tool will confirm the connection information is valid before continuing.
+When MSAM starts and a previous connection is not found, the user is prompted for an endpoint URL and API key. The tool will confirm the connection information is valid before continuing. You can save several endpoints in browser storage for easy reuse later.
+
+Toggle the **Remember** button on the Connection dialog to store the endpoint and API key for recall after the browser is closed. Remembered endpoints and API keys will remain for up to seven days without use before they are removed. Using an endpoint will reset its expiration timer. Select **Do Not Remember** to use this endpoint and API key only during the current browser session. Quittng the browser will cause the endpoint and API key to be forgotten.
+
+![Image of Advanced Settings dialog](images/remember-button.jpeg)
+
+API keys are created and removed from the API Gateway page in the AWS Console. An API key is still active until it is removed from API Gateway.
 
 The browser application checks the settings in the cloud for  regions displayed on the diagram after it has connected with the API. The tool will prompt the user to choose regions to display if none have been previously selected.
 
