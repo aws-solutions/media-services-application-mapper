@@ -8,7 +8,7 @@ Each time the MSAM web application is launched, the browser's locally stored coo
 
 When MSAM starts and a previous connection is not found, the user is prompted for an endpoint URL and API key. The tool will confirm the connection information is valid before continuing. You can save several endpoints in browser storage for easy reuse later.
 
-Toggle the **Remember** button on the Connection dialog to store the endpoint and API key for recall after the browser is closed. Remembered endpoints and API keys will remain for up to seven days without use before they are removed. Using an endpoint will reset its expiration timer. Select **Do Not Remember** to use this endpoint and API key only during the current browser session. Quittng the browser will cause the endpoint and API key to be forgotten.
+Toggle the **Do Not Remember**/**Remember** button on the Connection dialog to store the endpoint and API key for recall after the browser is closed. Remembered endpoints and API keys will remain for up to seven days without use before they are removed. Using an endpoint will reset its expiration timer. Select **Do Not Remember** to use this endpoint and API key only during the current browser session. Quittng the browser will cause the endpoint and API key to be forgotten.
 
 ![Image of Advanced Settings dialog](images/remember-button.jpeg)
 

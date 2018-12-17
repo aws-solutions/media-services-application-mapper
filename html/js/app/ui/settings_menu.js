@@ -44,6 +44,9 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 $("#input_endpoint_url").val(current[0]);
                 $("#input_endpoint_key").val(current[1]);
             }
+            $("#connectionRememberLabel").removeClass("active");
+            $("#connectionRemember").prop("checked", false);
+            $("#connectionRememberText").text("Do Not Remember");
         };
 
         var updateRegionDialog = function() {
