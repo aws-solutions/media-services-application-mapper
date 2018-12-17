@@ -1,0 +1,103 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Media Services Application Mapper (MSAM) browser application (SO0048) (ID: 1545066196)",
+    "Resources": {
+        "MSAMBrowserAppBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {}
+        },
+        "MSAMCustomResourceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/AdministratorAccess"
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [
+                                "lambda.amazonaws.com"
+                            ]
+                        },
+                        "Action": [
+                            "sts:AssumeRole"
+                        ]
+                    }]
+                },
+                "Path": "/"
+            }
+        },
+        "MSAMWebContentResource": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Fn::Join": [
+                            "-", [
+                                "rodeolabz",
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
+                    },
+                    "S3Key": "msam/webcontent_resource_1545066196.zip"
+                },
+                "Environment": {
+                    "Variables": {
+                        "BUILD_STAMP": "1545066196",
+                        "ZIP_DIGEST": "a2c8a1692957ab5cd38c6092c3c8e6c7633980bd"
+                    }
+                },
+                "Handler": "lambda_function.lambda_handler",
+                "Description": "MSAM Lambda for custom CloudFormation resource for loading web application",
+                "MemorySize": 2560,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "MSAMCustomResourceRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python3.6",
+                "Timeout": 300
+            }
+        },
+        "MSAMWebContent": {
+            "Type": "AWS::CloudFormation::CustomResource",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "MSAMWebContentResource",
+                        "Arn"
+                    ]
+                },
+                "BucketName": {
+                    "Ref": "MSAMBrowserAppBucket"
+                },
+                "StackName": {
+                    "Ref": "AWS::StackName"
+                },
+                "BUILD_STAMP": "1545066196",
+                "ZIP_DIGEST": "a2c8a1692957ab5cd38c6092c3c8e6c7633980bd"
+            }
+        }
+    },
+    "Outputs": {
+        "MSAMBrowserURL": {
+            "Value": {
+                "Fn::Join": [
+                    "", [
+                        "https://",
+                        {
+                            "Ref": "MSAMBrowserAppBucket"
+                        },
+                        ".s3.amazonaws.com/index.html"
+                    ]
+                ]
+            },
+            "Description": "URL for the MSAM browser application"
+        }
+    }
+}

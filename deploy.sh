@@ -10,11 +10,14 @@ STAMP=`date +%s`
 echo build stamp is $STAMP
 
 # create work areas
-STAGE="/tmp/msam"
-if [ -d "$STAGE" ]; then
-    rm -rf $STAGE
-fi
-mkdir -p $STAGE
+cd dist
+STAGE=`pwd`
+cd $ORIGIN
+
+# if [ -d "$STAGE" ]; then
+rm -rf $STAGE/*
+# fi
+# mkdir -p $STAGE
 
 HTMLWORK="/tmp/htmlwork"
 if [ -d "$HTMLWORK" ]; then
