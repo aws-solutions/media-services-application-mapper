@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (SO0048) (ID: DEV_0_0_0)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: DEV_0_0_0)",
     "Resources": {
         "MSAMBrowserAppBucket": {
             "Type": "AWS::S3::Bucket",
