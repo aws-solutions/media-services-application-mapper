@@ -57,15 +57,17 @@ def replace_bucket_contents(bucket_name):
     in the specified bucket, and adding contents from the zip archive.
     """
     client = boto3.client("s3")
-    source = "https://rodeolabz-{region}.s3.amazonaws.com/msam/msam-web.zip".format(region=os.environ["AWS_REGION"])
+    region = os.environ["AWS_REGION"]
+    stamp = os.environ["BUILD_STAMP"]
+    source = "https://rodeolabz-{region}.s3.amazonaws.com/msam/msam-web-{stamp}.zip".format(region=region, stamp=stamp)
 
     # empty the bucket
     delete_bucket_contents(bucket_name)
 
     # execute these commands to download the zip and extract it locally
     command_list = [
-        "rm -f /tmp/msam-web.zip", "rm -rf {}".format(WEB_FOLDER), "curl --silent -o /tmp/msam-web.zip {url}".format(url=source), "mkdir {}".format(WEB_FOLDER),
-        "unzip /tmp/msam-web.zip -d {}".format(WEB_FOLDER), "ls -l {}".format(WEB_FOLDER)
+        "rm -f /tmp/msam-web-{stamp}.zip".format(stamp=stamp), "rm -rf {folder}".format(folder=WEB_FOLDER), "curl --silent -o /tmp/msam-web-{stamp}.zip {url}".format(url=source, stamp=stamp),
+        "mkdir {folder}".format(folder=WEB_FOLDER), "unzip /tmp/msam-web-{stamp}.zip -d {folder}".format(stamp=stamp, folder=WEB_FOLDER), "ls -l {folder}".format(folder=WEB_FOLDER)
     ]
     for command in command_list:
         print(call(command, shell=True))
