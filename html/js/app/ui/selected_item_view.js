@@ -132,6 +132,40 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                 $.each(event.edges, function(index, id) {
                     display_selected_edge(model.edges.get(id), (index == 0));
                 });
+            } else if (event.event.type === "doubletap" && event.nodes.length == 0 && event.edges.length == 0) {
+                // get the vis canvas location of the doubletap
+                var click_x = event.pointer.canvas.x;
+                var click_y = event.pointer.canvas.y;
+                var network = global_view.get_network();
+                var closest = null;
+                // get all the node locations
+                var positions = network.getPositions();
+                // find the node closest to the doubletap
+                for (var p of Object.entries(positions)) {
+                    if (closest == null) {
+                        closest = {
+                            id: p[0],
+                            dx: Math.abs(click_x - p[1].x),
+                            dy: Math.abs(click_y - p[1].y)
+                        };
+                    } else {
+                        var dx = Math.abs(click_x - p[1].x);
+                        var dy = Math.abs(click_y - p[1].y);
+                        // update the closest node if better one is found
+                        if (dx + dy < closest.dx + closest.dy) {
+                            closest = {
+                                id: p[0],
+                                dx: dx,
+                                dy: dy
+                            };
+                        }
+                    }
+                }
+                console.log(JSON.stringify(closest));
+                if (closest != null) {
+                    // zoom to the closest node to the doubletap
+                    global_view.fit([closest.id]);
+                }
             }
         };
 
