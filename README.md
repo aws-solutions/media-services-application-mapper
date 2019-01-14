@@ -6,7 +6,7 @@
 * MSAM can be used as a top-down resource monitoring tool when integrated with CloudWatch
 * MSAM is installed into an AWS account with several CloudFormation templates
 
-Looking for detailed [Install](INSTALL.md) instructions? [Here](INSTALL.md).
+**Looking for detailed [Install](INSTALL.md) instructions? [Here](INSTALL.md).**
 
 ### Global Model
 
