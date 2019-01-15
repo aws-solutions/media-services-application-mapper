@@ -88,10 +88,10 @@ shasum -a 1 * >$DIST/sha1.txt
 shasum -a 256 * >$DIST/sha256.txt
 
 # hosted web locations
-echo >$DIST/hosted.txt 
+rm -f $DIST/hosted.txt 
 FILES=`find . -type f -exec basename {} \;`
 for F in $FILES; do
-    echo https://rodeolabz-us-west-2.s3.amazonaws.com/msam/$F >>$DIST/hosted.txt 
+    echo https://$BUCKET-us-west-2.s3.amazonaws.com/msam/$F >>$DIST/hosted.txt 
 done
 
 # copy processed templates back to dist
