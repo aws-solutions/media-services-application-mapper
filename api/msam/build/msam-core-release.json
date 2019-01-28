@@ -207,7 +207,7 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/93123d8204cc199bb49aca2d95991c9c",
+                    "Key": "msam/123e3dc3897e97b2712f9a9a2274d083",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -411,7 +411,7 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/93123d8204cc199bb49aca2d95991c9c",
+                    "Key": "msam/123e3dc3897e97b2712f9a9a2274d083",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -623,7 +623,7 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/93123d8204cc199bb49aca2d95991c9c",
+                    "Key": "msam/123e3dc3897e97b2712f9a9a2274d083",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -835,7 +835,7 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/93123d8204cc199bb49aca2d95991c9c",
+                    "Key": "msam/123e3dc3897e97b2712f9a9a2274d083",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3021,7 +3021,7 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling API Gateway REST calls",
                 "CodeUri": {
-                    "Key": "msam/93123d8204cc199bb49aca2d95991c9c",
+                    "Key": "msam/123e3dc3897e97b2712f9a9a2274d083",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }

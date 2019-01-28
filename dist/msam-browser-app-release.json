@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1547427497)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1548701751)",
     "Resources": {
         "MSAMBrowserAppBucket": {
             "Type": "AWS::S3::Bucket",
@@ -43,12 +43,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1547427497.zip"
+                    "S3Key": "msam/webcontent_resource_1548701751.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1547427497",
-                        "ZIP_DIGEST": "d1fc494803f0d7a75dc4417940dfa3a250130585"
+                        "BUILD_STAMP": "1548701751",
+                        "ZIP_DIGEST": "7689f7177bbe78606a871039a7352c305acc9a4e"
                     }
                 },
                 "Handler": "lambda_function.lambda_handler",
@@ -79,8 +79,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1547427497",
-                "ZIP_DIGEST": "d1fc494803f0d7a75dc4417940dfa3a250130585"
+                "BUILD_STAMP": "1548701751",
+                "ZIP_DIGEST": "7689f7177bbe78606a871039a7352c305acc9a4e"
             }
         }
     },
