@@ -40,7 +40,9 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
 
         var init = function() {
             if (network === undefined) {
-                var container = $("#" + div_id)[0];
+                var div = $("#" + div_id);
+                div.hide();
+                var container = div[0];
                 network = new vis.Network(container, {
                     "nodes": model.nodes,
                     "edges": model.edges
@@ -79,6 +81,7 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
                         });
                         console.log("layout restored");
                         alert.show("Layout restored");
+                        div.show();
                         setTimeout(fit, 1000);
                     }
                     layout_mode = LAYOUT_MANUAL;

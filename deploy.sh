@@ -106,8 +106,12 @@ else
 fi
 
 cd $ORIGIN
+# sync to us-west-2
+aws s3 sync $STAGE/ s3://$BUCKET-us-west-2/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
 
 # sync the buckets
 for R in $REGIONS; do 
-    aws s3 sync $STAGE/ s3://$BUCKET-$R/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+    if [ "$R" != "us-west-2" ]; then
+        aws s3 sync s3://$BUCKET-us-west-2/msam s3://$BUCKET-$R/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+    fi
 done
