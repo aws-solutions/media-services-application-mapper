@@ -220,7 +220,7 @@ def s3_bucket_cloudfront_distribution_ddb_items():
     Identify and format S3 Bucket to CloudFront Distribution connections for cache storage.
     """
     items = []
-    s3_origin = re.compile(r"(\S+)\.s3\.amazonaws\.com")
+    s3_origin = re.compile(r"(\S+)\.s3([^\.])*\.amazonaws\.com")
     try:
         # get S3 buckets
         s3_buckets_cached = cache.cached_by_service("s3")
