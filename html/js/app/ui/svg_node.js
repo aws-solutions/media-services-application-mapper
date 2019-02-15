@@ -3,8 +3,7 @@
 
 define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], function($, _, window, ui_util, plugins) {
 
-    var cache = {};
-    var max_line_length = 20;
+    var max_line_length = 25;
 
     var work_div_id = ui_util.makeid();
     var work_div_html = `<div id="${work_div_id}" style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;"></div>`;
@@ -12,22 +11,23 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
     var selected_border_rgb = "#262626";
 
     function wordWrap(str, max) {
-        if (str.length > 20) {
-            str = str.substring(0, 19) + " ...";
+        if (str.length > max) {
+            str = str.substring(0, max - 1) + " [...]";
         }
-        var lines = [];
-        var current_line = "";
-        for (var position = 0; position < str.length; position++) {
-            if (current_line.length >= max && /\W/.test(str[position])) {
-                lines.push(current_line);
-                current_line = "";
-            }
-            current_line += str[position];
-        }
-        if (current_line.length > 0) {
-            lines.push(current_line);
-        }
-        return lines;
+        // var lines = [];
+        // var current_line = "";
+        // for (var position = 0; position < str.length; position++) {
+        //     if (current_line.length >= max && /\W/.test(str[position])) {
+        //         lines.push(current_line);
+        //         current_line = "";
+        //     }
+        //     current_line += str[position];
+        // }
+        // if (current_line.length > 0) {
+        //     lines.push(current_line);
+        // }
+        // return lines;
+        return [str];
     }
 
     var create = function(type_name, node_name, node_rgb, selected, id) {
@@ -74,7 +74,11 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
 
         // export the SVG and turn it into an encoded inline image
         var code = drawing.svg();
-        var inline_image = 'data:image/svg+xml;base64,' + window.btoa(code);
+        // remove randomly generated ids from the SVG code
+        var regex = /id=\"\w+\"\s*/g;
+        modified = code.replace(regex, "");
+        // console.log(modified);
+        var inline_image = 'data:image/svg+xml;base64,' + window.btoa(modified);
         return inline_image;
     };
 
@@ -86,10 +90,6 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         return create(type_name, node_name, node_rgb, true, id);
     };
 
-    var alert = function(type_name, node_name, id) {
-        return create(type_name, node_name, "#ff0000", false, id);
-    };
-
     // add the hidden SVG rendering div to the end of the body
     $("body").append(work_div_html);
 
@@ -99,9 +99,6 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         },
         "selected": function(type_name, node_name, node_rgb, id) {
             return selected(type_name, node_name, node_rgb, id);
-        },
-        "alert": function(type_name, node_name, node_rgb, id) {
-            return alert(type_name, node_name, node_rgb, id);
         }
     };
 });

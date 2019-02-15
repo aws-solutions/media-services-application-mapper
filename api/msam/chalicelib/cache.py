@@ -64,6 +64,26 @@ def cached_by_service_region(service, region):
         return {"message": str(error)}
 
 
+def cached_by_arn(arn):
+    """
+    API entry point to retrieve an item from the cache under the ARN.
+    """
+    try:
+        arn = unquote(arn)
+        ddb_table_name = CONTENT_TABLE_NAME
+        ddb_resource = boto3.resource('dynamodb')
+        ddb_table = ddb_resource.Table(ddb_table_name)
+        response = ddb_table.query(KeyConditionExpression=Key('arn').eq(arn))
+        items = response["Items"]
+        while "LastEvaluatedKey" in response:
+            response = ddb_table.query(KeyConditionExpression=Key('arn').eq(arn), ExclusiveStartKey=response['LastEvaluatedKey'])
+            items = items + response["Items"]
+        return items
+    except ClientError as error:
+        print(error)
+        return {"message": str(error)}
+
+
 def put_cached_data(request):
     """
     APi entry point to add items to the cache.

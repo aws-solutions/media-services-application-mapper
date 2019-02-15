@@ -10,13 +10,18 @@ define(["jquery", "lodash", "app/model", "app/events"], function($, _, model, ev
         $.each(current_alerts, function(index, item) {
             var node = model.nodes.get(item.resource_arn);
             if (node) {
+                node.alerting = true;
                 // track which nodes are signaling an alert
                 if (!alerting_nodes.includes(item.resource_arn)) {
                     alerting_nodes.push(item.resource_arn);
                     // console.log("setting alert color for " + node.id);
-                    node.image.selected = node.render.alert_selected();
-                    node.image.unselected = node.render.alert_unselected();
-                    model.nodes.update(node);
+                    var selected = node.render.alert_selected();
+                    var unselected = node.render.alert_unselected();
+                    if (selected != node.image.selected || unselected != node.image.unselected) {
+                        node.image.selected = selected;
+                        node.image.unselected = unselected;
+                        model.nodes.update(node);
+                    }
                 }
             }
         });
@@ -36,9 +41,14 @@ define(["jquery", "lodash", "app/model", "app/events"], function($, _, model, ev
         $.each(inactive_nodes, function(index, arn) {
             var node = model.nodes.get(arn);
             if (node) {
-                node.image.selected = node.render.normal_selected();
-                node.image.unselected = node.render.normal_unselected();
-                model.nodes.update(node);
+                node.alerting = false;
+                var selected = node.render.normal_selected();
+                var unselected = node.render.normal_unselected();
+                if (selected != node.image.selected || unselected != node.image.unselected) {
+                    node.image.selected = selected;
+                    node.image.unselected = unselected;
+                    model.nodes.update(node);
+                }
             }
         });
     };

@@ -10,13 +10,19 @@ define(["jquery", "lodash", "app/model", "app/alarms"], function($, _, model, al
         $.each(current_alarming_subscribers, function(index, subscriber) {
             var node = model.nodes.get(subscriber.ResourceArn);
             if (node) {
+                node.alarming = true;
                 // track which nodes are signaling an alert
                 if (!alarming_nodes.includes(subscriber.ResourceArn)) {
                     alarming_nodes.push(subscriber.ResourceArn);
                     // console.log("setting alert color for " + node.id);
-                    node.image.selected = node.render.alert_selected();
-                    node.image.unselected = node.render.alert_unselected();
-                    model.nodes.update(node);
+                    var selected = node.render.alert_selected();
+                    var unselected = node.render.alert_unselected();
+                    // only update the node if the SVG changes
+                    if (selected != node.image.selected || unselected != node.image.unselected) {
+                        node.image.selected = selected;
+                        node.image.unselected = unselected;
+                        model.nodes.update(node);
+                    }
                 }
             }
         });
@@ -36,9 +42,15 @@ define(["jquery", "lodash", "app/model", "app/alarms"], function($, _, model, al
         $.each(inactive_nodes, function(index, node_id) {
             var node = model.nodes.get(node_id);
             if (node) {
-                node.image.selected = node.render.normal_selected();
-                node.image.unselected = node.render.normal_unselected();
-                model.nodes.update(node);
+                node.alarming = false;
+                // only switch the node render if the node is neither alarming nor alerting
+                var selected = node.render.normal_selected();
+                var unselected = node.render.normal_unselected();
+                if (selected != node.image.selected || unselected != node.image.unselected) {
+                    node.image.selected = selected;
+                    node.image.unselected = unselected;
+                    model.nodes.update(node);
+                }
             }
         });
     };

@@ -31,16 +31,16 @@ define({
         "app/tools/duplicate_names"
     ],
     "overlays": [
-        "app/ui/overlays/cloudfront_distribution_alarm",
-        "app/ui/overlays/elemental_live_encoder_alarm",
-        "app/ui/overlays/firewall_alarm",
-        "app/ui/overlays/medialive_channel_alert",
-        "app/ui/overlays/medialive_channel_alarm",
-        "app/ui/overlays/medialive_input_alarm",
-        "app/ui/overlays/mediapackage_channel_alarm",
-        "app/ui/overlays/mediapackage_endpoint_alarm",
-        "app/ui/overlays/mediastore_container_alarm",
-        "app/ui/overlays/s3_bucket_alarm",
-        "app/ui/overlays/speke_keyserver_alarm"
+        "app/ui/overlays/cloudfront_distribution",
+        "app/ui/overlays/ec2_firewall",
+        "app/ui/overlays/elemental_live_encoder",
+        "app/ui/overlays/medialive_channel",
+        "app/ui/overlays/medialive_input",
+        "app/ui/overlays/mediapackage_channel",
+        "app/ui/overlays/mediapackage_endpoint",
+        "app/ui/overlays/mediastore_container",
+        "app/ui/overlays/overlay_tools",
+        "app/ui/overlays/s3_bucket",
+        "app/ui/overlays/speke_keyserver"
     ]
 });

@@ -115,6 +115,14 @@ def cached_by_service_region(service, region):
     return cache.cached_by_service_region(service, region)
 
 
+@app.route('/cached/arn/{arn}', cors=True, api_key_required=True, methods=['GET'])
+def cached_by_arn(arn):
+    """
+    API entry point to retrieve items from the cache by arn.
+    """
+    return cache.cached_by_arn(arn)
+
+
 @app.route('/cached', cors=True, api_key_required=True, methods=['PUT', 'POST'], content_types=['application/json', 'application/x-www-form-urlencoded'])
 def put_cached_data():
     """
