@@ -75,7 +75,7 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         // export the SVG and turn it into an encoded inline image
         var code = drawing.svg();
         // remove randomly generated ids from the SVG code
-        var regex = /id=\"\w+\"\s*/g;
+        var regex = /id\=\"\w+\"\s*/g;
         modified = code.replace(regex, "");
         // console.log(modified);
         var inline_image = 'data:image/svg+xml;base64,' + window.btoa(modified);

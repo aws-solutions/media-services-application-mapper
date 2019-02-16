@@ -32,11 +32,11 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
             // var node = await model.update(id);
             // return new Promise(function(resolve, reject) {
             //     model.update(id).then(function(node) {
-            var node = model.nodes.get(id);
-            if (node) {
-                var state = node.data.State;
-                tools.set_info_text("State: " + state, drawing, font_size, width);
-            }
+            // var node = model.nodes.get(id);
+            // if (node) {
+            //     var state = node.data.State;
+            //     tools.set_info_text("State: " + state, drawing, font_size, width);
+            // }
         };
 
         var decorate = function(drawing, font_size, width, height, id) {
