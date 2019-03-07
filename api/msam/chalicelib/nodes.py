@@ -53,6 +53,10 @@ def update_regional_ddb_items(region_name):
         content.put_ddb_items(speke_server_ddb_items(region_name))
     except (ClientError, EndpointConnectionError) as error:
         print(error)
+    try:
+        content.put_ddb_items(mediaconnect_flow_ddb_items(region_name))
+    except ClientError as error:
+        print(error)
 
 
 def s3_bucket_ddb_items():
@@ -268,4 +272,37 @@ def mediastore_containers(region):
         items = items + response['Containers']
     for item in items:
         item['CreationTime'] = str(item['CreationTime'])
+    return items
+
+def mediaconnect_flows(region):
+    """
+    Return the MediaConnect flows for the given region.
+    """    
+    service = boto3.client('mediaconnect', region_name=region)
+    response = service.list_flows()
+    flows = response['Flows']
+    while "NextToken" in response:
+        response = service.list_flows(NextToken=response["NextToken"])
+        flows = flows + response['Flows']
+    
+    items = []
+    for flow in flows:
+        flow_details = service.describe_flow(FlowArn=flow['FlowArn'])
+        items.append(flow_details['Flow'])
+    print (items)
+    return items
+
+
+def mediaconnect_flow_ddb_items(region):
+    """
+    Retrieve and format MediaConnect flows for cache storage.
+    """
+    items = []
+    for mc_flow in mediaconnect_flows(region):
+        arn = mc_flow["FlowArn"]
+        service = "mediaconnect-flow"
+        items.append(node_to_ddb_item(arn, service, region, mc_flow))
+        print ("arn " + arn)
+        print ("flow ")
+        print( mc_flow)
     return items

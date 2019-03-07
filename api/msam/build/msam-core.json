@@ -32,152 +32,159 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Sid": "",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }]
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
                 },
-                "Policies": [{
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Action": [
-                                    "mediapackage:List*",
-                                    "mediapackage:Describe*",
-                                    "medialive:List*",
-                                    "medialive:Describe*",
-                                    "mediastore:List*",
-                                    "mediastore:Get*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "ec2:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "elasticloadbalancing:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:Describe*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "autoscaling:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "dynamodb:Query",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "application-autoscaling:DescribeScalableTargets",
-                                    "application-autoscaling:DescribeScalingActivities",
-                                    "application-autoscaling:DescribeScalingPolicies",
-                                    "cloudwatch:DescribeAlarmHistory",
-                                    "cloudwatch:DescribeAlarms",
-                                    "cloudwatch:DescribeAlarmsForMetric",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:ListMetrics",
-                                    "ec2:DescribeVpcs",
-                                    "ec2:DescribeSubnets",
-                                    "ec2:DescribeSecurityGroups",
-                                    "iam:GetRole",
-                                    "iam:ListRoles",
-                                    "sns:ListSubscriptions",
-                                    "sns:ListSubscriptionsByTopic",
-                                    "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "iam:PassRole"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringLike": {
-                                        "iam:PassedToService": [
-                                            "application-autoscaling.amazonaws.com",
-                                            "dax.amazonaws.com"
-                                        ]
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "elasticloadbalancing:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "autoscaling:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:ListFunctions",
+                                        "lambda:ListEventSourceMappings",
+                                        "lambda:GetFunctionConfiguration"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "iam:PassRole"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringLike": {
+                                            "iam:PassedToService": [
+                                                "application-autoscaling.amazonaws.com",
+                                                "dax.amazonaws.com"
+                                            ]
+                                        }
                                     }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "iam:CreateServiceLinkedRole"
-                                ],
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringEquals": {
-                                        "iam:AWSServiceName": [
-                                            "replication.dynamodb.amazonaws.com",
-                                            "dax.amazonaws.com",
-                                            "dynamodb.application-autoscaling.amazonaws.com"
-                                        ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreateServiceLinkedRole"
+                                    ],
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringEquals": {
+                                            "iam:AWSServiceName": [
+                                                "replication.dynamodb.amazonaws.com",
+                                                "dax.amazonaws.com",
+                                                "dynamodb.application-autoscaling.amazonaws.com"
+                                            ]
+                                        }
                                     }
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
                                 }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "s3:Get*",
-                                    "s3:List*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "logs:*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "acm:ListCertificates",
-                                    "cloudfront:Get*",
-                                    "cloudfront:List*",
-                                    "iam:ListServerCertificates",
-                                    "route53:List*",
-                                    "waf:ListWebACLs",
-                                    "waf:GetWebACL"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            }
-                        ]
-                    },
-                    "PolicyName": "IncomingCloudwatchAlarmRolePolicy"
-                }]
+                            ]
+                        },
+                        "PolicyName": "IncomingCloudwatchAlarmRolePolicy"
+                    }
+                ]
             }
         },
         "IncomingCloudwatchAlarm": {
@@ -185,9 +192,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/a7e67481f39d2ddeffcb8b24180382ca",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/8c9d6b9dc087550dfa1bda35eceee994",
                 "Tags": {
-                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.2:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -216,152 +223,159 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Sid": "",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }]
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
                 },
-                "Policies": [{
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Action": [
-                                    "mediapackage:List*",
-                                    "mediapackage:Describe*",
-                                    "medialive:List*",
-                                    "medialive:Describe*",
-                                    "mediastore:List*",
-                                    "mediastore:Get*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "ec2:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "elasticloadbalancing:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:Describe*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "autoscaling:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "dynamodb:Query",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "application-autoscaling:DescribeScalableTargets",
-                                    "application-autoscaling:DescribeScalingActivities",
-                                    "application-autoscaling:DescribeScalingPolicies",
-                                    "cloudwatch:DescribeAlarmHistory",
-                                    "cloudwatch:DescribeAlarms",
-                                    "cloudwatch:DescribeAlarmsForMetric",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:ListMetrics",
-                                    "ec2:DescribeVpcs",
-                                    "ec2:DescribeSubnets",
-                                    "ec2:DescribeSecurityGroups",
-                                    "iam:GetRole",
-                                    "iam:ListRoles",
-                                    "sns:ListSubscriptions",
-                                    "sns:ListSubscriptionsByTopic",
-                                    "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "iam:PassRole"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringLike": {
-                                        "iam:PassedToService": [
-                                            "application-autoscaling.amazonaws.com",
-                                            "dax.amazonaws.com"
-                                        ]
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "elasticloadbalancing:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "autoscaling:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:ListFunctions",
+                                        "lambda:ListEventSourceMappings",
+                                        "lambda:GetFunctionConfiguration"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "iam:PassRole"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringLike": {
+                                            "iam:PassedToService": [
+                                                "application-autoscaling.amazonaws.com",
+                                                "dax.amazonaws.com"
+                                            ]
+                                        }
                                     }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "iam:CreateServiceLinkedRole"
-                                ],
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringEquals": {
-                                        "iam:AWSServiceName": [
-                                            "replication.dynamodb.amazonaws.com",
-                                            "dax.amazonaws.com",
-                                            "dynamodb.application-autoscaling.amazonaws.com"
-                                        ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreateServiceLinkedRole"
+                                    ],
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringEquals": {
+                                            "iam:AWSServiceName": [
+                                                "replication.dynamodb.amazonaws.com",
+                                                "dax.amazonaws.com",
+                                                "dynamodb.application-autoscaling.amazonaws.com"
+                                            ]
+                                        }
                                     }
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
                                 }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "s3:Get*",
-                                    "s3:List*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "logs:*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "acm:ListCertificates",
-                                    "cloudfront:Get*",
-                                    "cloudfront:List*",
-                                    "iam:ListServerCertificates",
-                                    "route53:List*",
-                                    "waf:ListWebACLs",
-                                    "waf:GetWebACL"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            }
-                        ]
-                    },
-                    "PolicyName": "UpdateNodesRolePolicy"
-                }]
+                            ]
+                        },
+                        "PolicyName": "UpdateNodesRolePolicy"
+                    }
+                ]
             }
         },
         "UpdateNodes": {
@@ -369,9 +383,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/a7e67481f39d2ddeffcb8b24180382ca",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/8c9d6b9dc087550dfa1bda35eceee994",
                 "Tags": {
-                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.2:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -408,152 +422,159 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Sid": "",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }]
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
                 },
-                "Policies": [{
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Action": [
-                                    "mediapackage:List*",
-                                    "mediapackage:Describe*",
-                                    "medialive:List*",
-                                    "medialive:Describe*",
-                                    "mediastore:List*",
-                                    "mediastore:Get*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "ec2:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "elasticloadbalancing:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:Describe*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "autoscaling:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "dynamodb:Query",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "application-autoscaling:DescribeScalableTargets",
-                                    "application-autoscaling:DescribeScalingActivities",
-                                    "application-autoscaling:DescribeScalingPolicies",
-                                    "cloudwatch:DescribeAlarmHistory",
-                                    "cloudwatch:DescribeAlarms",
-                                    "cloudwatch:DescribeAlarmsForMetric",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:ListMetrics",
-                                    "ec2:DescribeVpcs",
-                                    "ec2:DescribeSubnets",
-                                    "ec2:DescribeSecurityGroups",
-                                    "iam:GetRole",
-                                    "iam:ListRoles",
-                                    "sns:ListSubscriptions",
-                                    "sns:ListSubscriptionsByTopic",
-                                    "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "iam:PassRole"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringLike": {
-                                        "iam:PassedToService": [
-                                            "application-autoscaling.amazonaws.com",
-                                            "dax.amazonaws.com"
-                                        ]
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "elasticloadbalancing:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "autoscaling:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:ListFunctions",
+                                        "lambda:ListEventSourceMappings",
+                                        "lambda:GetFunctionConfiguration"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "iam:PassRole"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringLike": {
+                                            "iam:PassedToService": [
+                                                "application-autoscaling.amazonaws.com",
+                                                "dax.amazonaws.com"
+                                            ]
+                                        }
                                     }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "iam:CreateServiceLinkedRole"
-                                ],
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringEquals": {
-                                        "iam:AWSServiceName": [
-                                            "replication.dynamodb.amazonaws.com",
-                                            "dax.amazonaws.com",
-                                            "dynamodb.application-autoscaling.amazonaws.com"
-                                        ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreateServiceLinkedRole"
+                                    ],
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringEquals": {
+                                            "iam:AWSServiceName": [
+                                                "replication.dynamodb.amazonaws.com",
+                                                "dax.amazonaws.com",
+                                                "dynamodb.application-autoscaling.amazonaws.com"
+                                            ]
+                                        }
                                     }
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
                                 }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "s3:Get*",
-                                    "s3:List*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "logs:*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "acm:ListCertificates",
-                                    "cloudfront:Get*",
-                                    "cloudfront:List*",
-                                    "iam:ListServerCertificates",
-                                    "route53:List*",
-                                    "waf:ListWebACLs",
-                                    "waf:GetWebACL"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            }
-                        ]
-                    },
-                    "PolicyName": "UpdateConnectionsRolePolicy"
-                }]
+                            ]
+                        },
+                        "PolicyName": "UpdateConnectionsRolePolicy"
+                    }
+                ]
             }
         },
         "UpdateConnections": {
@@ -561,9 +582,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/a7e67481f39d2ddeffcb8b24180382ca",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/8c9d6b9dc087550dfa1bda35eceee994",
                 "Tags": {
-                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.2:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -600,152 +621,159 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Sid": "",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }]
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
                 },
-                "Policies": [{
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Action": [
-                                    "mediapackage:List*",
-                                    "mediapackage:Describe*",
-                                    "medialive:List*",
-                                    "medialive:Describe*",
-                                    "mediastore:List*",
-                                    "mediastore:Get*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "ec2:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "elasticloadbalancing:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:Describe*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "autoscaling:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "dynamodb:Query",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "application-autoscaling:DescribeScalableTargets",
-                                    "application-autoscaling:DescribeScalingActivities",
-                                    "application-autoscaling:DescribeScalingPolicies",
-                                    "cloudwatch:DescribeAlarmHistory",
-                                    "cloudwatch:DescribeAlarms",
-                                    "cloudwatch:DescribeAlarmsForMetric",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:ListMetrics",
-                                    "ec2:DescribeVpcs",
-                                    "ec2:DescribeSubnets",
-                                    "ec2:DescribeSecurityGroups",
-                                    "iam:GetRole",
-                                    "iam:ListRoles",
-                                    "sns:ListSubscriptions",
-                                    "sns:ListSubscriptionsByTopic",
-                                    "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "iam:PassRole"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringLike": {
-                                        "iam:PassedToService": [
-                                            "application-autoscaling.amazonaws.com",
-                                            "dax.amazonaws.com"
-                                        ]
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "elasticloadbalancing:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "autoscaling:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:ListFunctions",
+                                        "lambda:ListEventSourceMappings",
+                                        "lambda:GetFunctionConfiguration"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "iam:PassRole"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringLike": {
+                                            "iam:PassedToService": [
+                                                "application-autoscaling.amazonaws.com",
+                                                "dax.amazonaws.com"
+                                            ]
+                                        }
                                     }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "iam:CreateServiceLinkedRole"
-                                ],
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringEquals": {
-                                        "iam:AWSServiceName": [
-                                            "replication.dynamodb.amazonaws.com",
-                                            "dax.amazonaws.com",
-                                            "dynamodb.application-autoscaling.amazonaws.com"
-                                        ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreateServiceLinkedRole"
+                                    ],
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringEquals": {
+                                            "iam:AWSServiceName": [
+                                                "replication.dynamodb.amazonaws.com",
+                                                "dax.amazonaws.com",
+                                                "dynamodb.application-autoscaling.amazonaws.com"
+                                            ]
+                                        }
                                     }
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
                                 }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "s3:Get*",
-                                    "s3:List*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "logs:*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "acm:ListCertificates",
-                                    "cloudfront:Get*",
-                                    "cloudfront:List*",
-                                    "iam:ListServerCertificates",
-                                    "route53:List*",
-                                    "waf:ListWebACLs",
-                                    "waf:GetWebACL"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            }
-                        ]
-                    },
-                    "PolicyName": "UpdateAlarmsRolePolicy"
-                }]
+                            ]
+                        },
+                        "PolicyName": "UpdateAlarmsRolePolicy"
+                    }
+                ]
             }
         },
         "UpdateAlarms": {
@@ -753,9 +781,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/a7e67481f39d2ddeffcb8b24180382ca",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/8c9d6b9dc087550dfa1bda35eceee994",
                 "Tags": {
-                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.2:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -792,152 +820,159 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Sid": "",
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }]
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
                 },
-                "Policies": [{
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                                "Action": [
-                                    "mediapackage:List*",
-                                    "mediapackage:Describe*",
-                                    "medialive:List*",
-                                    "medialive:Describe*",
-                                    "mediastore:List*",
-                                    "mediastore:Get*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "ec2:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "elasticloadbalancing:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "cloudwatch:ListMetrics",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:Describe*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": "autoscaling:Describe*",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "dynamodb:Query",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "application-autoscaling:DescribeScalableTargets",
-                                    "application-autoscaling:DescribeScalingActivities",
-                                    "application-autoscaling:DescribeScalingPolicies",
-                                    "cloudwatch:DescribeAlarmHistory",
-                                    "cloudwatch:DescribeAlarms",
-                                    "cloudwatch:DescribeAlarmsForMetric",
-                                    "cloudwatch:GetMetricStatistics",
-                                    "cloudwatch:ListMetrics",
-                                    "ec2:DescribeVpcs",
-                                    "ec2:DescribeSubnets",
-                                    "ec2:DescribeSecurityGroups",
-                                    "iam:GetRole",
-                                    "iam:ListRoles",
-                                    "sns:ListSubscriptions",
-                                    "sns:ListSubscriptionsByTopic",
-                                    "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "iam:PassRole"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringLike": {
-                                        "iam:PassedToService": [
-                                            "application-autoscaling.amazonaws.com",
-                                            "dax.amazonaws.com"
-                                        ]
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "elasticloadbalancing:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "autoscaling:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:ListFunctions",
+                                        "lambda:ListEventSourceMappings",
+                                        "lambda:GetFunctionConfiguration"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "iam:PassRole"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringLike": {
+                                            "iam:PassedToService": [
+                                                "application-autoscaling.amazonaws.com",
+                                                "dax.amazonaws.com"
+                                            ]
+                                        }
                                     }
-                                }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "iam:CreateServiceLinkedRole"
-                                ],
-                                "Resource": "*",
-                                "Condition": {
-                                    "StringEquals": {
-                                        "iam:AWSServiceName": [
-                                            "replication.dynamodb.amazonaws.com",
-                                            "dax.amazonaws.com",
-                                            "dynamodb.application-autoscaling.amazonaws.com"
-                                        ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreateServiceLinkedRole"
+                                    ],
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "StringEquals": {
+                                            "iam:AWSServiceName": [
+                                                "replication.dynamodb.amazonaws.com",
+                                                "dax.amazonaws.com",
+                                                "dynamodb.application-autoscaling.amazonaws.com"
+                                            ]
+                                        }
                                     }
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
                                 }
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "s3:Get*",
-                                    "s3:List*"
-                                ],
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "logs:*"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            },
-                            {
-                                "Action": [
-                                    "acm:ListCertificates",
-                                    "cloudfront:Get*",
-                                    "cloudfront:List*",
-                                    "iam:ListServerCertificates",
-                                    "route53:List*",
-                                    "waf:ListWebACLs",
-                                    "waf:GetWebACL"
-                                ],
-                                "Effect": "Allow",
-                                "Resource": "*"
-                            }
-                        ]
-                    },
-                    "PolicyName": "ApiHandlerRolePolicy"
-                }]
+                            ]
+                        },
+                        "PolicyName": "ApiHandlerRolePolicy"
+                    }
+                ]
             }
         },
         "RestAPI": {
@@ -984,15 +1019,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "view",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point for retrieving all item positions in a view.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "view",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1070,9 +1110,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "post": {
                                 "consumes": [
@@ -1104,9 +1147,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1184,15 +1230,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "node_id",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to delete the layout for a node.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "node_id",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1269,9 +1320,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "API entry point to return all the current channel names.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1349,15 +1403,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "name",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to set the nodes for a given channel name.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "name",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "post": {
                                 "consumes": [
@@ -1389,15 +1448,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "name",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to set the nodes for a given channel name.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "name",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "get": {
                                 "consumes": [
@@ -1428,15 +1492,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "name",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to get the nodes for a given channel name.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "name",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "delete": {
                                 "consumes": [
@@ -1467,15 +1536,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "name",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to delete a channel.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "name",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1553,15 +1627,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "item_key",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to get or set the object value for a setting.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "item_key",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "put": {
                                 "consumes": [
@@ -1593,15 +1672,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "item_key",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to get or set the object value for a setting.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "item_key",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "post": {
                                 "consumes": [
@@ -1633,15 +1717,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "item_key",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to get or set the object value for a setting.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "item_key",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "delete": {
                                 "consumes": [
@@ -1673,15 +1762,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "item_key",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to get or set the object value for a setting.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "item_key",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1758,10 +1852,14 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
+                                "summary": "API entry point to retrieve items from the cache under the service and region name.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
                                         "name": "service",
                                         "in": "path",
                                         "required": true,
@@ -1850,15 +1948,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "arn",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to retrieve items from the cache by arn.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "arn",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -1936,9 +2039,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "APi entry point to add items to the cache.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "post": {
                                 "consumes": [
@@ -1970,9 +2076,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "APi entry point to add items to the cache.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2049,9 +2158,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "API entry point to retrieve all regions based on EC2.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2128,15 +2240,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "region",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to retrieve all CloudWatch alarms for a given region.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "region",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2213,10 +2330,14 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
+                                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
                                         "name": "alarm_name",
                                         "in": "path",
                                         "required": true,
@@ -2259,10 +2380,14 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
+                                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
                                         "name": "alarm_name",
                                         "in": "path",
                                         "required": true,
@@ -2351,10 +2476,14 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
+                                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
                                         "name": "alarm_name",
                                         "in": "path",
                                         "required": true,
@@ -2397,10 +2526,14 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
+                                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
                                         "name": "alarm_name",
                                         "in": "path",
                                         "required": true,
@@ -2489,10 +2622,14 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
+                                "summary": "API entry point to return subscribed nodes of a CloudWatch alarm in a region.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
                                         "name": "alarm_name",
                                         "in": "path",
                                         "required": true,
@@ -2581,15 +2718,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "alarm_state",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to return nodes subscribed to alarms in a given alarm state (OK, ALARM, INSUFFICIENT_DATA).",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "alarm_state",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2666,15 +2808,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "resource_arn",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to return all alarms subscribed to by a node.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "resource_arn",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2751,9 +2898,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "API entry point to return a unique list of all subscribed alarms in the database.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2830,15 +2980,20 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }],
-                                "parameters": [{
-                                    "name": "state",
-                                    "in": "path",
-                                    "required": true,
-                                    "type": "string"
-                                }]
+                                "summary": "API entry point to retrieve all pipeline events in a given state (set, clear).",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "state",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -2915,9 +3070,12 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "security": [{
-                                    "api_key": []
-                                }]
+                                "summary": "API entry point to test the API key authentication and retrieve the build timestamp.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ]
                             },
                             "options": {
                                 "consumes": [
@@ -3004,9 +3162,9 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.app",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/a7e67481f39d2ddeffcb8b24180382ca",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/8c9d6b9dc087550dfa1bda35eceee994",
                 "Tags": {
-                    "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.6.2:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,

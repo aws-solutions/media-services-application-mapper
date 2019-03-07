@@ -4,6 +4,7 @@
 define({
     "nodes": [
         "app/mappers/nodes/cloudfront",
+        "app/mappers/nodes/mediaconnect",
         "app/mappers/nodes/medialive",
         "app/mappers/nodes/mediapackage",
         "app/mappers/nodes/mediastore",
@@ -13,6 +14,8 @@ define({
     ],
     "connections": [
         "app/mappers/connections/cloudfront_medialive_input",
+        "app/mappers/connections/mediaconnect_flow_medialive_input",
+        "app/mappers/connections/mediaconnect_flow_mediaconnect_flow",
         "app/mappers/connections/medialive_channel_mediapackage_channel",
         "app/mappers/connections/medialive_channel_mediastore_container",
         "app/mappers/connections/medialive_input_channel",
@@ -34,6 +37,7 @@ define({
         "app/ui/overlays/cloudfront_distribution",
         "app/ui/overlays/ec2_firewall",
         "app/ui/overlays/elemental_live_encoder",
+        "app/ui/overlays/mediaconnect_flow",
         "app/ui/overlays/medialive_channel",
         "app/ui/overlays/medialive_input",
         "app/ui/overlays/mediapackage_channel",

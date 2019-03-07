@@ -7,7 +7,9 @@
                 "medialive:List*",
                 "medialive:Describe*",
                 "mediastore:List*",
-                "mediastore:Get*"
+                "mediastore:Get*",
+                "mediaconnect:List*",
+                "mediaconnect:Describe*"
             ],
             "Effect": "Allow",
             "Resource": "*"
