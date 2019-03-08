@@ -413,6 +413,7 @@ def mediapackage_endpoint_speke_keyserver_ddb_items():
         print(error)
     return items
 
+
 def mediaconnect_flow_medialive_input_ddb_items():
     """
     Identify and format MediaConnect Flow to MediaLive Input connections for cache storage.
@@ -428,18 +429,18 @@ def mediaconnect_flow_medialive_input_ddb_items():
             # for each flow, process each outputs
             for flow_output in flow_data["Outputs"]:
                 print("processing flow output: ")
-                print (flow_output)
+                print(flow_output)
                 match_found = False
                 # check for MediaLiveInputArn first
                 try:
-                    if(flow_output["MediaLiveInputArn"]):
+                    if (flow_output["MediaLiveInputArn"]):
                         print("found MediaLiveInputArn: " + flow_output["MediaLiveInputArn"])
                         config = {"from": flow_data["FlowArn"], "to": flow_output["MediaLiveInputArn"], "scheme": "MEDIACONNECT"}
                         print(config)
-                        items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))    
+                        items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))
                 # if that didn't work, then check for IPs (Destination)
                 except KeyError as error:
-                    print("No MediaLiveInputArn in that output, checking for IPs instead")                    
+                    print("No MediaLiveInputArn in that output, checking for IPs instead")
                     # for each output, look for the matching MediaLive input
                     medialive_in_cached = cache.cached_by_service("medialive-input")
                     # iterate over all medialive inputs
@@ -465,6 +466,7 @@ def mediaconnect_flow_medialive_input_ddb_items():
     except ClientError as error:
         print(error)
     return items
+
 
 def mediaconnect_flow_mediaconnect_flow_ddb_items():
     """
