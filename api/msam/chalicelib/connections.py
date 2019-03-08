@@ -431,16 +431,16 @@ def mediaconnect_flow_medialive_input_ddb_items():
                 match_found = False
                 # check for MediaLiveInputArn first
                 try:
-                    if(flow_output["MediaLiveInputArn"]):
+                    if flow_output["MediaLiveInputArn"]:
                         config = {"from": flow_data["FlowArn"], "to": flow_output["MediaLiveInputArn"], "scheme": "MEDIACONNECT"}
-                        items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))    
+                        items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))
                 # if that didn't work, then check for IPs (Destination)
                 except KeyError as error:
                     # for each output, look for the matching MediaLive input
                     medialive_in_cached = cache.cached_by_service("medialive-input")
                     # iterate over all medialive inputs
                     for ml_input in medialive_in_cached:
-                        if (not match_found):
+                        if not match_found:
                             ml_input_data = json.loads(ml_input["data"])
                             # there are 2 ip addresses in ml_input
                             for destination in ml_input_data["Destinations"]:

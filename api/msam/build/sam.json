@@ -194,7 +194,7 @@
         "Handler": "app.incoming_cloudwatch_alarm",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.2:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -385,7 +385,7 @@
         "Handler": "app.update_nodes",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.2:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -584,7 +584,7 @@
         "Handler": "app.update_connections",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.2:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -783,7 +783,7 @@
         "Handler": "app.update_alarms",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.2:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -3164,7 +3164,7 @@
         "Handler": "app.app",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.2:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
