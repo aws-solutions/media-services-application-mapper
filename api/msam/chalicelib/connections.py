@@ -427,19 +427,14 @@ def mediaconnect_flow_medialive_input_ddb_items():
             flow_data = json.loads(flow["data"])
             # for each flow, process each outputs
             for flow_output in flow_data["Outputs"]:
-                print("processing flow output: ")
-                print (flow_output)
                 match_found = False
                 # check for MediaLiveInputArn first
                 try:
                     if(flow_output["MediaLiveInputArn"]):
-                        print("found MediaLiveInputArn: " + flow_output["MediaLiveInputArn"])
                         config = {"from": flow_data["FlowArn"], "to": flow_output["MediaLiveInputArn"], "scheme": "MEDIACONNECT"}
-                        print(config)
                         items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))    
                 # if that didn't work, then check for IPs (Destination)
                 except KeyError as error:
-                    print("No MediaLiveInputArn in that output, checking for IPs instead")                    
                     # for each output, look for the matching MediaLive input
                     medialive_in_cached = cache.cached_by_service("medialive-input")
                     # iterate over all medialive inputs
@@ -452,7 +447,6 @@ def mediaconnect_flow_medialive_input_ddb_items():
                                 try:
                                     if destination["Ip"] == flow_output["Destination"]:
                                         config = {"from": flow["arn"], "to": ml_input["arn"], "scheme": ml_input_data["Type"]}
-                                        print(config)
                                         items.append(connection_to_ddb_item(flow["arn"], ml_input["arn"], connection_type, config))
                                         match_found = True
                                         break
@@ -481,13 +475,11 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
             try:
                 if outer_flow_data["Source"]["EntitlementArn"]:
                     config = {"from": outer_flow_data["Source"]["EntitlementArn"], "to": outer_flow_data["FlowArn"], "scheme": "ENTITLEMENT"}
-                    print(config)
                     items.append(connection_to_ddb_item(outer_flow_data["Source"]["EntitlementArn"], outer_flow_data["FlowArn"], connection_type, config))
             except Exception as error:
                 print(error)
             # also, process each flow against each of the same set of flows for regular IP push (standard)
             outer_flow_egress_ip = outer_flow_data["EgressIp"]
-            print("processing flow egress IP address: " + outer_flow_egress_ip)
 
             # check this egress ip against all the output IPs of each of the flows
             for inner_flow in mediaconnect_flows_cached:
@@ -496,7 +488,6 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                     try:
                         if flow_output["Destination"] == outer_flow_egress_ip:
                             config = {"from": inner_flow_data["FlowArn"], "to": outer_flow_data["FlowArn"], "scheme": flow_output["Transport"]["Protocol"].upper()}
-                            print(config)
                             items.append(connection_to_ddb_item(inner_flow_data["FlowArn"], outer_flow_data["FlowArn"], connection_type, config))
                     except Exception as error:
                         print(error)
