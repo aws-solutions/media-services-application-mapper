@@ -1,13 +1,26 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1552073664)",
+    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1552598872)",
     "Resources": {
         "DefaultSettingsResourceRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/AdministratorAccess"
-                ],
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
+                "Policies": [{
+                    "PolicyName": "DefaultSettingsResourceRolePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:PutItem",
+                                "ec2:DescribeRegions"
+                            ],
+                            "Resource": "*"
+                        }]
+                    }
+                }],
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [{
@@ -21,8 +34,7 @@
                             "sts:AssumeRole"
                         ]
                     }]
-                },
-                "Path": "/"
+                }
             }
         },
         "DefaultSettingsResource": {
@@ -39,14 +51,14 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/dynamodb_resource_1552073664.zip"
+                    "S3Key": "msam/dynamodb_resource_1552598872.zip"
                 },
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for adding defaults to the Settings table",
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1552073664"
+                        "BUILD_STAMP": "1552598872"
                     }
                 },
                 "Role": {
@@ -71,7 +83,7 @@
                 "SettingsTable": {
                     "Ref": "Settings"
                 },
-                "BUILD_STAMP": "1552073664",
+                "BUILD_STAMP": "1552598872",
                 "StackName": {
                     "Ref": "AWS::StackName"
                 }

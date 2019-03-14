@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1552073664)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1552598872)",
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -107,7 +107,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -178,7 +179,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -209,7 +212,7 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/e2674d02fa677dd074bdd2169f4cc017",
+                    "Key": "msam/019340f63200d3b182955c6e726a5917",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -224,7 +227,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1552073664",
+                        "BUILD_STAMP": "1552598872",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -313,7 +316,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -384,7 +388,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -415,7 +421,7 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/e2674d02fa677dd074bdd2169f4cc017",
+                    "Key": "msam/019340f63200d3b182955c6e726a5917",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -430,7 +436,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1552073664",
+                        "BUILD_STAMP": "1552598872",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -527,7 +533,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -598,7 +605,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -629,7 +638,7 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/e2674d02fa677dd074bdd2169f4cc017",
+                    "Key": "msam/019340f63200d3b182955c6e726a5917",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -644,7 +653,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1552073664",
+                        "BUILD_STAMP": "1552598872",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -741,7 +750,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -812,7 +822,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -843,7 +855,7 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/e2674d02fa677dd074bdd2169f4cc017",
+                    "Key": "msam/019340f63200d3b182955c6e726a5917",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -858,7 +870,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1552073664",
+                        "BUILD_STAMP": "1552598872",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -955,7 +967,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -1026,7 +1039,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -3145,7 +3160,7 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling API Gateway REST calls",
                 "CodeUri": {
-                    "Key": "msam/e2674d02fa677dd074bdd2169f4cc017",
+                    "Key": "msam/019340f63200d3b182955c6e726a5917",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3160,7 +3175,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1552073664",
+                        "BUILD_STAMP": "1552598872",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },

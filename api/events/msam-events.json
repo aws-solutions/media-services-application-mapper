@@ -9,13 +9,19 @@
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/6a46b3bf1b49557e874dd82b3f25697d",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c8c2a1765c8e9713be61c5b7b622020d",
                 "MemorySize": 2560,
                 "Timeout": 60,
-                "Policies": [
-                    "AmazonDynamoDBFullAccess",
-                    "CloudWatchFullAccess"
-                ],
+                "Policies": [{
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Action": [
+                            "dynamodb:PutItem"
+                        ],
+                        "Resource": "*"
+                    }]
+                }],
                 "Environment": {
                     "Variables": {
                         "BUILD_STAMP": "DEV_0_0_0,",

@@ -1,0 +1,4 @@
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release.json
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release.json
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release.json
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release.json

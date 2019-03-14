@@ -87,7 +87,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -158,7 +159,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -187,7 +190,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/e2674d02fa677dd074bdd2169f4cc017",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/019340f63200d3b182955c6e726a5917",
                 "Tags": {
                     "aws-chalice": "version=1.7.0:stage=dev:app=msam"
                 },
@@ -273,7 +276,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -344,7 +348,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -373,7 +379,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/e2674d02fa677dd074bdd2169f4cc017",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/019340f63200d3b182955c6e726a5917",
                 "Tags": {
                     "aws-chalice": "version=1.7.0:stage=dev:app=msam"
                 },
@@ -467,7 +473,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -538,7 +545,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -567,7 +576,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/e2674d02fa677dd074bdd2169f4cc017",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/019340f63200d3b182955c6e726a5917",
                 "Tags": {
                     "aws-chalice": "version=1.7.0:stage=dev:app=msam"
                 },
@@ -661,7 +670,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -732,7 +742,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -761,7 +773,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/e2674d02fa677dd074bdd2169f4cc017",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/019340f63200d3b182955c6e726a5917",
                 "Tags": {
                     "aws-chalice": "version=1.7.0:stage=dev:app=msam"
                 },
@@ -855,7 +867,8 @@
                                     "dynamodb:Query",
                                     "dynamodb:DeleteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:GetItem"
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -926,7 +939,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -3043,7 +3058,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.app",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/e2674d02fa677dd074bdd2169f4cc017",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/019340f63200d3b182955c6e726a5917",
                 "Tags": {
                     "aws-chalice": "version=1.7.0:stage=dev:app=msam"
                 },

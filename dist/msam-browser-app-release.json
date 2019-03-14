@@ -1,17 +1,15 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1552073664)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1552598872)",
     "Resources": {
         "MSAMBrowserAppBucket": {
             "Type": "AWS::S3::Bucket",
             "Properties": {}
         },
-        "MSAMCustomResourceRole": {
+        "MSAMWebBucketLoaderRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/AdministratorAccess"
-                ],
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [{
@@ -26,7 +24,23 @@
                         ]
                     }]
                 },
-                "Path": "/"
+                "Policies": [{
+                    "PolicyName": "MSAMWebBucketLoaderRolePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:PutObject",
+                                "s3:ListBucket",
+                                "s3:DeleteObject",
+                                "s3:PutObjectAcl"
+                            ],
+                            "Resource": "*"
+                        }]
+                    }
+                }]
             }
         },
         "MSAMWebContentResource": {
@@ -43,12 +57,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1552073664.zip"
+                    "S3Key": "msam/webcontent_resource_1552598872.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1552073664",
-                        "ZIP_DIGEST": "51185a054212117c6b98d8b46607d0b9023ef085"
+                        "BUILD_STAMP": "1552598872",
+                        "ZIP_DIGEST": "bebec1b65f1448b22f6b89e47a7cf84691923428"
                     }
                 },
                 "Handler": "lambda_function.lambda_handler",
@@ -56,7 +70,7 @@
                 "MemorySize": 2560,
                 "Role": {
                     "Fn::GetAtt": [
-                        "MSAMCustomResourceRole",
+                        "MSAMWebBucketLoaderRole",
                         "Arn"
                     ]
                 },
@@ -79,8 +93,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1552073664",
-                "ZIP_DIGEST": "51185a054212117c6b98d8b46607d0b9023ef085"
+                "BUILD_STAMP": "1552598872",
+                "ZIP_DIGEST": "bebec1b65f1448b22f6b89e47a7cf84691923428"
             }
         }
     },

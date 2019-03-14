@@ -14,8 +14,12 @@ Resources:
       MemorySize: 2560
       Timeout: 60
       Policies:
-        - AmazonDynamoDBFullAccess
-        - CloudWatchFullAccess
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: '*'
       Environment:
         Variables:
           BUILD_STAMP: DEV_0_0_0,

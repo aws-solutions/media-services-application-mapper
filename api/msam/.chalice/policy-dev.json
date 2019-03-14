@@ -43,7 +43,8 @@
                 "dynamodb:Query",
                 "dynamodb:DeleteItem",
                 "dynamodb:PutItem",
-                "dynamodb:GetItem"
+                "dynamodb:GetItem",
+                "dynamodb:Scan"
             ],
             "Effect": "Allow",
             "Resource": "*"
@@ -114,7 +115,9 @@
         },
         {
             "Action": [
-                "logs:*"
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
             ],
             "Effect": "Allow",
             "Resource": "*"
