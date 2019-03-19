@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 b4e5e4de45e1bc04c0f2364558047d6a4441b1b2  dynamodb_resource_1553019970.zip
 94ecd2212c6f38ee04488d8aac577624e13c2dc7  msam-browser-app-release-1553019970.template
 94ecd2212c6f38ee04488d8aac577624e13c2dc7  msam-browser-app-release.json
@@ -9,3 +10,16 @@ b208fef16dce167509b1846b3544f95d7f07cd6d  msam-core-release.json
 6275fff1eeaa8f9cc3d058ead5badd1b66d506f6  msam-events-release.json
 79be9e3c64133d6e98f677ed09cf42139c8f2628  msam-web-1553019970.zip
 0084ef737fbb05e04f24d40a50dd7c3152f50263  webcontent_resource_1553019970.zip
+=======
+03e40bc52aa07665d900add9ae50c4f8b88e042c  dynamodb_resource_1552602078.zip
+7ea2273f1d0327e13d88a6d6c266356799add478  msam-browser-app-release-1552602078.template
+7ea2273f1d0327e13d88a6d6c266356799add478  msam-browser-app-release.json
+405b68444e052d02a045666bc8a8ae74e18474a4  msam-core-release-1552602078.template
+405b68444e052d02a045666bc8a8ae74e18474a4  msam-core-release.json
+f3cd8c6cb1212cc0c89f6d696b66ee602cf38523  msam-dynamodb-release-1552602078.template
+f3cd8c6cb1212cc0c89f6d696b66ee602cf38523  msam-dynamodb-release.json
+6c674bb85b42fe24eb2061823065e3e047d2e0c4  msam-events-release-1552602078.template
+6c674bb85b42fe24eb2061823065e3e047d2e0c4  msam-events-release.json
+becc37d69196e6a9d3ea55f7f191eea76e28e111  msam-web-1552602078.zip
+875f12ef9b6e1931513da80a1d0c084be7dafd4c  webcontent_resource_1552602078.zip
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7

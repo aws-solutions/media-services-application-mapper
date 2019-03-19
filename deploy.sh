@@ -87,12 +87,21 @@ md5sum * >$DIST/md5.txt
 shasum -a 1 * >$DIST/sha1.txt
 shasum -a 256 * >$DIST/sha256.txt
 
-# hosted web locations
-rm -f $DIST/hosted.txt 
-FILES=`find . -type f -exec basename {} \;`
+# released template web locations
+rm -f /tmp/release.txt 
+FILES=`find . -iname '*release*json' -type f -exec basename {} \;`
 for F in $FILES; do
-    echo https://$BUCKET-us-west-2.s3.amazonaws.com/msam/$F >>$DIST/hosted.txt 
+    echo https://$BUCKET-us-west-2.s3.amazonaws.com/msam/$F >>/tmp/release.txt 
 done
+sort </tmp/release.txt >$DIST/release.txt
+
+# current build template web locations
+rm -f /tmp/current.txt 
+FILES=`find . -iname '*template' -type f -exec basename {} \;`
+for F in $FILES; do
+    echo https://$BUCKET-us-west-2.s3.amazonaws.com/msam/$F >>/tmp/current.txt 
+done
+sort </tmp/current.txt >$DIST/current.txt
 
 # copy processed templates back to dist
 cp -f *.json $DIST/

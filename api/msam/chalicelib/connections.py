@@ -55,6 +55,9 @@ def update_connection_ddb_items():
         content.put_ddb_items(mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items())
         content.put_ddb_items(mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items())
         content.put_ddb_items(mediapackage_endpoint_speke_keyserver_ddb_items())
+        content.put_ddb_items(mediaconnect_flow_medialive_input_ddb_items())
+        content.put_ddb_items(mediaconnect_flow_mediaconnect_flow_ddb_items())
+
     except ClientError as error:
         print(error)
 
@@ -406,6 +409,90 @@ def mediapackage_endpoint_speke_keyserver_ddb_items():
                         config = {"from": mp_endpoint["arn"], "to": keyserver["arn"], "scheme": keyserver_data["scheme"]}
                         print(config)
                         items.append(connection_to_ddb_item(mp_endpoint["arn"], keyserver["arn"], "mediapackage-origin-endpoint-speke-keyserver", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+
+def mediaconnect_flow_medialive_input_ddb_items():
+    """
+    Identify and format MediaConnect Flow to MediaLive Input connections for cache storage.
+    """
+    items = []
+    connection_type = "mediaconnect-flow-medialive-input"
+    try:
+        # get MediaConnect flows
+        mediaconnect_flows_cached = cache.cached_by_service("mediaconnect-flow")
+        # process each flow
+        for flow in mediaconnect_flows_cached:
+            flow_data = json.loads(flow["data"])
+            # for each flow, process each outputs
+            for flow_output in flow_data["Outputs"]:
+                match_found = False
+                # check for MediaLiveInputArn first
+                try:
+                    if flow_output["MediaLiveInputArn"]:
+                        config = {"from": flow_data["FlowArn"], "to": flow_output["MediaLiveInputArn"], "scheme": "MEDIACONNECT"}
+                        items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))
+                # if that didn't work, then check for IPs (Destination)
+                except KeyError as error:
+                    # for each output, look for the matching MediaLive input
+                    medialive_in_cached = cache.cached_by_service("medialive-input")
+                    # iterate over all medialive inputs
+                    for ml_input in medialive_in_cached:
+                        if not match_found:
+                            ml_input_data = json.loads(ml_input["data"])
+                            # there are 2 ip addresses in ml_input
+                            for destination in ml_input_data["Destinations"]:
+                                # match the flow output ip address to a mediaLive input ip address
+                                try:
+                                    if destination["Ip"] == flow_output["Destination"]:
+                                        config = {"from": flow["arn"], "to": ml_input["arn"], "scheme": ml_input_data["Type"]}
+                                        items.append(connection_to_ddb_item(flow["arn"], ml_input["arn"], connection_type, config))
+                                        match_found = True
+                                        break
+                                except Exception as error:
+                                    print(error)
+                        else:
+                            break
+                except Exception as error:
+                    print(error)
+    except ClientError as error:
+        print(error)
+    return items
+
+
+def mediaconnect_flow_mediaconnect_flow_ddb_items():
+    """
+    Identify and format MediaConnect Flow to another MediaConnect Flow for cache storage.
+    """
+    items = []
+    connection_type = "mediaconnect-flow-mediaconnect-flow"
+    try:
+        # get MediaConnect flows
+        mediaconnect_flows_cached = cache.cached_by_service("mediaconnect-flow")
+        for outer_flow in mediaconnect_flows_cached:
+            outer_flow_data = json.loads(outer_flow["data"])
+            # process each flow for entitlement
+            try:
+                if outer_flow_data["Source"]["EntitlementArn"]:
+                    config = {"from": outer_flow_data["Source"]["EntitlementArn"], "to": outer_flow_data["FlowArn"], "scheme": "ENTITLEMENT"}
+                    items.append(connection_to_ddb_item(outer_flow_data["Source"]["EntitlementArn"], outer_flow_data["FlowArn"], connection_type, config))
+            except Exception as error:
+                print(error)
+            # also, process each flow against each of the same set of flows for regular IP push (standard)
+            outer_flow_egress_ip = outer_flow_data["EgressIp"]
+
+            # check this egress ip against all the output IPs of each of the flows
+            for inner_flow in mediaconnect_flows_cached:
+                inner_flow_data = json.loads(inner_flow["data"])
+                for flow_output in inner_flow_data["Outputs"]:
+                    try:
+                        if flow_output["Destination"] == outer_flow_egress_ip:
+                            config = {"from": inner_flow_data["FlowArn"], "to": outer_flow_data["FlowArn"], "scheme": flow_output["Transport"]["Protocol"].upper()}
+                            items.append(connection_to_ddb_item(inner_flow_data["FlowArn"], outer_flow_data["FlowArn"], connection_type, config))
+                    except Exception as error:
+                        print(error)
     except ClientError as error:
         print(error)
     return items

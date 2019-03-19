@@ -12,10 +12,16 @@
                 "CodeUri": "s3://rodeolabz-us-west-2/msam/39b180fcbd75df80d5c128c92b931e08",
                 "MemorySize": 2560,
                 "Timeout": 60,
-                "Policies": [
-                    "AmazonDynamoDBFullAccess",
-                    "CloudWatchFullAccess"
-                ],
+                "Policies": [{
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Action": [
+                            "dynamodb:PutItem"
+                        ],
+                        "Resource": "*"
+                    }]
+                }],
                 "Environment": {
                     "Variables": {
                         "BUILD_STAMP": "DEV_0_0_0,",

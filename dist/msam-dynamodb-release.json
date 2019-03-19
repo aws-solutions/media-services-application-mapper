@@ -1,13 +1,30 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
+<<<<<<< HEAD
     "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1553019970)",
+=======
+    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1552602078)",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
     "Resources": {
         "DefaultSettingsResourceRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/AdministratorAccess"
-                ],
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
+                "Policies": [{
+                    "PolicyName": "DefaultSettingsResourceRolePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:PutItem",
+                                "ec2:DescribeRegions"
+                            ],
+                            "Resource": "*"
+                        }]
+                    }
+                }],
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [{
@@ -21,8 +38,7 @@
                             "sts:AssumeRole"
                         ]
                     }]
-                },
-                "Path": "/"
+                }
             }
         },
         "DefaultSettingsResource": {
@@ -39,14 +55,22 @@
                             ]
                         ]
                     },
+<<<<<<< HEAD
                     "S3Key": "msam/dynamodb_resource_1553019970.zip"
+=======
+                    "S3Key": "msam/dynamodb_resource_1552602078.zip"
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                 },
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for adding defaults to the Settings table",
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
+<<<<<<< HEAD
                         "BUILD_STAMP": "1553019970"
+=======
+                        "BUILD_STAMP": "1552602078"
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                     }
                 },
                 "Role": {
@@ -71,7 +95,11 @@
                 "SettingsTable": {
                     "Ref": "Settings"
                 },
+<<<<<<< HEAD
                 "BUILD_STAMP": "1553019970",
+=======
+                "BUILD_STAMP": "1552602078",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                 "StackName": {
                     "Ref": "AWS::StackName"
                 }

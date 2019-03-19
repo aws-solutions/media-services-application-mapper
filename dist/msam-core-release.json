@@ -1,6 +1,10 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
+<<<<<<< HEAD
     "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1553019970)",
+=======
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1552602078)",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -71,7 +75,9 @@
                                     "medialive:List*",
                                     "medialive:Describe*",
                                     "mediastore:List*",
-                                    "mediastore:Get*"
+                                    "mediastore:Get*",
+                                    "mediaconnect:List*",
+                                    "mediaconnect:Describe*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -177,7 +183,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -208,7 +216,11 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
+<<<<<<< HEAD
                     "Key": "msam/6f767281d7ee7616bddad571f67460d6",
+=======
+                    "Key": "msam/b4fa674d2adf3badd7c43607c243ee2f",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -223,7 +235,11 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
+<<<<<<< HEAD
                         "BUILD_STAMP": "1553019970",
+=======
+                        "BUILD_STAMP": "1552602078",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -276,7 +292,9 @@
                                     "medialive:List*",
                                     "medialive:Describe*",
                                     "mediastore:List*",
-                                    "mediastore:Get*"
+                                    "mediastore:Get*",
+                                    "mediaconnect:List*",
+                                    "mediaconnect:Describe*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -382,7 +400,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -413,7 +433,11 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
+<<<<<<< HEAD
                     "Key": "msam/6f767281d7ee7616bddad571f67460d6",
+=======
+                    "Key": "msam/b4fa674d2adf3badd7c43607c243ee2f",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -428,7 +452,11 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
+<<<<<<< HEAD
                         "BUILD_STAMP": "1553019970",
+=======
+                        "BUILD_STAMP": "1552602078",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -489,7 +517,9 @@
                                     "medialive:List*",
                                     "medialive:Describe*",
                                     "mediastore:List*",
-                                    "mediastore:Get*"
+                                    "mediastore:Get*",
+                                    "mediaconnect:List*",
+                                    "mediaconnect:Describe*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -595,7 +625,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -626,7 +658,11 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
+<<<<<<< HEAD
                     "Key": "msam/6f767281d7ee7616bddad571f67460d6",
+=======
+                    "Key": "msam/b4fa674d2adf3badd7c43607c243ee2f",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -641,7 +677,11 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
+<<<<<<< HEAD
                         "BUILD_STAMP": "1553019970",
+=======
+                        "BUILD_STAMP": "1552602078",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -702,7 +742,9 @@
                                     "medialive:List*",
                                     "medialive:Describe*",
                                     "mediastore:List*",
-                                    "mediastore:Get*"
+                                    "mediastore:Get*",
+                                    "mediaconnect:List*",
+                                    "mediaconnect:Describe*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -808,7 +850,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -839,7 +883,11 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
+<<<<<<< HEAD
                     "Key": "msam/6f767281d7ee7616bddad571f67460d6",
+=======
+                    "Key": "msam/b4fa674d2adf3badd7c43607c243ee2f",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -854,7 +902,11 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
+<<<<<<< HEAD
                         "BUILD_STAMP": "1553019970",
+=======
+                        "BUILD_STAMP": "1552602078",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -915,7 +967,9 @@
                                     "medialive:List*",
                                     "medialive:Describe*",
                                     "mediastore:List*",
-                                    "mediastore:Get*"
+                                    "mediastore:Get*",
+                                    "mediaconnect:List*",
+                                    "mediaconnect:Describe*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -1021,7 +1075,9 @@
                             },
                             {
                                 "Action": [
-                                    "logs:*"
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -1150,6 +1206,41 @@
                                 "consumes": [
                                     "application/json"
                                 ],
+<<<<<<< HEAD
+=======
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                                "security": [{
+                                    "api_key": []
+                                }]
+                            },
+                            "post": {
+                                "consumes": [
+                                    "application/json",
+                                    "application/x-www-form-urlencoded"
+                                ],
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                                 "produces": [
                                     "application/json"
                                 ],
@@ -1175,7 +1266,11 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
+<<<<<<< HEAD
                                 "summary": "API entry point for removing nodes from a view.",
+=======
+                                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                                 "security": [{
                                     "api_key": []
                                 }],
@@ -1269,6 +1364,7 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
+<<<<<<< HEAD
                                 "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
                                 "security": [{
                                     "api_key": []
@@ -1305,6 +1401,9 @@
                                     "type": "aws_proxy"
                                 },
                                 "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+=======
+                                "summary": "API entry point to delete the layout for a node.",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                                 "security": [{
                                     "api_key": []
                                 }]
@@ -3146,7 +3245,11 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling API Gateway REST calls",
                 "CodeUri": {
+<<<<<<< HEAD
                     "Key": "msam/6f767281d7ee7616bddad571f67460d6",
+=======
+                    "Key": "msam/b4fa674d2adf3badd7c43607c243ee2f",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3161,7 +3264,11 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
+<<<<<<< HEAD
                         "BUILD_STAMP": "1553019970",
+=======
+                        "BUILD_STAMP": "1552602078",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },

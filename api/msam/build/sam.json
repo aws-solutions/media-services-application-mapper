@@ -55,7 +55,9 @@
                     "medialive:List*",
                     "medialive:Describe*",
                     "mediastore:List*",
-                    "mediastore:Get*"
+                    "mediastore:Get*",
+                    "mediaconnect:List*",
+                    "mediaconnect:Describe*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -161,7 +163,9 @@
                 },
                 {
                   "Action": [
-                    "logs:*"
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -245,7 +249,9 @@
                     "medialive:List*",
                     "medialive:Describe*",
                     "mediastore:List*",
-                    "mediastore:Get*"
+                    "mediastore:Get*",
+                    "mediaconnect:List*",
+                    "mediaconnect:Describe*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -351,7 +357,9 @@
                 },
                 {
                   "Action": [
-                    "logs:*"
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -443,7 +451,9 @@
                     "medialive:List*",
                     "medialive:Describe*",
                     "mediastore:List*",
-                    "mediastore:Get*"
+                    "mediastore:Get*",
+                    "mediaconnect:List*",
+                    "mediaconnect:Describe*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -549,7 +559,9 @@
                 },
                 {
                   "Action": [
-                    "logs:*"
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -641,7 +653,9 @@
                     "medialive:List*",
                     "medialive:Describe*",
                     "mediastore:List*",
-                    "mediastore:Get*"
+                    "mediastore:Get*",
+                    "mediaconnect:List*",
+                    "mediaconnect:Describe*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -747,7 +761,9 @@
                 },
                 {
                   "Action": [
-                    "logs:*"
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -839,7 +855,9 @@
                     "medialive:List*",
                     "medialive:Describe*",
                     "mediastore:List*",
-                    "mediastore:Get*"
+                    "mediastore:Get*",
+                    "mediaconnect:List*",
+                    "mediaconnect:Describe*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -945,7 +963,9 @@
                 },
                 {
                   "Action": [
-                    "logs:*"
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -1104,7 +1124,11 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+<<<<<<< HEAD
                 "summary": "API entry point for removing nodes from a view.",
+=======
+                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                 "security": [
                   {
                     "api_key": []
@@ -1117,6 +1141,16 @@
                     "required": true,
                     "type": "string"
                   },
+<<<<<<< HEAD
+=======
+                  "passthroughBehavior": "when_no_match",
+                  "httpMethod": "POST",
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "type": "aws_proxy"
+                },
+                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                "security": [
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                   {
                     "name": "id",
                     "in": "path",
@@ -1201,7 +1235,11 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+<<<<<<< HEAD
                 "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+=======
+                "summary": "API entry point to delete the layout for a node.",
+>>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                 "security": [
                   {
                     "api_key": []

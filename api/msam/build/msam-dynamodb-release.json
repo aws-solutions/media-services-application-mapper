@@ -5,9 +5,22 @@
         "DefaultSettingsResourceRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/AdministratorAccess"
-                ],
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
+                "Policies": [{
+                    "PolicyName": "DefaultSettingsResourceRolePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:PutItem",
+                                "ec2:DescribeRegions"
+                            ],
+                            "Resource": "*"
+                        }]
+                    }
+                }],
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [{
@@ -21,8 +34,7 @@
                             "sts:AssumeRole"
                         ]
                     }]
-                },
-                "Path": "/"
+                }
             }
         },
         "DefaultSettingsResource": {

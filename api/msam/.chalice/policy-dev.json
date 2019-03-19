@@ -7,7 +7,9 @@
                 "medialive:List*",
                 "medialive:Describe*",
                 "mediastore:List*",
-                "mediastore:Get*"
+                "mediastore:Get*",
+                "mediaconnect:List*",
+                "mediaconnect:Describe*"
             ],
             "Effect": "Allow",
             "Resource": "*"
@@ -113,7 +115,9 @@
         },
         {
             "Action": [
-                "logs:*"
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
             ],
             "Effect": "Allow",
             "Resource": "*"
