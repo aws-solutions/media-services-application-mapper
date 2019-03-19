@@ -2,13 +2,11 @@
        SPDX-License-Identifier: Apache-2.0 */
 
 define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util", "app/ui/tile_view"],
-    function($, model, fuse, global_view, ui_util, tile_view) {
+    function($, model, search, global_view, ui_util, tile_view) {
 
         var tab_id = "nav-search-tab";
 
         var node_visibility_timer;
-
-        var visibility_change_delay = 500;
 
         var show = function() {
             $("#" + tab_id).tab('show');
@@ -27,7 +25,95 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             }
         };
 
-        var display_search_results = function(text, model_matches, tile_matches) {
+        function display_search_results(results) {
+            display_results_search_text(results);
+            display_results_model_matches(results);
+            display_results_diagram_name_matches(results);
+            display_results_diagram_contents_matches(results);
+            display_results_tile_name_matches(results);
+            display_results_tile_contents_matches(results);
+        }
+
+        function display_results_search_text(results) {
+            console.log(results);
+            $("#search-text-div").text(results.text);
+        }
+
+        function display_results_model_matches(results) {
+            $("#inventory-match-count").text(results.model.length);
+            var html = `<ol>`;
+            results.model.forEach(function(node, index) {
+                var id = ui_util.makeid();
+                var line = `<li><b>${node.title}:</b> <a href="#" data-node-id="${node.id}" id="${id}">${node.name}</a></li>`;
+                html += line;
+            });
+            var close = `</ol>`;
+            html += close;
+            $("#global-model-search").html(html);
+        }
+
+        function display_results_diagram_name_matches(results) {
+            $("#diagram-names-match-count").text(results.diagram_names.length);
+            var html = `<ol>`;
+            results.diagram_names.forEach(function(name, index) {
+                var id = ui_util.makeid();
+                var line = `<li><a href="#" data-diagram-name="${name}" id="${id}">${name}</a></li>`;
+                html += line;
+            });
+            var close = `</ol>`;
+            html += close;
+            $("#diagram-names-match").html(html);
+        }
+
+        function display_results_diagram_contents_matches(results) {
+            $("#diagram-contents-match-count").text(results.diagram_contents.length);
+            var html = `<ol>`;
+            results.diagram_contents.forEach(function(entry, index) {
+                var name = entry.diagram;
+                entry.found.forEach(function(node_id, index) {
+                    var node = model.nodes.get(node_id)
+                    var id = ui_util.makeid();
+                    var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" id="${id}">${node.name}</a></li>`;
+                    html += line;
+                });
+
+            });
+            var close = `</ol>`;
+            html += close;
+            $("#diagram-contents-match").html(html);
+        }
+
+        function display_results_tile_name_matches(results) {
+            $("#tile-names-match-count").text(results.tile_names.length);
+            var html = `<ol>`;
+            results.tile_names.forEach(function(name, index) {
+                var id = ui_util.makeid();
+                var line = `<li><a href="#" data-tile-name="${name}" id="${id}">${name}</a></li>`;
+                html += line;
+            });
+            var close = `</ol>`;
+            html += close;
+            $("#tile-names-match").html(html);
+        }
+
+        function display_results_tile_contents_matches(results) {
+            $("#tile-contents-match-count").text(results.tile_contents.length);
+            var html = `<ol>`;
+            results.tile_contents.forEach(function(entry, index) {
+                var name = entry.tile;
+                entry.found.forEach(function(node_id, index) {
+                    var node = model.nodes.get(node_id)
+                    var id = ui_util.makeid();
+                    var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" id="${id}">${node.name}</a></li>`;
+                    html += line;
+                });
+            });
+            var close = `</ol>`;
+            html += close;
+            $("#tile-contents-match").html(html);
+        }
+
+        var display_search_results_old = function(text, model_matches, tile_matches) {
             var showing_global = ($("#global-model-tab").attr("aria-selected") == "true");
             if (text != "") {
                 // $("#nav-search-subtitle").html("Search for '<i>" + text + "</i>'");
@@ -138,7 +224,7 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             } else {
                 var text = $("#search_input").val().trim();
                 if (text !== "") {
-                    var matches = fuse.search_nodes(text);
+                    var matches = search.search_nodes(text);
                     if (matches.length > 0) {
                         $.each(model.nodes.get(), function(index, node) {
                             var found = false;
@@ -169,7 +255,7 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
                 var text = $("#search_input").val().trim();
                 if (text !== "") {
                     $("[data-channel-name]").hide();
-                    var matches = fuse.search_tiles(text);
+                    var matches = search.search_tiles(text);
                     if (matches.length > 0) {
                         $.each(matches, (index, match) => {
                             var query = `[data-channel-name='${match}']`;
@@ -238,22 +324,22 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             }
         }
 
-        $("#search_input").on("input propertychange", () => {
+        function search_now() {
             show();
             var text = $("#search_input").val();
-            var model_matches = fuse.search_nodes(text);
-            var tile_matches = fuse.search_tiles(text);
-            display_search_results(text, model_matches, tile_matches);
-            if ($("#only-show-matches-button").attr("aria-pressed") === "true") {
-                if (undefined !== node_visibility_timer) {
-                    clearTimeout(node_visibility_timer);
-                }
-                node_visibility_timer = setTimeout(update_node_visibility, visibility_change_delay);
-            }
-        });
+            search.search(text).then(function(results) {
+                display_search_results(results);
+                // build the results compartment
+            });
+        }
 
         $("#search-reset-button").on("click", () => {
             clear_search();
+            return false;
+        });
+
+        $("#search-now-button").on("click", function(event) {
+            search_now();
             return false;
         });
 

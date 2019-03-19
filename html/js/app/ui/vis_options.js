@@ -2,22 +2,60 @@
        SPDX-License-Identifier: Apache-2.0 */
 
 define({
+    diagram_pre_options: {
+        layout: {
+            hierarchical: {
+                enabled: true
+            }
+        },
+        physics: {
+            enabled: false
+        },
+        interaction: {
+            dragNodes: true,
+            dragView: true,
+            hideEdgesOnDrag: false,
+            hideNodesOnDrag: false,
+            hover: true,
+            hoverConnectedEdges: true,
+            keyboard: {
+                enabled: false,
+                speed: {
+                    x: 10,
+                    y: 10,
+                    zoom: 0.02
+                },
+                bindToWindow: true
+            },
+            multiselect: true,
+            navigationButtons: true,
+            selectable: true,
+            selectConnectedEdges: true,
+            tooltipDelay: 300,
+            zoomView: false
+        }
+    },
     with_layout: {
         layout: {
-            improvedLayout: false
+            improvedLayout: true
         },
-        "nodes": {
-            "widthConstraint": {
-                "maximum": 200
+        nodes: {
+            widthConstraint: {
+                maximum: 200
             }
         },
         edges: {
-            "smooth": {
+            smooth: {
                 enabled: false
             }
         },
-        "physics": {
-            "enabled": true
+        physics: {
+            enabled: true,
+            minVelocity: 25,
+            stabilization: {
+                enabled: true,
+                iterations: 10
+            }
         },
         interaction: {
             dragNodes: true,
@@ -50,12 +88,35 @@ define({
             }
         },
         edges: {
-            "smooth": {
+            smooth: {
                 enabled: false
             }
         },
-        "physics": {
-            "enabled": false
+        physics: {
+            enabled: false
+        },
+        interaction: {
+            dragNodes: true,
+            dragView: true,
+            hideEdgesOnDrag: false,
+            hideNodesOnDrag: false,
+            hover: true,
+            hoverConnectedEdges: true,
+            keyboard: {
+                enabled: false,
+                speed: {
+                    x: 10,
+                    y: 10,
+                    zoom: 0.02
+                },
+                bindToWindow: true
+            },
+            multiselect: true,
+            navigationButtons: true,
+            selectable: true,
+            selectConnectedEdges: true,
+            tooltipDelay: 300,
+            zoomView: false
         }
     },
     vertical_layout: {
@@ -70,12 +131,12 @@ define({
             }
         },
         edges: {
-            "smooth": {
+            smooth: {
                 enabled: false
             }
         },
-        "physics": {
-            "enabled": false
+        physics: {
+            enabled: false
         }
     },
     horizontal_layout: {
@@ -90,12 +151,12 @@ define({
             }
         },
         edges: {
-            "smooth": {
+            smooth: {
                 enabled: false
             }
         },
-        "physics": {
-            "enabled": false
+        physics: {
+            enabled: false
         }
     }
 });

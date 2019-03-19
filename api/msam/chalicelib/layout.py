@@ -65,30 +65,20 @@ def set_node_layout(request):
     return settings
 
 
-def delete_node_layout(node_id):
+def delete_node_layout(view, node_id):
     """
-    API entry point to delete the layout for a node.
+    API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.
     """
-    print("deleting layout for " + node_id)
     settings = {}
     table_name = LAYOUT_TABLE_NAME
     try:
+        print(view, node_id)
         table = DYNAMO_RESOURCE.Table(table_name)
-        try:
-            # get each layout record for the ID
-            response = table.query(IndexName="IdIndex", KeyConditionExpression=Key('id').eq(node_id))
-            print(response)
-            # remove each record
-            if "Items" in response:
-                for item in response["Items"]:
-                    table.delete_item(Key={"view": item["view"], "id": node_id})
-        except ClientError:
-            print("not found")
-            settings = {"message": "not found"}
+        table.delete_item(Key={"view": view, "id": node_id})
         settings = {"message": "deleted"}
         print(settings)
-    except ClientError as error_out:
+    except ClientError as error:
         # send the exception back in the object
-        print(error_out)
-        settings = {"exception": str(error_out)}
+        print(error)
+        settings = {"exception": str(error)}
     return settings

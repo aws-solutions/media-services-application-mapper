@@ -52,7 +52,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
         return server.get(current_endpoint, api_key);
     };
 
-    var remove_node_layout = function(id) {
+    var delete_view = function(view, ids) {
         var current_connection = connections.get_current();
         var url = current_connection[0];
         var api_key = current_connection[1];
@@ -77,7 +77,8 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
     return {
         "save_node": save_node,
         "save_layout": save_layout,
-        "restore_view": restore_view
+        "restore_view": restore_view,
+        "delete_view": remove_layout
     };
 
 });

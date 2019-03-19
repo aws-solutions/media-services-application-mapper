@@ -51,20 +51,20 @@ def get_view_layout(view):
     return node_layout.get_view_layout(app.current_request, view)
 
 
+@app.route('/layout/nodes/{view}/{id}', cors=True, api_key_required=True, methods=['DELETE'])
+def delete_view_layout(view, node_id):
+    """
+    API entry point for removing nodes from a view.
+    """
+    return node_layout.delete_node_layout(view, node_id)
+
+
 @app.route('/layout/nodes', cors=True, api_key_required=True, methods=['PUT', 'POST'], content_types=['application/json', 'application/x-www-form-urlencoded'])
-def set_node_layout():
+def set_view_layout():
     """
     API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.
     """
     return node_layout.set_node_layout(app.current_request)
-
-
-@app.route('/layout/node/{node_id}', cors=True, api_key_required=True, methods=['DELETE'], content_types=['application/json', 'application/x-www-form-urlencoded'])
-def delete_node_layout(node_id):
-    """
-    API entry point to delete the layout for a node.
-    """
-    return node_layout.delete_node_layout(node_id)
 
 
 @app.route('/channels', cors=True, api_key_required=True, methods=['GET'])

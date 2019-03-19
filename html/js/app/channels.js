@@ -5,6 +5,42 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
 
     var last_channel_list;
 
+    function have_any(node_ids) {
+        // console.log(node_ids);
+        var matches = [];
+        // return a list of channel names that have any of these nodes
+        return new Promise(function(outer_resolve, outer_reject) {
+            var promises = [];
+            channel_list().then(function(channel_names) {
+                for (var name of channel_names) {
+                    promises.push(
+                        new Promise(function(resolve, reject) {
+                            // console.log(name);
+                            // look for model matches
+                            retrieve_channel(name).then(function(contents) {
+                                var channel_keys = Object.keys(contents).sort();
+                                var intersect = _.intersection(node_ids, channel_keys);
+                                // console.log(intersect);
+                                if (intersect.length > 0) {
+                                    matches.push(name);
+                                }
+                                resolve();
+                            });
+                        })
+                    );
+                }
+            });
+            Promise.all(promises).then(function() {
+                // return it all
+                outer_resolve(matches);
+            });
+        });
+    }
+
+    function have_all(node_ids) {
+        // return a list of channel name that have all of these nodes
+    }
+
     var create_channel = function(name, nodes) {
         var current_connection = connections.get_current();
         var url = current_connection[0];
@@ -112,6 +148,8 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         "retrieve_channel": retrieve_channel,
         "channel_list": channel_list,
         "arn_to_channels": arn_to_channels,
-        "cached_channel_list": cached_channel_list
+        "cached_channel_list": cached_channel_list,
+        "have_any": have_any,
+        "have_all": have_all
     };
 });

@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Transform": "AWS::Serverless-2016-10-31",
-    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1550279441)",
+    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1553019970)",
     "Resources": {
         "Collector": {
             "Type": "AWS::Serverless::Function",
@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/f78d9d55e44f404634fb5a436d4aefbf",
+                    "Key": "msam/39b180fcbd75df80d5c128c92b931e08",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -23,7 +23,7 @@
                 ],
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1550279441",
+                        "BUILD_STAMP": "1553019970",
                         "EVENTS_TABLE_REGION": {
                             "Ref": "EventsTableRegion"
                         },

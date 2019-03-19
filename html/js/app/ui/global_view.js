@@ -328,9 +328,9 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
         }
 
         // this shuts down the browser's context menu
-        document.body.oncontextmenu = function() {
-            return false;
-        };
+        // document.body.oncontextmenu = function() {
+        //     return false;
+        // };
 
         return {
             "init": init,

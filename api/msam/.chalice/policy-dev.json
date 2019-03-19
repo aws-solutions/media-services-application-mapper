@@ -41,7 +41,8 @@
                 "dynamodb:Query",
                 "dynamodb:DeleteItem",
                 "dynamodb:PutItem",
-                "dynamodb:GetItem"
+                "dynamodb:GetItem",
+                "dynamodb:Scan"
             ],
             "Effect": "Allow",
             "Resource": "*"

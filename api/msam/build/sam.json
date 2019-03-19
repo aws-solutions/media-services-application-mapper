@@ -89,7 +89,8 @@
                     "dynamodb:Query",
                     "dynamodb:DeleteItem",
                     "dynamodb:PutItem",
-                    "dynamodb:GetItem"
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -192,7 +193,7 @@
         "Handler": "app.incoming_cloudwatch_alarm",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -278,7 +279,8 @@
                     "dynamodb:Query",
                     "dynamodb:DeleteItem",
                     "dynamodb:PutItem",
-                    "dynamodb:GetItem"
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -381,7 +383,7 @@
         "Handler": "app.update_nodes",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -475,7 +477,8 @@
                     "dynamodb:Query",
                     "dynamodb:DeleteItem",
                     "dynamodb:PutItem",
-                    "dynamodb:GetItem"
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -578,7 +581,7 @@
         "Handler": "app.update_connections",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -672,7 +675,8 @@
                     "dynamodb:Query",
                     "dynamodb:DeleteItem",
                     "dynamodb:PutItem",
-                    "dynamodb:GetItem"
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -775,7 +779,7 @@
         "Handler": "app.update_alarms",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -869,7 +873,8 @@
                     "dynamodb:Query",
                     "dynamodb:DeleteItem",
                     "dynamodb:PutItem",
-                    "dynamodb:GetItem"
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -1009,6 +1014,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point for retrieving all item positions in a view.",
                 "security": [
                   {
                     "api_key": []
@@ -1068,129 +1074,10 @@
                 }
               }
             },
-            "/layout/nodes": {
-              "put": {
-                "consumes": [
-                  "application/json",
-                  "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                  "application/json"
-                ],
-                "responses": {
-                  "200": {
-                    "description": "200 response",
-                    "schema": {
-                      "$ref": "#/definitions/Empty"
-                    }
-                  }
-                },
-                "x-amazon-apigateway-integration": {
-                  "responses": {
-                    "default": {
-                      "statusCode": "200"
-                    }
-                  },
-                  "uri": {
-                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
-                  },
-                  "passthroughBehavior": "when_no_match",
-                  "httpMethod": "POST",
-                  "contentHandling": "CONVERT_TO_TEXT",
-                  "type": "aws_proxy"
-                },
-                "security": [
-                  {
-                    "api_key": []
-                  }
-                ]
-              },
-              "post": {
-                "consumes": [
-                  "application/json",
-                  "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                  "application/json"
-                ],
-                "responses": {
-                  "200": {
-                    "description": "200 response",
-                    "schema": {
-                      "$ref": "#/definitions/Empty"
-                    }
-                  }
-                },
-                "x-amazon-apigateway-integration": {
-                  "responses": {
-                    "default": {
-                      "statusCode": "200"
-                    }
-                  },
-                  "uri": {
-                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
-                  },
-                  "passthroughBehavior": "when_no_match",
-                  "httpMethod": "POST",
-                  "contentHandling": "CONVERT_TO_TEXT",
-                  "type": "aws_proxy"
-                },
-                "security": [
-                  {
-                    "api_key": []
-                  }
-                ]
-              },
-              "options": {
-                "consumes": [
-                  "application/json"
-                ],
-                "produces": [
-                  "application/json"
-                ],
-                "responses": {
-                  "200": {
-                    "description": "200 response",
-                    "schema": {
-                      "$ref": "#/definitions/Empty"
-                    },
-                    "headers": {
-                      "Access-Control-Allow-Methods": {
-                        "type": "string"
-                      },
-                      "Access-Control-Allow-Origin": {
-                        "type": "string"
-                      },
-                      "Access-Control-Allow-Headers": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
-                "x-amazon-apigateway-integration": {
-                  "responses": {
-                    "default": {
-                      "statusCode": "200",
-                      "responseParameters": {
-                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,OPTIONS'",
-                        "method.response.header.Access-Control-Allow-Origin": "'*'",
-                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
-                      }
-                    }
-                  },
-                  "requestTemplates": {
-                    "application/json": "{\"statusCode\": 200}"
-                  },
-                  "passthroughBehavior": "when_no_match",
-                  "type": "mock"
-                }
-              }
-            },
-            "/layout/node/{node_id}": {
+            "/layout/nodes/{view}/{id}": {
               "delete": {
                 "consumes": [
-                  "application/json",
-                  "application/x-www-form-urlencoded"
+                  "application/json"
                 ],
                 "produces": [
                   "application/json"
@@ -1217,6 +1104,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point for removing nodes from a view.",
                 "security": [
                   {
                     "api_key": []
@@ -1224,7 +1112,13 @@
                 ],
                 "parameters": [
                   {
-                    "name": "node_id",
+                    "name": "view",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                  },
+                  {
+                    "name": "id",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -1276,6 +1170,126 @@
                 }
               }
             },
+            "/layout/nodes": {
+              "put": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                  "application/json"
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty"
+                    }
+                  }
+                },
+                "x-amazon-apigateway-integration": {
+                  "responses": {
+                    "default": {
+                      "statusCode": "200"
+                    }
+                  },
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "httpMethod": "POST",
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "type": "aws_proxy"
+                },
+                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ]
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                  "application/json"
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty"
+                    }
+                  }
+                },
+                "x-amazon-apigateway-integration": {
+                  "responses": {
+                    "default": {
+                      "statusCode": "200"
+                    }
+                  },
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "httpMethod": "POST",
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "type": "aws_proxy"
+                },
+                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                "security": [
+                  {
+                    "api_key": []
+                  }
+                ]
+              },
+              "options": {
+                "consumes": [
+                  "application/json"
+                ],
+                "produces": [
+                  "application/json"
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty"
+                    },
+                    "headers": {
+                      "Access-Control-Allow-Methods": {
+                        "type": "string"
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string"
+                      },
+                      "Access-Control-Allow-Headers": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "x-amazon-apigateway-integration": {
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                      }
+                    }
+                  },
+                  "requestTemplates": {
+                    "application/json": "{\"statusCode\": 200}"
+                  },
+                  "passthroughBehavior": "when_no_match",
+                  "type": "mock"
+                }
+              }
+            },
             "/channels": {
               "get": {
                 "consumes": [
@@ -1306,6 +1320,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to return all the current channel names.",
                 "security": [
                   {
                     "api_key": []
@@ -1388,6 +1403,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to set the nodes for a given channel name.",
                 "security": [
                   {
                     "api_key": []
@@ -1432,6 +1448,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to set the nodes for a given channel name.",
                 "security": [
                   {
                     "api_key": []
@@ -1475,6 +1492,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to get the nodes for a given channel name.",
                 "security": [
                   {
                     "api_key": []
@@ -1518,6 +1536,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to delete a channel.",
                 "security": [
                   {
                     "api_key": []
@@ -1608,6 +1627,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to get or set the object value for a setting.",
                 "security": [
                   {
                     "api_key": []
@@ -1652,6 +1672,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to get or set the object value for a setting.",
                 "security": [
                   {
                     "api_key": []
@@ -1696,6 +1717,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to get or set the object value for a setting.",
                 "security": [
                   {
                     "api_key": []
@@ -1740,6 +1762,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to get or set the object value for a setting.",
                 "security": [
                   {
                     "api_key": []
@@ -1829,6 +1852,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to retrieve items from the cache under the service and region name.",
                 "security": [
                   {
                     "api_key": []
@@ -1924,6 +1948,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to retrieve items from the cache by arn.",
                 "security": [
                   {
                     "api_key": []
@@ -2014,6 +2039,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "APi entry point to add items to the cache.",
                 "security": [
                   {
                     "api_key": []
@@ -2050,6 +2076,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "APi entry point to add items to the cache.",
                 "security": [
                   {
                     "api_key": []
@@ -2131,6 +2158,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to retrieve all regions based on EC2.",
                 "security": [
                   {
                     "api_key": []
@@ -2212,6 +2240,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to retrieve all CloudWatch alarms for a given region.",
                 "security": [
                   {
                     "api_key": []
@@ -2301,6 +2330,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []
@@ -2350,6 +2380,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []
@@ -2445,6 +2476,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []
@@ -2494,6 +2526,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []
@@ -2589,6 +2622,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to return subscribed nodes of a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []
@@ -2684,6 +2718,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to return nodes subscribed to alarms in a given alarm state (OK, ALARM, INSUFFICIENT_DATA).",
                 "security": [
                   {
                     "api_key": []
@@ -2773,6 +2808,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to return all alarms subscribed to by a node.",
                 "security": [
                   {
                     "api_key": []
@@ -2862,6 +2898,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to return a unique list of all subscribed alarms in the database.",
                 "security": [
                   {
                     "api_key": []
@@ -2943,6 +2980,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to retrieve all pipeline events in a given state (set, clear).",
                 "security": [
                   {
                     "api_key": []
@@ -3032,6 +3070,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
+                "summary": "API entry point to test the API key authentication and retrieve the build timestamp.",
                 "security": [
                   {
                     "api_key": []
@@ -3125,7 +3164,7 @@
         "Handler": "app.app",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.6.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,

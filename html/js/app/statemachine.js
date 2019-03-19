@@ -218,6 +218,7 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                             "app/ui/alarms_menu",
                             "app/ui/alarm_indicators",
                             "app/ui/channels_menu",
+                            "app/ui/diagram_menu",
                             "app/ui/event_alert_indicators",
                             "app/ui/informational_overlays",
                             "app/ui/monitor_view",
