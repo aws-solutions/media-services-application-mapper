@@ -3,22 +3,47 @@
 
 define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"], function($, server, connections, model, alert) {
 
-    var purge_delay_millis = 5000;
 
-    var purge_timer;
+    var retrieve_layout = function(diagram) {
+        var current_connection = connections.get_current();
+        var url = current_connection[0];
+        var api_key = current_connection[1];
+        var current_endpoint = `${url}/layout/view/${encodeURIComponent(diagram.view_id)}`;
+        return server.get(current_endpoint, api_key);
+    };
 
-    var unsaved_nodes = [];
+    var delete_layout = function(diagram, node_ids) {
+        node_ids = node_ids || diagram.nodes.getIds();
+        alert.show("Deleting layout");
+        var current_connection = connections.get_current();
+        var url = current_connection[0];
+        var api_key = current_connection[1];
+        node_ids.forEach(function(node_id) {
+            var current_endpoint = `${url}/layout/nodes/${encodeURIComponent(diagram.view_id)}/${encodeURIComponent(node_id)}`;
+            server.delete_method(current_endpoint, api_key);
+        });
+    };
 
-    var purge_nodes = function() {
+    var save_layout = function(diagram, node_ids) {
+        node_ids = node_ids || diagram.nodes.getIds();
+        alert.show("Saving layout");
+        var network = diagram.network;
+        var positions = network.getPositions(node_ids);
+        var layout = [];
+        Object.keys(positions).forEach(function(key) {
+            var entry = {
+                view: diagram.view_id,
+                id: key,
+                x: positions[key].x,
+                y: positions[key].y
+            };
+            layout.push(entry);
+        });
         var current_connection = connections.get_current();
         var url = current_connection[0];
         var api_key = current_connection[1];
         var current_endpoint = `${url}/layout/nodes`;
-        var save_list = unsaved_nodes.slice(0);
-        // console.log("saving = " + JSON.stringify(save_list));
-        unsaved_nodes = [];
-        purge_timer = undefined;
-        server.post(current_endpoint, api_key, save_list).then(function() {
+        server.post(current_endpoint, api_key, layout).then(function() {
             alert.show("Layout saved");
             console.log("layout changes are saved");
         }).catch(function(error) {
@@ -26,59 +51,10 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
         });
     };
 
-    var save_node = function(view, node, x, y) {
-        if (typeof node == 'object') {
-            id = node.id;
-        } else {
-            id = node;
-        }
-        unsaved_nodes.push({
-            "view": view,
-            "id": id,
-            "x": x,
-            "y": y
-        });
-        if (purge_timer === undefined) {
-            purge_timer = setTimeout(purge_nodes, purge_delay_millis);
-        }
-        return Promise.resolve();
-    };
-
-    var restore_view = function(view) {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/layout/view/${encodeURI(view)}`;
-        return server.get(current_endpoint, api_key);
-    };
-
-    var delete_view = function(view, ids) {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/layout/node/${encodeURI(id)}`;
-        return server.deleteMethod(current_endpoint, api_key);
-    };
-
-    var save_layout = function(view_name) {
-        alert.show("Saving layout");
-        var global_view = require("app/ui/global_view");
-        var network = global_view.get_network();
-        $.each(model.nodes.get(), function(index, node) {
-            var positions = network.getPositions([node.id]);
-            save_node(view_name, node, positions[node.id].x, positions[node.id].y).then(function(response) {
-                // console.log("ok");
-            }).catch(function(error) {
-                console.log(error);
-            });
-        });
-    };
-
     return {
-        "save_node": save_node,
-        "save_layout": save_layout,
-        "restore_view": restore_view,
-        "delete_view": remove_layout
+        "retrieve_layout": retrieve_layout,
+        "delete_layout": delete_layout,
+        "save_layout": save_layout
     };
 
 });

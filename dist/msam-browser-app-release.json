@@ -1,10 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-<<<<<<< HEAD
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1553019970)",
-=======
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1552602078)",
->>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1553097353)",
     "Resources": {
         "MSAMBrowserAppBucket": {
             "Type": "AWS::S3::Bucket",
@@ -61,21 +57,12 @@
                             ]
                         ]
                     },
-<<<<<<< HEAD
-                    "S3Key": "msam/webcontent_resource_1553019970.zip"
+                    "S3Key": "msam/webcontent_resource_1553097353.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1553019970",
-                        "ZIP_DIGEST": "79be9e3c64133d6e98f677ed09cf42139c8f2628"
-=======
-                    "S3Key": "msam/webcontent_resource_1552602078.zip"
-                },
-                "Environment": {
-                    "Variables": {
-                        "BUILD_STAMP": "1552602078",
-                        "ZIP_DIGEST": "becc37d69196e6a9d3ea55f7f191eea76e28e111"
->>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
+                        "BUILD_STAMP": "1553097353",
+                        "ZIP_DIGEST": "93aa4e79d8861e5f033f552aa2eb3bd4171ff653"
                     }
                 },
                 "Handler": "lambda_function.lambda_handler",
@@ -106,13 +93,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-<<<<<<< HEAD
-                "BUILD_STAMP": "1553019970",
-                "ZIP_DIGEST": "79be9e3c64133d6e98f677ed09cf42139c8f2628"
-=======
-                "BUILD_STAMP": "1552602078",
-                "ZIP_DIGEST": "becc37d69196e6a9d3ea55f7f191eea76e28e111"
->>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
+                "BUILD_STAMP": "1553097353",
+                "ZIP_DIGEST": "93aa4e79d8861e5f033f552aa2eb3bd4171ff653"
             }
         }
     },

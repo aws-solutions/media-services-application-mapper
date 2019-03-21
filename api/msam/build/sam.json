@@ -1094,7 +1094,7 @@
                 }
               }
             },
-            "/layout/nodes/{view}/{id}": {
+            "/layout/nodes/{view}/{node_id}": {
               "delete": {
                 "consumes": [
                   "application/json"
@@ -1124,11 +1124,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
-<<<<<<< HEAD
                 "summary": "API entry point for removing nodes from a view.",
-=======
-                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
->>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                 "security": [
                   {
                     "api_key": []
@@ -1141,18 +1137,8 @@
                     "required": true,
                     "type": "string"
                   },
-<<<<<<< HEAD
-=======
-                  "passthroughBehavior": "when_no_match",
-                  "httpMethod": "POST",
-                  "contentHandling": "CONVERT_TO_TEXT",
-                  "type": "aws_proxy"
-                },
-                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
-                "security": [
->>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                   {
-                    "name": "id",
+                    "name": "node_id",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -1235,11 +1221,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
-<<<<<<< HEAD
                 "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
-=======
-                "summary": "API entry point to delete the layout for a node.",
->>>>>>> ecdcfa2e38db2cd662c27da08286323eae101cd7
                 "security": [
                   {
                     "api_key": []

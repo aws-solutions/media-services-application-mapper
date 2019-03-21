@@ -23,8 +23,9 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                     `<a class="nav-item nav-link" id="${my_diagram.tab_id}" data-toggle="tab" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}</a>`;
                                 var diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
                                 // add to containers
-                                my_diagram.tab_container.append(tab);
-                                // $("#create-diagram-tab").before(tab);
+                                // my_diagram.tab_container.append(tab);
+                                $("#channel-tiles-tab").after(tab);
+                                // $("#add-diagram-tab").before(tab);
                                 my_diagram.diagram_container.append(diagram_div);
                                 my_diagram.container = $("#" + my_diagram.diagram_id);
                                 this.transition("create-diagram");
@@ -99,12 +100,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                     }
                                 })());
                                 my_diagram.network.on("dragEnd", function(event) {
-                                    event.nodes.forEach(function(id) {
-                                        var positions = network.getPositions([id]);
-                                        layout.save_node(diagram.view_id, node, positions[id].x, positions[id].y).catch(function(error) {
-                                            console.log(error);
-                                        });
-                                    });
+                                    layout.save_layout(my_diagram, event.nodes);
                                 });
 
                                 $("#" + my_diagram.tab_id).on("show.bs.tab", (function() {
@@ -203,8 +199,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                 my_diagram.add_node_dataset_callback(function(event, properties) {
                                     // update edges when a node is added or removed
                                     my_diagram.synchronize_edges(event, properties.items);
-
-
+                                    my_diagram.synchronize_content(event, properties.items);
                                 });
                             }
                         }

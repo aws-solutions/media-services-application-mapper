@@ -51,7 +51,7 @@ def get_view_layout(view):
     return node_layout.get_view_layout(app.current_request, view)
 
 
-@app.route('/layout/nodes/{view}/{id}', cors=True, api_key_required=True, methods=['DELETE'])
+@app.route('/layout/nodes/{view}/{node_id}', cors=True, api_key_required=True, methods=['DELETE'])
 def delete_view_layout(view, node_id):
     """
     API entry point for removing nodes from a view.

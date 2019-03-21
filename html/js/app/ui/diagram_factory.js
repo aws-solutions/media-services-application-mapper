@@ -51,7 +51,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 $("#" + this.diagram_id).remove();
             }
 
-            layout_vertical() {
+            layout_vertical(save) {
                 var my_diagram = this;
                 settings.get("layout-method").then(function(response) {
                     var method = response.method;
@@ -61,9 +61,11 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         return function() {
                             console.log("layout finished");
                             my_diagram.network.setOptions(vis_options.without_layout);
-                            my_diagram.layout_isolated();
+                            my_diagram.layout_isolated(false);
                             my_diagram.network.fit();
-                            // layout.save_layout(view_name);
+                            if (save) {
+                                layout.save_layout(my_diagram);
+                            }
                         }
                     })());
                     console.log("layout start");
@@ -71,7 +73,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 });
             }
 
-            layout_horizontal() {
+            layout_horizontal(save) {
                 var my_diagram = this;
                 settings.get("layout-method").then(function(response) {
                     var method = response.method;
@@ -81,9 +83,11 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         return function() {
                             console.log("layout finished");
                             my_diagram.network.setOptions(vis_options.without_layout);
-                            my_diagram.layout_isolated();
+                            my_diagram.layout_isolated(false);
                             my_diagram.network.fit();
-                            // layout.save_layout(view_name);
+                            if (save) {
+                                layout.save_layout(my_diagram);
+                            }
                         }
                     })());
                     console.log("layout start");
@@ -91,7 +95,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 });
             }
 
-            layout_isolated() {
+            layout_isolated(save) {
                 var isolated = new Map();
                 var diagram = this;
                 $.each(this.nodes.getIds(), function(id_index, node_id) {
@@ -131,7 +135,9 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         }
                     });
                 });
-                // layout.save_layout(this.view_id);
+                if (save) {
+                    layout.save_layout(diagram);
+                }
             }
 
             node_dimensions() {
@@ -151,6 +157,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 } catch (error) {
                     // print only
                     console.log(error);
+                    max_height = 0;
+                    max_height = 0;
                 }
                 return {
                     "max_width": max_width,
@@ -189,13 +197,10 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
             restore_nodes() {
                 var diagram = this;
                 return new Promise(function(resolve, reject) {
-                    layout.restore_view(diagram.view_id).then(function(layout_items) {
-                        $.each(layout_items, function(i, item) {
-                            var node = model.nodes.get(item.id);
-                            if (node) {
-                                diagram.nodes.update(node);
-                            }
-                        });
+                    layout.retrieve_layout(diagram).then(function(layout_items) {
+                        var node_ids = _.map(layout_items, "id");
+                        var nodes = _.compact(model.nodes.get(node_ids));
+                        diagram.nodes.update(nodes);
                         resolve();
                     }).catch(function(error) {
                         console.log(error);
@@ -207,13 +212,14 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
             restore_layout() {
                 var diagram = this;
                 return new Promise(function(resolve, reject) {
-                    layout.restore_view(diagram.view_id).then(function(layout_items) {
-                        $.each(layout_items, function(i, item) {
+                    layout.retrieve_layout(diagram).then(function(layout_items) {
+                        layout_items.forEach(function(item) {
                             var node = diagram.nodes.get(item.id);
                             if (node) {
                                 diagram.network.moveNode(item.id, item.x, item.y);
                             } else {
-                                console.log("delete layout for node id " + item.id);
+                                console.log("purging layout for node id " + item.id);
+                                layout.delete_layout(diagram, [item.id]);
                             }
                         });
                         resolve();
@@ -235,8 +241,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     // add each edge if both nodes are present
                     for (var edge of matches) {
                         if (this.edges.get(edge.id) == null) {
-                            // not added yet, do we have both ends?
-                            var ends = this.nodes.get([edge.to, edge.from]);
+                            // compact nulls, do we have both ends?
+                            var ends = _.compact(this.nodes.get([edge.to, edge.from]));
                             if (ends.length == 2) {
                                 // yes, add the edge between the endpoints
                                 this.edges.update(edge);
@@ -291,25 +297,10 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
             synchronize_content(event, node_ids) {
                 var diagram = this;
                 if (event == "add" || event == "update") {
-                    event.nodes.forEach(function(id) {
-                        var positions = network.getPositions([id]);
-                        layout.save_node(diagram.view_id, node, positions[id].x, positions[id].y).catch(function(error) {
-                            console.log(error);
-                        });
-                    });
+                    layout.save_layout(diagram, node_ids);
                 } else
                 if (event == "remove") {
-                    for (var id of node_ids) {
-                        // query all edges on the diagram 
-                        diagram.edges.forEach(function(edge) {
-                            console.log("removing unneeded edge");
-                            diagram.edges.remove(edge.id);
-                        }, {
-                            filter: function(edge) {
-                                return edge.to == id || edge.from == id;
-                            }
-                        });
-                    }
+                    layout.delete_layout(diagram, node_ids);
                 }
             }
 

@@ -53,7 +53,7 @@ define(["jquery"], function($) {
         });
     };
 
-    var deleteMethod = function(url, api_key) {
+    var delete_method = function(url, api_key) {
         return new Promise((resolve, reject) => {
             var headers = {
                 'Accept': 'application/json',
@@ -77,10 +77,36 @@ define(["jquery"], function($) {
         });
     };
 
+    var delete_method_with_body = function(url, api_key, data) {
+        return new Promise((resolve, reject) => {
+            var headers = {
+                'Accept': 'application/json',
+                'x-api-key': api_key
+            };
+            // get the library contents
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                data: JSON.stringify(data),
+                headers: headers,
+                contentType: "application/json",
+                success: (data) => {
+                    resolve(data);
+                },
+                error: (data) => {
+                    console.log(data);
+                    reject(data);
+                },
+                timeout: request_timeout
+            });
+        });
+    };
+
     return {
         "get": get,
         "post": post,
-        "delete_method": deleteMethod,
+        "delete_method": delete_method,
+        "delete_method_with_body": delete_method_with_body,
         "get_request_timeout": function() {
             return request_timeout;
         },

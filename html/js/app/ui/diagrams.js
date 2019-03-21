@@ -1,7 +1,7 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
-define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/window", "app/model", "app/channels"],
-    function($, _, settings, diagram_factory, window, model, channels) {
+define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model", "app/channels", "app/ui/layout", "app/ui/util"],
+    function($, _, settings, diagram_factory, model, channels, layout, ui_util) {
 
         var vary_multiplier = 8;
 
@@ -25,10 +25,12 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/windo
             return diagrams;
         };
 
-        var add_diagram = function(name, view_id) {
+        var add_diagram = function(name, view_id, save) {
             var diagram = diagram_factory.create(name, view_id);
             diagrams[name] = diagram;
-            // save_diagrams();
+            if (save) {
+                save_diagrams();
+            }
             return diagram;
         };
 
@@ -46,25 +48,30 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/windo
         };
 
         var save_diagrams = function() {
-            var names = Object.keys(diagrams).sort();
-            settings.put("diagrams", names).then(function() {
+            // var settings = _.map(Object.values(diagrams), ["name", "view_id"]);
+            var diagram_map = _.map(Object.values(diagrams), function(item) {
+                return { "name": item.name, "view_id": item.view_id }
+            });
+            // console.log(settings);
+            settings.put("diagrams", diagram_map).then(function() {
                 console.log("diagrams saved");
+            }).catch(function(error) {
+                console.log(error);
             });
         };
 
         var load_diagrams = function() {
             // load diagram names from the cloud on initialization
-            settings.get("diagrams").then(function(value) {
-                console.log("load user-defined diagrams: " + JSON.stringify(value));
-                if (Array.isArray(value)) {
-                    for (var diagram_name of value) {
-                        var view_id = _.snakeCase(diagram_name);
-                        add_diagram(diagram_name, view_id);
-                    }
+            settings.get("diagrams").then(function(diagrams) {
+                console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
+                if (Array.isArray(diagrams)) {
+                    diagrams.forEach(function(diagram) {
+                        add_diagram(diagram.name, diagram.view_id, false);
+                    });
                 } else {
-                    // no diagrams, create default View from previous
-                    console.log("no used-defined diagrams, creating Global diagram");
-                    add_diagram("Global", "global");
+                    // no diagrams, create default View from previous Global View
+                    console.log("no used-defined diagrams, creating default diagram");
+                    add_diagram("Global", "global", true);
                 }
             });
         }
@@ -118,14 +125,6 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/windo
             return results;
         }
 
-        function get_random_number(max) {
-            return Math.floor(Math.random() * Math.floor(max));
-        }
-
-        function vary(value, limit) {
-            return value + (get_random_number(limit) * (get_random_number(2) == 0 ? -1 : 1));
-        }
-
         load_diagrams();
 
         $("body").on("dragstart", function(event) {
@@ -177,14 +176,15 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/windo
                 console.log("add node " + drag_id + " to diagram " + diagram.name);
                 var node = model.nodes.get(drag_id);
                 if (node) {
-                    diagram.nodes.update(node);
-                    // position the node at the drop location
                     var canvas = diagram.network.DOMtoCanvas({
                         x: event.clientX,
                         y: event.clientY
                     });
-                    diagram.network.moveNode(node.id, canvas.x, canvas.y - node.size * 2);
-                    diagram.blink(6, node.id);
+                    // this should be for initial placement only
+                    node.x = canvas.x;
+                    node.y = canvas.y - node.size * 2;
+                    diagram.nodes.update(node);
+                    // position the node at the drop location
                 }
             } else
             if (drag_type == "diagram" && drag_id) {
@@ -199,8 +199,10 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/windo
                 });
                 target_diagram.nodes.update(nodes);
                 Array.from(nodes).forEach(function(node) {
-                    target_diagram.network.moveNode(node.id, vary(canvas.x, node.size * vary_multiplier), vary(canvas.y, node.size * vary_multiplier));
+                    target_diagram.network.moveNode(node.id, ui_util.vary(canvas.x, node.size * vary_multiplier), ui_util.vary(canvas.y, node.size * vary_multiplier));
                 });
+                var node_ids = _.map(Array.from(nodes), "id");
+                layout.save_layout(target_diagram, node_ids);
                 target_diagram.network.fit();
             } else
             if (drag_type == "tile" && drag_id) {
@@ -217,8 +219,10 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/windo
                     });
                     target_diagram.nodes.update(nodes);
                     Array.from(nodes).forEach(function(node) {
-                        target_diagram.network.moveNode(node.id, vary(canvas.x, node.size * vary_multiplier), vary(canvas.y, node.size * vary_multiplier));
+                        target_diagram.network.moveNode(node.id, ui_util.vary(canvas.x, node.size * vary_multiplier), ui_util.vary(canvas.y, node.size * vary_multiplier));
                     });
+                    var node_ids = _.map(Array.from(nodes), "id");
+                    layout.save_layout(target_diagram, node_ids);
                     target_diagram.network.fit();
                 });
             }

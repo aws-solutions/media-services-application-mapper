@@ -8,131 +8,118 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
 
         var view_name = "global";
 
-        $("#channel-tiles-tab").on("show.bs.tab", function(event) {
-            $("#nodes_dropdown").addClass("disabled");
-            $("#nodes_dropdown").attr("aria-disabled", true);
-        });
+        // $("#channel-tiles-tab").on("show.bs.tab", function(event) {
+        //     $("#nodes_dropdown").addClass("disabled");
+        //     $("#nodes_dropdown").attr("aria-disabled", true);
+        // });
 
-        $("#global-model-tab").on("show.bs.tab", function(event) {
-            $("#nodes_dropdown").removeClass("disabled");
-            $("#nodes_dropdown").attr("aria-disabled", false);
-        });
+        // $("#global-model-tab").on("show.bs.tab", function(event) {
+        //     $("#nodes_dropdown").removeClass("disabled");
+        //     $("#nodes_dropdown").attr("aria-disabled", false);
+        // });
 
-        $("#nodes_dropdown").on("click", function(event) {
-            if (global_view.get_selected().nodes.length == 0) {
-                $("#nodes_associate_alarms_button").addClass("disabled");
-                $("#nodes_associate_alarms_button").attr("aria-disabled", true);
-            } else {
-                $("#nodes_associate_alarms_button").removeClass("disabled");
-                $("#nodes_associate_alarms_button").attr("aria-disabled", false);
-            }
-        });
+        // $("#nodes_dropdown").on("click", function(event) {
+        //     if (global_view.get_selected().nodes.length == 0) {
+        //         $("#nodes_associate_alarms_button").addClass("disabled");
+        //         $("#nodes_associate_alarms_button").attr("aria-disabled", true);
+        //     } else {
+        //         $("#nodes_associate_alarms_button").removeClass("disabled");
+        //         $("#nodes_associate_alarms_button").attr("aria-disabled", false);
+        //     }
+        // });
 
         $("#nodes_layout_vertical").on("click", function(event) {
             // global_view.vertical_layout();
             var shown = diagrams.shown();
-            shown.layout_vertical();
+            if (shown) {
+                shown.layout_vertical(true);
+            }
         });
 
         $("#nodes_layout_horizontal").on("click", function(event) {
             // global_view.horizontal_layout();
             var shown = diagrams.shown();
-            shown.layout_horizontal();
+            if (shown) {
+                shown.layout_horizontal(true);
+            }
         });
 
         $("#nodes_layout_isolated").on("click", function(event) {
             // global_view.isolated_item_layout();
             var shown = diagrams.shown();
-            shown.layout_isolated();
+            if (shown) {
+                shown.layout_isolated(true);
+            }
         });
 
         $("#nodes_select_downstream").on("click", function(event) {
             var shown = diagrams.shown();
-            var selected = shown.network.getSelectedNodes();
-            var connected = [];
-            for (var node_id of selected) {
-                if (!connected.includes(node_id)) {
-                    connected.push(node_id);
-                    get_downstream(shown.edges, node_id, connected);
+            if (shown) {
+                var selected = shown.network.getSelectedNodes();
+                var connected = [];
+                for (var node_id of selected) {
+                    if (!connected.includes(node_id)) {
+                        connected.push(node_id);
+                        ui_util.get_downstream(shown.edges, node_id, connected);
+                    }
                 }
+                console.log(connected);
+                alert.show(connected.length + " selected");
+                shown.network.selectNodes(connected);
             }
-            console.log(connected);
-            alert.show(connected.length + " selected");
-            shown.network.selectNodes(connected);
         });
-
-        var get_downstream = function(edges, node_id, connected_nodes) {
-            // var node_ids = global_view.get_network().getConnectedNodes(node_id);
-            var downstream_edges = edges.get({
-                filter: function(item) {
-                    return item.from === node_id;
-                }
-            });
-            for (var edge of downstream_edges) {
-                if (!connected_nodes.includes(edge.to)) {
-                    connected_nodes.push(edge.to);
-                    get_downstream(edges, edge.to, connected_nodes);
-                }
-            }
-        };
 
         $("#nodes_select_upstream").on("click", function(event) {
-            var selected = global_view.get_selected().nodes;
-            var connected = [];
-            for (var node_id of selected) {
-                if (!connected.includes(node_id)) {
-                    connected.push(node_id);
-                    get_upstream(node_id, connected);
+            var shown = diagrams.shown();
+            if (shown) {
+                var selected = shown.network.getSelectedNodes();
+                var connected = [];
+                for (var node_id of selected) {
+                    if (!connected.includes(node_id)) {
+                        connected.push(node_id);
+                        ui_util.get_upstream(shown.edges, node_id, connected);
+                    }
                 }
+                console.log(connected);
+                alert.show(connected.length + " selected");
+                shown.network.selectNodes(connected);
             }
-            console.log(connected);
-            alert.show(connected.length + " selected");
-            global_view.get_network().selectNodes(connected);
         });
 
-        var get_upstream = function(node_id, connected_nodes) {
-            // var node_ids = global_view.get_network().getConnectedNodes(node_id);
-            var upstream_edges = model.edges.get({
-                filter: function(item) {
-                    return item.to === node_id;
-                }
-            });
-            for (var edge of upstream_edges) {
-                if (!connected_nodes.includes(edge.from)) {
-                    connected_nodes.push(edge.from);
-                    get_upstream(edge.from, connected_nodes);
-                }
-            }
-        };
-
         $("#nodes_align_vertical").on("click", function(event) {
-            var selected = global_view.get_selected().nodes;
-            var positions = global_view.get_network().getPositions(selected);
-            var average_x = 0;
-            for (var node_id of Object.keys(positions)) {
-                average_x += positions[node_id].x;
+            var diagram = diagrams.shown();
+            if (diagram) {
+                var selected = diagram.network.getSelectedNodes();
+                var positions = diagram.network.getPositions(selected);
+                var average_x = 0;
+                for (var node_id of Object.keys(positions)) {
+                    average_x += positions[node_id].x;
+                }
+                average_x = Math.round(average_x / selected.length);
+                for (var node_id of Object.keys(positions)) {
+                    diagram.network.moveNode(node_id, average_x, positions[node_id].y);
+                }
+                layout.save_layout(diagram, Object.keys(positions));
+                alert.show("Alignment complete");
             }
-            average_x = Math.round(average_x / selected.length);
-            for (var node_id of Object.keys(positions)) {
-                global_view.get_network().moveNode(node_id, average_x, positions[node_id].y);
-                layout.save_node("global", node_id, average_x, positions[node_id].y);
-            }
-            alert.show("Alignment complete");
         });
 
         $("#nodes_align_horizontal").on("click", function(event) {
-            var selected = global_view.get_selected().nodes;
-            var positions = global_view.get_network().getPositions(selected);
-            var average_y = 0;
-            for (var node_id of Object.keys(positions)) {
-                average_y += positions[node_id].y;
+            var diagram = diagrams.shown();
+            if (diagram) {
+                var selected = diagram.network.getSelectedNodes();
+                var positions = diagram.network.getPositions(selected);
+                var average_y = 0;
+                for (var node_id of Object.keys(positions)) {
+                    average_y += positions[node_id].y;
+                }
+                average_y = Math.round(average_y / selected.length);
+                for (var node_id of Object.keys(positions)) {
+                    diagram.network.moveNode(node_id, positions[node_id].x, average_y);
+                }
+                layout.save_layout(diagram, Object.keys(positions));
+                alert.show("Alignment complete");
             }
-            average_y = Math.round(average_y / selected.length);
-            for (var node_id of Object.keys(positions)) {
-                global_view.get_network().moveNode(node_id, positions[node_id].x, average_y);
-                layout.save_node("global", node_id, positions[node_id].x, average_y);
-            }
-            alert.show("Alignment complete");
         });
 
     });

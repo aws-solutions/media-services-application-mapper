@@ -15,6 +15,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.1.2/css/bootstrap/tabulator_bootstrap4.min.css" integrity="sha256-DDJiZD+ORXOovR4Qln+so9eW8YGdlqyaDRkxxPo0dRs=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
@@ -106,12 +107,18 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         Diagram
                     </a>
                     <div class="dropdown-menu" aria-labelledby="diagram_dropdown">
-                        <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Nodes Downstream of Selected</a>
-                        <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Nodes Upstream of Selected</a>
+                        <a class="dropdown-item" href="#" id="diagram_manage_contents">Manage Contents</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Downstream Nodes of Selected</a>
+                        <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Upstream Nodes of Selected</a>
+                        <a class="dropdown-item" href="#" id="diagram_add_all_nodes">Add All Nodes of Selected (Upstream/Downstream)</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" id="diagram_remove_selected">Remove Selected Nodes</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="diagram_save_layout">Save Diagram Layout Now</a>
+                        <a class="dropdown-item" href="#" id="diagram_add_diagram">Add New Diagram</a>
+                        <a class="dropdown-item" href="#" id="diagram_duplicate_diagram">Duplicate Current Diagram</a>
+                        <a class="dropdown-item" href="#" id="diagram_remove_diagram">Remove Current Diagram</a>
+                        <!-- <a class="dropdown-item" href="#" id="diagram_save_layout">Save Diagram Layout Now</a> -->
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -119,8 +126,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         Channels
                     </a>
                     <div class="dropdown-menu" aria-labelledby="channels_dropdown">
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_create_channel_button" data-target="#channel_definition_modal">Create New Channel Tile</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_add_to_channel_button" data-target="#channel_add_node_modal">Add to Existing Channel Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_create_channel_button">Create New Channel Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_add_to_channel_button">Add to Existing Channel Tile</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -156,13 +163,23 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <nav>
         <div class="nav nav-tabs" id="diagram-tab" role="tablist">
             <a class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab" href="#channel-tiles-diagram" role="tab" aria-controls="channel-tiles-diagram" aria-selected="false">Tiles</a>
-            <a class="nav-item nav-link" id="global-model-tab" data-toggle="tab" href="#global-model-diagram" role="tab" aria-controls="global-model-diagram" aria-selected="false">Global Model</a>
+            <!-- <a class="nav-item nav-link" id="global-model-tab" data-toggle="tab" href="#global-model-diagram" role="tab" aria-controls="global-model-diagram" aria-selected="false">Global Model</a> -->
+            <a class="nav-item nav-link" id="add-diagram-tab" role="tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Add Diagram"><i class="material-icons" style="cursor: pointer;">
+                    add_box
+                    </i></a>
+            <a class="nav-item nav-link" id="duplicate-diagram-tab" role="tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Duplicate Diagram"><i class="material-icons" style="cursor: pointer;">
+                    file_copy
+                    </i></a>
+            <a class="nav-item nav-link" id="manage-contents-tab" role="tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Manage Contents"><i class="material-icons" style="cursor: pointer;">
+                    list_alt
+                    </i></a>
+            <a class="nav-item nav-link" id="remove-diagram-tab" role="tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Remove Diagram"><i class="material-icons" style="cursor: pointer;">
+                    delete_forever
+                    </i></a>
         </div>
     </nav>
     <div id="diagram" style="height: 60%; width: 100%;">
         <div class="tab-content" id="diagram-tab-content" style="height: 100%; width: 100%;">
-            <div id="global-model-diagram" class="tab-pane" role="tabpanel" aria-labelledby="global-model-tab" style="height: inherit; width: inherit;">
-            </div>
             <div id="channel-tiles-diagram" class="tab-pane" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit; overflow-x: hidden; overflow-y: scroll;">
             </div>
         </div>
@@ -587,6 +604,60 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <button type="button" id="advanced_settings_modal_save" class="btn btn-success">Save</button>
                         <button type="button" id="advanced_settings_modal_cancel" class="btn btn-danger">Cancel</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create diagram dialog -->
+    <!-- Modal -->
+    <div class="modal fade" id="create_diagram_dialog" tabindex="-1" role="dialog" aria-labelledby="create_diagram_dialog_title" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-2">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="create_diagram_dialog_title">Create New Diagram</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div id="create_diagram_dialog_alert">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Diagram Name</span>
+                    </div>
+                    <input id="create_diagram_dialog_name" type="text" class="form-control" aria-label="Diagram Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="create_diagram_dialog_proceed" class="btn btn-primary">Proceed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Duplicate diagram dialog -->
+    <!-- Modal -->
+    <div class="modal fade" id="dupe_diagram_dialog" tabindex="-1" role="dialog" aria-labelledby="dupe_diagram_dialog_title" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-2">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dupe_diagram_dialog_title">Duplicate This Diagram</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div id="dupe_diagram_dialog_alert">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Diagram Name</span>
+                    </div>
+                    <input id="dupe_diagram_dialog_name" type="text" class="form-control" aria-label="Diagram Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="dupe_diagram_dialog_proceed" class="btn btn-primary">Proceed</button>
                 </div>
             </div>
         </div>

@@ -202,8 +202,8 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                 "update-visual-model": {
                     _onEnter: function() {
                         // update global view
-                        global_view.init();
-                        global_view.show();
+                        // global_view.init();
+                        // global_view.show();
                         this.handle("visualModelReady")
                     },
                     "visualModelReady": "visual-model-fresh"
@@ -228,6 +228,8 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                             "app/ui/tile_view",
                             "app/ui/tools_menu"
                         ]);
+                        // show the tiles tab
+                        $("#channel-tiles-tab").tab('show');
                     },
                     // start a timer and/or events to watch model data
                     refreshModelData: function() {

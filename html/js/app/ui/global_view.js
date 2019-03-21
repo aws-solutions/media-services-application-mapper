@@ -113,8 +113,8 @@ define(["jquery", "vis", "app/model", "app/ui/vis_options", "app/ui/layout", "ap
 
         var get_selected = function() {
             return {
-                "nodes": network.getSelectedNodes(),
-                "edges": network.getSelectedEdges()
+                "nodes": [],
+                "edges": []
             }
         };
 

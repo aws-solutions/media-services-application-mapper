@@ -5,6 +5,7 @@ This file contains helper functions related to layout.
 """
 
 import os
+from urllib.parse import unquote
 
 import boto3
 from boto3.dynamodb.conditions import Key
@@ -21,6 +22,7 @@ def get_view_layout(request, view):
     """
     API entry point for retrieving all item positions in a view.
     """
+    view = unquote(view)
     items = []
     table_name = LAYOUT_TABLE_NAME
     try:
@@ -67,8 +69,10 @@ def set_node_layout(request):
 
 def delete_node_layout(view, node_id):
     """
-    API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.
+    API entry point for removing nodes from a view.
     """
+    view = unquote(view)
+    node_id = unquote(node_id)
     settings = {}
     table_name = LAYOUT_TABLE_NAME
     try:
