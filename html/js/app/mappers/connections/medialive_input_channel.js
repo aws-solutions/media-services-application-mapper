@@ -1,46 +1,47 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model", "app/server", "app/connections"], function($, model, server, connections) {
+define(["jquery", "app/model", "app/server", "app/connections"],
+    function($, model, server, connections) {
 
-    var update_connections = function() {
-        var current = connections.get_current();
-        var url = current[0];
-        var api_key = current[1];
-        return new Promise((resolve, reject) => {
-            server.get(url + "/cached/medialive-input-medialive-channel/global", api_key).then((connections) => {
-                $.each(connections, function(index, connection) {
-                    var data = JSON.parse(connection.data);
-                    var human_type = data.type.replace(/\_/, " ");
-                    model.edges.update({
-                        "id": data.arn,
-                        "to": data.to,
-                        "from": data.from,
-                        "label": human_type,
-                        "arrows": "to",
-                        "color": {
-                            "color": "black"
-                        }
+        var update_connections = function() {
+            var current = connections.get_current();
+            var url = current[0];
+            var api_key = current[1];
+            return new Promise((resolve, reject) => {
+                server.get(url + "/cached/medialive-input-medialive-channel/global", api_key).then((connections) => {
+                    $.each(connections, function(index, connection) {
+                        var data = JSON.parse(connection.data);
+                        var human_type = data.type.replace(/\_/, " ");
+                        model.edges.update({
+                            "id": data.arn,
+                            "to": data.to,
+                            "from": data.from,
+                            "label": human_type,
+                            "arrows": "to",
+                            "color": {
+                                "color": "black"
+                            }
+                        });
                     });
                 });
-            });
-            resolve();
-        });
-    }
-
-    var update = function() {
-        return new Promise((resolve, reject) => {
-            update_connections().then(function() {
                 resolve();
-            }).catch(function(error) {
-                console.log(error);
-                reject(error);
             });
-        });
-    }
+        }
 
-    return {
-        "name": "MediaLive Input to Channel Connections",
-        "update": update
-    };
-});
+        var update = function() {
+            return new Promise((resolve, reject) => {
+                update_connections().then(function() {
+                    resolve();
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        }
+
+        return {
+            "name": "MediaLive Input to Channel Connections",
+            "update": update
+        };
+    });

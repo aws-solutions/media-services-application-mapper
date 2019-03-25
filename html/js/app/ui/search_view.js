@@ -1,28 +1,17 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util", "app/ui/tile_view"],
-    function($, model, search, global_view, ui_util, tile_view) {
+define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util", "app/ui/tile_view", "app/ui/diagrams"],
+    function($, model, search, global_view, ui_util, tile_view, diagrams) {
 
         var tab_id = "nav-search-tab";
+
+        var blinks = 10;
 
         var node_visibility_timer;
 
         var show = function() {
             $("#" + tab_id).tab('show');
-        };
-
-        var border_blinker = function(blinks, node) {
-            if (blinks > 0) {
-                setTimeout(function() {
-                    if (blinks % 2 == 0) {
-                        global_view.get_network().selectNodes([node.id], false);
-                    } else {
-                        global_view.get_network().unselectAll();
-                    }
-                    border_blinker(blinks - 1, node);
-                }, 500);
-            }
         };
 
         function display_search_results(results) {
@@ -44,7 +33,7 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             var html = `<ol>`;
             results.model.forEach(function(node, index) {
                 var id = ui_util.makeid();
-                var line = `<li><b>${node.title}:</b> <a href="#" data-node-id="${node.id}" id="${id}">${node.name}</a></li>`;
+                var line = `<li><b>${node.title}:</b> <a href="#" title="Drag to a Diagram or Tile" data-node-id="${node.id}" draggable="true" id="${id}">${node.name}</a></li>`;
                 html += line;
             });
             var close = `</ol>`;
@@ -53,19 +42,46 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
         }
 
         function display_results_diagram_name_matches(results) {
+            var anchor_handler_data = [];
             $("#diagram-names-match-count").text(results.diagram_names.length);
             var html = `<ol>`;
             results.diagram_names.forEach(function(name, index) {
                 var id = ui_util.makeid();
-                var line = `<li><a href="#" data-diagram-name="${name}" id="${id}">${name}</a></li>`;
+                var line = `<li><a href="#" data-diagram-name="${name}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${name}</a></li>`;
                 html += line;
+                anchor_handler_data.push({
+                    diagram: diagrams.get(name),
+                    anchor_id: id
+                });
             });
             var close = `</ol>`;
             html += close;
             $("#diagram-names-match").html(html);
+            anchor_handler_data.forEach(function(item) {
+                var anchor_id = item.anchor_id;
+                var eventClosure = function() {
+                    var diagram = item.diagram;
+                    return function(event) {
+                        if (!diagram.shown()) {
+                            diagram.network.once("afterDrawing", (function() {
+                                return function() {
+                                    console.log(diagram);
+                                    diagram.network.fit();
+                                }
+                            })());
+                            diagram.show();
+                        } else {
+                            diagram.network.fit();
+                        }
+                    };
+                }();
+                $("#" + anchor_id).on("click", eventClosure);
+            });
+
         }
 
         function display_results_diagram_contents_matches(results) {
+            var anchor_handler_data = [];
             $("#diagram-contents-match-count").text(results.diagram_contents.length);
             var html = `<ol>`;
             results.diagram_contents.forEach(function(entry, index) {
@@ -73,30 +89,82 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
                 entry.found.forEach(function(node_id, index) {
                     var node = model.nodes.get(node_id)
                     var id = ui_util.makeid();
-                    var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" id="${id}">${node.name}</a></li>`;
+                    var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${node.name}</a></li>`;
                     html += line;
+                    anchor_handler_data.push({
+                        diagram: diagrams.get(name),
+                        node_id: node.id,
+                        anchor_id: id
+                    });
                 });
-
             });
             var close = `</ol>`;
             html += close;
             $("#diagram-contents-match").html(html);
+            anchor_handler_data.forEach(function(item) {
+                var anchor_id = item.anchor_id;
+                var eventClosure = function() {
+                    var diagram = item.diagram;
+                    var node_id = item.node_id;
+                    return function(event) {
+                        if (!diagram.shown()) {
+                            diagram.network.once("afterDrawing", (function() {
+                                return function() {
+                                    console.log(diagram);
+                                    console.log(node_id);
+                                    diagram.network.fit({
+                                        nodes: [node_id],
+                                        animation: true
+                                    });
+                                    diagram.blink(blinks, node_id);
+                                }
+                            })());
+                            diagram.show();
+                        } else {
+                            diagram.network.fit({
+                                nodes: [node_id],
+                                animation: true
+                            });
+                            diagram.blink(blinks, node_id);
+                        }
+                    };
+                }();
+                $("#" + anchor_id).on("click", eventClosure);
+            });
         }
 
         function display_results_tile_name_matches(results) {
+            var anchor_handler_data = [];
             $("#tile-names-match-count").text(results.tile_names.length);
             var html = `<ol>`;
             results.tile_names.forEach(function(name, index) {
                 var id = ui_util.makeid();
-                var line = `<li><a href="#" data-tile-name="${name}" id="${id}">${name}</a></li>`;
+                var line = `<li><a href="#" title="Click or Drag to a Diagram or Tile" data-tile-name="${name}" draggable="true" id="${id}">${name}</a></li>`;
                 html += line;
+                anchor_handler_data.push({
+                    tile: name,
+                    anchor_id: id
+                });
             });
             var close = `</ol>`;
             html += close;
             $("#tile-names-match").html(html);
+            anchor_handler_data.forEach(function(item) {
+                var anchor_id = item.anchor_id;
+                var eventClosure = function() {
+                    var name = item.tile;
+                    return function(event) {
+                        $("#channel-tiles-tab").tab('show');
+                        tile_view.blink(name);
+                    };
+                }();
+                $("#" + anchor_id).on("click", eventClosure);
+            });
+
         }
 
         function display_results_tile_contents_matches(results) {
+            var anchor_handler_data = [];
             $("#tile-contents-match-count").text(results.tile_contents.length);
             var html = `<ol>`;
             results.tile_contents.forEach(function(entry, index) {
@@ -104,112 +172,29 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
                 entry.found.forEach(function(node_id, index) {
                     var node = model.nodes.get(node_id)
                     var id = ui_util.makeid();
-                    var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" id="${id}">${node.name}</a></li>`;
+                    var line = `<li><b><a href="#" title="Click or Drag to a Diagram or Tile" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>: </b>${node.title}: <a href="#" draggable="true" title="Drag to a Diagram or Tile" data-node-id="${node.id}">${node.name}</a></li>`;
                     html += line;
+                    anchor_handler_data.push({
+                        tile: name,
+                        anchor_id: id
+                    });
                 });
             });
             var close = `</ol>`;
             html += close;
             $("#tile-contents-match").html(html);
-        }
+            anchor_handler_data.forEach(function(item) {
+                var anchor_id = item.anchor_id;
+                var eventClosure = function() {
+                    var name = item.tile;
+                    return function(event) {
+                        $("#channel-tiles-tab").tab('show');
+                        tile_view.blink(name);
+                    };
+                }();
+                $("#" + anchor_id).on("click", eventClosure);
+            });
 
-        var display_search_results_old = function(text, model_matches, tile_matches) {
-            var showing_global = ($("#global-model-tab").attr("aria-selected") == "true");
-            if (text != "") {
-                // $("#nav-search-subtitle").html("Search for '<i>" + text + "</i>'");
-                if (showing_global) {
-                    $("#global-model-collapse").collapse('show');
-                }
-                var html = ` for '${text}' (${model_matches.length} match${model_matches.length != 1 ? "es" : ""})`;
-                $("#global-model-search-text").html(html);
-                if (model_matches.length > 0) {
-                    // show the global model accordian
-                    var html = `<ol>`;
-                    var targets = [];
-                    $.each(model_matches, (index, node) => {
-                        var id = ui_util.makeid();
-                        targets.push({
-                            id: id,
-                            node: node
-                        });
-                        html += "<li><b>" + node.title + ":</b> <a href='#' id='" + id + "'>" + node.name + "</a></li>";
-                    });
-                    html += "</ol>";
-                    $("#global-model-search").html(html);
-                    $.each(targets, (index, target) => {
-                        var eventClosure = function() {
-                            var node = model.nodes.get(target.node.id);
-                            return function(event) {
-                                // console.log(target);
-                                var tab = $("#global-model-tab");
-                                // console.log(tab.attr("aria-selected"));
-                                if (tab.attr("aria-selected") == "false") {
-                                    $("#global-model-tab").tab('show');
-                                    setTimeout(function() {
-                                        global_view.fit([target.node.id]);
-                                        border_blinker(6, node);
-                                    }, 1000);
-                                } else {
-                                    global_view.fit([target.node.id]);
-                                    border_blinker(6, node);
-                                }
-                            };
-                        }();
-                        $("#" + target.id).on("click", eventClosure);
-                    });
-                } else {
-                    // hide the global model accordian
-                    // $("#global-model-collapse").collapse('hide');
-                    var span = `<span class="mx-3">No matches found</span>`;
-                    $("#global-model-search").html(span);
-                }
-                // show tile matches
-                if (!showing_global) {
-                    $("#channel-tile-collapse").collapse('show');
-                }
-                var html = ` for '${text}' (${tile_matches.length} match${tile_matches.length != 1 ? "es" : ""})`;
-                $("#channel-tile-search-text").html(html);
-                if (tile_matches.length > 0) {
-                    // show the global model accordian
-                    var html = `<ol>`;
-                    var targets = [];
-                    $.each(tile_matches, (index, name) => {
-                        var id = ui_util.makeid();
-                        targets.push({
-                            id: id,
-                            name: name
-                        });
-                        html += "<li><a href='#' id='" + id + "'>" + name + "</a></li>";
-                    });
-                    html += "</ol>";
-                    $("#channel-tile-search").html(html);
-                    $.each(targets, (index, target) => {
-                        var eventClosure = function() {
-                            return function(event) {
-                                // console.log(target);
-                                var tab = $("#channel-tiles-tab");
-                                // console.log(tab.attr("aria-selected"));
-                                if (tab.attr("aria-selected") == "false") {
-                                    $("#channel-tiles-tab").tab('show');
-                                }
-                                tile_view.select_tile(target.name);
-                            };
-                        }();
-                        $("#" + target.id).on("click", eventClosure);
-                    });
-                } else {
-                    // hide the global model accordian
-                    // $("#global-model-collapse").collapse('hide');
-                    var span = `<span class="mx-3">No matches found</span>`;
-                    $("#channel-tile-search").html(span);
-                }
-            } else {
-                $("#nav-search-subtitle").html("");
-                $("#global-model-search").html("");
-                $("#global-model-search-text").html("");
-                $("#channel-tile-search").html("");
-                $("#channel-tile-search-text").html("");
-            }
         }
 
         var update_node_visibility = function(only_matches) {
@@ -277,12 +262,21 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             $("#search_input").focus();
             $("#nav-search-subtitle").html("");
             $("#nav-search-text").html("");
-            only_show_matches(false);
-            display_search_results("", []);
-            setTimeout(function() {
-                update_node_visibility();
-                update_tile_visibility()
-            }, 500);
+            // only_show_matches(false);
+            // display_search_results("", []);
+            // setTimeout(function() {
+            //     update_node_visibility();
+            //     update_tile_visibility()
+            // }, 500);
+            display_search_results({
+                text: "",
+                model: [],
+                tile_names: [],
+                tile_contents: [],
+                diagram_names: [],
+                diagram_contents: []
+            });
+            $("#nav-status-tab").tab("show");
         };
 
         var set_node_filter = function(name, visible_node_ids) {
@@ -327,15 +321,28 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
         function search_now() {
             show();
             var text = $("#search_input").val();
-            search.search(text).then(function(results) {
-                display_search_results(results);
-                // build the results compartment
-            });
+            var useful = new RegExp("\\S+");
+            if (useful.test(text)) {
+                search.search(text).then(function(results) {
+                    display_search_results(results);
+                    // build the results compartment
+                });
+            } else {
+                console.log("whitespace only");
+            }
         }
 
         $("#search-reset-button").on("click", () => {
             clear_search();
             return false;
+        });
+
+        // enter key handler
+        $("#search_input").keypress(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                search_now();
+            }
         });
 
         $("#search-now-button").on("click", function(event) {

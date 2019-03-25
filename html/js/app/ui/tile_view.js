@@ -6,12 +6,11 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
 
         var tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
-        var selected_tile_name = "";
-        var selected_tile;
-
         var click_listeners = [];
 
         var content_div = "channel-tiles-diagram";
+
+        var tab_id = "channel-tiles-tab";
 
         // interval in millis to check the cloud for tile changes
         var update_interval;
@@ -44,35 +43,62 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             toggle_tile(name);
         };
 
+        var selected_tile_name = function() {
+            var selected = $(".selected-channel-tile");
+            return selected.attr("data-channel-name");
+        }
+
         var toggle_tile = function(name) {
-            if (name == selected_tile_name) {
+            if (name == selected_tile_name()) {
                 unselect_all()
             } else {
                 select_tile(name);
             }
         };
 
+        var blink = function(blinks, tile) {
+            var interval_ms = 500;
+            if (blinks > 0) {
+                setTimeout(
+                    function() {
+                        if (blinks % 2 == 0) {
+                            select_tile(tile);
+                        } else {
+                            unselect_tile(tile);
+                        }
+                        blink(blinks - 1, tile);
+                    }, interval_ms);
+            } else {
+                select_tile(tile);
+            }
+        }
+
         var scroll_to_tile = function(name) {
             // scroll to the selected item
+            var query = `[data-channel-name='${name}']`;
+            var selected = $(query);
             $("#" + tile_row_div_id).animate({
-                scrollTop: selected_tile.offset().top
+                scrollTop: selected.offset().top
             }, "slow");
         };
 
         var select_tile = function(name) {
-            selected_tile_name = name;
             var query = `[data-channel-name='${name}']`;
-            selected_tile = $(query);
+            var selected_tile = $(query);
             selected_tile.addClass("selected-channel-tile");
             query = `[data-channel-name][data-channel-name!='${name}']`;
             var unselected_tiles = $(query);
             unselected_tiles.removeClass("selected-channel-tile");
         }
 
+        var unselect_tile = function(name) {
+            var query = `[data-channel-name='${name}']`;
+            var selected_tile = $(query);
+            selected_tile.removeClass("selected-channel-tile");
+        }
+
         var unselect_all = function() {
-            selected_tile = undefined;
-            selected_tile_name = "";
-            query = `[data-channel-name]`;
+            var query = `[data-channel-name]`;
             var unselected_tiles = $(query);
             unselected_tiles.removeClass("selected-channel-tile");
         }
@@ -176,7 +202,7 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                                     }
                                 });
                             });
-                            if (channel_name == selected_tile_name) {
+                            if (channel_name == selected_tile_name()) {
                                 border_class = border_class + " selected-channel-tile";
                             }
                             var channel_card_id = ui_util.makeid();
@@ -185,7 +211,7 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                             var edit_button_id = channel_card_id + "_edit_button";
                             var header_id = channel_card_id + "_header";
                             var tile = `
-                                <div class="card ${border_class} ml-4 my-3" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
+                                <div draggable="true" class="card ${border_class} ml-4 my-3" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
                                     <div class="card-header" style="cursor: pointer;" id="${header_id}">${channel_name}</div>
                                     <div class="card-body text-info my-0 py-1">
                                         <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${alert_count == 1 ? "" : "s"}</h5>
@@ -193,7 +219,7 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                                         <p class="card-text small my-0 py-0" id="${channel_card_id}_services">${service_count} cloud services</p>
                                     </div>
                                     <div class="btn-group btn-group-sm mb-1 mx-auto" role="group" aria-label="Basic example">
-                                        <button type="button" id="${model_button_id}" class="btn btn-secondary"><small>Detailed Model</small></button>
+                                        <button type="button" id="${model_button_id}" class="btn btn-secondary"><small>View Diagram</small></button>
                                         <button type="button" id="${edit_button_id}" class="btn btn-secondary"><small>Edit</small></button>
                                         <button type="button" id="${delete_button_id}" class="btn btn-secondary"><small>Delete</small></button>
                                     </div>
@@ -213,12 +239,12 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                                 var name = channel_name;
                                 var members = channel_members;
                                 return function(event) {
-                                    require("app/ui/global_view").show();
-                                    var node_ids = [];
-                                    $.each(members, function(i, member) {
-                                        node_ids.push(member.id);
-                                    });
-                                    require("app/ui/search_view").set_node_filter(name, node_ids);
+                                    // require("app/ui/global_view").show();
+                                    // var node_ids = [];
+                                    // $.each(members, function(i, member) {
+                                    //     node_ids.push(member.id);
+                                    // });
+                                    // require("app/ui/search_view").set_node_filter(name, node_ids);
                                 }
                             })());
                             $("#" + edit_button_id).on("click", (function() {
@@ -361,12 +387,14 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
         return {
             "add_click_listener": add_click_listener,
             "redraw_tiles": redraw_tiles,
+            "update_tile_info": update_tile_info,
             "select_tile": function(name) {
-                select_tile(name);
                 scroll_to_tile(name);
+                select_tile(name);
             },
+            "unselect_tile": unselect_tile,
             "get_selected_tile_name": function() {
-                return selected_tile_name;
+                return selected_tile_name();
             },
             "set_update_interval": function(seconds) {
                 set_update_interval(seconds).then(function() {
@@ -375,6 +403,29 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             },
             "get_update_interval": function() {
                 return update_interval;
+            },
+            "blink": function(name) {
+                scroll_to_tile(name);
+                blink(10, name);
+            },
+            "shown": function() {
+                return $("#" + tab_id).attr("aria-selected") == 'true';
+            },
+            "tile_at": function(x, y) {
+                // get all the tile divs
+                var tile_divs = $("div[data-channel-name]");
+                // get bounding boxes for each div
+                tile_divs.each(function(index, item) {
+                    console.log(item);
+                    // var rect = $(item)[0].getElementById($(item).attr("id")).getBoundingClientRect();
+                    // console.log(rect);
+                    // compare to provided x,y
+                    // if (x >= rect.left && x <= rect.left + rect.width && y >= rect.top && y <= rect.top + rect.height) {
+                    //     return item.attr("data-channel-name");
+                    // }
+                    // return tile name
+                });
+                return null;
             }
         };
     });

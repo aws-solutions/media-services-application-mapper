@@ -1,7 +1,7 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
-define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "app/ui/layout", "machina"],
-    function($, _, ui_util, vis_options, model, layout, machina) {
+define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "app/ui/layout", "machina", "app/ui/alert"],
+    function($, _, ui_util, vis_options, model, layout, machina, alert) {
 
         function create(diagram) {
             return (function() {
@@ -20,7 +20,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                             _onEnter: function() {
                                 // create the html
                                 var tab =
-                                    `<a class="nav-item nav-link" id="${my_diagram.tab_id}" data-toggle="tab" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}</a>`;
+                                    `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-toggle="tab" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i class="material-icons px-1 small">image_aspect_ratio</i></a>`;
                                 var diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
                                 // add to containers
                                 // my_diagram.tab_container.append(tab);
@@ -65,15 +65,18 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                 })());
                                 my_diagram.network.on("click", (function() {
                                     return function(event) {
-                                        console.log(my_diagram.name + " diagram click");
+                                        // console.log(my_diagram.name + " diagram click");
+                                        if (event.nodes.length > 0) {
+                                            alert.show(event.nodes.length + " selected");
+                                        }
                                         // take a copy of the one-shots in case more get added during event handling
                                         var one_time = Array.from(my_diagram.click_callbacks_once);
                                         my_diagram.click_callbacks_once = [];
                                         for (var callback of one_time) {
-                                            callback(event);
+                                            callback(my_diagram, event);
                                         }
                                         for (var callback of my_diagram.click_callbacks) {
-                                            callback(event);
+                                            callback(my_diagram, event);
                                         }
                                     }
                                 })());
@@ -84,10 +87,10 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         var one_time = Array.from(my_diagram.doubleclick_callbacks_once);
                                         my_diagram.doubleclick_callbacks_once = [];
                                         for (var callback of one_time) {
-                                            callback(event);
+                                            callback(my_diagram, event);
                                         }
                                         for (var callback of my_diagram.doubleclick_callbacks) {
-                                            callback(event);
+                                            callback(my_diagram, event);
                                         }
                                         // zoom
                                         if (event.nodes.length > 0) {
@@ -100,7 +103,9 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                     }
                                 })());
                                 my_diagram.network.on("dragEnd", function(event) {
-                                    layout.save_layout(my_diagram, event.nodes);
+                                    if (event.nodes.length) {
+                                        layout.save_layout(my_diagram, event.nodes);
+                                    }
                                 });
 
                                 $("#" + my_diagram.tab_id).on("show.bs.tab", (function() {

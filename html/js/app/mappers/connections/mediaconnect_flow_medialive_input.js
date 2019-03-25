@@ -1,7 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-       define(["jquery", "app/model", "app/server", "app/connections"], function($, model, server, connections) {
+define(["jquery", "app/model", "app/server", "app/connections"],
+    function($, model, server, connections) {
 
         var update_connections = function() {
             var current = connections.get_current();
@@ -27,7 +28,7 @@
                 resolve();
             });
         }
-    
+
         var update = function() {
             return new Promise((resolve, reject) => {
                 update_connections().then(function() {
@@ -38,7 +39,7 @@
                 });
             });
         }
-    
+
         return {
             "name": "MediaConnect Flow to MediaLive Input",
             "update": update

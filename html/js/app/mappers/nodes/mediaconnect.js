@@ -1,7 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-       define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"], function($, server, connections, region_promise, model, svg_node) {
+define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
+    function($, server, connections, region_promise, model, svg_node) {
 
         var update_flows = function(regionName) {
             var current = connections.get_current();
@@ -20,8 +21,8 @@
                 });
             });
         };
-    
-    
+
+
         var map_flow = function(cache_entry) {
             var flow = JSON.parse(cache_entry.data);
             var name = flow.Name;
@@ -33,6 +34,7 @@
                 "overlay": "informational",
                 "cache_update": cache_entry.updated,
                 "id": id,
+                "region": cache_entry.region,
                 "shape": "image",
                 "image": {
                     "unselected": null,
@@ -97,8 +99,8 @@
             node_data.image.unselected = node_data.render.normal_unselected();
             nodes.update(node_data);
         };
-    
-        
+
+
         var update = function() {
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
@@ -117,7 +119,7 @@
                 });
             });
         };
-    
+
         return {
             "name": "MediaConnect Flows",
             "arn_matches": {

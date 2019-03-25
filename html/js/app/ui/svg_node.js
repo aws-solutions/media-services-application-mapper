@@ -14,19 +14,6 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         if (str.length > max) {
             str = str.substring(0, max - 1) + " [...]";
         }
-        // var lines = [];
-        // var current_line = "";
-        // for (var position = 0; position < str.length; position++) {
-        //     if (current_line.length >= max && /\W/.test(str[position])) {
-        //         lines.push(current_line);
-        //         current_line = "";
-        //     }
-        //     current_line += str[position];
-        // }
-        // if (current_line.length > 0) {
-        //     lines.push(current_line);
-        // }
-        // return lines;
         return [str];
     }
 
@@ -37,7 +24,12 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         var height = 200;
         var inc_y = 35;
         var pos_y = 10;
-        var w_border = Math.ceil(width * 0.025);
+        var w_border;
+        if (!selected) {
+            w_border = Math.ceil(width * 0.025);
+        } else {
+            w_border = Math.ceil(width * 0.05);
+        }
         // var h_border = height * 0.05;
         $("#" + work_div_id).empty();
         var drawing = SVG(work_div_id).size(width, height);

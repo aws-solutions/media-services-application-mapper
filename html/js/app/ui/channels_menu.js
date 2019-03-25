@@ -85,7 +85,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/channel
             var diagram = diagrams.shown();
             $.each(diagram.network.getSelectedNodes(), function(index, id) {
                 var node = model.nodes.get(id);
-                channel_content += `<tr><th scope="row">${index+1}</th><td>${node.title}</td><td data-node-id="${node.id}">${node.id}</td></tr>`;
+                channel_content += `<tr><th scope="row">${index+1}</th><td>${node.title}</td><td draggable="true" data-node-id="${node.id}">${node.id}</td></tr>`;
             });
             var html = `
         <table class="my-3 table table-sm table-hover">
@@ -151,4 +151,57 @@ define(["jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/channel
                 tile_view.redraw_tiles();
             });
         });
+
+        var set_quick_new_tile_alert = function(message) {
+            var html = `<div id="quick_new_tile_dialog_alert" class="alert alert-danger" role="alert">${message}</div>`;
+            $("#quick_new_tile_dialog_alert").replaceWith(html);
+        };
+
+        var clear_quick_new_tile_alert = function() {
+            var html = `<div id="quick_new_tile_dialog_alert"></div>`;
+            $("#quick_new_tile_dialog_alert").replaceWith(html);
+        };
+
+        $("#quick_new_tile_dialog").on('shown.bs.modal', function() {
+            clear_quick_new_tile_alert();
+            $("#quick_new_tile_dialog_name").val("");
+            $("#quick_new_tile_dialog_name").focus();
+        });
+
+        $("#quick_new_tile_dialog_proceed").on("click", function() {
+            try {
+                // get the name
+                var channel_name = $("#quick_new_tile_dialog_name").val();
+                // check it
+                var valid_name = new RegExp("^\\w+");
+                if (valid_name.test(channel_name)) {
+                    var node_ids = JSON.parse($("#quick_new_tile_dialog").attr("node_ids"));
+                    channels.create_channel(channel_name, node_ids).then(function(response) {
+                        console.log(response);
+                        $("#quick_new_tile_dialog").modal('hide');
+                        alert.show("Channel created");
+                        var tile_view = require("app/ui/tile_view");
+                        tile_view.redraw_tiles();
+                    }).catch(function(error) {
+                        console.log(error);
+                    });
+                } else {
+                    set_quick_new_tile_alert("Names must start with an alphanumeric character");
+                }
+            } catch (error) {
+                console.log(error);
+                set_quick_new_tile_alert("Names must start with an alphanumeric character");
+            }
+        });
+
+        function show_quick_new_tile(node_ids) {
+            var encoded = JSON.stringify(node_ids);
+            $("#quick_new_tile_dialog").attr("node_ids", encoded);
+            $("#quick_new_tile_dialog").modal('show');
+        };
+
+        return {
+            show_quick_new_tile: show_quick_new_tile
+        };
+
     });

@@ -6,6 +6,54 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
 
         var vary_multiplier = 8;
 
+        var inventory_tabulator = new Tabulator("#diagram_contents_inventory", {
+            placeholder: "No Inventory",
+            selectable: true,
+            selectableRangeMode: "click",
+            index: "id",
+            tooltips: true,
+            height: 600,
+            layout: "fitColumns",
+            groupBy: ["title"],
+            columns: [{
+                title: "Name",
+                field: "name",
+                headerFilter: true
+            }, {
+                title: "AWS Region",
+                field: "region",
+                headerFilter: true
+            }, {
+                title: "ARN",
+                field: "id",
+                headerFilter: true
+            }]
+        });
+
+        var diagram_tabulator = new Tabulator("#diagram_contents_diagram", {
+            placeholder: "No Diagram Contents",
+            selectable: true,
+            selectableRangeMode: "click",
+            index: "id",
+            tooltips: true,
+            height: 600,
+            layout: "fitColumns",
+            groupBy: ["title"],
+            columns: [{
+                title: "Name",
+                field: "name",
+                headerFilter: true
+            }, {
+                title: "AWS Region",
+                field: "region",
+                headerFilter: true
+            }, {
+                title: "ARN",
+                field: "id",
+                headerFilter: true
+            }]
+        });
+
         $("#nodes_remove_disconnected_button").on("click", () => {
             var remove_nodes = [];
             $.each(model.nodes.get(), (nodeIndex, node) => {
@@ -223,7 +271,10 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
         });
 
         $("#duplicate-diagram-tab,#diagram_duplicate_diagram").on("click", function() {
-            $("#dupe_diagram_dialog").modal('show');
+            var diagram = diagrams.shown();
+            if (diagram) {
+                $("#dupe_diagram_dialog").modal('show');
+            }
         });
 
         $("#remove-diagram-tab,#diagram_remove_diagram").on("click", function() {
@@ -237,6 +288,54 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
                     alert.show(message);
                 });
             }
+        });
+
+        $("#diagram_contents_modal").on('shown.bs.modal', function() {
+            inventory_tabulator.setData(model.nodes.get());
+            var current = diagrams.shown();
+            diagram_tabulator.setData(current.nodes.get());
+        });
+
+        $("#manage-contents-tab,#diagram_manage_contents").on("click", function() {
+            if (diagrams.shown()) {
+                $("#diagram_contents_modal").modal('show');
+            }
+        });
+
+        $("#add-selected-to-diagram").on("click", function() {
+            var inv_selected = inventory_tabulator.getSelectedData();
+            diagram_tabulator.updateOrAddData(inv_selected);
+        });
+
+        $("#remove-selected-from-diagram").on("click", function() {
+            var selectedRows = diagram_tabulator.getSelectedRows();
+            for (var row of selectedRows) {
+                row.delete();
+            }
+        });
+
+        $("#add-all-to-diagram").on("click", function() {
+            diagram_tabulator.setData(inventory_tabulator.getData());
+        });
+
+        $("#remove-all-from-diagram").on("click", function() {
+            diagram_tabulator.setData([]);
+        });
+
+        $("#diagram_contents_save").on("click", function() {
+            var diagram = diagrams.shown();
+            var tabulator_node_ids = _.map(diagram_tabulator.getData(), "id").sort();
+            var diagram_node_ids = diagram.nodes.getIds().sort();
+            var add_ids = _.difference(tabulator_node_ids, diagram_node_ids);
+            var remove_ids = _.difference(diagram_node_ids, tabulator_node_ids);
+            var nodes = _.compact(model.nodes.get(add_ids));
+            diagram.network.once("afterDrawing", function() {
+                diagram.network.fit();
+            });
+            diagram.nodes.update(nodes);
+            diagram.nodes.remove(remove_ids);
+            // // hide the dialog
+            $("#diagram_contents_modal").modal('hide');
         });
 
     });

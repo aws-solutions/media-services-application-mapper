@@ -1,13 +1,10 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "app/ui/tile_view"],
-    function($, _, model, global_view, event_alerts, tile_view) {
+define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "app/ui/tile_view", "app/ui/diagrams"],
+    function($, _, model, global_view, event_alerts, tile_view, diagrams) {
 
         var last_displayed;
-
-        var alarm_tabulator_ready = false;
-        var alert_tabulator_ready = false;
 
         var show = function() {
             $("#" + tab_id).tab('show');
@@ -20,73 +17,69 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
             $("#nav-monitor-alarms-text").empty();
         };
 
+        var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
+            placeholder: "No Recent Pipeline Alerts",
+            tooltips: true,
+            selectable: false,
+            height: 200,
+            layout: "fitColumns",
+            columns: [{
+                title: "Event Source ARN",
+                field: "channel_arn"
+            }, {
+                title: "Event Source Name",
+                field: "name"
+            }, {
+                title: "Alert",
+                field: "alert_type"
+            }, {
+                title: "Message",
+                field: "message",
+                widthGrow: 3
+            }, {
+                title: "Pipeline",
+                field: "pipeline",
+                widthGrow: 0
+            }, {
+                title: "Time",
+                field: "time"
+            }]
+        });
 
-        var create_alert_tabulator = function() {
-            $("#nav-monitor-alerts-text").tabulator({
-                placeholder: "No Recent Pipeline Alerts",
-                tooltips: true,
-                selectable: false,
-                height: 200,
-                layout: "fitColumns",
-                columns: [{
-                    title: "Event Source ARN",
-                    field: "channel_arn"
-                }, {
-                    title: "Event Source Name",
-                    field: "name"
-                }, {
-                    title: "Alert",
-                    field: "alert_type"
-                }, {
-                    title: "Message",
-                    field: "message",
-                    widthGrow: 3
-                }, {
-                    title: "Pipeline",
-                    field: "pipeline",
-                    widthGrow: 0
-                }, {
-                    title: "Time",
-                    field: "time"
-                }]
-            });
-            alert_tabulator_ready = true;
-        };
 
-        var create_alarm_tabulator = function() {
-            $("#nav-monitor-alarms-text").tabulator({
-                placeholder: "No Alarm Subscriptions",
-                tooltips: true,
-                selectable: false,
-                height: 200,
-                layout: "fitColumns",
-                columns: [{
-                    title: "Subscriber ARN",
-                    field: "ARN"
-                }, {
-                    title: "Subscriber Name",
-                    field: "name"
-                }, {
-                    title: "Alarm Region",
-                    field: "Region"
-                }, {
-                    title: "Alarm Namespace",
-                    field: "Namespace"
-                }, {
-                    title: "Alarm Name",
-                    field: "AlarmName"
-                }, {
-                    title: "Alarm State",
-                    field: "StateValue"
-                }, {
-                    title: "Alarm State Updated",
-                    field: "StateUpdated"
-                }]
-            });
-            alarm_tabulator_ready = true;
-        };
+        var alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
+            placeholder: "No Alarm Subscriptions",
+            tooltips: true,
+            selectable: false,
+            height: 200,
+            layout: "fitColumns",
+            columns: [{
+                title: "Subscriber ARN",
+                field: "ARN"
+            }, {
+                title: "Subscriber Name",
+                field: "name"
+            }, {
+                title: "Alarm Region",
+                field: "Region"
+            }, {
+                title: "Alarm Namespace",
+                field: "Namespace"
+            }, {
+                title: "Alarm Name",
+                field: "AlarmName"
+            }, {
+                title: "Alarm State",
+                field: "StateValue"
+            }, {
+                title: "Alarm State Updated",
+                field: "StateUpdated"
+            }]
+        });
 
-        var display_selected_node = function(node) {
+        var display_selected_nodes = function(diagram, node_ids) {
+            nodes_ids = Array.isArray(node_ids) ? node_ids : [node_ids];
+            var node = model.nodes.get(node_ids[0]);
             var data = [];
             $("#nav-monitor-selected-item").html(node.header);
             // event alerts
@@ -96,11 +89,7 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
                     data.push(event_value.detail);
                 }
             });
-            if (!alert_tabulator_ready) {
-                create_alert_tabulator();
-            }
-            $("#nav-monitor-alerts-text").tabulator("setData", data);
-
+            alert_tabulator.setData(data);
             // alarms
             require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
                 for (subscription of subscriptions) {
@@ -110,10 +99,7 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
                     subscription.ARN = node.id;
                     subscription.name = node.name;
                 }
-                if (!alarm_tabulator_ready) {
-                    create_alarm_tabulator();
-                }
-                $("#nav-monitor-alarms-text").tabulator("setData", subscriptions);
+                alarm_tabulator.setData(subscriptions);
             });
         };
 
@@ -186,13 +172,14 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
             }
         };
 
-        global_view.add_click_listener(global_view_click_listener);
-        tile_view.add_click_listener(tile_view_click_listener);
-        event_alerts.add_listener(event_alert_listener);
+        // global_view.add_click_listener(global_view_click_listener);
+        // tile_view.add_click_listener(tile_view_click_listener);
+        // event_alerts.add_listener(event_alert_listener);
 
-        return {
-            "show": show,
-            "display_selected_node": display_selected_node,
-            "display_selected_tile": display_selected_tile
-        }
+        diagrams.add_selection_callback(function(diagram, event) {
+            if (event.nodes.length > 0) {
+                display_selected_nodes(diagram, event.nodes);
+            }
+        });
+
     });

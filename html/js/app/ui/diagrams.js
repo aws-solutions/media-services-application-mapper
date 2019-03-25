@@ -3,12 +3,9 @@
 define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model", "app/channels", "app/ui/layout", "app/ui/util"],
     function($, _, settings, diagram_factory, model, channels, layout, ui_util) {
 
-        var vary_multiplier = 8;
-
         var diagrams = {};
 
-        var drag_id;
-        var drag_type;
+        var selection_callbacks = [];
 
         var shown_diagram = function() {
             var shown = null;
@@ -25,12 +22,27 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             return diagrams;
         };
 
+        var add_selection_callback = function(callback) {
+            if (!selection_callbacks.includes(callback)) {
+                selection_callbacks.push(callback);
+            }
+        }
+
         var add_diagram = function(name, view_id, save) {
             var diagram = diagram_factory.create(name, view_id);
             diagrams[name] = diagram;
             if (save) {
                 save_diagrams();
             }
+            diagram.add_singleclick_callback(function(diagram, event) {
+                selection_callbacks.forEach(function(callback) {
+                    try {
+                        callback(diagram, event);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                });
+            });
             return diagram;
         };
 
@@ -41,6 +53,8 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             delete diagrams[name];
             // update settings
             save_diagrams();
+            // select the tile tab
+            $("#channel-tiles-tab").tab('show');
         };
 
         var get_diagram = function(name) {
@@ -84,12 +98,9 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             }
             for (var name in diagrams) {
                 var diagram = diagrams[name];
-                var found = diagram.nodes.get(node_ids);
+                var found = _.compact(diagram.nodes.get(node_ids));
                 if (found.length == node_ids.length) {
-                    results.push({
-                        diagram: name,
-                        found: node_ids
-                    });
+                    results.push(diagram);
                 }
             }
             return results;
@@ -127,107 +138,6 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
 
         load_diagrams();
 
-        $("body").on("dragstart", function(event) {
-            try {
-                if (event.target.attributes["data-node-id"]) {
-                    console.log("dragging node");
-                    var node_id = event.target.attributes["data-node-id"].value;
-                    drag_id = node_id;
-                    drag_type = "node";
-                } else
-                if (event.target.attributes["data-diagram-name"]) {
-                    console.log("dragging diagram");
-                    var diagram_name = event.target.attributes["data-diagram-name"].value;
-                    drag_id = diagram_name;
-                    drag_type = "diagram";
-                } else
-                if (event.target.attributes["data-tile-name"]) {
-                    console.log("dragging channel tile");
-                    var tile_name = event.target.attributes["data-tile-name"].value;
-                    drag_id = tile_name;
-                    drag_type = "tile";
-                } else {
-                    console.log("ignoring unknown draggable");
-                }
-            } catch (exception) {
-                console.log(exception);
-            }
-        });
-
-        $("#diagram-tab-content")[0].addEventListener("dragenter", function(event) {
-            event.preventDefault();
-        }, false);
-
-        $("#diagram-tab-content")[0].addEventListener("dragover", function(event) {
-            event.preventDefault();
-        }, false);
-
-        $("#diagram-tab-content")[0].addEventListener("dragleave", function(event) {}, false);
-
-        $("#diagram-tab-content")[0].addEventListener("dragend", function(event) {
-            event.preventDefault();
-        }, false);
-
-        $("#diagram-tab-content")[0].addEventListener("drop", function(event) {
-            console.log(event);
-            event.preventDefault();
-            if (drag_type == "node" && drag_id) {
-                var diagram = shown_diagram();
-                console.log("add node " + drag_id + " to diagram " + diagram.name);
-                var node = model.nodes.get(drag_id);
-                if (node) {
-                    var canvas = diagram.network.DOMtoCanvas({
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                    // this should be for initial placement only
-                    node.x = canvas.x;
-                    node.y = canvas.y - node.size * 2;
-                    diagram.nodes.update(node);
-                    // position the node at the drop location
-                }
-            } else
-            if (drag_type == "diagram" && drag_id) {
-                var source_diagram = get_diagram(drag_id);
-                var target_diagram = shown_diagram();
-                console.log("add diagram contents from " + source_diagram.name + " to diagram " + target_diagram.name);
-                var nodes = source_diagram.nodes.get();
-                // position the nodes around the drop location
-                var canvas = target_diagram.network.DOMtoCanvas({
-                    x: event.clientX,
-                    y: event.clientY
-                });
-                target_diagram.nodes.update(nodes);
-                Array.from(nodes).forEach(function(node) {
-                    target_diagram.network.moveNode(node.id, ui_util.vary(canvas.x, node.size * vary_multiplier), ui_util.vary(canvas.y, node.size * vary_multiplier));
-                });
-                var node_ids = _.map(Array.from(nodes), "id");
-                layout.save_layout(target_diagram, node_ids);
-                target_diagram.network.fit();
-            } else
-            if (drag_type == "tile" && drag_id) {
-                var tile_name = drag_id;
-                var target_diagram = shown_diagram();
-                console.log("add tile contents from " + tile_name + " to diagram " + target_diagram.name);
-                channels.retrieve_channel(tile_name).then(function(contents) {
-                    var channel_node_ids = _.map(contents, "id").sort();
-                    // vis returns null for each id it can't find, therefore _.compact
-                    var nodes = _.compact(model.nodes.get(channel_node_ids));
-                    var canvas = target_diagram.network.DOMtoCanvas({
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                    target_diagram.nodes.update(nodes);
-                    Array.from(nodes).forEach(function(node) {
-                        target_diagram.network.moveNode(node.id, ui_util.vary(canvas.x, node.size * vary_multiplier), ui_util.vary(canvas.y, node.size * vary_multiplier));
-                    });
-                    var node_ids = _.map(Array.from(nodes), "id");
-                    layout.save_layout(target_diagram, node_ids);
-                    target_diagram.network.fit();
-                });
-            }
-        }, false);
-
         return {
             shown: shown_diagram,
             list: list_diagrams,
@@ -235,7 +145,8 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             remove: remove_diagram,
             get: get_diagram,
             have_all: have_all,
-            have_any: have_any
+            have_any: have_any,
+            add_selection_callback: add_selection_callback
         };
 
     });
