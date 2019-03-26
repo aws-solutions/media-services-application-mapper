@@ -85,7 +85,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 } else {
                     // no diagrams, create default View from previous Global View
                     console.log("no used-defined diagrams, creating default diagram");
-                    add_diagram("Global", "global", true);
+                    add_diagram("Default", "default", true);
                 }
             });
         }

@@ -108,17 +108,18 @@ def medialive_channel_mediapackage_channel_ddb_items():
             for destination in ml_channel_data["Destinations"]:
                 for setting in destination["Settings"]:
                     ml_url = setting["Url"]
+                    ml_url_v2 = None
                     # convert a mediapackage v1 ingest url to a v2 url before
                     # checking
                     parsed = urlparse(ml_url)
                     if parsed.path.startswith("/in/v1/"):
                         pieces = parsed.path.split("/")
                         if len(pieces) == 5:
-                            ml_url = "{scheme}://{netloc}/in/v2/{uid}/{uid}/channel".format(scheme=parsed.scheme, netloc=parsed.netloc, uid=pieces[3])
+                            ml_url_v2 = "{scheme}://{netloc}/in/v2/{uid}/{uid}/channel".format(scheme=parsed.scheme, netloc=parsed.netloc, uid=pieces[3])
                     for mp_channel in mediapackage_ch_cached:
                         mp_channel_data = json.loads(mp_channel["data"])
                         for ingest_endpoint in mp_channel_data["HlsIngest"]["IngestEndpoints"]:
-                            if ml_url == ingest_endpoint["Url"]:
+                            if ml_url == ingest_endpoint["Url"] or ml_url_v2 == ingest_endpoint["Url"]:
                                 # create a 'connection' out of matches
                                 config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"], "pipeline": destination["Settings"].index(setting)}
                                 print(config)
@@ -334,24 +335,25 @@ def mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items():
         # iterate over all distributions
         for distro in cloudfront_distros_cached:
             distro_data = json.loads(distro["data"])
-            for tag in distro_data["Tags"]["Items"]:
-                if (tag["Key"] == "MP-Endpoint-ARN" or tag["Key"] == "mediapackage:cloudfront_assoc") and ":channels/" in tag["Value"]:
-                    channel_arn = tag["Value"]
-                    channel_id = None
-                    # find the channel
-                    for channel in mediapackage_ch_cached:
-                        if channel_arn == channel["arn"]:
-                            channel_data = json.loads(channel["data"])
-                            channel_id = channel_data["Id"]
-                            break
-                    if channel_id:
-                        # add a connection to each endpoint
-                        for endpoint in mediapackage_ep_cached:
-                            endpoint_data = json.loads(endpoint["data"])
-                            if endpoint_data["ChannelId"] == channel_id:
-                                config = {"from": endpoint["arn"], "to": distro["arn"], "scheme": urlparse(endpoint_data["Url"]).scheme, "connected_by": "tag", "tag": tag["Key"]}
-                                print(config)
-                                items.append(connection_to_ddb_item(endpoint["arn"], distro["arn"], "mediapackage-origin-endpoint-cloudfront-distribution", config))
+            if "Tags" in distro_data:
+                for tag in distro_data["Tags"]["Items"]:
+                    if (tag["Key"] == "MP-Endpoint-ARN" or tag["Key"] == "mediapackage:cloudfront_assoc") and ":channels/" in tag["Value"]:
+                        channel_arn = tag["Value"]
+                        channel_id = None
+                        # find the channel
+                        for channel in mediapackage_ch_cached:
+                            if channel_arn == channel["arn"]:
+                                channel_data = json.loads(channel["data"])
+                                channel_id = channel_data["Id"]
+                                break
+                        if channel_id:
+                            # add a connection to each endpoint
+                            for endpoint in mediapackage_ep_cached:
+                                endpoint_data = json.loads(endpoint["data"])
+                                if endpoint_data["ChannelId"] == channel_id:
+                                    config = {"from": endpoint["arn"], "to": distro["arn"], "scheme": urlparse(endpoint_data["Url"]).scheme, "connected_by": "tag", "tag": tag["Key"]}
+                                    print(config)
+                                    items.append(connection_to_ddb_item(endpoint["arn"], distro["arn"], "mediapackage-origin-endpoint-cloudfront-distribution", config))
     except ClientError as error:
         print(error)
     return items
