@@ -471,16 +471,22 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             console.log("tile view: interval scheduled " + update_interval + "ms");
         };
 
-        load_update_interval().then(function() {
+        // check for any tiles, create a default if needed, finish initialization
+        channels.channel_list().then(function(channel_list) {
+            if (channel_list.length === 0) {
+                channels.create_channel("Default", []).then(function() {
+                    redraw_tiles();
+                });
+            } else {
+                redraw_tiles();
+            }
+            return load_update_interval();
+        }).then(function() {
             schedule_interval();
+            event_alerts.add_callback(event_alert_callback);
+            alarms.add_callback(alarm_callback);
+            add_selection_callback(selection_listener);
         });
-
-        redraw_tiles();
-
-        event_alerts.add_callback(event_alert_callback);
-        alarms.add_callback(alarm_callback);
-
-        add_selection_callback(selection_listener);
 
         return {
             "add_selection_callback": add_selection_callback,
