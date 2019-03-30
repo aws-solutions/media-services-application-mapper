@@ -14,9 +14,9 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                         var data = JSON.parse(connection.data);
                         var human_type = data.type.replace(/\_/, " ");
                         model.edges.update({
-                            "id": data.arn,
-                            "to": data.to,
-                            "from": data.from,
+                            "id": connection.arn,
+                            "to": connection.to,
+                            "from": connection.from,
                             "label": human_type,
                             "arrows": "to",
                             "color": {
@@ -24,8 +24,8 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             }
                         });
                     });
+                    resolve();
                 });
-                resolve();
             });
         }
 

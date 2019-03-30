@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/events", "app/alarms", "app/settings"],
-    function($, _, channels, model, ui_util, event_alerts, alarms, settings) {
+define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app/alarms", "app/settings", "app/ui/diagrams", "lodash", "app/ui/confirmation", "app/ui/alert", "app/ui/channels_menu"],
+    function($, channels, model, ui_util, event_alerts, alarms, settings, diagrams, _, confirmation, alert, channels_menu) {
 
         var tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
@@ -25,17 +25,17 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
         var current_channel_list = [];
         var current_channel_members = {};
 
-        var add_click_listener = function(callback) {
+        var add_selection_callback = function(callback) {
             if (!click_listeners.includes(callback)) {
                 click_listeners.push(callback);
             }
         };
 
-        var event_alert_callback = function(current_alerts, previous_alerts) {
+        var event_alert_callback = function() {
             update_tile_info();
         };
 
-        var alarm_callback = function(current_alarming_ids, previous_alarming_ids) {
+        var alarm_callback = function() {
             update_tile_info();
         };
 
@@ -43,16 +43,16 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             toggle_tile(name);
         };
 
-        var selected_tile_name = function() {
-            var selected = $(".selected-channel-tile");
-            return selected.attr("data-channel-name");
-        }
+        var selected = function() {
+            var tile = $(".selected-channel-tile");
+            return tile.attr("data-channel-name");
+        };
 
         var toggle_tile = function(name) {
-            if (name == selected_tile_name()) {
-                unselect_all()
+            if (name === selected()) {
+                unselect_all();
             } else {
-                select_tile(name);
+                select(name);
             }
         };
 
@@ -61,17 +61,17 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             if (blinks > 0) {
                 setTimeout(
                     function() {
-                        if (blinks % 2 == 0) {
-                            select_tile(tile);
+                        if (blinks % 2 === 0) {
+                            select(tile);
                         } else {
-                            unselect_tile(tile);
+                            unselect(tile);
                         }
                         blink(blinks - 1, tile);
                     }, interval_ms);
             } else {
-                select_tile(tile);
+                select(tile);
             }
-        }
+        };
 
         var scroll_to_tile = function(name) {
             // scroll to the selected item
@@ -82,32 +82,44 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             }, "slow");
         };
 
-        var select_tile = function(name) {
+        var select = function(name) {
             var query = `[data-channel-name='${name}']`;
             var selected_tile = $(query);
             selected_tile.addClass("selected-channel-tile");
             query = `[data-channel-name][data-channel-name!='${name}']`;
             var unselected_tiles = $(query);
             unselected_tiles.removeClass("selected-channel-tile");
-        }
+        };
 
-        var unselect_tile = function(name) {
+        var unselect = function(name) {
             var query = `[data-channel-name='${name}']`;
             var selected_tile = $(query);
             selected_tile.removeClass("selected-channel-tile");
-        }
+        };
 
         var unselect_all = function() {
             var query = `[data-channel-name]`;
             var unselected_tiles = $(query);
             unselected_tiles.removeClass("selected-channel-tile");
+        };
+
+        var shown = function() {
+            return $("#" + tab_id).attr("aria-selected") === "true";
+        };
+
+        function tab_alert(state) {
+            if (state) {
+                $("#channel-tiles-tab-icon").text("warning");
+            } else {
+                $("#channel-tiles-tab-icon").text("grid_on");
+            }
         }
 
         var update_tile_info = function() {
             var cached_events = event_alerts.get_cached_events();
             var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-            $.each(current_channel_list, function(channel_index, channel_name) {
-                channel_members = current_channel_members[channel_name];
+            current_channel_list.forEach(function(channel_name) {
+                var channel_members = current_channel_members[channel_name];
                 if (channel_members) {
                     var query = `[data-channel-name='${channel_name}']`;
                     var tile_id = $(query).attr("id");
@@ -119,22 +131,21 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                     var alert_count = 0;
                     var alarm_count = 0;
                     var border_class = "border-success";
-                    $.each(channel_members, function(member_index, member) {
-                        $.each(cached_events.current, function(event_index, event_value) {
+                    channel_members.forEach(function(member) {
+                        cached_events.current.forEach(function(event_value) {
                             if (member.id === event_value.resource_arn) {
                                 border_class = "border-danger";
-                                alert_count++;
+                                alert_count += 1;
                             }
                         });
-                        $.each(cached_alarming_subscribers.current, function(alarm_index, alarm_value) {
+                        cached_alarming_subscribers.current.forEach(function(alarm_value) {
                             if (member.id === alarm_value.ResourceArn) {
                                 border_class = "border-danger";
-                                alarm_count++;
+                                alarm_count += 1;
                             }
                         });
-
                     });
-                    if (border_class == "border-success") {
+                    if (border_class === "border-success") {
                         $("#" + tile_id).removeClass("border-danger");
                     } else {
                         $("#" + tile_id).removeClass("border-success");
@@ -143,11 +154,12 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                     $("#" + tile_id).attr("data-alarm-count", alarm_count);
                     $("#" + tile_id).addClass(border_class);
                     $("#" + service_count_id).html(`${service_count} cloud services`);
-                    $("#" + event_count_id).html(`${alert_count} alert event${alert_count == 1 ? "" : "s"}`);
-                    $("#" + alarm_count_id).html(`${alarm_count} alarm${alarm_count == 1 ? "" : "s"}`);
+                    $("#" + event_count_id).html(`${alert_count} alert event${(alert_count === 1 ? "" : "s")}`);
+                    $("#" + alarm_count_id).html(`${alarm_count} alarm${(alarm_count === 1 ? "" : "s")}`);
                 }
             });
             sort_tiles();
+            tab_alert($("#" + content_div + " .border-danger").length > 0);
         };
 
         var sort_tiles = function() {
@@ -156,15 +168,15 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                 var compare = 0;
                 var compA = Number.parseInt($(a).attr("data-alert-count")) + Number.parseInt($(a).attr("data-alarm-count"));
                 var compB = Number.parseInt($(b).attr("data-alert-count")) + Number.parseInt($(b).attr("data-alarm-count"));
-                compare = (compA < compB) ? 1 : (compA > compB) ? -1 : 0;
-                if (compare == 0) {
+                compare = (compA < compB ? 1 : (compA > compB ? -1 : 0));
+                if (compare === 0) {
                     compA = $(a).attr("data-channel-name");
                     compB = $(b).attr("data-channel-name");
-                    compare = (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+                    compare = (compA < compB ? -1 : (compA > compB ? 1 : 0));
                 }
                 return compare;
             });
-            $.each(tiles, function(index, tile) {
+            tiles.each(function(ignore, tile) {
                 $("[data-tile-row]").append(tile);
             });
         };
@@ -174,13 +186,13 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             current_channel_members = {};
             // $("#" + content_div).empty();
             $("#" + content_div).html(`<div id="${tile_row_div_id}" data-tile-row="true" class="row ml-3">`);
-            new Promise(function(outerResolve, outerReject) {
+            new Promise(function(outerResolve) {
                 channels.channel_list().then(function(channel_list) {
                     // console.log(channel_list);
                     current_channel_list = channel_list;
                     var cached_events = event_alerts.get_cached_events();
                     var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-                    $.each(channel_list, function(channel_index, channel_name) {
+                    channel_list.forEach(function(channel_name) {
                         var border_class = "border-success";
                         channels.retrieve_channel(channel_name).then(function(channel_members) {
                             // console.log(channel_members);
@@ -188,21 +200,21 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                             var service_count = channel_members.length;
                             var alert_count = 0;
                             var alarm_count = 0;
-                            $.each(channel_members, function(member_index, member) {
-                                $.each(cached_events.current, function(event_index, event_value) {
+                            channel_members.forEach(function(member) {
+                                cached_events.current.forEach(function(event_value) {
                                     if (member.id === event_value.resource_arn) {
                                         border_class = "border-danger";
-                                        alert_count++;
+                                        alert_count += 1;
                                     }
                                 });
-                                $.each(cached_alarming_subscribers.current, function(alarm_index, alarm_value) {
+                                cached_alarming_subscribers.current.forEach(function(alarm_value) {
                                     if (member.id === alarm_value.ResourceArn) {
                                         border_class = "border-danger";
-                                        alarm_count++;
+                                        alarm_count += 1;
                                     }
                                 });
                             });
-                            if (channel_name == selected_tile_name()) {
+                            if (channel_name === selected()) {
                                 border_class = border_class + " selected-channel-tile";
                             }
                             var channel_card_id = ui_util.makeid();
@@ -212,101 +224,69 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                             var header_id = channel_card_id + "_header";
                             var tile = `
                                 <div draggable="true" class="card ${border_class} ml-4 my-3" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
-                                    <div class="card-header" style="cursor: pointer;" id="${header_id}">${channel_name}</div>
+                                    <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${channel_name}</div>
                                     <div class="card-body text-info my-0 py-1">
-                                        <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${alert_count == 1 ? "" : "s"}</h5>
-                                        <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${alarm_count == 1 ? "" : "s"}</h5>
+                                        <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${(alert_count === 1 ? "" : "s")}</h5>
+                                        <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${(alarm_count === 1 ? "" : "s")}</h5>
                                         <p class="card-text small my-0 py-0" id="${channel_card_id}_services">${service_count} cloud services</p>
                                     </div>
-                                    <div class="btn-group btn-group-sm mb-1 mx-auto" role="group" aria-label="Basic example">
-                                        <button type="button" id="${model_button_id}" class="btn btn-secondary"><small>View Diagram</small></button>
-                                        <button type="button" id="${edit_button_id}" class="btn btn-secondary"><small>Edit</small></button>
-                                        <button type="button" id="${delete_button_id}" class="btn btn-secondary"><small>Delete</small></button>
+                                    <div class="btn-group btn-group-sm mb-1 mx-auto" role="group" aria-label="Tile Buttons">
+                                        <button type="button" id="${model_button_id}" title="Navigate to Diagram" class="btn btn-light px-2">Diagram</button>
                                     </div>
                                 </div>
                             `;
                             $("#" + tile_row_div_id).append(tile);
-                            $("#" + header_id).on("click", (function() {
+                            var header_click_closure = function() {
                                 var name = channel_name;
                                 var members = channel_members;
-                                return function(event) {
+                                return function() {
                                     click_listeners.forEach(function(f) {
                                         f(name, members);
                                     });
-                                }
-                            })());
-                            $("#" + model_button_id).on("click", (function() {
+                                };
+                            };
+                            $("#" + header_id).on("click", header_click_closure());
+                            $("#" + header_id).dblclick((function() {
                                 var name = channel_name;
                                 var members = channel_members;
-                                return function(event) {
-                                    // require("app/ui/global_view").show();
-                                    // var node_ids = [];
-                                    // $.each(members, function(i, member) {
-                                    //     node_ids.push(member.id);
-                                    // });
-                                    // require("app/ui/search_view").set_node_filter(name, node_ids);
+                                return function() {
+                                    show_edit_dialog(name, members);
                                 }
                             })());
-                            $("#" + edit_button_id).on("click", (function() {
-                                var name = channel_name;
-                                var members = channel_members;
-                                return function(event) {
-                                    // console.log(members);
-                                    $("#channel_edit_name").val(name);
-                                    $("#channel_edit_name").attr("data-original-name", name);
-                                    $("#channel_edit_modal_items").empty();
-                                    var channel_content = "";
-                                    $.each(members, function(index, member) {
-                                        var node = model.nodes.get(member.id);
-                                        // var data = JSON.stringify(node.data);
-                                        var checkbox_id = ui_util.makeid();
-                                        channel_content += `
-                                                <tr><th scope="row">${index+1}</th>
-                                                <td>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
-                                                </div>
-                                                </td>
-                                                <td>${node.title}</td><td>${node.id}</td></tr>
-                                            `;
-                                    });
-                                    var html = `
-                                            <table id="channel_edit_members_table" class="table table-sm table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Remove</th>
-                                                        <th scope="col">Type</th>
-                                                        <th scope="col">ARN</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    ${channel_content}
-                                                </tbody>
-                                            </table>`;
-                                    $("#channel_edit_modal_items").html(html);
-                                    $("#channel_edit_modal").modal('show');
-                                }
-                            })());
-                            $("#" + delete_button_id).on("click", function(event) {
-                                var local_name = channel_name;
-                                console.log(event);
-                                $("#confirmation_dialog_proceed").on("click", function(event) {
-                                    console.log(event);
-                                    channels.delete_channel(local_name).then(function(response) {
-                                        console.log(response);
-                                        redraw_tiles();
-                                    });
-                                });
-                                $("#confirmation_dialog").on("hide.bs.modal", function(event) {
-                                    console.log(event);
-                                    $("#confirmation_dialog_proceed").unbind("click");
-                                });
-                                $("#confirmation_dialog_body").html("<p>Delete the channel tile named " + channel_name + "?</p>");
-                                $("#confirmation_dialog").modal('show');
-                            });
+                            var model_click_closure = function() {
+                                var tile_name = channel_name;
+                                var node_ids = _.map(channel_members, "id");
+                                return function() {
+                                    var html;
+                                    var matches = diagrams.have_all(node_ids);
+                                    // show tile diagram dialog
+                                    $("#view_tile_diagram_selected_diagram").empty();
+                                    if (node_ids.length === 0) {
+                                        alert.show("Add resources to the tile");
+                                    } else
+                                    if (matches.length === 0) {
+                                        html = `This tile's contents were not found on any diagram. Would you like to generate a new one?`;
+                                        confirmation.show(html, function() {
+                                            var diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+                                            // populate
+                                            var nodes = _.compact(model.nodes.get(node_ids));
+                                            diagram.nodes.update(nodes);
+                                            diagram.show();
+                                        });
+                                    } else {
+                                        matches.forEach(function(diagram) {
+                                            html = `<option value="${diagram.name}">${diagram.name}</option>`;
+                                            $("#view_tile_diagram_selected_diagram").append(html);
+                                        });
+                                        $("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
+                                        $("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
+                                        $("#view_tile_diagram_dialog").modal("show");
+                                    }
+                                };
+                            };
+                            $("#" + model_button_id).on("click", model_click_closure());
                             var tile_count = $("#" + tile_row_div_id + " > .card").length;
-                            if (tile_count == channel_list.length) {
+                            if (tile_count === channel_list.length) {
                                 outerResolve();
                             }
                         }).catch(function(error) {
@@ -322,7 +302,88 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
 
         };
 
-        $("#save_channel_edit").on("click", function(event) {
+        function show_edit_dialog(name, members) {
+            // console.log(members);
+            $("#channel_edit_name").val(name);
+            $("#channel_edit_name").attr("data-original-name", name);
+            $("#channel_edit_modal_items").empty();
+            var channel_content = "";
+            $.each(members, function(index, member) {
+                var node = model.nodes.get(member.id);
+                // var data = JSON.stringify(node.data);
+                var checkbox_id = ui_util.makeid();
+                if (node) {
+                    channel_content += `
+                                        <tr><th scope="row">${index+1}</th>
+                                        <td>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
+                                        </div>
+                                        </td>
+                                        <td>${node.title}</td><td>${node.id}</td></tr>
+                                    `;
+                } else {
+                    channel_content += `
+                                        <tr><th scope="row">${index+1}</th>
+                                        <td>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
+                                        </div>
+                                        </td>
+                                        <td>Expired</td><td>Expired</td></tr>
+                                    `;
+                }
+            });
+            var html = `
+                        <table id="channel_edit_members_table" class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Remove</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">ARN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${channel_content}
+                            </tbody>
+                        </table>`;
+            $("#channel_edit_modal_items").html(html);
+            $("#channel_edit_modal").modal("show");
+        }
+
+        $("#view_tile_diagram_show").on("click", function() {
+            var diagram_name = $("#view_tile_diagram_selected_diagram").val();
+            var node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
+            var diagram = diagrams.get(diagram_name);
+            diagram.network.once("afterDrawing", function() {
+                diagram.network.fit({
+                    nodes: node_ids,
+                    animation: true
+                });
+                diagram.blink(10, node_ids);
+            });
+            $("#view_tile_diagram_dialog").modal("hide");
+            diagram.show();
+        });
+
+        $("#view_tile_diagram_generate_diagram_button").on("click", function() {
+            var tile_name = $("#view_tile_diagram_dialog").attr("data-tile-name");
+            var node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
+            var diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+            // populate
+            var nodes = _.compact(model.nodes.get(node_ids));
+            diagram.nodes.update(nodes);
+            // diagram.network.once("afterDrawing", function() {
+            //     // layout
+            //     diagram.layout_vertical(true);
+            // });
+            // show
+            diagram.show();
+            $("#view_tile_diagram_dialog").modal("hide");
+        });
+
+        $("#save_channel_edit").on("click", function() {
             var edited_name = $("#channel_edit_name").val();
             // console.log(edited_name);
             var original_name = $("#channel_edit_name").attr("data-original-name");
@@ -332,8 +393,8 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             channels.delete_channel(original_name).then(function() {
                 console.log("removed channel members");
                 var members = [];
-                $.each(member_checkboxes, function(index, item) {
-                    if (item.checked == false) {
+                member_checkboxes.each(function(ignore, item) {
+                    if (item.checked === false) {
                         members.push(item.value);
                     }
                 });
@@ -347,12 +408,49 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
             });
         });
 
+        $("#tiles_duplicate_selected_tile_button").on("click", function() {
+            var tile_name = selected();
+            if (shown() && tile_name && tile_name !== "") {
+                channels.retrieve_channel(tile_name).then(function(source_contents) {
+                    source_node_ids = _.map(source_contents, "id").sort();
+                    channels_menu.show_quick_new_tile(source_node_ids);
+                });
+            }
+        });
+
+        $("#tiles_edit_selected_tile_button").on("click", function() {
+            var tile_name = selected();
+            if (shown() && tile_name && tile_name !== "") {
+                channels.retrieve_channel(tile_name).then(function(contents) {
+                    show_edit_dialog(tile_name, contents);
+                });
+            }
+        });
+
+        $("#tiles_delete_selected_tile_button").on("click", function() {
+            var tile_name = selected();
+            if (shown() && tile_name && tile_name !== "") {
+                $("#confirmation_dialog_proceed").on("click", function(event) {
+                    channels.delete_channel(tile_name).then(function(response) {
+                        redraw_tiles();
+                    });
+                });
+                $("#confirmation_dialog").on("hide.bs.modal", function(event) {
+                    console.log(event);
+                    $("#confirmation_dialog_proceed").unbind("click");
+                });
+                $("#confirmation_dialog_body").html("<p>Delete the tile named " + tile_name + "?</p>");
+                $("#confirmation_dialog").modal("show");
+
+            }
+        });
+
         var cache_update = redraw_tiles;
 
         var load_update_interval = function() {
-            return new Promise(function(resolve, reject) {
+            return new Promise(function(resolve) {
                 settings.get(settings_key).then(function(value) {
-                    seconds = Number.parseInt(value);
+                    var seconds = Number.parseInt(value);
                     update_interval = seconds * 1000;
                     resolve();
                 });
@@ -379,23 +477,21 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
 
         redraw_tiles();
 
-        event_alerts.add_listener(event_alert_callback);
-        alarms.add_listener(alarm_callback);
+        event_alerts.add_callback(event_alert_callback);
+        alarms.add_callback(alarm_callback);
 
-        add_click_listener(selection_listener);
+        add_selection_callback(selection_listener);
 
         return {
-            "add_click_listener": add_click_listener,
+            "add_selection_callback": add_selection_callback,
             "redraw_tiles": redraw_tiles,
             "update_tile_info": update_tile_info,
-            "select_tile": function(name) {
+            "select": function(name) {
                 scroll_to_tile(name);
-                select_tile(name);
+                select(name);
             },
-            "unselect_tile": unselect_tile,
-            "get_selected_tile_name": function() {
-                return selected_tile_name();
-            },
+            "unselect": unselect,
+            "selected": selected,
             "set_update_interval": function(seconds) {
                 set_update_interval(seconds).then(function() {
                     schedule_interval();
@@ -408,24 +504,6 @@ define(["jquery", "lodash", "app/channels", "app/model", "app/ui/util", "app/eve
                 scroll_to_tile(name);
                 blink(10, name);
             },
-            "shown": function() {
-                return $("#" + tab_id).attr("aria-selected") == 'true';
-            },
-            "tile_at": function(x, y) {
-                // get all the tile divs
-                var tile_divs = $("div[data-channel-name]");
-                // get bounding boxes for each div
-                tile_divs.each(function(index, item) {
-                    console.log(item);
-                    // var rect = $(item)[0].getElementById($(item).attr("id")).getBoundingClientRect();
-                    // console.log(rect);
-                    // compare to provided x,y
-                    // if (x >= rect.left && x <= rect.left + rect.width && y >= rect.top && y <= rect.top + rect.height) {
-                    //     return item.attr("data-channel-name");
-                    // }
-                    // return tile name
-                });
-                return null;
-            }
+            "shown": shown
         };
     });

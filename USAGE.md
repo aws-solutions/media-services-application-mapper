@@ -78,10 +78,10 @@ A typical process for diagram layout involves:
     * Save Entire Layout Now -- save the position of all nodes. When nodes are moved, the new positions are recorded automatically after a few seconds. This is a manual operation on all the diagram items that records the positions immediately. **This operation may cause your layout table in DynamoDB to scale-up in capacity units temporarily if you are working with a large inventory of diagram items.**
 
 * Channels
-    * Create New Channel Tile -- see below. One or more diagram nodes are selected before choosing this menu item. This operation will prompt the user for a channel tile name with the selected nodes. After providing the name and clicking Save, the tile will appear in the Channel Tiles tab.
-    * Add to Existing Channel Tile -- One or more diagram nodes are selected before choosing this menu item. This operation will display a dialog with existing channel tiles and the currently selected nodes. After select one or more existing tiles and clicking Save, the tiles will update in the Channel Tiles tab.
+    * Create New Tile -- see below. One or more diagram nodes are selected before choosing this menu item. This operation will prompt the user for a tile name with the selected nodes. After providing the name and clicking Save, the tile will appear in the Channel Tiles tab.
+    * Add to Existing Tile -- One or more diagram nodes are selected before choosing this menu item. This operation will display a dialog with existing channel tiles and the currently selected nodes. After select one or more existing tiles and clicking Save, the tiles will update in the Channel Tiles tab.
 
-![Create Channel Tile](images/create-channel-tile.jpeg)
+![Create Tile](images/create-channel-tile.jpeg)
 
 * Alarms
     * Subscribe to Alarms -- see below. One or more diagram nodes are selected before choosing this menu item. This operation will prompt the user to find and select one or more CloudWatch alarms to associate to the selected nodes. Any alarms can be subscribed to any nodes. The association exists only within MSAM.
@@ -90,22 +90,22 @@ A typical process for diagram layout involves:
 
 * Tools -- tools are extensions that provide some type of functionality. Custom tools can be built and added to MSAM, and invoked from this menu.
 
-## Channel Tiles
+## Tiles
 
-A channel tile represents all of the cloud resources that make up a broadcast or live streaming channel. A channel tile might include, for example, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, and CloudFront distribution. A cloud resource can be a member of more than one channel tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a channel tile's resources are aggregated and communicated by visual indications on the tile.
+A tile represents all of the cloud resources that make up a broadcast or live streaming channel. A tile might include, for example, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, and CloudFront distribution. A cloud resource can be a member of more than one tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a tile's resources are aggregated and communicated by visual indications on the tile.
 
 Tiles are sorted by the total number of alarms and alerts, and then by tile name. Diagram nodes are peridically updated to visually reflect the state of subscribed alarms and alerts. Channel tiles reflect the aggregate status of all diagram nodes associated with the tile. 
 
 ### Creating a Tile
 
-A channel tile is created from the Global Model. 
+A tile is created from the Global Model. 
 
 1. Select one or more nodes on the diagram using any of the methods discussed above
-1. Select the Channels menu, Create New Channel Tile menu item
-1. Review the cloud resources previously selected
-1. Provide a name for the new tile and click the Save button
+2. Select the Channels menu, Create New Tile menu item
+3. Review the cloud resources previously selected
+4. Provide a name for the new tile and click the Save button
 
-The new tile will appear in the Channel Tile view. Tiles will automatically update every few seconds to show the latest status.
+The new tile will appear in the Tile view. Tiles will automatically update every few seconds to show the latest status.
 
 ### Selecting a Tile
 
@@ -128,9 +128,9 @@ Select any item in the **Global Model** or **Channel Tiles view**. Click the **M
 MSAM can associate any CloudWatch alarm to any node on the diagram. 
 
 1. Select one or more items in the Global Model
-1. Select the Alarms menu and Subscribe to Alarms menu item
-1. Use the region list and column filters, and select one or more CloudWatch alarms
-1. Click Save
+2. Select the Alarms menu and Subscribe to Alarms menu item
+3. Use the region list and column filters, and select one or more CloudWatch alarms
+4. Click Save
 
 After a diagram node is subscribed to an alarm:
 

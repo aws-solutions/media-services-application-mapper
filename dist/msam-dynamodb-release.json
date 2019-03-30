@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1553532612)",
+    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1553884394)",
     "Resources": {
         "DefaultSettingsResourceRole": {
             "Type": "AWS::IAM::Role",
@@ -51,14 +51,14 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/dynamodb_resource_1553532612.zip"
+                    "S3Key": "msam/dynamodb_resource_1553884394.zip"
                 },
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for adding defaults to the Settings table",
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1553532612"
+                        "BUILD_STAMP": "1553884394"
                     }
                 },
                 "Role": {
@@ -83,7 +83,7 @@
                 "SettingsTable": {
                     "Ref": "Settings"
                 },
-                "BUILD_STAMP": "1553532612",
+                "BUILD_STAMP": "1553884394",
                 "StackName": {
                     "Ref": "AWS::StackName"
                 }

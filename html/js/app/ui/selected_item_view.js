@@ -10,13 +10,11 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
         var blinks = 10;
 
         var show = function() {
-            $("#" + tab_id).tab('show');
+            $("#" + tab_id).tab("show");
         };
 
         var display_selected_nodes = function(diagram, node_ids) {
-            var compartment = "";
-            var promises = [];
-            nodes_ids = Array.isArray(node_ids) ? node_ids : [node_ids];
+            nodes_ids = (Array.isArray(node_ids) ? node_ids : [node_ids]);
             var node = model.nodes.get(node_ids[0]);
             var found_on = diagrams.have_all(node.id);
             var diagram_links = "";
@@ -57,7 +55,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                 var data = node.data;
                 // $("#search_input").val("");
                 // $("#nav-data-subtitle").html(node.title);
-                renderjson.set_icons('+', '-');
+                renderjson.set_icons("+", "-");
                 renderjson.set_show_to_level(1);
                 var html = `
                     <h6 class="card-subtitle mb-2 text-muted" id="${div_id}-subtitle">${node.header}&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
@@ -70,10 +68,11 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                 $("#" + div_id).empty();
                 // }
                 $("#" + div_id).append(html);
+                var json = renderjson(data);
                 $("#" + div_id + "-text")[0].appendChild(
-                    renderjson(data)
+                    json
                 );
-                // attach click handlers to channel tile links
+                // attach click handlers to tile links
                 $.each(channel_tile_link_ids, function(index, link) {
                     var name = link.name;
                     var id = link.id;
@@ -82,7 +81,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                         return function(event) {
                             var tab = $("#channel-tiles-tab");
                             if (tab.attr("aria-selected") == "false") {
-                                $("#channel-tiles-tab").tab('show');
+                                $("#channel-tiles-tab").tab("show");
                             }
                             view.blink(name);
                         };
@@ -91,21 +90,21 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                 });
                 // attach click handlers to diagram links
                 $.each(diagram_link_ids, function(index, item) {
-                    var diagram = item.diagram;
+                    var my_diagram = item.diagram;
                     var id = item.id;
                     var node_id = item.node_id;
                     var eventClosure = function() {
                         return function(event) {
-                            diagram.network.once("afterDrawing", (function() {
+                            my_diagram.network.once("afterDrawing", (function() {
                                 return function() {
-                                    diagram.network.fit({
+                                    my_diagram.network.fit({
                                         nodes: [node_id],
                                         animation: true
                                     });
-                                    diagram.blink(blinks, node_id);
-                                }
+                                    my_diagram.blink(blinks, node_id);
+                                };
                             })());
-                            diagram.show();
+                            my_diagram.show();
                         };
                     }();
                     $("#" + id).on("click", eventClosure);
@@ -115,27 +114,26 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
         };
 
 
-        var display_selected_edge = function(edge, empty) {
+        var display_selected_edges = function(diagram, edges) {
+            var edge = model.edges.get(edges[0]);
             var toNode = model.nodes.get(edge.to);
             var fromNode = model.nodes.get(edge.from);
-            // $("#search_input").val("");
-            $("#nav-data-subtitle").html("Connection from " + fromNode.title + " to " + toNode.title);
-            renderjson.set_icons('+', '-');
+            $("#" + div_id).empty();
+            renderjson.set_icons("+", "-");
             renderjson.set_show_to_level(1);
-            if (empty) {
-                $("#nav-data-text").empty();
-            }
-            $("#nav-data-text")[0].appendChild(
-                renderjson(fromNode.data)
-            );
-            $("#nav-data-text")[0].appendChild(
-                renderjson(toNode.data)
-            );
+            var html = `
+                <h6 class="card-subtitle mb-2 text-muted">Connection from ${fromNode.title} to ${toNode.title}</h6>
+                <p class="card-text small" id="${div_id}-from"></p>
+                <p class="card-text small" id="${div_id}-to"></p>
+                `;
+            $("#" + div_id).append(html);
+            $("#" + div_id + "-from").append(renderjson(fromNode.data));
+            $("#" + div_id + "-to").append(renderjson(toNode.data));
         };
 
 
         var display_selected_tile = function(name, members) {
-            renderjson.set_icons('+', '-');
+            renderjson.set_icons("+", "-");
             renderjson.set_show_to_level(2);
             var data = [];
             $.each(members, function(member_index, member_value) {
@@ -156,7 +154,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             $("#nav-data-text").empty();
             $("#nav-data-subtitle").empty();
             // $("#search_input").val("");
-        }
+        };
 
         var global_view_listener = function(event) {
             if (event.nodes.length > 0) {
@@ -182,7 +180,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                 // get all the node locations
                 var positions = network.getPositions();
                 // find the node closest to the doubletap
-                for (var p of Object.entries(positions)) {
+                Object.entries(positions).forEach(function(p) {
                     if (closest == null) {
                         closest = {
                             id: p[0],
@@ -201,7 +199,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                             };
                         }
                     }
-                }
+                });
                 console.log(JSON.stringify(closest));
                 if (closest != null) {
                     // zoom to the closest node to the doubletap
@@ -211,7 +209,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
         };
 
         var tile_view_listener = function(name, members) {
-            if (tile_view.get_selected_tile_name() != "") {
+            if (tile_view.selected()) {
                 // show();
                 display_selected_tile(name, members);
             } else {
@@ -220,10 +218,16 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
         };
 
         diagrams.add_selection_callback(function(diagram, event) {
+            console.log(event);
             if (event.nodes.length > 0) {
                 display_selected_nodes(diagram, event.nodes);
+            } else
+            if (event.edges.length > 0) {
+                display_selected_edges(diagram, event.edges);
             }
         });
+
+        tile_view.add_selection_callback(tile_view_listener);
 
         // return {
         //     "display_selected_tile": display_selected_tile,

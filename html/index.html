@@ -15,7 +15,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.1.2/css/bootstrap/tabulator_bootstrap4.min.css" integrity="sha256-DDJiZD+ORXOovR4Qln+so9eW8YGdlqyaDRkxxPo0dRs=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
@@ -96,6 +96,18 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                 </li>
                 <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tiles
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="channels_dropdown">
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_add_new_tile_button">Add New Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_add_to_tile_button">Add Selected Node to Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_duplicate_selected_tile_button">Duplicate Selected Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_edit_selected_tile_button">Show/Edit Contents of Selected Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_delete_selected_tile_button">Delete Selected Tile</a>
+                    </div>
+                </li>
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="nodes_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Nodes
                     </a>
@@ -110,17 +122,27 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <a class="dropdown-item" href="#" id="nodes_layout_horizontal">Layout Hierarchical Left-Right</a>
                         <a class="dropdown-item" href="#" id="nodes_layout_isolated">Layout Isolated Nodes</a>
                     </div>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="diagram_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Diagram
                     </a>
                     <div class="dropdown-menu" aria-labelledby="diagram_dropdown">
                         <a class="dropdown-item" href="#" id="diagram_manage_contents">Manage Diagram Contents</a>
-                        <div class="dropdown-divider"></div>
+                        <!-- <div class="dropdown-divider"></div> -->
                         <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Downstream Connected Nodes</a>
                         <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Upstream Connected Nodes</a>
                         <a class="dropdown-item" href="#" id="diagram_add_all_nodes">Add All Connected Nodes</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="nodes_select_downstream">Expand Selection Downstream</a>
+                        <a class="dropdown-item" href="#" id="nodes_select_upstream">Expand Selection Upstream</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="nodes_align_vertical">Align Selected Vertically</a>
+                        <a class="dropdown-item" href="#" id="nodes_align_horizontal">Align Selected Horizontally</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="nodes_layout_vertical">Layout Hierarchical Top-Bottom</a>
+                        <a class="dropdown-item" href="#" id="nodes_layout_horizontal">Layout Hierarchical Left-Right</a>
+                        <a class="dropdown-item" href="#" id="nodes_layout_isolated">Layout Isolated Nodes</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" id="diagram_remove_selected">Remove Selected Nodes</a>
                         <div class="dropdown-divider"></div>
@@ -130,51 +152,48 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Channels
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="channels_dropdown">
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_create_channel_button">Create New Channel Tile</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="channels_add_to_channel_button">Add to Existing Channel Tile</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="alarms_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Alarms
                     </a>
                     <div class="dropdown-menu" aria-labelledby="alarms_dropdown">
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="alarms_subscribe_button">Subscribe to
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="alarms_subscribe_button">Subscribe Selected to
                             Alarms</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="alarms_manage_subscriptions_button">Manage
-                            Alarm Subscriptions</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="tools_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Tools
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="tools_dropdown" id="tools-dropdown-menu">
+                        <!-- <a class="dropdown-item" href="#" data-toggle="modal" id="alarms_manage_subscriptions_button">Manage Selected Item
+                            Alarm Subscriptions</a> -->
                     </div>
                 </li>
             </ul>
             <div id="alert_div" class="alert alert-dark my-0 py-1 px-4 mx-3" role="alert" style="display: none;">
                 Something happened.
             </div>
-            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="add-diagram-tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Add New Diagram"><i class="material-icons" style="cursor: pointer;">
+            <!-- <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" id="add-tile-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Add New Tile"><i class="material-icons" style="cursor: pointer;">
                     add_box
                     </i></a>
-            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="duplicate-diagram-tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Duplicate Current Diagram"><i class="material-icons" style="cursor: pointer;">
+            <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" id="duplicate-tile-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Duplicate Selected Tile"><i class="material-icons" style="cursor: pointer;">
                     file_copy
                     </i></a>
-            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="manage-contents-tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Manage Diagram Contents"><i class="material-icons" style="cursor: pointer;">
+            <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" id="edit-tile-contents-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Edit Tile Contents"><i class="material-icons" style="cursor: pointer;">
                     list_alt
                     </i></a>
-            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="remove-diagram-tab" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Remove Current Diagram"><i class="material-icons" style="cursor: pointer;">
+            <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" id="remove-tile-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Remove Selected Tile"><i class="material-icons" style="cursor: pointer;">
                     delete_forever
                     </i></a>
-            <span class="px-2"></span>
+            <span class="px-2"></span> -->
+            <!-- <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="add-diagram-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Add New Diagram"><i class="material-icons" style="cursor: pointer;">
+                    add_box
+                    </i></a>
+            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="duplicate-diagram-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Duplicate Current Diagram"><i class="material-icons" style="cursor: pointer;">
+                    file_copy
+                    </i></a>
+            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="manage-diagram-contents-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Manage Diagram Contents"><i class="material-icons" style="cursor: pointer;">
+                    list_alt
+                    </i></a>
+            <a href="#" class="btn btn-outline-secondary mx-1 p-1 pt-2 px-2" id="remove-diagram-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Remove Current Diagram"><i class="material-icons" style="cursor: pointer;">
+                    delete_forever
+                    </i></a>
+            <span class="px-2"></span> -->
             <form class="form-inline pl-4 my-2 my-lg-0">
-                <input class="form-control mx-1" id="search_input" type="search" placeholder="Search Terms" aria-label="Search" onsubmit="return false;">
+                <input class="form-control mx-1" id="search_input" placeholder="Search Terms" onsubmit="return false;">
                 <!-- <button class="btn btn-outline-info mx-1 my-0" id="search-now-button" type="Submit">Search</button> -->
                 <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button">
                     <i class="material-icons">search</i>
@@ -183,9 +202,9 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     <i class="material-icons">clear</i>
                 </a> -->
                 <!-- <button type="button" id="only-show-matches-button" class="btn btn-outline-warning mx-1 my-0 py-2" data-toggle="button" aria-pressed="false" autocomplete="off">Only Show Matches</button> -->
-                <a href="#" class="btn btn-outline-warning mx-1 p-1 pt-2 px-2" data-toggle="button" id="only-show-matches-button" title="Filter Tile and Diagram Content">
+                <!-- <a href="#" class="btn btn-outline-warning mx-1 p-1 pt-2 px-2" data-toggle="button" id="only-show-matches-button" title="Filter Tile and Diagram Content">
                     <i class="material-icons">filter_list</i>
-                </a>
+                </a> -->
                 <!-- <button class="btn btn-outline-success mx-1 my-0" id="search-reset-button">Clear</button> -->
             </form>
         </div>
@@ -194,7 +213,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
         <div draggable="false" class="nav nav-tabs" id="diagram-tab" role="tablist">
             <a draggable="false" class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab" href="#channel-tiles-diagram" role="tab" aria-controls="channel-tiles-diagram" aria-selected="false">
                 Tiles
-                <i draggable="false" class="material-icons px-1 small">
+                <i id="channel-tiles-tab-icon" draggable="false" class="material-icons pl-1 small">
                         grid_on
                         </i>
             </a>
@@ -209,10 +228,10 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <hr class="m-0 p-0">
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
-            <a class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
-            <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
-            <a class="nav-item nav-link" id="nav-monitor-tab" data-toggle="tab" href="#nav-monitor" role="tab" aria-controls="nav-monitor" aria-selected="false">Monitor</a>
+            <a draggable="false" class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
+            <a draggable="false" class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
+            <a draggable="false" class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
+            <a draggable="false" class="nav-item nav-link" id="nav-monitor-tab" data-toggle="tab" href="#nav-monitor" role="tab" aria-controls="nav-monitor" aria-selected="false">Monitor</a>
         </div>
     </nav>
     <div id="information" style="height: 35%; width: 100%;">
@@ -304,15 +323,17 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <h6 class="card-subtitle mb-2 text-muted" id="nav-data-subtitle"></h6>
                 <p class="card-text small" id="nav-data-text"></p>
             </div>
-            <div class="tab-pane   mt-3 px-3" id="nav-monitor" role="tabpanel" aria-labelledby="nav-monitor-tab">
+            <div class="tab-pane mt-3 px-3" id="nav-monitor" role="tabpanel" aria-labelledby="nav-monitor-tab" style="width: 100%;">
                 <h6 class="mb-2 text-muted" id="nav-monitor-selected-item"></h6>
-                <b>
-                    <p class="mb-2 text-muted" id="nav-monitor-alarms-subtitle">Subscribed Alarms</p>
-                </b>
+                <p class="mb-2 text-muted mt-2"><b>Subscribed Alarms</b></p>
+                <!-- <button type="button" class="small btn btn-outline-danger d-inline float-right mx-1 p-1 pt-2 px-2 mb-1" id="monitor-unsubscribe-alarms-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Unsubscribe Selected Alarms">
+                        <i class="material-icons">clear</i>
+                    </button>
+                <button type="button" class="small btn btn-outline-success d-inline float-right mx-1 p-1 pt-2 px-2 mb-1" id="monitor-subscribe-alarms-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Subscribe to Alarms">
+                        <i class="material-icons">add</i>
+                    </button> -->
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alarms-text"></p>
-                <b>
-                    <p class="mb-2 text-muted" id="nav-monitor-alerts-subtitle">Pipeline Alerts</p>
-                </b>
+                <p class="mb-2 text-muted mt-2"><b>Pipeline Alerts</b></p>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alerts-text"></p>
             </div>
         </div>
@@ -391,7 +412,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="channel_definition_modal_title">Create a Channel Tile</h5>
+                    <h5 class="modal-title" id="channel_definition_modal_title">Create a Tile</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -424,7 +445,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="channel_edit_modal_title">Edit a Channel Tile</h5>
+                    <h5 class="modal-title" id="channel_edit_modal_title">Edit a Tile</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -457,7 +478,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="channel_add_node_modal_title">Add to an Existing Channel Tile</h5>
+                    <h5 class="modal-title" id="channel_add_node_modal_title">Add to an Existing Tile</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -700,9 +721,9 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Diagram Name</span>
+                        <span class="input-group-text">Tile Name</span>
                     </div>
-                    <input id="quick_new_tile_dialog_name" type="text" class="form-control" aria-label="Diagram Name">
+                    <input id="quick_new_tile_dialog_name" type="text" class="form-control" aria-label="Tile Name">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -759,6 +780,38 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <button type="button" id="diagram_contents_save" class="btn btn-success">Save</button>
                         <button type="button" id="diagram_contents_cancel" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View tile diagram dialog -->
+    <!-- Modal -->
+    <div class="modal fade" id="view_tile_diagram_dialog" tabindex="-1" role="dialog" aria-labelledby="view_tile_diagram_dialog_title" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-2">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="view_tile_diagram_dialog_title">View Tile Diagram</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div id="view_tile_diagram_dialog_alert">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Existing Diagrams</label>
+                    </div>
+                    <select class="custom-select" id="view_tile_diagram_selected_diagram">
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="view_tile_diagram_show" class="btn btn-primary">Show</button>
+                    <button type="button" id="view_tile_diagram_generate_diagram_button" class="btn btn-success" data-dismiss="modal">Generate New Diagram</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

@@ -22,6 +22,12 @@ define(["jquery", "lodash", "app/model", "app/alarms"], function($, _, model, al
                         node.image.selected = selected;
                         node.image.unselected = unselected;
                         model.nodes.update(node);
+                        var matches = diagrams.have_all([node.id]);
+                        // console.log(matches);
+                        matches.forEach(function(diagram) {
+                            diagram.nodes.update(node);
+                            diagram.alert(true);
+                        });
                     }
                 }
             }
@@ -50,10 +56,16 @@ define(["jquery", "lodash", "app/model", "app/alarms"], function($, _, model, al
                     node.image.selected = selected;
                     node.image.unselected = unselected;
                     model.nodes.update(node);
+                    var matches = diagrams.have_all([node.id]);
+                    // console.log(matches);
+                    matches.forEach(function(diagram) {
+                        diagram.nodes.update(node);
+                        diagram.alert(false);
+                    });
                 }
             }
         });
     };
 
-    alarms.add_listener(updateAlarmState);
+    alarms.add_callback(updateAlarmState);
 });

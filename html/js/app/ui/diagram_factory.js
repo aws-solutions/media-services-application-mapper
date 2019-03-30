@@ -13,7 +13,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 this.node_dataset_callbacks = [];
                 this.node_dataset_callbacks_once = [];
                 // DOM containers
-                this.tab_container = $("#diagram-tab");
+                this.tab_container_id = "diagram-tab";
                 this.diagram_container = $("#diagram-tab-content");
                 // this is used as the display name (UI display)
                 this.name = name;
@@ -23,6 +23,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 this.base_id = ui_util.makeid();
                 // create ids for our tab and diagram div
                 this.tab_id = "tab_" + this.base_id;
+                this.tab_icon_id = this.tab_id + "_icon";
                 this.diagram_id = "diagram_" + this.base_id;
                 // drag-select
                 this.drag_canvas;
@@ -455,22 +456,30 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 }
             }
 
-            blink(blinks, id) {
+            blink(blinks, ids) {
                 var interval_ms = 500;
-                id = Array.isArray(id) ? id : [id];
+                ids = Array.isArray(ids) ? ids : [ids];
                 var diagram = this;
                 if (blinks > 0) {
                     setTimeout(
                         function() {
                             if (blinks % 2 == 0) {
-                                diagram.network.selectNodes(id, false);
+                                diagram.network.selectNodes(ids, false);
                             } else {
                                 diagram.network.unselectAll();
                             }
-                            diagram.blink(blinks - 1, id);
+                            diagram.blink(blinks - 1, ids);
                         }, interval_ms);
                 } else {
                     diagram.network.unselectAll();
+                }
+            }
+
+            alert(state) {
+                if (state) {
+                    $("#" + this.tab_icon_id).text("warning");
+                } else {
+                    $("#" + this.tab_icon_id).text("image_aspect_ratio");
                 }
             }
         };

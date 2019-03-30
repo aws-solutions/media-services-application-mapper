@@ -20,12 +20,25 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                             _onEnter: function() {
                                 // create the html
                                 var tab =
-                                    `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-toggle="tab" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i class="material-icons px-1 small">image_aspect_ratio</i></a>`;
+                                    `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-toggle="tab" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons pl-1 small">image_aspect_ratio</i></a>`;
                                 var diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
                                 // add to containers
-                                // my_diagram.tab_container.append(tab);
-                                $("#channel-tiles-tab").after(tab);
-                                // $("#add-diagram-tab").before(tab);
+                                // skip Tiles tab
+                                var existing_tabs = $("#" + my_diagram.tab_container_id + " a[data-diagram-name]");
+                                var added = false;
+                                existing_tabs.each(function(index, item) {
+                                    // console.log(index, item);
+                                    if ($(item).attr("data-diagram-name") > my_diagram.name) {
+                                        var id = $(item).attr("id");
+                                        $("#" + id).before(tab);
+                                        added = true;
+                                        return false;
+                                    }
+                                });
+                                if (!added) {
+                                    $("#" + my_diagram.tab_container_id).append(tab);
+                                }
+                                // $("#add-diagram-button").before(tab);
                                 my_diagram.diagram_container.append(diagram_div);
                                 my_diagram.container = $("#" + my_diagram.diagram_id);
                                 this.transition("create-diagram");

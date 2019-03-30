@@ -88,6 +88,24 @@ define(["app/server", "app/connections", "app/settings"], function(server, conne
         });
     };
 
+    var unsubscribe_from_alarm = function(region, alarm_name, resource_arns) {
+        console.log(region, alarm_name, resource_arns);
+        var current_connection = connections.get_current();
+        var url = current_connection[0];
+        var api_key = current_connection[1];
+        alarm_name = encodeURIComponent(alarm_name);
+        var current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/unsubscribe`;
+        return new Promise(function(resolve, reject) {
+            server.post(current_endpoint, api_key, resource_arns).then(function(response) {
+                console.log(response);
+                resolve(response);
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    };
+
     var cache_update = function() {
         subscribers_with_alarm_state("ALARM").then(function(response) {
             // console.log("updated set event cache");
@@ -153,13 +171,14 @@ define(["app/server", "app/connections", "app/settings"], function(server, conne
                 "previous": previous_subscribers_with_alarms
             };
         },
-        "add_listener": function(f) {
+        "add_callback": function(f) {
             if (!listeners.includes(f)) {
                 listeners.push(f);
             }
         },
         "all_alarms_for_region": all_alarms_for_region,
         "subscribe_to_alarm": subscribe_to_alarm,
+        unsubscribe_from_alarm: unsubscribe_from_alarm,
         "alarms_for_subscriber": alarms_for_subscriber,
         "set_update_interval": function(seconds) {
             set_update_interval(seconds).then(function() {

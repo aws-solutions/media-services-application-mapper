@@ -207,8 +207,8 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                         this.handle("visualModelReady")
                     },
                     "visualModelReady": "visual-model-fresh"
-                        // update tile view, select first tile
-                        // update channel view (this happens with tile selection)
+                    // update tile view, select first tile
+                    // update channel view (this happens with tile selection)
 
                 },
                 "visual-model-fresh": {

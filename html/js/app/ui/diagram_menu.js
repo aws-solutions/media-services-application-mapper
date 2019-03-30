@@ -266,18 +266,18 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             }
         });
 
-        $("#add-diagram-tab,#diagram_add_diagram").on("click", function() {
+        $("#add-diagram-button,#diagram_add_diagram").on("click", function() {
             $("#create_diagram_dialog").modal('show');
         });
 
-        $("#duplicate-diagram-tab,#diagram_duplicate_diagram").on("click", function() {
+        $("#duplicate-diagram-button,#diagram_duplicate_diagram").on("click", function() {
             var diagram = diagrams.shown();
             if (diagram) {
                 $("#dupe_diagram_dialog").modal('show');
             }
         });
 
-        $("#remove-diagram-tab,#diagram_remove_diagram").on("click", function() {
+        $("#remove-diagram-button,#diagram_remove_diagram").on("click", function() {
             var diagram = diagrams.shown();
             if (diagram) {
                 var html = `Permanently remove ${diagram.name} diagram?`;
@@ -296,7 +296,7 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             diagram_tabulator.setData(current.nodes.get());
         });
 
-        $("#manage-contents-tab,#diagram_manage_contents").on("click", function() {
+        $("#manage-diagram-contents-button,#diagram_manage_contents").on("click", function() {
             if (diagrams.shown()) {
                 $("#diagram_contents_modal").modal('show');
             }

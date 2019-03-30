@@ -164,11 +164,11 @@ def subscribe_resource_to_alarm(alarm_name, region):
 
 
 @app.route('/cloudwatch/alarm/{alarm_name}/region/{region}/unsubscribe', cors=True, api_key_required=True, methods=['PUT', 'POST'])
-def unsubscribe_resource_to_alarm(alarm_name, region):
+def unsubscribe_resource_from_alarm(alarm_name, region):
     """
-    API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.
+    API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.
     """
-    return cloudwatch_data.unsubscribe_resource_to_alarm(app.current_request, alarm_name, region)
+    return cloudwatch_data.unsubscribe_resource_from_alarm(app.current_request, alarm_name, region)
 
 
 @app.route('/cloudwatch/alarm/{alarm_name}/region/{region}/subscribers', cors=True, api_key_required=True, methods=['GET'])

@@ -1,13 +1,67 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/ui/util", "app/alarms", "app/regions", "app/ui/alert"],
-    function($, _, model, global_view, ui_util, alarms, regions_promise, alert) {
+define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/alert", "app/ui/diagrams", "app/ui/tile_view", "app/channels"],
+    function($, _, model, alarms, regions_promise, alert, diagrams, tile_view, channels) {
 
         var regions_list;
 
-        var alarm_tabulator_ready = false;
-        var items_tabulator_ready = false;
+        var alarms_tabulator = new Tabulator("#subscribe_to_alarms_modal_alarm_selection", {
+            placeholder: "No Alarms Defined in this Region",
+            tooltips: true,
+            height: 400, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            layout: "fitColumns", //fit columns to width of table (optional)
+            selectable: true,
+            selectableRangeMode: "click",
+            columns: [ //Define Table Columns
+                {
+                    title: "Namespace",
+                    field: "Namespace",
+                    headerFilter: true
+                }, {
+                    title: "Alarm",
+                    field: "AlarmName",
+                    headerFilter: true
+                }, {
+                    title: "Metric",
+                    field: "MetricName",
+                    headerFilter: true
+                }, {
+                    title: "State",
+                    field: "StateValue",
+                    headerFilter: true
+                },
+            ],
+            rowSelectionChanged: function(data, rows) {
+                //update selected row counter on selection change
+                selected_alarm_data = data;
+                $("#subscribe_to_alarms_modal_alarm_selection_count").text(data.length);
+                var diagram = diagrams.shown();
+                if (diagram) {
+                    subscribe_save_button(diagram.network.getSelectedNodes().length > 0 && data.length > 0);
+                }
+            },
+        });
+
+        var nodes_tabulator = new Tabulator("#subscribe_to_alarms_modal_selected_items", {
+            placeholder: "No Model Items Selected",
+            tooltips: true,
+            selectable: false,
+            height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            layout: "fitColumns", //fit columns to width of table (optional)
+            columns: [ //Define Table Columns
+                {
+                    title: "Type",
+                    field: "title"
+                }, {
+                    title: "Name",
+                    field: "name"
+                }, {
+                    title: "ARN",
+                    field: "id"
+                }
+            ]
+        });
 
         var selected_alarm_data;
         var selected_alarm_region;
@@ -16,72 +70,18 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/ui/util", "a
             selected_alarm_region = region;
             $("#subscribe_to_alarms_modal_alarm_selection_count").text("0");
             alarms.all_alarms_for_region(region).then(function(response) {
-                if (!alarm_tabulator_ready) {
-                    $("#subscribe_to_alarms_modal_alarm_selection").empty();
-                    $("#subscribe_to_alarms_modal_alarm_selection").tabulator({
-                        placeholder: "No Alarms Defined in this Region",
-                        tooltips: true,
-                        selectable: true, //make rows selectable
-                        height: 400, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-                        layout: "fitColumns", //fit columns to width of table (optional)
-                        columns: [ //Define Table Columns
-                            {
-                                title: "Namespace",
-                                field: "Namespace",
-                                headerFilter: true
-                            }, {
-                                title: "Alarm",
-                                field: "AlarmName",
-                                headerFilter: true
-                            }, {
-                                title: "Metric",
-                                field: "MetricName",
-                                headerFilter: true
-                            }, {
-                                title: "State",
-                                field: "StateValue",
-                                headerFilter: true
-                            },
-                        ],
-                        rowSelectionChanged: function(data, rows) {
-                            //update selected row counter on selection change
-                            selected_alarm_data = data;
-                            $("#subscribe_to_alarms_modal_alarm_selection_count").text(data.length);
-                            subscribe_save_button(global_view.get_selected().nodes.length > 0 && data.length > 0);
-                        },
-                    });
-                    alarm_tabulator_ready = true;
-                }
-                $("#subscribe_to_alarms_modal_alarm_selection").tabulator("deselectRow"); //deselect all rows
-                $("#subscribe_to_alarms_modal_alarm_selection").tabulator("setData", response);
+                // $("#subscribe_to_alarms_modal_alarm_selection").tabulator("deselectRow"); //deselect all rows
+                // $("#subscribe_to_alarms_modal_alarm_selection").tabulator("setData", response);
+                alarms_tabulator.setData(response);
             });
         };
 
-        var populate_selected_items = function() {
-            var data = model.nodes.get(global_view.get_selected().nodes);
-            if (!items_tabulator_ready) {
-                $("#subscribe_to_alarms_modal_selected_items").empty();
-                $("#subscribe_to_alarms_modal_selected_items").tabulator({
-                    placeholder: "No Model Items Selected",
-                    tooltips: true,
-                    height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-                    layout: "fitColumns", //fit columns to width of table (optional)
-                    columns: [ //Define Table Columns
-                        {
-                            title: "Type",
-                            field: "title"
-                        }, {
-                            title: "Name",
-                            field: "name"
-                        }, {
-                            title: "ARN",
-                            field: "id"
-                        }
-                    ]
-                });
-                items_tabulator_ready = true;
-            }
-            $("#subscribe_to_alarms_modal_selected_items").tabulator("setData", data);
+        var populate_selected_items = function(node_ids) {
+            var data = _.compact(model.nodes.get(node_ids));
+            // placed a scrubbed list of node ids on the dialog as a data attribute
+            $("#subscribe_to_alarms_modal").attr("data-node-ids", JSON.stringify(_.map(data, "id")));
+            // $("#subscribe_to_alarms_modal_selected_items").tabulator("setData", data);
+            nodes_tabulator.setData(data);
         };
 
         var subscribe_save_button = function(enable) {
@@ -103,20 +103,48 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/ui/util", "a
         });
 
         $("#alarms_subscribe_button").on("click", function(event) {
-            subscribe_save_button(false);
-            populate_selected_items();
-            $("#subscribe_to_alarms_modal").modal('show');
+            show_alarm_subscribe_dialog();
         });
 
+        function show_alarm_subscribe_dialog() {
+            var diagram = diagrams.shown();
+            if (diagram) {
+                if (diagram.network.getSelectedNodes().length > 0) {
+                    subscribe_save_button(false);
+                    populate_selected_items(diagram.network.getSelectedNodes());
+                    $("#subscribe_to_alarms_modal").modal('show');
+                } else {
+                    alert.show("Select at least one node");
+                }
+            } else
+            if (tile_view.shown()) {
+                var tile_name = tile_view.selected();
+                if (tile_name) {
+                    channels.retrieve_channel(tile_name).then(function(members) {
+                        var node_ids = _.map(members, "id");
+                        populate_selected_items(node_ids);
+                        $("#subscribe_to_alarms_modal").modal('show');
+                    });
+                } else {
+                    alert.show("Select a tile");
+                }
+            }
+        }
+
         $("#subscribe_to_alarms_save").on("click", function(event) {
-            var node_ids = global_view.get_selected().nodes;
+            // var diagram = diagrams.shown();
+            var node_ids = JSON.parse($("#subscribe_to_alarms_modal").attr("data-node-ids"));
             var promises = [];
             $.each(selected_alarm_data, function(index, alarm) {
                 promises.push(alarms.subscribe_to_alarm(selected_alarm_region, alarm.AlarmName, node_ids));
             });
             Promise.all(promises).then(function() {
                 alert.show("Saved");
+                require("app/ui/monitor_view").refresh();
                 $("#subscribe_to_alarms_modal").modal('hide');
+                if (tile_view.shown()) {
+                    tile_view.redraw_tiles();
+                }
             }).catch(function(error) {
                 alert("Error while saving");
             });
@@ -147,5 +175,9 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/ui/util", "a
             $("#dropdownMenuButton").text(first_region);
             populate_alarms_from_region(first_region);
         });
+
+        return {
+            show_alarm_subscribe_dialog: show_alarm_subscribe_dialog
+        }
 
     });

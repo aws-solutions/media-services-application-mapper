@@ -40,7 +40,7 @@ Navigate to the [Install](INSTALL.md) document and follow the instructions to in
 
 ## Part 3: Browser Application
 
-### Essential Diagram and Channel Tile Usage
+### Essential Diagram and Tile Usage
 
 1. Navigate to the [Usage](USAGE.md) document
 2. Read and follow the First Run instructions

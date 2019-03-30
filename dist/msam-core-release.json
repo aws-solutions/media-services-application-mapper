@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1553532612)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1553884394)",
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -212,7 +212,7 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/7babee4a920b9b04063d5e6fb7c304f3",
+                    "Key": "msam/0d71b5596aa0de0b8aa4d3221998e7c2",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -227,7 +227,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1553532612",
+                        "BUILD_STAMP": "1553884394",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -421,7 +421,7 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/7babee4a920b9b04063d5e6fb7c304f3",
+                    "Key": "msam/0d71b5596aa0de0b8aa4d3221998e7c2",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -436,7 +436,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1553532612",
+                        "BUILD_STAMP": "1553884394",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -638,7 +638,7 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/7babee4a920b9b04063d5e6fb7c304f3",
+                    "Key": "msam/0d71b5596aa0de0b8aa4d3221998e7c2",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -653,7 +653,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1553532612",
+                        "BUILD_STAMP": "1553884394",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -855,7 +855,7 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/7babee4a920b9b04063d5e6fb7c304f3",
+                    "Key": "msam/0d71b5596aa0de0b8aa4d3221998e7c2",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -870,7 +870,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1553532612",
+                        "BUILD_STAMP": "1553884394",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -2503,7 +2503,7 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                                "summary": "API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.",
                                 "security": [{
                                     "api_key": []
                                 }],
@@ -2550,7 +2550,7 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                                "summary": "API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.",
                                 "security": [{
                                     "api_key": []
                                 }],
@@ -3166,7 +3166,7 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling API Gateway REST calls",
                 "CodeUri": {
-                    "Key": "msam/7babee4a920b9b04063d5e6fb7c304f3",
+                    "Key": "msam/0d71b5596aa0de0b8aa4d3221998e7c2",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3181,7 +3181,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1553532612",
+                        "BUILD_STAMP": "1553884394",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },

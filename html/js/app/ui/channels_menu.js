@@ -1,17 +1,20 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/channels", "app/ui/alert", "app/ui/diagrams"],
-    function($, model, global_view, ui_util, channels, alert, diagrams) {
+define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "app/ui/diagrams"],
+    function($, model, ui_util, channels, alert, diagrams) {
 
-        $("#channels_create_channel_button").on("click", function(event) {
+        $("#tiles_add_new_tile_button").on("click", function(event) {
             var diagram = diagrams.shown();
             if (diagram && diagram.network.getSelectedNodes().length > 0) {
                 $("#channel_definition_modal").modal("show");
+            } else {
+                // show the quick new tile
+                show_quick_new_tile([]);
             }
         });
 
-        $("#channels_add_to_channel_button").on("click", function(event) {
+        $("#tiles_add_to_tile_button").on("click", function(event) {
             var diagram = diagrams.shown();
             if (diagram && diagram.network.getSelectedNodes().length > 0) {
                 $("#channel_add_node_modal").modal("show");
@@ -122,7 +125,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/channel
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Add to Channel</th>
-                            <th scope="col">Channel Tile Name</th>
+                            <th scope="col">Tile Name</th>
                         </tr>
                     </thead>
                     <tbody>

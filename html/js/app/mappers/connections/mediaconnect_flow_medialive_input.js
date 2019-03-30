@@ -24,8 +24,8 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             }
                         });
                     });
+                    resolve();
                 });
-                resolve();
             });
         }
 

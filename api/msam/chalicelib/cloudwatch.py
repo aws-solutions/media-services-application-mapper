@@ -271,7 +271,7 @@ def subscribers_to_alarm(alarm_name, region):
     return sorted(subscribers)
 
 
-def unsubscribe_resource_to_alarm(request, alarm_name, region):
+def unsubscribe_resource_from_alarm(request, alarm_name, region):
     """
     API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.
     """

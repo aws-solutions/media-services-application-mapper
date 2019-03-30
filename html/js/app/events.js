@@ -83,7 +83,7 @@ define(["app/server", "app/connections", "app/settings"],
                     "previous": previous_set_events
                 };
             },
-            "add_listener": function(f) {
+            "add_callback": function(f) {
                 if (!listeners.includes(f)) {
                     listeners.push(f);
                 }

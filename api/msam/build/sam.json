@@ -2496,7 +2496,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
-                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                "summary": "API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []
@@ -2546,7 +2546,7 @@
                   "contentHandling": "CONVERT_TO_TEXT",
                   "type": "aws_proxy"
                 },
-                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                "summary": "API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.",
                 "security": [
                   {
                     "api_key": []

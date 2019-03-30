@@ -13,9 +13,9 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                     $.each(connections, function(index, connection) {
                         var data = JSON.parse(connection.data);
                         model.edges.update({
-                            "id": data.arn,
-                            "to": data.to,
-                            "from": data.from,
+                            "id": connection.arn,
+                            "to": connection.to,
+                            "from": connection.from,
                             "label": data.package,
                             "arrows": "to",
                             "color": {
@@ -23,8 +23,8 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             }
                         });
                     });
+                    resolve();
                 });
-                resolve();
             });
         }
 

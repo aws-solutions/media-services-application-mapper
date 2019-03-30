@@ -73,7 +73,7 @@ Channel tiles aggregate all configuration and status from the underlying assigne
 
 ### REST API
 
-All browser actions are performed through an authenticated and SSL encrypted REST API hosted in the cloud. The API can be used by other tools to perform activities such as preloading channel tile definitions or adding custom content to the cache.
+All browser actions are performed through an authenticated and SSL encrypted REST API hosted in the cloud. The API can be used by other tools to perform activities such as preloading tile definitions or adding custom content to the cache.
 
 ## Navigate
 

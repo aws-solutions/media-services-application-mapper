@@ -1,27 +1,16 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "app/ui/tile_view", "app/ui/diagrams"],
-    function($, _, model, global_view, event_alerts, tile_view, diagrams) {
+define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/ui/diagrams", "app/alarms", "app/ui/confirmation"],
+    function($, _, model, event_alerts, tile_view, diagrams, alarms, confirmation) {
 
         var last_displayed;
-
-        var show = function() {
-            $("#" + tab_id).tab('show');
-        };
-
-        var display_no_selection = function() {
-            $("#nav-monitor-alerts-subtitle").empty();
-            $("#nav-monitor-alerts-text").empty();
-            $("#nav-monitor-alarms-subtitle").empty();
-            $("#nav-monitor-alarms-text").empty();
-        };
 
         var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
             placeholder: "No Recent Pipeline Alerts",
             tooltips: true,
             selectable: false,
-            height: 200,
+            height: 250,
             layout: "fitColumns",
             columns: [{
                 title: "Event Source ARN",
@@ -46,12 +35,13 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
             }]
         });
 
-
         var alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
             placeholder: "No Alarm Subscriptions",
             tooltips: true,
-            selectable: false,
-            height: 200,
+            selectable: true,
+            selectableRangeMode: "click",
+            selectablePersistence: true,
+            height: 250,
             layout: "fitColumns",
             columns: [{
                 title: "Subscriber ARN",
@@ -74,12 +64,21 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
             }, {
                 title: "Alarm State Updated",
                 field: "StateUpdated"
+            }, {
+                tooltip: "Unsubscribe from Alarm",
+                headerSort: false,
+                formatter: "buttonCross",
+                width: 40,
+                align: "center",
+                cellClick: function(e, cell) {
+                    unsubscribe_alarm(cell.getRow()._row.data);
+                }
             }]
         });
 
-        var display_selected_nodes = function(diagram, node_ids) {
-            nodes_ids = Array.isArray(node_ids) ? node_ids : [node_ids];
-            var node = model.nodes.get(node_ids[0]);
+        var display_selected_node = function(node_id) {
+            var node = model.nodes.get(node_id);
+            last_displayed = node_id;
             var data = [];
             $("#nav-monitor-selected-item").html(node.header);
             // event alerts
@@ -89,7 +88,7 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
                     data.push(event_value.detail);
                 }
             });
-            alert_tabulator.setData(data);
+            alert_tabulator.replaceData(data);
             // alarms
             require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
                 for (subscription of subscriptions) {
@@ -98,8 +97,9 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
                     }
                     subscription.ARN = node.id;
                     subscription.name = node.name;
+                    subscription.id = node.id + ":" + subscription.Region + ":" + subscription.name;
                 }
-                alarm_tabulator.setData(subscriptions);
+                alarm_tabulator.replaceData(subscriptions);
             });
         };
 
@@ -119,8 +119,11 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
                     var local_node_id = member_value.id;
                     var local_node_name = node.name;
                     require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
+                        // console.log(subscriptions);
                         for (subscription of subscriptions) {
-                            subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
+                            if (subscription.StateUpdated) {
+                                subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
+                            }
                             subscription.ARN = local_node_id;
                             subscription.name = local_node_name;
                         }
@@ -130,56 +133,100 @@ define(["jquery", "lodash", "app/model", "app/ui/global_view", "app/events", "ap
                 }));
             });
             Promise.all(promises).then(function() {
-                if (!alarm_tabulator_ready) {
-                    create_alarm_tabulator();
-                }
-                if (!alert_tabulator_ready) {
-                    create_alert_tabulator();
-                }
-                $("#nav-monitor-alarms-text").tabulator("setData", alarm_data);
-                $("#nav-monitor-alerts-text").tabulator("setData", alert_data);
+                alarm_tabulator.replaceData(alarm_data);
+                alert_tabulator.replaceData(alert_data);
             });
         };
 
-        var global_view_click_listener = function(event) {
-            // console.log(event);
+        var diagram_selection_listener = function(diagram, event) {
             if (event.nodes.length > 0) {
                 last_displayed = event.nodes[0];
-                display_selected_node(model.nodes.get(event.nodes[0]));
+                display_selected_node(event.nodes[0]);
             }
         };
 
         var tile_view_click_listener = function(name, members) {
-            if (tile_view.get_selected_tile_name() != "") {
+            if (tile_view.selected()) {
                 last_displayed = {
                     name: name,
                     members: members
                 };
                 display_selected_tile(name, members);
-            } else {
-                last_displayed = undefined;
-                display_no_selection();
             }
         };
 
         var event_alert_listener = function() {
-            if (last_displayed) {
-                if (typeof last_displayed == 'string') {
-                    display_selected_node(model.nodes.get(last_displayed));
-                } else if (typeof last_displayed == 'object') {
-                    display_selected_tile(last_displayed.name, last_displayed.members);
-                }
-            }
+            refresh();
         };
 
-        // global_view.add_click_listener(global_view_click_listener);
-        // tile_view.add_click_listener(tile_view_click_listener);
-        // event_alerts.add_listener(event_alert_listener);
+        tile_view.add_selection_callback(tile_view_click_listener);
+
+        event_alerts.add_callback(event_alert_listener);
+
+        alarms.add_callback(event_alert_listener);
 
         diagrams.add_selection_callback(function(diagram, event) {
             if (event.nodes.length > 0) {
-                display_selected_nodes(diagram, event.nodes);
+                display_selected_node(event.nodes[0]);
             }
         });
+
+        $("#monitor-subscribe-alarms-button").click(function() {
+            require("app/ui/alarms_menu").show_alarm_subscribe_dialog();
+        });
+
+        $("#monitor-unsubscribe-alarms-button").click(function() {
+            var selected_alarms = alarm_tabulator.getSelectedData();
+            var diagram = diagrams.shown();
+            var selected_nodes = diagram.network.getSelectedNodes();
+            // console.log(selected_alarms);
+            confirmation.show("Unsubscribe selected node" +
+                (selected_nodes.length == 1 ? "" : "s") + " from " +
+                selected_alarms.length + " alarm" +
+                (selected_alarms.length == 1 ? "" : "s") + "?",
+                function() {
+                    var promises = [];
+                    selected_alarms.forEach(function(alarm) {
+                        promises.push(alarms.unsubscribe_from_alarm(alarm.Region, alarm.AlarmName, selected_nodes));
+                    });
+                    Promise.all(promises).then(function() {
+                        refresh();
+                    });
+                });
+        });
+
+
+        function unsubscribe_alarm(row) {
+            console.log(row);
+            var node = model.nodes.get(row.ARN);
+            if (node) {
+                // prompt if the node still exists
+                confirmation.show("Unsubscribe " + node.header + " from alarm " + row.AlarmName + "?",
+                    function() {
+                        alarms.unsubscribe_from_alarm(row.Region, row.AlarmName, [row.ARN]).then(function() {
+                            refresh();
+                        });
+                    });
+            } else {
+                // otherwise just delete it
+                alarms.unsubscribe_from_alarm(row.Region, row.AlarmName, [row.ARN]).then(function() {
+                    refresh();
+                });
+            }
+        };
+
+
+
+        function refresh() {
+            if (typeof last_displayed == 'string') {
+                display_selected_node(last_displayed);
+            } else if (typeof last_displayed == 'object') {
+                display_selected_tile(last_displayed.name, last_displayed.members);
+            }
+        }
+
+        return {
+            refresh: refresh
+        }
 
     });

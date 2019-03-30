@@ -308,7 +308,9 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 // save layout method
                 var method = $("#layout-method-select").val();
                 console.log("layout-method is " + method);
-                settings.put("layout-method", { "method": method });
+                settings.put("layout-method", {
+                    "method": method
+                });
                 // hide it
                 $("#advanced_settings_modal").modal('hide');
             }

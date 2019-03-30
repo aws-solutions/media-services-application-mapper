@@ -64,7 +64,10 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
         var save_diagrams = function() {
             // var settings = _.map(Object.values(diagrams), ["name", "view_id"]);
             var diagram_map = _.map(Object.values(diagrams), function(item) {
-                return { "name": item.name, "view_id": item.view_id }
+                return {
+                    "name": item.name,
+                    "view_id": item.view_id
+                }
             });
             // console.log(settings);
             settings.put("diagrams", diagram_map).then(function() {
@@ -84,26 +87,25 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                     });
                 } else {
                     // no diagrams, create default View from previous Global View
-                    console.log("no used-defined diagrams, creating default diagram");
-                    add_diagram("Default", "default", true);
+                    console.log("no used-defined diagrams, creating default global diagram");
+                    add_diagram("Default", "global", true);
                 }
             });
         }
 
         function have_all(node_ids) {
             var results = [];
-            node_ids = node_ids || [];
             if (!Array.isArray(node_ids)) {
                 node_ids = [node_ids];
             }
             for (var name in diagrams) {
                 var diagram = diagrams[name];
                 var found = _.compact(diagram.nodes.get(node_ids));
-                if (found.length == node_ids.length) {
+                if (found.length === node_ids.length) {
                     results.push(diagram);
                 }
             }
-            return results;
+            return _.orderBy(results, ["name"]);
         }
 
         function have_any(node_ids) {
@@ -112,28 +114,16 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             if (!Array.isArray(node_ids)) {
                 node_ids = [node_ids];
             }
-            var nodes;
-            // array of nodes or nodes ids?
-            if (node_ids.length > 0) {
-                if (typeof node_ids[0] == 'object') {
-                    // nodes, convert to ids
-                    nodes = node_ids;
-                    node_ids = [];
-                    nodes.forEach(function(value, index) {
-                        node_ids.push(value.id);
-                    });
-                }
-            }
-            Object.values(diagrams).forEach(function(diagram, index) {
+            Object.values(diagrams).forEach(function(diagram) {
                 var intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids.sort());
                 if (intersect.length > 0) {
                     results.push({
                         diagram: diagram.name,
-                        found: intersect.sort()
+                        found: intersect
                     });
                 }
             });
-            return results;
+            return _.orderBy(results, ["diagram"]);;
         }
 
         load_diagrams();
