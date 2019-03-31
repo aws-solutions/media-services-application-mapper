@@ -294,7 +294,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
 
             synchronize_content(event, node_ids) {
                 var diagram = this;
-                if (event == "add" || event == "update") {
+                // if (event == "add" || event == "update") {
+                if (event == "add") {
                     layout.save_layout(diagram, node_ids);
                 } else
                 if (event == "remove") {
