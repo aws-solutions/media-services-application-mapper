@@ -218,9 +218,6 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             var node = diagram.nodes.get(item.id);
                             if (node) {
                                 diagram.network.moveNode(item.id, item.x, item.y);
-                            } else {
-                                console.log("purging layout for node id " + item.id);
-                                layout.delete_layout(diagram, [item.id]);
                             }
                         });
                         resolve();
