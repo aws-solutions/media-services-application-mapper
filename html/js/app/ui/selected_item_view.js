@@ -209,11 +209,14 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
         };
 
         var tile_view_listener = function(name, members) {
-            if (tile_view.selected()) {
+            var selected = tile_view.selected();
+            if (selected === name) {
                 // show();
                 display_selected_tile(name, members);
-            } else {
-                display_no_selection();
+            } else if (selected) {
+                channels.retrieve_channel(selected).then((members) => {
+                    display_selected_tile(selected, members);
+                });
             }
         };
 

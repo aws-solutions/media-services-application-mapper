@@ -41,6 +41,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
 
         var selection_listener = function(name) {
             toggle_tile(name);
+            // select(name);
         };
 
         var selected = function() {
@@ -83,12 +84,12 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         };
 
         var select = function(name) {
+            // query = `[data-channel-name][data-channel-name!='${name}']`;
+            var unselected_tiles = $(".selected-channel-tile");
+            unselected_tiles.removeClass("selected-channel-tile");
             var query = `[data-channel-name='${name}']`;
             var selected_tile = $(query);
             selected_tile.addClass("selected-channel-tile");
-            query = `[data-channel-name][data-channel-name!='${name}']`;
-            var unselected_tiles = $(query);
-            unselected_tiles.removeClass("selected-channel-tile");
         };
 
         var unselect = function(name) {
@@ -240,6 +241,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                                 var name = channel_name;
                                 var members = channel_members;
                                 return function() {
+                                    selection_listener(name, members);
                                     click_listeners.forEach(function(f) {
                                         f(name, members);
                                     });
@@ -485,7 +487,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             schedule_interval();
             event_alerts.add_callback(event_alert_callback);
             alarms.add_callback(alarm_callback);
-            add_selection_callback(selection_listener);
+            // add_selection_callback(selection_listener);
         });
 
         return {

@@ -11,7 +11,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return new Promise(function(resolve, reject) {
                 server.get(url + "/cached/mediaconnect-flow/" + regionName, api_key).then(function(flows) {
                     $.each(flows, function(index, cache_entry) {
-                        console.log(cache_entry);
+                        // console.log(cache_entry);
                         map_flow(cache_entry);
                     });
                     resolve();
