@@ -57,7 +57,9 @@
                     "mediastore:List*",
                     "mediastore:Get*",
                     "mediaconnect:List*",
-                    "mediaconnect:Describe*"
+                    "mediaconnect:Describe*",
+                    "mediatailor:Get*",
+                    "mediatailor:List*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -197,7 +199,7 @@
         "Handler": "app.incoming_cloudwatch_alarm",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
+          "aws-chalice": "version=1.8.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -251,7 +253,9 @@
                     "mediastore:List*",
                     "mediastore:Get*",
                     "mediaconnect:List*",
-                    "mediaconnect:Describe*"
+                    "mediaconnect:Describe*",
+                    "mediatailor:Get*",
+                    "mediatailor:List*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -391,7 +395,7 @@
         "Handler": "app.update_nodes",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
+          "aws-chalice": "version=1.8.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -453,7 +457,9 @@
                     "mediastore:List*",
                     "mediastore:Get*",
                     "mediaconnect:List*",
-                    "mediaconnect:Describe*"
+                    "mediaconnect:Describe*",
+                    "mediatailor:Get*",
+                    "mediatailor:List*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -593,7 +599,7 @@
         "Handler": "app.update_connections",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
+          "aws-chalice": "version=1.8.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -655,7 +661,9 @@
                     "mediastore:List*",
                     "mediastore:Get*",
                     "mediaconnect:List*",
-                    "mediaconnect:Describe*"
+                    "mediaconnect:Describe*",
+                    "mediatailor:Get*",
+                    "mediatailor:List*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -795,7 +803,7 @@
         "Handler": "app.update_alarms",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
+          "aws-chalice": "version=1.8.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,
@@ -857,7 +865,9 @@
                     "mediastore:List*",
                     "mediastore:Get*",
                     "mediaconnect:List*",
-                    "mediaconnect:Describe*"
+                    "mediaconnect:Describe*",
+                    "mediatailor:Get*",
+                    "mediatailor:List*"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
@@ -3184,7 +3194,7 @@
         "Handler": "app.app",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.7.0:stage=dev:app=msam"
+          "aws-chalice": "version=1.8.0:stage=dev:app=msam"
         },
         "Timeout": 300,
         "MemorySize": 2560,

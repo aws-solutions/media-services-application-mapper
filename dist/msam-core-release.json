@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1554494864)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1559941286)",
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -73,7 +73,9 @@
                                     "mediastore:List*",
                                     "mediastore:Get*",
                                     "mediaconnect:List*",
-                                    "mediaconnect:Describe*"
+                                    "mediaconnect:Describe*",
+                                    "mediatailor:Get*",
+                                    "mediatailor:List*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -212,7 +214,7 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/36f4cff93cbe839e4de1b4de64869dda",
+                    "Key": "msam/f429bb398870de53c4257afb0527f322",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -227,7 +229,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1554494864",
+                        "BUILD_STAMP": "1559941286",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -282,7 +284,9 @@
                                     "mediastore:List*",
                                     "mediastore:Get*",
                                     "mediaconnect:List*",
-                                    "mediaconnect:Describe*"
+                                    "mediaconnect:Describe*",
+                                    "mediatailor:Get*",
+                                    "mediatailor:List*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -421,7 +425,7 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/36f4cff93cbe839e4de1b4de64869dda",
+                    "Key": "msam/f429bb398870de53c4257afb0527f322",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -436,7 +440,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1554494864",
+                        "BUILD_STAMP": "1559941286",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -499,7 +503,9 @@
                                     "mediastore:List*",
                                     "mediastore:Get*",
                                     "mediaconnect:List*",
-                                    "mediaconnect:Describe*"
+                                    "mediaconnect:Describe*",
+                                    "mediatailor:Get*",
+                                    "mediatailor:List*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -638,7 +644,7 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/36f4cff93cbe839e4de1b4de64869dda",
+                    "Key": "msam/f429bb398870de53c4257afb0527f322",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -653,7 +659,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1554494864",
+                        "BUILD_STAMP": "1559941286",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -716,7 +722,9 @@
                                     "mediastore:List*",
                                     "mediastore:Get*",
                                     "mediaconnect:List*",
-                                    "mediaconnect:Describe*"
+                                    "mediaconnect:Describe*",
+                                    "mediatailor:Get*",
+                                    "mediatailor:List*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -855,7 +863,7 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/36f4cff93cbe839e4de1b4de64869dda",
+                    "Key": "msam/f429bb398870de53c4257afb0527f322",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -870,7 +878,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1554494864",
+                        "BUILD_STAMP": "1559941286",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -933,7 +941,9 @@
                                     "mediastore:List*",
                                     "mediastore:Get*",
                                     "mediaconnect:List*",
-                                    "mediaconnect:Describe*"
+                                    "mediaconnect:Describe*",
+                                    "mediatailor:Get*",
+                                    "mediatailor:List*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -3166,7 +3176,7 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling API Gateway REST calls",
                 "CodeUri": {
-                    "Key": "msam/36f4cff93cbe839e4de1b4de64869dda",
+                    "Key": "msam/f429bb398870de53c4257afb0527f322",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
@@ -3181,7 +3191,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1554494864",
+                        "BUILD_STAMP": "1559941286",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
