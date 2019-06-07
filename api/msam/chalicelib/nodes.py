@@ -58,6 +58,10 @@ def update_regional_ddb_items(region_name):
         content.put_ddb_items(mediaconnect_flow_ddb_items(region_name))
     except ClientError as error:
         print(error)
+    try:
+        content.put_ddb_items(mediatailor_configuration_ddb_items(region_name))
+    except ClientError as error:
+        print(error)
 
 
 def s3_bucket_ddb_items():
@@ -168,6 +172,27 @@ def speke_server_ddb_items(region):
             items.append(node_to_ddb_item(arn, service, "global", config))
     return items
 
+def mediaconnect_flow_ddb_items(region):
+    """
+    Retrieve and format MediaConnect flows for cache storage.
+    """
+    items = []
+    for mc_flow in mediaconnect_flows(region):
+        arn = mc_flow["FlowArn"]
+        service = "mediaconnect-flow"
+        items.append(node_to_ddb_item(arn, service, region, mc_flow))
+    return items
+
+def mediatailor_configuration_ddb_items(region):
+    """
+    Retrieve and format MediaTailor configuration for cache storage.
+    """
+    items = []
+    for config in mediatailor_configurations(region):
+        arn = config["PlaybackConfigurationArn"]
+        service = "mediatailor-configuration"
+        items.append(node_to_ddb_item(arn, service, region, config))
+    return items
 
 def node_to_ddb_item(arn, service, region, config):
     """
@@ -295,20 +320,22 @@ def mediaconnect_flows(region):
     for flow in flows:
         flow_details = service.describe_flow(FlowArn=flow['FlowArn'])
         items.append(flow_details['Flow'])
-    print(items)
     return items
 
-
-def mediaconnect_flow_ddb_items(region):
+def mediatailor_configurations(region):
     """
-    Retrieve and format MediaConnect flows for cache storage.
+    Return the MediaTailor configurations for the given region.
     """
+    service = boto3.client('mediatailor', region_name=region)
+    response = service.list_playback_configurations()
+    configs = response['Items']
+    while "NextToken" in response:
+        response = service.list_playback_configurations(NextToken=response["NextToken"])
+        configs = configs + response['Items']
     items = []
-    for mc_flow in mediaconnect_flows(region):
-        arn = mc_flow["FlowArn"]
-        service = "mediaconnect-flow"
-        items.append(node_to_ddb_item(arn, service, region, mc_flow))
-        print("arn " + arn)
-        print("flow ")
-        print(mc_flow)
+    for config in configs:
+        response = service.get_playback_configuration(Name=config['Name'])
+        if 'ResponseMetadata' in response:
+            del response['ResponseMetadata']
+        items.append(response)
     return items

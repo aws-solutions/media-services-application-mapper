@@ -57,7 +57,9 @@ def update_connection_ddb_items():
         content.put_ddb_items(mediapackage_endpoint_speke_keyserver_ddb_items())
         content.put_ddb_items(mediaconnect_flow_medialive_input_ddb_items())
         content.put_ddb_items(mediaconnect_flow_mediaconnect_flow_ddb_items())
-
+        content.put_ddb_items(mediapackage_endpoint_mediatailor_configuration_ddb_items())
+        content.put_ddb_items(s3_bucket_mediatailor_configuration_ddb_items())
+        content.put_ddb_items(mediastore_container_mediatailor_configuration_ddb_items())
     except ClientError as error:
         print(error)
 
@@ -435,6 +437,7 @@ def mediaconnect_flow_medialive_input_ddb_items():
                 try:
                     if flow_output["MediaLiveInputArn"]:
                         config = {"from": flow_data["FlowArn"], "to": flow_output["MediaLiveInputArn"], "scheme": "MEDIACONNECT"}
+                        print(config)
                         items.append(connection_to_ddb_item(flow_data["FlowArn"], flow_output["MediaLiveInputArn"], connection_type, config))
                 # if that didn't work, then check for IPs (Destination)
                 except KeyError as error:
@@ -450,6 +453,7 @@ def mediaconnect_flow_medialive_input_ddb_items():
                                 try:
                                     if destination["Ip"] == flow_output["Destination"]:
                                         config = {"from": flow["arn"], "to": ml_input["arn"], "scheme": ml_input_data["Type"]}
+                                        print(config)
                                         items.append(connection_to_ddb_item(flow["arn"], ml_input["arn"], connection_type, config))
                                         match_found = True
                                         break
@@ -495,6 +499,96 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                             items.append(connection_to_ddb_item(inner_flow_data["FlowArn"], outer_flow_data["FlowArn"], connection_type, config))
                     except Exception as error:
                         print(error)
+    except ClientError as error:
+        print(error)
+    return items
+
+def mediapackage_endpoint_mediatailor_configuration_ddb_items():
+    """
+    Identify and format MediaPackage endpoints to a MediaTailor configuration for cache storage.
+    """
+    items = []
+    connection_type = "mediapackage-origin-endpoint-mediatailor-configuration"
+    try:
+        mediapackage_ep_cached = cache.cached_by_service("mediapackage-origin-endpoint")        
+        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")        
+        # get the URL from data and compare to the VideoContentSourceUrl of MediaTailor
+        for mp_endpoint in mediapackage_ep_cached:
+            mp_endpoint_data = json.loads(mp_endpoint["data"])
+            mp_endpoint_channel_id = mp_endpoint_data["Url"]
+            for mt_config in mediatailor_configs_cached:
+                mt_config_data = json.loads(mt_config["data"])
+                mt_config_video_source = mt_config_data["VideoContentSourceUrl"]
+                if mt_config_video_source in mp_endpoint_channel_id:
+                    config = {"from": mp_endpoint_data["Arn"], "to": mt_config_data["PlaybackConfigurationArn"], "scheme": urlparse(mt_config_video_source).scheme}
+                    print(config)
+                    items.append(connection_to_ddb_item(mp_endpoint_data["Arn"], mt_config_data["PlaybackConfigurationArn"], connection_type, config))                     
+    except ClientError as error:
+        print(error)
+    return items
+
+def mediastore_container_mediatailor_configuration_ddb_items():
+    """
+    Identify and format MediaStore containers to a MediaTailor configuration for cache storage.
+    """
+    items = []
+    try:
+        # get mediatailor configs
+        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")        
+        # get mediastore containers
+        mediastore_con_cached = cache.cached_by_service("mediastore-container")
+        # iterate over mediatailor configs
+        for mt_config in mediatailor_configs_cached:
+            mt_config_data = json.loads(mt_config["data"])
+            mt_config_video_source = mt_config_data["VideoContentSourceUrl"]
+            parsed_source = urlparse(mt_config_video_source)
+            if "mediastore" in parsed_source.netloc:
+                for ms_container in mediastore_con_cached:
+                    container_data = json.loads(ms_container["data"])
+                    parsed_endpoint = urlparse(container_data["Endpoint"])
+                    if parsed_source.netloc == parsed_endpoint.netloc:
+                        # create a 'connection' out of matches
+                        config = {"from": container_data["ARN"], "to": mt_config_data["PlaybackConfigurationArn"], "scheme": parsed_source.scheme}
+                        print(config)
+                        items.append(connection_to_ddb_item(container_data["ARN"], mt_config_data["PlaybackConfigurationArn"], "mediastore-container-mediatailor-configuration", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+
+def s3_bucket_mediatailor_configuration_ddb_items():
+    """
+    Identify and format S3 buckets to a MediaTailor configuration for cache storage.
+    """
+    items = []
+    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+")]
+    try:
+        # get S3 buckets
+        s3_buckets_cached = cache.cached_by_service("s3")
+        # get MediaTailor configurations
+        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")        
+        # iterate over configs
+        for mt_config in mediatailor_configs_cached:
+            bucket_name = None
+            scheme = None
+            mt_config_data = json.loads(mt_config["data"])
+            mt_config_video_source = mt_config_data["VideoContentSourceUrl"]
+            # is this a bucket url?
+            for expr in s3_url_expressions:
+                match = expr.match(mt_config_video_source)
+                if match:
+                    # yes
+                    bucket_name = match.group(1)
+                    scheme = urlparse(mt_config_video_source).scheme
+                    break
+            if bucket_name:
+                # find the bucket
+                for s3_bucket in s3_buckets_cached:
+                    s3_bucket_data = json.loads(s3_bucket["data"])
+                    if bucket_name == s3_bucket_data["Name"]:
+                        config = {"from": s3_bucket["arn"], "to": mt_config_data["PlaybackConfigurationArn"], "scheme": scheme}
+                        print(config)
+                        items.append(connection_to_ddb_item(s3_bucket["arn"], mt_config_data["PlaybackConfigurationArn"], "s3-bucket-mediatailor-configuration", config))        
     except ClientError as error:
         print(error)
     return items

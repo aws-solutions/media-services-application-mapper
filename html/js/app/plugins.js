@@ -10,7 +10,8 @@ define({
         "app/mappers/nodes/mediastore",
         "app/mappers/nodes/s3",
         "app/mappers/nodes/speke",
-        "app/mappers/nodes/user_defined_node"
+        "app/mappers/nodes/user_defined_node",
+        "app/mappers/nodes/mediatailor"
     ],
     "connections": [
         "app/mappers/connections/cloudfront_medialive_input",
@@ -25,7 +26,10 @@ define({
         "app/mappers/connections/s3_bucket_medialive_input",
         "app/mappers/connections/s3_bucket_cloudfront",
         "app/mappers/connections/speke",
-        "app/mappers/connections/user_defined_connection"
+        "app/mappers/connections/user_defined_connection",
+        "app/mappers/connections/mediapackage_endpoint_mediatailor_configuration",
+        "app/mappers/connections/s3_bucket_mediatailor_configuration",
+        "app/mappers/connections/mediastore_container_mediatailor_configuration"
     ],
     "tools": [
         "app/tools/build_numbers",
@@ -45,6 +49,7 @@ define({
         "app/ui/overlays/mediastore_container",
         "app/ui/overlays/overlay_tools",
         "app/ui/overlays/s3_bucket",
-        "app/ui/overlays/speke_keyserver"
+        "app/ui/overlays/speke_keyserver",
+        "app/ui/overlays/mediatailor_configuration"
     ]
 });

@@ -9,7 +9,9 @@
                 "mediastore:List*",
                 "mediastore:Get*",
                 "mediaconnect:List*",
-                "mediaconnect:Describe*"
+                "mediaconnect:Describe*",
+                "mediatailor:Get*",
+                "mediatailor:List*"
             ],
             "Effect": "Allow",
             "Resource": "*"
