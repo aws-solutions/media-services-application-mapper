@@ -1,14 +1,14 @@
 # Media Services Application Mapper (MSAM)
 
+**Installing? Use the detailed [installation instructions](INSTALL.md).**
+
+**Already using MSAM? Please [take our survey](https://amazonmr.au1.qualtrics.com/jfe/form/SV_cBbBD6QulbrGdyl) and tell us how it's working for you.**
+
 ## Overview
 
 * MSAM is a browser-based tool that allows operators to visualize the structure and logical connections among AWS Media Services and supporting services in the cloud
 * MSAM can be used as a top-down resource monitoring tool when integrated with CloudWatch
 * MSAM is installed into an AWS account with several CloudFormation templates
-
-**Installing? Use the detailed [installation instructions](INSTALL.md).**
-
-**Already using MSAM? Please [take our survey](https://amazonmr.au1.qualtrics.com/jfe/form/SV_cBbBD6QulbrGdyl) and tell us how it's working for you.**
 
 
 ### Global Model
