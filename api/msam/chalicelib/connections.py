@@ -108,24 +108,35 @@ def medialive_channel_mediapackage_channel_ddb_items():
         for ml_channel in medialive_ch_cached:
             ml_channel_data = json.loads(ml_channel["data"])
             for destination in ml_channel_data["Destinations"]:
-                for setting in destination["Settings"]:
-                    ml_url = setting["Url"]
-                    ml_url_v2 = None
-                    # convert a mediapackage v1 ingest url to a v2 url before
-                    # checking
-                    parsed = urlparse(ml_url)
-                    if parsed.path.startswith("/in/v1/"):
-                        pieces = parsed.path.split("/")
-                        if len(pieces) == 5:
-                            ml_url_v2 = "{scheme}://{netloc}/in/v2/{uid}/{uid}/channel".format(scheme=parsed.scheme, netloc=parsed.netloc, uid=pieces[3])
+                # if setting is empty, we have to connect medialive with mediapackage via channel ID
+                if destination["Settings"] == 0:
                     for mp_channel in mediapackage_ch_cached:
                         mp_channel_data = json.loads(mp_channel["data"])
-                        for ingest_endpoint in mp_channel_data["HlsIngest"]["IngestEndpoints"]:
-                            if ml_url == ingest_endpoint["Url"] or ml_url_v2 == ingest_endpoint["Url"]:
-                                # create a 'connection' out of matches
-                                config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"], "pipeline": destination["Settings"].index(setting)}
-                                print(config)
-                                items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
+                        if mp_channel_data['Id'] == ml_channel_data['Id']:
+                            # create a 'connection' out of matches
+                            config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"]}
+                            print(config)
+                            items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
+                # otherwise we check via URL endpoints
+                else: 
+                    for setting in destination["Settings"]:
+                        ml_url = setting["Url"]
+                        ml_url_v2 = None
+                        # convert a mediapackage v1 ingest url to a v2 url before
+                        # checking
+                        parsed = urlparse(ml_url)
+                        if parsed.path.startswith("/in/v1/"):
+                            pieces = parsed.path.split("/")
+                            if len(pieces) == 5:
+                                ml_url_v2 = "{scheme}://{netloc}/in/v2/{uid}/{uid}/channel".format(scheme=parsed.scheme, netloc=parsed.netloc, uid=pieces[3])
+                        for mp_channel in mediapackage_ch_cached:
+                            mp_channel_data = json.loads(mp_channel["data"])
+                            for ingest_endpoint in mp_channel_data["HlsIngest"]["IngestEndpoints"]:
+                                if ml_url == ingest_endpoint["Url"] or ml_url_v2 == ingest_endpoint["Url"]:
+                                    # create a 'connection' out of matches
+                                    config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"], "pipeline": destination["Settings"].index(setting)}
+                                    print(config)
+                                    items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
     except ClientError as error:
         print(error)
     return items
@@ -254,7 +265,7 @@ def s3_bucket_medialive_input_ddb_items():
     Identify and format S3 Bucket to MediaLive Input connections for cache storage.
     """
     items = []
-    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+")]
+    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com")]
     try:
         # get S3 buckets
         s3_buckets_cached = cache.cached_by_service("s3")
@@ -561,7 +572,7 @@ def s3_bucket_mediatailor_configuration_ddb_items():
     Identify and format S3 buckets to a MediaTailor configuration for cache storage.
     """
     items = []
-    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+")]
+    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com")]
     try:
         # get S3 buckets
         s3_buckets_cached = cache.cached_by_service("s3")
