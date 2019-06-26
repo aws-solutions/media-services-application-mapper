@@ -265,7 +265,11 @@ def s3_bucket_medialive_input_ddb_items():
     Identify and format S3 Bucket to MediaLive Input connections for cache storage.
     """
     items = []
-    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com")]
+    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), 
+                            re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), 
+                            re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),
+                            re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com"),
+                            re.compile(r"s3\:\/\/([^\/]+)")]
     try:
         # get S3 buckets
         s3_buckets_cached = cache.cached_by_service("s3")
