@@ -78,18 +78,21 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
         };
 
         var load_diagrams = function() {
-            // load diagram names from the cloud on initialization
-            settings.get("diagrams").then(function(diagrams) {
-                console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
-                if (Array.isArray(diagrams)) {
-                    diagrams.forEach(function(diagram) {
-                        add_diagram(diagram.name, diagram.view_id, false);
-                    });
-                } else {
-                    // no diagrams, create default View from previous Global View
-                    console.log("no used-defined diagrams, creating default global diagram");
-                    add_diagram("Default", "global", true);
-                }
+            return new Promise((resolve, reject) => {
+                // load diagram names from the cloud on initialization
+                settings.get("diagrams").then(function(diagrams) {
+                    console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
+                    if (Array.isArray(diagrams)) {
+                        diagrams.forEach(function(diagram) {
+                            add_diagram(diagram.name, diagram.view_id, false);
+                        });
+                    } else {
+                        // no diagrams, create default View from previous Global View
+                        console.log("no used-defined diagrams, creating default global diagram");
+                        add_diagram("Default", "global", true);
+                    }
+                    resolve();
+                });
             });
         }
 
@@ -126,7 +129,15 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             return _.orderBy(results, ["diagram"]);;
         }
 
-        load_diagrams();
+        load_diagrams().then(() => {
+            var current_url = new URL(window.location);
+            var override_diagram = current_url.searchParams.get("diagram");
+            if (override_diagram) {
+                console.log("Show diagram " + override_diagram + " on start");
+                var diagram = get_diagram(override_diagram);
+                diagram.show();
+            };
+        });
 
         return {
             shown: shown_diagram,
