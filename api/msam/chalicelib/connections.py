@@ -109,14 +109,15 @@ def medialive_channel_mediapackage_channel_ddb_items():
             ml_channel_data = json.loads(ml_channel["data"])
             for destination in ml_channel_data["Destinations"]:
                 # if setting is empty, we have to connect medialive with mediapackage via channel ID
-                if destination["Settings"] == 0:
-                    for mp_channel in mediapackage_ch_cached:
-                        mp_channel_data = json.loads(mp_channel["data"])
-                        if mp_channel_data['Id'] == ml_channel_data['Id']:
-                            # create a 'connection' out of matches
-                            config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"]}
-                            print(config)
-                            items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
+                if "MediaPackageSettings" in destination:
+                    for mp_setting in destination["MediaPackageSettings"]:
+                        for mp_channel in mediapackage_ch_cached:
+                            mp_channel_data = json.loads(mp_channel["data"])
+                            if mp_channel_data['Id'] == mp_setting['ChannelId']:
+                                # create a 'connection' out of matches
+                                config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"]}
+                                print(config)
+                                items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
                 # otherwise we check via URL endpoints
                 else: 
                     for setting in destination["Settings"]:
