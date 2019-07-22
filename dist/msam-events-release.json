@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Transform": "AWS::Serverless-2016-10-31",
-    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1563819619)",
+    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1563825985)",
     "Resources": {
         "Collector": {
             "Type": "AWS::Serverless::Function",
@@ -29,7 +29,7 @@
                 }],
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "EVENTS_TABLE_REGION": {
                             "Ref": "EventsTableRegion"
                         },

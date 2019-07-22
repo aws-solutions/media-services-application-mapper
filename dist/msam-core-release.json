@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1563819619)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1563825985)",
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -229,7 +229,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -440,7 +440,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -659,7 +659,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -878,7 +878,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -1097,7 +1097,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -3410,7 +3410,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1563819619",
+                        "BUILD_STAMP": "1563825985",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
