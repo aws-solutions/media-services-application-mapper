@@ -64,15 +64,15 @@ def get_channel_list():
     return channels
 
 
-def set_channel_nodes(request, name):
+def set_channel_nodes(name, node_ids):
     """
      API entry point to set the nodes for a given channel name.
     """
     try:
         name = unquote(name)
         table = DYNAMO_RESOURCE.Table(CHANNELS_TABLE_NAME)
-        print(request.json_body)
-        node_ids = request.json_body
+        # print(request.json_body)
+        # node_ids = request.json_body
         # write the channel nodes to the database
         for node_id in node_ids:
             item = {"channel": name, "id": node_id}
@@ -93,7 +93,7 @@ def set_channel_nodes(request, name):
     return result
 
 
-def get_channel_nodes(request, name):
+def get_channel_nodes(name):
     """
     API entry point to get the nodes for a given channel name.
     """
@@ -101,7 +101,6 @@ def get_channel_nodes(request, name):
         name = unquote(name)
         table_name = CHANNELS_TABLE_NAME
         table = DYNAMO_RESOURCE.Table(table_name)
-        print(request.method)
         try:
             # get the settings object
             response = table.query(KeyConditionExpression=Key('channel').eq(name))

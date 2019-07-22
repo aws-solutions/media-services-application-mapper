@@ -214,15 +214,15 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/b0b0a1fdbf12db8946a80fc03cb233ba",
+                    "Key": "msam/0d62905a5de61621adc777e8886c8698",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.9.0:stage=dev:app=msam"
                 },
-                "Timeout": 300,
+                "Timeout": 600,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -425,15 +425,15 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/b0b0a1fdbf12db8946a80fc03cb233ba",
+                    "Key": "msam/0d62905a5de61621adc777e8886c8698",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.9.0:stage=dev:app=msam"
                 },
-                "Timeout": 300,
+                "Timeout": 600,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -471,7 +471,7 @@
                     "UpdateNodesEvent": {
                         "Type": "Schedule",
                         "Properties": {
-                            "Schedule": "rate(2 minutes)"
+                            "Schedule": "rate(5 minutes)"
                         }
                     }
                 }
@@ -644,15 +644,15 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/b0b0a1fdbf12db8946a80fc03cb233ba",
+                    "Key": "msam/0d62905a5de61621adc777e8886c8698",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.9.0:stage=dev:app=msam"
                 },
-                "Timeout": 300,
+                "Timeout": 600,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -690,7 +690,7 @@
                     "UpdateConnectionsEvent": {
                         "Type": "Schedule",
                         "Properties": {
-                            "Schedule": "rate(2 minutes)"
+                            "Schedule": "rate(5 minutes)"
                         }
                     }
                 }
@@ -863,15 +863,15 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/b0b0a1fdbf12db8946a80fc03cb233ba",
+                    "Key": "msam/0d62905a5de61621adc777e8886c8698",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.9.0:stage=dev:app=msam"
                 },
-                "Timeout": 300,
+                "Timeout": 600,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -910,6 +910,225 @@
                         "Type": "Schedule",
                         "Properties": {
                             "Schedule": "rate(1 minute)"
+                        }
+                    }
+                }
+            }
+        },
+        "UpdateFromTagsRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Sid": "",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "lambda.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }]
+                },
+                "Policies": [{
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                                "Action": [
+                                    "mediapackage:List*",
+                                    "mediapackage:Describe*",
+                                    "medialive:List*",
+                                    "medialive:Describe*",
+                                    "mediastore:List*",
+                                    "mediastore:Get*",
+                                    "mediaconnect:List*",
+                                    "mediaconnect:Describe*",
+                                    "mediatailor:Get*",
+                                    "mediatailor:List*"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": "ec2:Describe*",
+                                "Resource": "*"
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": "elasticloadbalancing:Describe*",
+                                "Resource": "*"
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "cloudwatch:ListMetrics",
+                                    "cloudwatch:GetMetricStatistics",
+                                    "cloudwatch:Describe*"
+                                ],
+                                "Resource": "*"
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": "autoscaling:Describe*",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
+                                    "dynamodb:Query",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
+                                    "application-autoscaling:DescribeScalableTargets",
+                                    "application-autoscaling:DescribeScalingActivities",
+                                    "application-autoscaling:DescribeScalingPolicies",
+                                    "cloudwatch:DescribeAlarmHistory",
+                                    "cloudwatch:DescribeAlarms",
+                                    "cloudwatch:DescribeAlarmsForMetric",
+                                    "cloudwatch:GetMetricStatistics",
+                                    "cloudwatch:ListMetrics",
+                                    "ec2:DescribeVpcs",
+                                    "ec2:DescribeSubnets",
+                                    "ec2:DescribeSecurityGroups",
+                                    "iam:GetRole",
+                                    "iam:ListRoles",
+                                    "sns:ListSubscriptions",
+                                    "sns:ListSubscriptionsByTopic",
+                                    "sns:ListTopics",
+                                    "lambda:ListFunctions",
+                                    "lambda:ListEventSourceMappings",
+                                    "lambda:GetFunctionConfiguration"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
+                                    "iam:PassRole"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*",
+                                "Condition": {
+                                    "StringLike": {
+                                        "iam:PassedToService": [
+                                            "application-autoscaling.amazonaws.com",
+                                            "dax.amazonaws.com"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "iam:CreateServiceLinkedRole"
+                                ],
+                                "Resource": "*",
+                                "Condition": {
+                                    "StringEquals": {
+                                        "iam:AWSServiceName": [
+                                            "replication.dynamodb.amazonaws.com",
+                                            "dax.amazonaws.com",
+                                            "dynamodb.application-autoscaling.amazonaws.com"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "s3:Get*",
+                                    "s3:List*"
+                                ],
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            },
+                            {
+                                "Action": [
+                                    "acm:ListCertificates",
+                                    "cloudfront:Get*",
+                                    "cloudfront:List*",
+                                    "iam:ListServerCertificates",
+                                    "route53:List*",
+                                    "waf:ListWebACLs",
+                                    "waf:GetWebACL"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": "*"
+                            }
+                        ]
+                    },
+                    "PolicyName": "UpdateFromTagsRolePolicy"
+                }]
+            }
+        },
+        "UpdateFromTags": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Runtime": "python3.6",
+                "Handler": "app.update_from_tags",
+                "Description": "MSAM Lambda for handling diagram and tile updates from tags",
+                "CodeUri": {
+                    "Key": "msam/0d62905a5de61621adc777e8886c8698",
+                    "Bucket": {
+                        "Fn::Sub": "rodeolabz-${AWS::Region}"
+                    }
+                },
+                "Tags": {
+                    "aws-chalice": "version=1.9.0:stage=dev:app=msam"
+                },
+                "Timeout": 600,
+                "MemorySize": 2560,
+                "Environment": {
+                    "Variables": {
+                        "ALARMS_TABLE_NAME": {
+                            "Ref": "AlarmsTableName"
+                        },
+                        "BUILD_STAMP": "DEV_0_0_0",
+                        "CACHE_ITEM_TTL": {
+                            "Ref": "CacheItemTTL"
+                        },
+                        "CHANNELS_TABLE_NAME": {
+                            "Ref": "ChannelsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
+                        },
+                        "EVENTS_TABLE_NAME": {
+                            "Ref": "EventsTableName"
+                        },
+                        "LAYOUT_TABLE_NAME": {
+                            "Ref": "LayoutTableName"
+                        },
+                        "SETTINGS_TABLE_NAME": {
+                            "Ref": "SettingsTableName"
+                        }
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "UpdateFromTagsRole",
+                        "Arn"
+                    ]
+                },
+                "Events": {
+                    "UpdateFromTagsEvent": {
+                        "Type": "Schedule",
+                        "Properties": {
+                            "Schedule": "rate(5 minutes)"
                         }
                     }
                 }
@@ -3174,17 +3393,17 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.app",
-                "Description": "MSAM Lambda for handling API Gateway REST calls",
+                "Description": "MSAM Lambda for handling requests from clients",
                 "CodeUri": {
-                    "Key": "msam/b0b0a1fdbf12db8946a80fc03cb233ba",
+                    "Key": "msam/0d62905a5de61621adc777e8886c8698",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.6.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.9.0:stage=dev:app=msam"
                 },
-                "Timeout": 300,
+                "Timeout": 600,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {

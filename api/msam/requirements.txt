@@ -3,3 +3,4 @@ botocore
 chalice
 jsonpath_ng
 fuzzywuzzy
+stringcase

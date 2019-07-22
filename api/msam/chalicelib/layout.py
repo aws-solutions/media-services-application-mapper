@@ -45,7 +45,7 @@ def get_view_layout(request, view):
     return items
 
 
-def set_node_layout(request):
+def set_node_layout(layout_items):
     """
     API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.
     """
@@ -53,8 +53,8 @@ def set_node_layout(request):
     table_name = LAYOUT_TABLE_NAME
     try:
         table = DYNAMO_RESOURCE.Table(table_name)
-        print(request.json_body)
-        layout_items = request.json_body
+        # print(request.json_body)
+        # layout_items = request.json_body
         # write to the database in batch
         for item in layout_items:
             table.put_item(Item=item)
@@ -86,3 +86,20 @@ def delete_node_layout(view, node_id):
         print(error)
         settings = {"exception": str(error)}
     return settings
+
+
+def has_node(view, node_id):
+    """
+    API entry point to check presence of nodes in a view.
+    """
+    view = unquote(view)
+    node_id = unquote(node_id)
+    table_name = LAYOUT_TABLE_NAME
+    try:
+        table = DYNAMO_RESOURCE.Table(table_name)
+        response = table.get_item(Key={"view": view, "id": node_id})
+        # True or False
+        return "Item" in response
+    except ClientError as error:
+        print(error)
+        return False

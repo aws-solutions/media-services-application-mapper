@@ -109,7 +109,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
             ml_channel_data = json.loads(ml_channel["data"])
             for destination in ml_channel_data["Destinations"]:
                 # if setting is empty, we have to connect medialive with mediapackage via channel ID
-                if "MediaPackageSettings" in destination:
+                if destination["MediaPackageSettings"]:
                     for mp_setting in destination["MediaPackageSettings"]:
                         for mp_channel in mediapackage_ch_cached:
                             mp_channel_data = json.loads(mp_channel["data"])
@@ -119,7 +119,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
                                 print(config)
                                 items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
                 # otherwise we check via URL endpoints
-                else: 
+                else:
                     for setting in destination["Settings"]:
                         ml_url = setting["Url"]
                         ml_url_v2 = None
@@ -266,11 +266,13 @@ def s3_bucket_medialive_input_ddb_items():
     Identify and format S3 Bucket to MediaLive Input connections for cache storage.
     """
     items = []
-    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), 
-                            re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), 
-                            re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),
-                            re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com"),
-                            re.compile(r"s3\:\/\/([^\/]+)")]
+    s3_url_expressions = [
+        re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"),
+        re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"),
+        re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),
+        re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com"),
+        re.compile(r"s3\:\/\/([^\/]+)")
+    ]
     try:
         # get S3 buckets
         s3_buckets_cached = cache.cached_by_service("s3")
@@ -353,25 +355,24 @@ def mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items():
         # iterate over all distributions
         for distro in cloudfront_distros_cached:
             distro_data = json.loads(distro["data"])
-            if "Tags" in distro_data:
-                for tag in distro_data["Tags"]["Items"]:
-                    if (tag["Key"] == "MP-Endpoint-ARN" or tag["Key"] == "mediapackage:cloudfront_assoc") and ":channels/" in tag["Value"]:
-                        channel_arn = tag["Value"]
-                        channel_id = None
-                        # find the channel
-                        for channel in mediapackage_ch_cached:
-                            if channel_arn == channel["arn"]:
-                                channel_data = json.loads(channel["data"])
-                                channel_id = channel_data["Id"]
-                                break
-                        if channel_id:
-                            # add a connection to each endpoint
-                            for endpoint in mediapackage_ep_cached:
-                                endpoint_data = json.loads(endpoint["data"])
-                                if endpoint_data["ChannelId"] == channel_id:
-                                    config = {"from": endpoint["arn"], "to": distro["arn"], "scheme": urlparse(endpoint_data["Url"]).scheme, "connected_by": "tag", "tag": tag["Key"]}
-                                    print(config)
-                                    items.append(connection_to_ddb_item(endpoint["arn"], distro["arn"], "mediapackage-origin-endpoint-cloudfront-distribution", config))
+            for key, value in distro_data["Tags"].items():
+                if (key in ["MP-Endpoint-ARN", "mediapackage:cloudfront_assoc"]) and ":channels/" in value:
+                    channel_arn = value
+                    channel_id = None
+                    # find the channel
+                    for channel in mediapackage_ch_cached:
+                        if channel_arn == channel["arn"]:
+                            channel_data = json.loads(channel["data"])
+                            channel_id = channel_data["Id"]
+                            break
+                    if channel_id:
+                        # add a connection to each endpoint
+                        for endpoint in mediapackage_ep_cached:
+                            endpoint_data = json.loads(endpoint["data"])
+                            if endpoint_data["ChannelId"] == channel_id:
+                                config = {"from": endpoint["arn"], "to": distro["arn"], "scheme": urlparse(endpoint_data["Url"]).scheme, "connected_by": "tag", "tag": key}
+                                print(config)
+                                items.append(connection_to_ddb_item(endpoint["arn"], distro["arn"], "mediapackage-origin-endpoint-cloudfront-distribution", config))
     except ClientError as error:
         print(error)
     return items
@@ -379,7 +380,7 @@ def mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items():
 
 def mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items():
     """
-    Identify and format MediaPackage origin endpoints to CloudFront Distributions by tags for cache storage.
+    Identify and format MediaPackage origin endpoints to CloudFront Distributions by URL for cache storage.
     """
     min_ratio = 80
     items = []
@@ -519,6 +520,7 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
         print(error)
     return items
 
+
 def mediapackage_endpoint_mediatailor_configuration_ddb_items():
     """
     Identify and format MediaPackage endpoints to a MediaTailor configuration for cache storage.
@@ -526,8 +528,8 @@ def mediapackage_endpoint_mediatailor_configuration_ddb_items():
     items = []
     connection_type = "mediapackage-origin-endpoint-mediatailor-configuration"
     try:
-        mediapackage_ep_cached = cache.cached_by_service("mediapackage-origin-endpoint")        
-        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")        
+        mediapackage_ep_cached = cache.cached_by_service("mediapackage-origin-endpoint")
+        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")
         # get the URL from data and compare to the VideoContentSourceUrl of MediaTailor
         for mp_endpoint in mediapackage_ep_cached:
             mp_endpoint_data = json.loads(mp_endpoint["data"])
@@ -538,10 +540,11 @@ def mediapackage_endpoint_mediatailor_configuration_ddb_items():
                 if mt_config_video_source in mp_endpoint_channel_id:
                     config = {"from": mp_endpoint_data["Arn"], "to": mt_config_data["PlaybackConfigurationArn"], "scheme": urlparse(mt_config_video_source).scheme}
                     print(config)
-                    items.append(connection_to_ddb_item(mp_endpoint_data["Arn"], mt_config_data["PlaybackConfigurationArn"], connection_type, config))                     
+                    items.append(connection_to_ddb_item(mp_endpoint_data["Arn"], mt_config_data["PlaybackConfigurationArn"], connection_type, config))
     except ClientError as error:
         print(error)
     return items
+
 
 def mediastore_container_mediatailor_configuration_ddb_items():
     """
@@ -550,7 +553,7 @@ def mediastore_container_mediatailor_configuration_ddb_items():
     items = []
     try:
         # get mediatailor configs
-        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")        
+        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")
         # get mediastore containers
         mediastore_con_cached = cache.cached_by_service("mediastore-container")
         # iterate over mediatailor configs
@@ -577,12 +580,17 @@ def s3_bucket_mediatailor_configuration_ddb_items():
     Identify and format S3 buckets to a MediaTailor configuration for cache storage.
     """
     items = []
-    s3_url_expressions = [re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"), re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"), re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com")]
+    s3_url_expressions = [
+        re.compile(r"http.?\:\/\/(\S+)\.s3\-website.+"),
+        re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"),
+        re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),
+        re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com")
+    ]
     try:
         # get S3 buckets
         s3_buckets_cached = cache.cached_by_service("s3")
         # get MediaTailor configurations
-        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")        
+        mediatailor_configs_cached = cache.cached_by_service("mediatailor-configuration")
         # iterate over configs
         for mt_config in mediatailor_configs_cached:
             bucket_name = None
@@ -604,7 +612,7 @@ def s3_bucket_mediatailor_configuration_ddb_items():
                     if bucket_name == s3_bucket_data["Name"]:
                         config = {"from": s3_bucket["arn"], "to": mt_config_data["PlaybackConfigurationArn"], "scheme": scheme}
                         print(config)
-                        items.append(connection_to_ddb_item(s3_bucket["arn"], mt_config_data["PlaybackConfigurationArn"], "s3-bucket-mediatailor-configuration", config))        
+                        items.append(connection_to_ddb_item(s3_bucket["arn"], mt_config_data["PlaybackConfigurationArn"], "s3-bucket-mediatailor-configuration", config))
     except ClientError as error:
         print(error)
     return items
