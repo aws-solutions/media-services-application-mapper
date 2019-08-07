@@ -11,7 +11,9 @@
                 "mediaconnect:List*",
                 "mediaconnect:Describe*",
                 "mediatailor:Get*",
-                "mediatailor:List*"
+                "mediatailor:List*", 
+                "ssm:List*",
+                "ssm:Get*"
             ],
             "Effect": "Allow",
             "Resource": "*"

@@ -73,7 +73,16 @@ def update_regional_ddb_items(region_name):
         content.put_ddb_items(mediatailor_configuration_ddb_items(region_name))
     except ClientError as error:
         print(error)
-
+    try:
+        print("ssm-managed-instances")
+        content.put_ddb_items(ssm_managed_instance_ddb_items(region_name))
+    except ClientError as error:
+        print(error)
+    try:
+        print("ec2-instances")
+        content.put_ddb_items(ec2_instance_ddb_items(region_name))
+    except ClientError as error:
+        print(error)    
 
 def update_global_ddb_items():
     """
@@ -221,6 +230,28 @@ def mediatailor_configuration_ddb_items(region):
         arn = config["PlaybackConfigurationArn"]
         service = "mediatailor-configuration"
         items.append(node_to_ddb_item(arn, service, region, config))
+    return items
+
+def ssm_managed_instance_ddb_items(region):
+    """
+    Retrieve and format SSM managed instances for cache storage.
+    """
+    items = []
+    for managed_instance in ssm_managed_instances(region):
+        arn = "arn:aws:ssm-managed-instance:" + region + "::" + managed_instance['Id']
+        service = "ssm-managed-instance"
+        items.append(node_to_ddb_item(arn, service, region, managed_instance))
+    return items
+
+def ec2_instance_ddb_items(region):
+    """
+    Retrieve and format EC2 instances for cache storage.
+    """
+    items = []
+    for ec2_instance in ec2_instances(region):
+        arn = "arn:aws:ec2-instance:" + region + "::" + ec2_instance['InstanceId']
+        service = "ec2-instance"
+        items.append(node_to_ddb_item(arn, service, region, ec2_instance))
     return items
 
 
@@ -421,6 +452,66 @@ def mediatailor_configurations(region):
             if 'ResponseMetadata' in response:
                 del response['ResponseMetadata']
             items.append(response)
+    else:
+        print("not available in this region")
+    return items
+
+
+def ssm_managed_instances(region):
+    """
+    Retrieve resources like on-prem encoders stored in SSM with MSAM specific tags.
+    """
+    items = []
+    devices = []
+    service_name = 'ssm'
+    if region in boto3.Session().get_available_regions(service_name):
+        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        response = service.get_inventory()
+        devices = devices + response['Entities']
+        while "NextToken" in response:
+            response = service.get_inventory(NextToken=response["NextToken"])
+            devices = devices + response['Entities']
+        for device in devices:
+            #process hybrid/on prem machines
+            device['Tags'] = {}
+            if device['Id'].startswith('mi-'):
+                device_tags = service.list_tags_for_resource(
+                    ResourceType = 'ManagedInstance',
+                    ResourceId = device['Id']
+                )
+                #check for MSAM-NodeType is present, then store this as a node
+                if 'TagList' in device_tags:
+                    for tag in device_tags['TagList']:
+                        #reformat tags before adding to device data
+                        device['Tags'][tag['Key']] = tag['Value']
+                items.append(device)
+    else:
+        print("not available in this region")
+    return items
+
+def ec2_instances(region):
+    """
+    Retrieve EC2 instances with MSAM specific tags.
+    """
+    items = []
+    reservations = []
+    service_name = 'ec2'
+    if region in boto3.Session().get_available_regions(service_name):
+        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        response = service.describe_instances()
+        reservations = reservations + response['Reservations']
+        while "NextToken" in response:
+            response = service.describe_instances(NextToken=response["NextToken"])
+            reservations = reservations + response['Reservations']
+        for reservation in reservations:
+            for instance in reservation['Instances']:
+                if 'Tags' in instance:
+                    final_tags = {}
+                    for tag in instance['Tags']:
+                        #reformat the tags before appending to data
+                        final_tags[tag["Key"]] = tag["Value"]
+                        instance['Tags'] = final_tags
+                items.append(instance)
     else:
         print("not available in this region")
     return items

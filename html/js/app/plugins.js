@@ -11,7 +11,9 @@ define({
         "app/mappers/nodes/s3",
         "app/mappers/nodes/speke",
         "app/mappers/nodes/user_defined_node",
-        "app/mappers/nodes/mediatailor"
+        "app/mappers/nodes/mediatailor",
+        "app/mappers/nodes/ec2",
+        "app/mappers/nodes/ssm_managed_instance"
     ],
     "connections": [
         "app/mappers/connections/cloudfront_medialive_input",
@@ -50,6 +52,8 @@ define({
         "app/ui/overlays/overlay_tools",
         "app/ui/overlays/s3_bucket",
         "app/ui/overlays/speke_keyserver",
-        "app/ui/overlays/mediatailor_configuration"
+        "app/ui/overlays/mediatailor_configuration",
+        "app/ui/overlays/ec2_instance",
+        "app/ui/overlays/ssm_managed_instance"
     ]
 });

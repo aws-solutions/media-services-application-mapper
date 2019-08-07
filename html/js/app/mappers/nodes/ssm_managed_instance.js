@@ -9,7 +9,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var url = current[0];
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
-                server.get(url + "/cached/mediatailor-configuration/" + regionName, api_key).then(function(configs) {
+                server.get(url + "/cached/ssm-managed-instance/" + regionName, api_key).then(function(configs) {
                     $.each(configs, function(index, cache_entry) {
                         // console.log(cache_entry);
                         map_config(cache_entry);
@@ -24,11 +24,16 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
         var map_config = function(cache_entry) {
             var config = JSON.parse(cache_entry.data);
-            var name = config.Name;
-            var id = config.PlaybackConfigurationArn;
+            var name = config.Id;
+            var id = cache_entry.arn;
             var nodes = model.nodes;
-            var rgb = "#80e5ff";
-            var node_type = "MediaTailor Configuration";
+            var rgb = "#D5DBDB";
+            var node_type = "SSM Managed Instance";
+            if ('Tags' in config) {
+                if ('MSAM-NodeType' in config.Tags) {
+                    node_type = config.Tags['MSAM-NodeType'];
+                }
+            }
             var node_data = {
                 "overlay": "informational",
                 "cache_update": cache_entry.updated,
@@ -83,14 +88,14 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 "console_link": (function() {
                     var region = id.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/mediatailor/home?region=${region}#/config/${name}`;
+                        var html = `https://console.aws.amazon.com/systems-manager/managed-instances/${name}/description?region=${region}`;
                         return html;
                     };
                 })(),
                 "cloudwatch_link": (function() {
                     var region = id.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#logs:prefix=MediaTailor`;
+                        var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:`;
                         return html;
                     };
                 })()
@@ -121,7 +126,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
         };
 
         return {
-            "name": "MediaTailor Configurations",
+            "name": "SSM Managed Instances",
             "update": update
         };
     });
