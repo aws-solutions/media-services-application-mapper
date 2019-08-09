@@ -15,6 +15,10 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             height: 600,
             layout: "fitColumns",
             groupBy: ["title"],
+            initialSort: [
+                { column: "id" },
+                { column: "name" }
+            ],
             columns: [{
                 title: "Name",
                 field: "name",
@@ -39,6 +43,10 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             height: 600,
             layout: "fitColumns",
             groupBy: ["title"],
+            initialSort: [
+                { column: "id" },
+                { column: "name" }
+            ],
             columns: [{
                 title: "Name",
                 field: "name",

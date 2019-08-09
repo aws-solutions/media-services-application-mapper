@@ -29,7 +29,14 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                 "data.Origin.Items.DomainName",
                 "data.Origin.Items.OriginPath",
                 "data.Destinations.Settings.Url",
-                "data.HlsIngest.IngestEndpoints.Url"
+                "data.HlsIngest.IngestEndpoints.Url",
+                // SSM and EC2 instances
+                "data.Data.AWS:InstanceInformation.Content.ComputerName",
+                "data.Data.AWS:InstanceInformation.Content.IpAddress",
+                "data.PrivateDnsName",
+                "data.PrivateIpAddress",
+                "data.PublicDnsName",
+                "data.PublicIpAddress"
             ]
         };
 
