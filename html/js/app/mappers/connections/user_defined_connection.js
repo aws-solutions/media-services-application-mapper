@@ -21,11 +21,13 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/user-defined-connection/global", api_key).then((connections) => {
                     $.each(connections, function(index, connection) {
+                        var data = JSON.parse(connection.data);
                         model.edges.update({
                             "id": connection.arn,
                             "to": connection.to,
                             "from": connection.from,
                             "label": connection.label,
+                            "data": data,
                             "arrows": "to",
                             "color": {
                                 "color": "black"

@@ -259,14 +259,14 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             if (edge.to == id) {
                                 // check 'from' node is on diagram
                                 if (diagram.nodes.get(edge.from)) {
-                                    console.log("connecting nodes");
+                                    // console.log(`${diagram.name} diagram connecting nodes ${edge.from} ${edge.to}`);
                                     diagram.edges.update(edge);
                                 }
                             } else
                             if (edge.from == id) {
                                 // check 'to' node is on diagram
                                 if (diagram.nodes.get(edge.to)) {
-                                    console.log("connecting nodes");
+                                    // console.log(`${diagram.name} diagram connecting nodes ${edge.from} ${edge.to}`);
                                     diagram.edges.update(edge);
                                 }
                             }

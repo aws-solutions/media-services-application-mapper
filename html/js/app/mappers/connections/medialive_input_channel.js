@@ -17,6 +17,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             "id": connection.arn,
                             "to": connection.to,
                             "from": connection.from,
+                            "data": data,
                             "label": human_type,
                             "arrows": "to",
                             "color": {

@@ -45,7 +45,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/layout", "app/u
         }
 
         function drop_diagram_to_diagram() {
-            var source_diagram = diagrams.get(drag_id);
+            var source_diagram = diagrams.get_by_name(drag_id);
             var target_diagram = diagrams.shown();
             var nodes;
             var node_ids;
@@ -62,7 +62,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/layout", "app/u
 
         function drop_diagram_to_tile(tile) {
             var name = tile.attr("data-channel-name");
-            var source_diagram = diagrams.get(drag_id);
+            var source_diagram = diagrams.get_by_name(drag_id);
             var node_ids;
             var html;
             if (source_diagram) {
@@ -129,7 +129,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/layout", "app/u
         }
 
         function drop_diagram_to_tile_canvas() {
-            var diagram = diagrams.get(drag_id);
+            var diagram = diagrams.get_by_name(drag_id);
             var html;
             if (diagram) {
                 html = `Create a new tile from diagram ${diagram.name} contents?`;

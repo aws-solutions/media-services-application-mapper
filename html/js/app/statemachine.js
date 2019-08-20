@@ -207,8 +207,8 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                         this.handle("visualModelReady")
                     },
                     "visualModelReady": "visual-model-fresh"
-                    // update tile view, select first tile
-                    // update channel view (this happens with tile selection)
+                        // update tile view, select first tile
+                        // update channel view (this happens with tile selection)
 
                 },
                 "visual-model-fresh": {
@@ -227,7 +227,8 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                             "app/ui/search_view",
                             "app/ui/selected_item_view",
                             "app/ui/tile_view",
-                            "app/ui/tools_menu"
+                            "app/ui/tools_menu",
+                            "app/ui/user_defined"
                         ]);
                         // show the tiles tab
                         $("#channel-tiles-tab").tab('show');

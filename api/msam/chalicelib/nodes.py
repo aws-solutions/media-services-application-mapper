@@ -82,7 +82,8 @@ def update_regional_ddb_items(region_name):
         print("ec2-instances")
         content.put_ddb_items(ec2_instance_ddb_items(region_name))
     except ClientError as error:
-        print(error)    
+        print(error)
+
 
 def update_global_ddb_items():
     """
@@ -232,6 +233,7 @@ def mediatailor_configuration_ddb_items(region):
         items.append(node_to_ddb_item(arn, service, region, config))
     return items
 
+
 def ssm_managed_instance_ddb_items(region):
     """
     Retrieve and format SSM managed instances for cache storage.
@@ -242,6 +244,7 @@ def ssm_managed_instance_ddb_items(region):
         service = "ssm-managed-instance"
         items.append(node_to_ddb_item(arn, service, region, managed_instance))
     return items
+
 
 def ec2_instance_ddb_items(region):
     """
@@ -475,10 +478,7 @@ def ssm_managed_instances(region):
             #process hybrid/on prem machines
             device['Tags'] = {}
             if device['Id'].startswith('mi-'):
-                device_tags = service.list_tags_for_resource(
-                    ResourceType = 'ManagedInstance',
-                    ResourceId = device['Id']
-                )
+                device_tags = service.list_tags_for_resource(ResourceType='ManagedInstance', ResourceId=device['Id'])
                 #check for MSAM-NodeType is present, then store this as a node
                 if 'TagList' in device_tags:
                     for tag in device_tags['TagList']:
@@ -488,6 +488,7 @@ def ssm_managed_instances(region):
     else:
         print("not available in this region")
     return items
+
 
 def ec2_instances(region):
     """

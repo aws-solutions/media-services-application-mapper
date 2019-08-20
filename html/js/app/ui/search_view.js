@@ -50,7 +50,7 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
                 var line = `<li><a href="#" data-diagram-name="${name}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${name}</a></li>`;
                 html += line;
                 anchor_handler_data.push({
-                    diagram: diagrams.get(name),
+                    diagram: diagrams.get_by_name(name),
                     anchor_id: id
                 });
             });
@@ -92,7 +92,7 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
                     var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${node.name}</a></li>`;
                     html += line;
                     anchor_handler_data.push({
-                        diagram: diagrams.get(name),
+                        diagram: diagrams.get_by_name(name),
                         node_id: node.id,
                         anchor_id: id
                     });

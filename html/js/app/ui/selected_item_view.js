@@ -123,10 +123,14 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             renderjson.set_show_to_level(1);
             var html = `
                 <h6 class="card-subtitle mb-2 text-muted">Connection from ${fromNode.title} to ${toNode.title}</h6>
+                <p class="card-text small" id="${div_id}-data"></p>
+                <h6 class="card-subtitle mb-2 text-muted">From</h6>
                 <p class="card-text small" id="${div_id}-from"></p>
+                <h6 class="card-subtitle mb-2 text-muted">To</h6>
                 <p class="card-text small" id="${div_id}-to"></p>
                 `;
             $("#" + div_id).append(html);
+            $("#" + div_id + "-data").append(renderjson(edge.data));
             $("#" + div_id + "-from").append(renderjson(fromNode.data));
             $("#" + div_id + "-to").append(renderjson(toNode.data));
         };

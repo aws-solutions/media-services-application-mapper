@@ -96,7 +96,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                 var contained_by = diagrams.have_any(node_ids);
                 results.diagram_contents = contained_by;
                 // find diagram name matches
-                for (var name of Object.keys(diagrams.list())) {
+                for (var name of Object.keys(diagrams.get_all())) {
                     var includes = name.toLowerCase().includes(text.toLowerCase());
                     if (includes) {
                         results.diagram_names.push(name);

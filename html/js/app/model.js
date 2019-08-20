@@ -72,7 +72,42 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
                 reject(error);
             });
         });
-    }
+    };
+
+    var put_records = function(record) {
+        var current = connections.get_current();
+        var url = current[0];
+        var api_key = current[1];
+        var current_endpoint = `${url}/cached`;
+        if (record && !Array.isArray(record)) {
+            record = [record];
+        }
+        return new Promise(function(resolve, reject) {
+            server.post(current_endpoint, api_key, record).then(function(response) {
+                console.log(response);
+                resolve(response);
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    };
+
+    var delete_record = function(arn) {
+        var current = connections.get_current();
+        var url = current[0];
+        var api_key = current[1];
+        var current_endpoint = `${url}/cached/arn/${encodeURIComponent(arn)}`;
+        return new Promise(function(resolve, reject) {
+            server.delete_method(current_endpoint, api_key).then(function(response) {
+                console.log(response);
+                resolve(response);
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    };
 
     // clear the model at module definition
     reset();
@@ -82,6 +117,8 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
         "edges": edges,
         "reset": reset,
         "map": map,
-        "update": update
+        "update": update,
+        "put_records": put_records,
+        "delete_record": delete_record
     }
 });

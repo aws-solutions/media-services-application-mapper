@@ -357,7 +357,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         $("#view_tile_diagram_show").on("click", function() {
             var diagram_name = $("#view_tile_diagram_selected_diagram").val();
             var node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
-            var diagram = diagrams.get(diagram_name);
+            var diagram = diagrams.get_by_name(diagram_name);
             diagram.network.once("afterDrawing", function() {
                 diagram.network.fit({
                     nodes: node_ids,

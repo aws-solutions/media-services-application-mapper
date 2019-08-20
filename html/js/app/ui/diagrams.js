@@ -18,7 +18,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             return shown;
         };
 
-        var list_diagrams = function() {
+        var get_all = function() {
             return diagrams;
         };
 
@@ -57,7 +57,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             $("#channel-tiles-tab").tab('show');
         };
 
-        var get_diagram = function(name) {
+        var get_by_name = function(name) {
             return diagrams[name];
         };
 
@@ -117,8 +117,9 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             if (!Array.isArray(node_ids)) {
                 node_ids = [node_ids];
             }
+            node_ids = node_ids.sort();
             Object.values(diagrams).forEach(function(diagram) {
-                var intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids.sort());
+                var intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids);
                 if (intersect.length > 0) {
                     results.push({
                         diagram: diagram.name,
@@ -134,17 +135,17 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             var override_diagram = current_url.searchParams.get("diagram");
             if (override_diagram) {
                 console.log("Show diagram " + override_diagram + " on start");
-                var diagram = get_diagram(override_diagram);
+                var diagram = get_by_name(override_diagram);
                 diagram.show();
             };
         });
 
         return {
             shown: shown_diagram,
-            list: list_diagrams,
+            get_all: get_all,
             add: add_diagram,
             remove: remove_diagram,
-            get: get_diagram,
+            get_by_name: get_by_name,
             have_all: have_all,
             have_any: have_any,
             add_selection_callback: add_selection_callback

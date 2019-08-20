@@ -19,7 +19,7 @@ import chalicelib.settings as msam_settings
 app = Chalice(app_name='msam')
 
 # update one region at this interval
-NODE_UPDATE_RATE_MINUTES = 5
+NODE_UPDATE_RATE_MINUTES = 15
 
 # update connections at this interval
 CONNECTION_UPDATE_RATE_MINUTES = 5
@@ -129,9 +129,17 @@ def cached_by_arn(arn):
 @app.route('/cached', cors=True, api_key_required=True, methods=['PUT', 'POST'], content_types=['application/json', 'application/x-www-form-urlencoded'])
 def put_cached_data():
     """
-    APi entry point to add items to the cache.
+    API entry point to add items to the cache.
     """
     return cache.put_cached_data(app.current_request)
+
+
+@app.route('/cached/arn/{arn}', cors=True, api_key_required=True, methods=['DELETE'])
+def delete_cached_data(arn):
+    """
+    API entry point to delete items from the cache.
+    """
+    return cache.delete_cached_data(arn)
 
 
 @app.route('/regions', cors=True, api_key_required=True, methods=['GET'])
@@ -223,11 +231,23 @@ def ping():
 
 
 @app.schedule(Rate(NODE_UPDATE_RATE_MINUTES, unit=Rate.MINUTES))
-def update_nodes(_):
+def update_nodes(event):
     """
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
-    return periodic_handlers.update_nodes()
+    # get this lambda's timeout value
+    lambda_client = boto3.client("lambda")
+    this_lambda = lambda_client.get_function(FunctionName=event.context.invoked_function_arn)
+    # calculate millis
+    total_ms = int(this_lambda['Configuration']['Timeout']) * 1000
+    # we need 25% of our total run time remaining to keep going
+    min_remain_ms = int(total_ms * 0.25)
+    # loop until the remaining time is less than the minimum
+    while min_remain_ms < event.context.get_remaining_time_in_millis():
+        periodic_handlers.update_nodes()
+        # print the stats
+        print("remaining time {}ms".format(event.context.get_remaining_time_in_millis()))
+        print("required remaining time {}ms".format(min_remain_ms))
 
 
 @app.schedule(Rate(CONNECTION_UPDATE_RATE_MINUTES, unit=Rate.MINUTES))

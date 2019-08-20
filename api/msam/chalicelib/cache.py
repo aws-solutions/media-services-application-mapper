@@ -86,7 +86,7 @@ def cached_by_arn(arn):
 
 def put_cached_data(request):
     """
-    APi entry point to add items to the cache.
+    API entry point to add items to the cache.
     """
     try:
         ddb_table_name = CONTENT_TABLE_NAME
@@ -101,6 +101,26 @@ def put_cached_data(request):
             entry["updated"] = int(entry["updated"])
             ddb_table.put_item(Item=entry)
         return {"message": "saved"}
+    except ClientError as error:
+        print(error)
+        return {"message": str(error)}
+
+
+def delete_cached_data(arn):
+    """
+    API entry point to delete items from the cache.
+    """
+    try:
+        arn = unquote(arn)
+        ddb_table_name = CONTENT_TABLE_NAME
+        ddb_resource = boto3.resource('dynamodb')
+        ddb_table = ddb_resource.Table(ddb_table_name)
+        # cache_entries = request.json_body
+        # print(cache_entries)
+        # write the channel nodes to the database
+        # for entry in cache_entries:
+        ddb_table.delete_item(Key={"arn": arn})
+        return {"message": "deleted"}
     except ClientError as error:
         print(error)
         return {"message": str(error)}

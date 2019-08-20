@@ -119,12 +119,12 @@ def update_nodes():
             node_cache.update_regional_ddb_items(region_name)
     except ClientError as error:
         print(error)
-    return True
+    return region_name
 
 
 def update_from_tags():
     """
-    Updates MSAM visuals with tags designations on cloud resources
+    Updates MSAM diagrams and tiles from tags on cloud resources. Check for MSAM-Diagram and MSAM-Tile tags.
     """
     tags.update_diagrams()
     tags.update_tiles()
