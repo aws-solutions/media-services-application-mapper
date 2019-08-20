@@ -72,9 +72,11 @@ define(["app/server", "app/connections", "app/settings"],
             console.log("events: interval scheduled " + update_interval + "ms");
         };
 
-        load_update_interval().then(function() {
-            schedule_interval();
-        });
+        // load_update_interval().then(function() {
+        //     schedule_interval();
+        // });
+
+        load_update_interval();
 
         return {
             "get_cached_events": function() {
@@ -86,6 +88,9 @@ define(["app/server", "app/connections", "app/settings"],
             "add_callback": function(f) {
                 if (!listeners.includes(f)) {
                     listeners.push(f);
+                }
+                if (!intervalID) {
+                    schedule_interval();
                 }
             },
             "set_update_interval": function(seconds) {

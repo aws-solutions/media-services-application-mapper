@@ -11,7 +11,7 @@ requirejs.config({
         "fuse": "https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min",
         "object_hash": "https://cdn.jsdelivr.net/gh/puleos/object-hash/dist/object_hash",
         "levenshtein": "https://cdn.jsdelivr.net/npm/fast-levenshtein@2.0.6/levenshtein.min",
-        "lodash": "https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min",
+        "lodash": "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min",
         "machina": "https://cdn.jsdelivr.net/npm/machina@2.0.2/lib/machina.min",
         "vis": "https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min"
     },
