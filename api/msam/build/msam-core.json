@@ -55,7 +55,9 @@
                                     "mediaconnect:List*",
                                     "mediaconnect:Describe*",
                                     "mediatailor:Get*",
-                                    "mediatailor:List*"
+                                    "mediatailor:List*",
+                                    "ssm:List*",
+                                    "ssm:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -113,9 +115,8 @@
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
+                                    "lambda:List*",
+                                    "lambda:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -192,11 +193,11 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/0d62905a5de61621adc777e8886c8698",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c6856dceef13818681b4904ad549b7cb",
                 "Tags": {
-                    "aws-chalice": "version=1.9.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
                 },
-                "Timeout": 600,
+                "Timeout": 900,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -246,7 +247,9 @@
                                     "mediaconnect:List*",
                                     "mediaconnect:Describe*",
                                     "mediatailor:Get*",
-                                    "mediatailor:List*"
+                                    "mediatailor:List*",
+                                    "ssm:List*",
+                                    "ssm:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -304,9 +307,8 @@
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
+                                    "lambda:List*",
+                                    "lambda:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -383,11 +385,11 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/0d62905a5de61621adc777e8886c8698",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c6856dceef13818681b4904ad549b7cb",
                 "Tags": {
-                    "aws-chalice": "version=1.9.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
                 },
-                "Timeout": 600,
+                "Timeout": 900,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -411,7 +413,7 @@
                     "UpdateNodesEvent": {
                         "Type": "Schedule",
                         "Properties": {
-                            "Schedule": "rate(5 minutes)"
+                            "Schedule": "rate(15 minutes)"
                         }
                     }
                 }
@@ -445,7 +447,9 @@
                                     "mediaconnect:List*",
                                     "mediaconnect:Describe*",
                                     "mediatailor:Get*",
-                                    "mediatailor:List*"
+                                    "mediatailor:List*",
+                                    "ssm:List*",
+                                    "ssm:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -503,9 +507,8 @@
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
+                                    "lambda:List*",
+                                    "lambda:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -582,11 +585,11 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/0d62905a5de61621adc777e8886c8698",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c6856dceef13818681b4904ad549b7cb",
                 "Tags": {
-                    "aws-chalice": "version=1.9.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
                 },
-                "Timeout": 600,
+                "Timeout": 900,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -644,7 +647,9 @@
                                     "mediaconnect:List*",
                                     "mediaconnect:Describe*",
                                     "mediatailor:Get*",
-                                    "mediatailor:List*"
+                                    "mediatailor:List*",
+                                    "ssm:List*",
+                                    "ssm:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -702,9 +707,8 @@
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
+                                    "lambda:List*",
+                                    "lambda:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -781,11 +785,11 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/0d62905a5de61621adc777e8886c8698",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c6856dceef13818681b4904ad549b7cb",
                 "Tags": {
-                    "aws-chalice": "version=1.9.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
                 },
-                "Timeout": 600,
+                "Timeout": 900,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -843,7 +847,9 @@
                                     "mediaconnect:List*",
                                     "mediaconnect:Describe*",
                                     "mediatailor:Get*",
-                                    "mediatailor:List*"
+                                    "mediatailor:List*",
+                                    "ssm:List*",
+                                    "ssm:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -901,9 +907,8 @@
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
+                                    "lambda:List*",
+                                    "lambda:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -980,11 +985,11 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/0d62905a5de61621adc777e8886c8698",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c6856dceef13818681b4904ad549b7cb",
                 "Tags": {
-                    "aws-chalice": "version=1.9.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
                 },
-                "Timeout": 600,
+                "Timeout": 900,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
@@ -1042,7 +1047,9 @@
                                     "mediaconnect:List*",
                                     "mediaconnect:Describe*",
                                     "mediatailor:Get*",
-                                    "mediatailor:List*"
+                                    "mediatailor:List*",
+                                    "ssm:List*",
+                                    "ssm:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -1100,9 +1107,8 @@
                                     "sns:ListSubscriptions",
                                     "sns:ListSubscriptionsByTopic",
                                     "sns:ListTopics",
-                                    "lambda:ListFunctions",
-                                    "lambda:ListEventSourceMappings",
-                                    "lambda:GetFunctionConfiguration"
+                                    "lambda:List*",
+                                    "lambda:Get*"
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
@@ -1177,6 +1183,7 @@
         "RestAPI": {
             "Type": "AWS::Serverless::Api",
             "Properties": {
+                "EndpointConfiguration": "EDGE",
                 "StageName": "msam",
                 "DefinitionBody": {
                     "swagger": "2.0",
@@ -2115,6 +2122,46 @@
                                     "type": "string"
                                 }]
                             },
+                            "delete": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to delete items from the cache.",
+                                "security": [{
+                                    "api_key": []
+                                }],
+                                "parameters": [{
+                                    "name": "arn",
+                                    "in": "path",
+                                    "required": true,
+                                    "type": "string"
+                                }]
+                            },
                             "options": {
                                 "consumes": [
                                     "application/json"
@@ -2146,7 +2193,7 @@
                                         "default": {
                                             "statusCode": "200",
                                             "responseParameters": {
-                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,DELETE,OPTIONS'",
                                                 "method.response.header.Access-Control-Allow-Origin": "'*'",
                                                 "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
                                             }
@@ -2191,7 +2238,7 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "summary": "APi entry point to add items to the cache.",
+                                "summary": "API entry point to add items to the cache.",
                                 "security": [{
                                     "api_key": []
                                 }]
@@ -2226,7 +2273,7 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "summary": "APi entry point to add items to the cache.",
+                                "summary": "API entry point to add items to the cache.",
                                 "security": [{
                                     "api_key": []
                                 }]
@@ -3273,11 +3320,11 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.app",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/0d62905a5de61621adc777e8886c8698",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/c6856dceef13818681b4904ad549b7cb",
                 "Tags": {
-                    "aws-chalice": "version=1.9.1:stage=dev:app=msam"
+                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
                 },
-                "Timeout": 600,
+                "Timeout": 900,
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {

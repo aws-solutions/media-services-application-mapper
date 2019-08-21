@@ -4,7 +4,7 @@
     "app_name": "msam",
     "manage_iam_role": true,
     "autogen_policy": false,
-    "lambda_timeout": 600,
+    "lambda_timeout": 900,
     "lambda_memory_size": 2560,
     "environment_variables": {
         "ALARMS_TABLE_NAME": "media-services-application-mapper-alarms",

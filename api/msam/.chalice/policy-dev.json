@@ -11,7 +11,7 @@
                 "mediaconnect:List*",
                 "mediaconnect:Describe*",
                 "mediatailor:Get*",
-                "mediatailor:List*", 
+                "mediatailor:List*",
                 "ssm:List*",
                 "ssm:Get*"
             ],
@@ -71,9 +71,8 @@
                 "sns:ListSubscriptions",
                 "sns:ListSubscriptionsByTopic",
                 "sns:ListTopics",
-                "lambda:ListFunctions",
-                "lambda:ListEventSourceMappings",
-                "lambda:GetFunctionConfiguration"
+                "lambda:List*",
+                "lambda:Get*"
             ],
             "Effect": "Allow",
             "Resource": "*"
