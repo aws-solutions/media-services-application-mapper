@@ -38,11 +38,16 @@ define(["app/server", "app/connections", "app/settings"],
         var cache_update = function() {
             retrieve_for_state("set").then(function(response) {
                 // console.log("updated set event cache");
+                // console.log(response);
                 previous_set_events = current_set_events;
                 current_set_events = response;
-                listeners.forEach(function(f) {
-                    f(current_set_events, previous_set_events);
-                });
+                var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
+                var removed = _.differenceBy(previous_set_events, current_set_events, "alarm_id");
+                if (added.length || removed.length) {
+                    listeners.forEach(function(f) {
+                        f(current_set_events, previous_set_events);
+                    });
+                }
             }).catch(function(error) {
                 console.log(error);
             });
