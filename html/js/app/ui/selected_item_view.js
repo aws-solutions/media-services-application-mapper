@@ -140,9 +140,16 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             renderjson.set_icons("+", "-");
             renderjson.set_show_to_level(2);
             var data = [];
+            var missing = [];
             $.each(members, function(member_index, member_value) {
-                data.push(model.nodes.get(member_value.id).data);
+                var node = model.nodes.get(member_value.id);
+                if (node) {
+                    data.push(node.data);
+                } else {
+                    missing.push(member_value.id);
+                }
             });
+            data.push({ "missing-nodes": missing });
             var html = `
             <h6 class="card-subtitle mb-2 text-muted" id="${div_id}-subtitle">Channel: ${name}</h6>
             <p class="card-text small" id="${div_id}-text"></p>

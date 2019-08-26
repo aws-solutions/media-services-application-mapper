@@ -202,7 +202,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         var node_ids = _.map(layout_items, "id");
                         var nodes = _.compact(model.nodes.get(node_ids));
                         diagram.nodes.update(nodes);
-                        resolve();
+                        resolve(layout_items);
                     }).catch(function(error) {
                         console.log(error);
                         reject(error);
@@ -210,17 +210,23 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 });
             }
 
-            restore_layout() {
+            restore_layout(layout_items) {
                 var diagram = this;
                 return new Promise(function(resolve, reject) {
-                    layout.retrieve_layout(diagram).then(function(layout_items) {
+                    var inner_promise;
+                    if (!layout_items) {
+                        inner_promise = layout.retrieve_layout(diagram);
+                    } else {
+                        inner_promise = Promise.resolve(layout_items);
+                    }
+                    inner_promise.then(function(layout_items) {
                         layout_items.forEach(function(item) {
                             var node = diagram.nodes.get(item.id);
                             if (node) {
                                 diagram.network.moveNode(item.id, item.x, item.y);
                             }
                         });
-                        resolve();
+                        resolve(layout_items);
                     }).catch(function(error) {
                         console.log(error);
                         reject(error);

@@ -109,28 +109,30 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             var promises = [];
             $.each(members, function(member_index, member_value) {
                 var node = model.nodes.get(member_value.id);
-                $.each(event_alerts.get_cached_events().current, function(event_index, event_value) {
-                    if (member_value.id == event_value.resource_arn) {
-                        event_value.detail.name = node.name;
-                        alert_data.push(event_value.detail);
-                    }
-                });
-                promises.push(new Promise(function(resolve, reject) {
-                    var local_node_id = member_value.id;
-                    var local_node_name = node.name;
-                    require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
-                        // console.log(subscriptions);
-                        for (subscription of subscriptions) {
-                            if (subscription.StateUpdated) {
-                                subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
-                            }
-                            subscription.ARN = local_node_id;
-                            subscription.name = local_node_name;
+                if (node) {
+                    $.each(event_alerts.get_cached_events().current, function(event_index, event_value) {
+                        if (member_value.id == event_value.resource_arn) {
+                            event_value.detail.name = node.name;
+                            alert_data.push(event_value.detail);
                         }
-                        alarm_data = alarm_data.concat(subscriptions);
-                        resolve();
                     });
-                }));
+                    promises.push(new Promise(function(resolve, reject) {
+                        var local_node_id = member_value.id;
+                        var local_node_name = node.name;
+                        require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
+                            // console.log(subscriptions);
+                            for (subscription of subscriptions) {
+                                if (subscription.StateUpdated) {
+                                    subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
+                                }
+                                subscription.ARN = local_node_id;
+                                subscription.name = local_node_name;
+                            }
+                            alarm_data = alarm_data.concat(subscriptions);
+                            resolve();
+                        });
+                    }));
+                }
             });
             Promise.all(promises).then(function() {
                 alarm_tabulator.replaceData(alarm_data);

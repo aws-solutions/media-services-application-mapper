@@ -172,18 +172,19 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                         },
                         "restore-nodes": {
                             _onEnter: function() {
-                                my_diagram.restore_nodes().then(function() {
+                                my_diagram.restore_nodes().then(function(layout_items) {
                                     // stop layout of node dump
                                     my_diagram.network.setOptions(vis_options.without_layout);
                                     // next state
-                                    my_diagram.statemachine.transition("restore-layout");
+                                    my_diagram.statemachine.handle("restore-layout", layout_items);
                                 });
-                            }
+                            },
+                            "restore-layout": "restore-layout"
                         },
                         "restore-layout": {
-                            _onEnter: function() {
+                            _onEnter: function(layout_items) {
                                 // restore the node layout
-                                my_diagram.restore_layout().then(function() {
+                                my_diagram.restore_layout(layout_items).then(function() {
                                     my_diagram.statemachine.transition("restore-edges");
                                 });
                             }
