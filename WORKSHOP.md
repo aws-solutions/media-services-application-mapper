@@ -57,16 +57,21 @@ MSAM integrates with CloudWatch alarms and MediaLive pipeline alerts, and can vi
 
 ### Create a pipeline alert
 
-1. Stop your MediaLive Channel
-1. Edit your MediaLive Input
-1. Edit one input URL to make it invalid
-1. Save the MediaLive Input
-1. Start the MediaLive Channel
-1. Wait for Channel to start
-1. Find the MediaLive Channel in MSAM
-1. Wait for the pipeline alert to show on the MediaLive node
-1. Select the channel and click the monitor tab to view the alert
-1. Done? Go back and fix your input URL
+Pause one of your pipelines to trigger a pipeline alert on your MediaLive channel. 
+1. Navigate to the MediaLive console.
+1. Click on your channel.  
+1. From the **Schedule** tab, click on **Create** button.
+1. Provide an action name like `Pause`.
+1. Leave the Start Type as **Fixed**.
+1. Provide a UTC time that’s at least 15 seconds from current UTC time.  You can look up current UTC time by going to sites like: https://time.is/UTC
+1. From **Action Type** dropdown, select **Pause**.
+1. Click on **Add Pipelines** button. 
+1. From **Pipelines Id** dropdown, select **PIPELINE_0**.
+1. Click on **Create** button.
+1. Find the MediaLive Channel in MSAM.
+1. Wait for the pipeline alert to show on the MediaLive node. The alert show up once the pause event gets triggered at the scheduled time.
+1. Select the channel and click the monitor tab to view the alert.
+1. Repeat steps 1-10 above when ready to un-pause the pipeline. This should clear the alert.
 
 
 ## Removal and Clean Up
