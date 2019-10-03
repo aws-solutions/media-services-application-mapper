@@ -44,6 +44,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
+            region = encodeURIComponent(region);
             var current_endpoint = `${url}/cloudwatch/alarms/all/${region}`;
             return new Promise(function(resolve, reject) {
                 server.get(current_endpoint, api_key).then(function(response) {

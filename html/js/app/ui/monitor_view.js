@@ -91,6 +91,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             alert_tabulator.replaceData(data);
             // alarms
             require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
+                console.log(subscriptions);
                 for (subscription of subscriptions) {
                     if (subscription.StateUpdated) {
                         subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
