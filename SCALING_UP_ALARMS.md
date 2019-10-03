@@ -35,7 +35,7 @@ Choose a region to install MSAM. The tool will be able to work with all regions 
 1. Navigate to the SNS console
 2. Create a new SNS Topic (such as `msam-alarm-notify`)
 3. Navigate to the Lambda console
-4. Find the Lambda with IncomingCloudwatchAlarm in the name
+4. Find the Lambda with `IncomingCloudwatchAlarm` in the name
 5. Add a trigger for this Lambda from the SNS topic created above
 
 ### Option 2
@@ -43,7 +43,7 @@ Choose a region to install MSAM. The tool will be able to work with all regions 
 1. Navgate to each region CloudWatch alarms are configured
 2. Create an SNS topic in each region (such as `msam-alarm-notify-us-west-2`, `msam-alarm-notify-eu-west-1`)
 3. Navigate to the Lambda console
-4. Find the Lambda with IncomingCloudwatchAlarm in the name
+4. Find the Lambda with `IncomingCloudwatchAlarm` in the name
 5. Add a trigger for this Lambda from each SNS topic created above
 
 ## Create Tiles and Diagrams with MSAM
