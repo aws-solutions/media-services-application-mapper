@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/1e0e8f9eb6bb84ed67efa973e31e66ac",
+                    "Key": "msam/55a5af7ea1784855e15e8a7e81be7e8a",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }

@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1566860864)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1570062574)",
     "Transform": "AWS::Serverless-2016-10-31",
     "Outputs": {
         "RestAPIId": {
@@ -215,13 +215,13 @@
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
-                    "Key": "msam/4fb142bc9f6688bcb383f74682a82f5c",
+                    "Key": "msam/71d8e92182dbb546dd9cbb5b2d638bf8",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.11.1:stage=dev:app=msam"
                 },
                 "Timeout": 900,
                 "MemorySize": 2560,
@@ -230,7 +230,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1566860864",
+                        "BUILD_STAMP": "1570062574",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -427,13 +427,13 @@
                 "Handler": "app.update_nodes",
                 "Description": "MSAM Lambda for periodically updating the node cache",
                 "CodeUri": {
-                    "Key": "msam/4fb142bc9f6688bcb383f74682a82f5c",
+                    "Key": "msam/71d8e92182dbb546dd9cbb5b2d638bf8",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.11.1:stage=dev:app=msam"
                 },
                 "Timeout": 900,
                 "MemorySize": 2560,
@@ -442,7 +442,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1566860864",
+                        "BUILD_STAMP": "1570062574",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -647,13 +647,13 @@
                 "Handler": "app.update_connections",
                 "Description": "MSAM Lambda for peridically updating the connection cache",
                 "CodeUri": {
-                    "Key": "msam/4fb142bc9f6688bcb383f74682a82f5c",
+                    "Key": "msam/71d8e92182dbb546dd9cbb5b2d638bf8",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.11.1:stage=dev:app=msam"
                 },
                 "Timeout": 900,
                 "MemorySize": 2560,
@@ -662,7 +662,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1566860864",
+                        "BUILD_STAMP": "1570062574",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -867,13 +867,13 @@
                 "Handler": "app.update_alarms",
                 "Description": "MSAM Lambda for polling CloudWatch alarm states",
                 "CodeUri": {
-                    "Key": "msam/4fb142bc9f6688bcb383f74682a82f5c",
+                    "Key": "msam/71d8e92182dbb546dd9cbb5b2d638bf8",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.11.1:stage=dev:app=msam"
                 },
                 "Timeout": 900,
                 "MemorySize": 2560,
@@ -882,7 +882,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1566860864",
+                        "BUILD_STAMP": "1570062574",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -1087,13 +1087,13 @@
                 "Handler": "app.update_from_tags",
                 "Description": "MSAM Lambda for handling diagram and tile updates from tags",
                 "CodeUri": {
-                    "Key": "msam/4fb142bc9f6688bcb383f74682a82f5c",
+                    "Key": "msam/71d8e92182dbb546dd9cbb5b2d638bf8",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.11.1:stage=dev:app=msam"
                 },
                 "Timeout": 900,
                 "MemorySize": 2560,
@@ -1102,7 +1102,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1566860864",
+                        "BUILD_STAMP": "1570062574",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -3442,13 +3442,13 @@
                 "Handler": "app.app",
                 "Description": "MSAM Lambda for handling requests from clients",
                 "CodeUri": {
-                    "Key": "msam/4fb142bc9f6688bcb383f74682a82f5c",
+                    "Key": "msam/71d8e92182dbb546dd9cbb5b2d638bf8",
                     "Bucket": {
                         "Fn::Sub": "rodeolabz-${AWS::Region}"
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.10.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.11.1:stage=dev:app=msam"
                 },
                 "Timeout": 900,
                 "MemorySize": 2560,
@@ -3457,7 +3457,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1566860864",
+                        "BUILD_STAMP": "1570062574",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
