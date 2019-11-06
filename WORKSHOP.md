@@ -11,7 +11,7 @@ This workshop guides the user through basic understanding of MSAM including inst
 	* Content cache tuning
 	* First run!
 	* Review navigation, diagram layout, searching
-	* Channel tiles
+	* Tiles
 * CloudWatch Integration
 	* Understand monitoring, alarms, alerts
 	* Create a pipeline alert
@@ -45,7 +45,7 @@ Navigate to the [Install](INSTALL.md) document and follow the instructions to in
 1. Navigate to the [Usage](USAGE.md) document
 2. Read and follow the First Run instructions
 3. Practice navigation, layout, and search
-4. Create one or more channel tiles
+4. Create one or more tiles
 
 ## Part 4: CloudWatch Alarms and Event Integration
 

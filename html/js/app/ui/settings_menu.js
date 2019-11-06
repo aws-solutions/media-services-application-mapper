@@ -294,7 +294,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             } else if (Number.isNaN(event_interval)) {
                 setAdvancedSettingsAlert("Please check the CloudWatch Event Update Interval");
             } else if (Number.isNaN(tiles_interval)) {
-                setAdvancedSettingsAlert("Please check the Refresh Channel Tiles Interval");
+                setAdvancedSettingsAlert("Please check the Refresh Tile Inventory Interval");
             } else if (!Array.isArray(regions_array)) {
                 setAdvancedSettingsAlert("Please check the Never Cache Regions input");
             } else {

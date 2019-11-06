@@ -102,7 +102,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                         results.diagram_names.push(name);
                     }
                 }
-                // find channel tiles with any of these nodes
+                // find tiles with any of these nodes
                 channels.have_any(node_ids).then(function(matches) {
                     results.tile_contents = matches;
                 });

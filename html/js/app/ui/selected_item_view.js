@@ -44,7 +44,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                         var html = `<a href="#" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                         tile_links = tile_links + html;
                     });
-                    tile_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Channel tiles:</b>&nbsp;&nbsp;${tile_links}</p>`;
+                    tile_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Tiles:</b>&nbsp;&nbsp;${tile_links}</p>`;
                 }
                 var cache_html = "";
                 if (node.cache_update != 0) {

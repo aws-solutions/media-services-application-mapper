@@ -5,7 +5,50 @@ MSAM is installed into an AWS account using several CloudFormation templates.
 ## Requirements for MSAM
 
 * Amazon Web Services account with root or Administrator permissions
-* Google Chrome, Mozilla Firefox, or another current browser with JavaScript enabled
+* Google Chrome, Mozilla Firefox, Safari or another current browser with JavaScript enabled
+
+
+## Finding Installation Content
+
+### dist/ folder in GitHub
+
+This folder in the repository contains files you can use to install MSAM into your AWS account. 
+
+The four CloudFormation templates located in this folder that end with `-release.json` are ready to use to install the latest release of MSAM.
+
+```
+msam-browser-app-release.json
+msam-core-release.json
+msam-dynamodb-release.json
+msam-events-release.json
+```
+
+### md5.txt, sha1.txt, sha256.txt
+
+These files contain digest values for the templates and packaged code contained in this folder and hosted on S3 by the project sponsors.
+
+
+### release.txt
+
+The hosted templates listed in this file always point to the latest release of MSAM. These links can be used directly in the CloudFormation console to install MSAM into any supported AWS region. Templates in this file have an epoch timestamp embedded in the template description.
+
+```
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release.json
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release.json
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release.json
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release.json
+```
+
+### current.txt
+
+The templates listed in this file point to a build of MSAM under development or test. Templates in this file have an epoch timestamp in the file name and embedded in the template description.
+
+```
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release-1570062574.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release-1570062574.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release-1570062574.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1570062574.template
+```
 
 ## CloudFormation Stack Creation
 
@@ -96,15 +139,13 @@ Go to the Outputs section of the created stack and copy the MSAMBrowserURL to a 
 
 ![Browser URL](images/cfn-browser-url.jpeg)
 
-## Retrieve the Authentication Key for the REST API
+## Retrieve the API Key for the REST API
 
 The MSAM back-end requires an API key to access any of the REST endpoints. The Core API CloudFormation template creates a default API key automatically. The key is not displayed in Outputs section of the created stack. You can retrieve the key from the AWS console. **By default, no access is possible until the following steps are performed.**
 
-1. Take note of the APIKeyID in the Outputs section of the Core API stack
-2. Go to the API Gateway console
-3. In the left-hand tree view, click on API Keys
-4. Find the API key matching the ID of the key in the CloudFormation stack
-5. Click on the API Key and click the **Show** link to see the actual API Key
+1. Change to the Resources tab of the Core API stack
+2. Click the link for the API Key in the Physical ID column of the Resources listing
+3. Click the Show link in the main compartment for the API key
 6. Copy the API Key and keep it with the Endpoint URL
   
 ![API Key Value](images/api-key.jpeg)
@@ -132,9 +173,8 @@ There are six DynamoDB tables used by MSAM. They are:
 * [StackName]-Layout-[ID]
 * [StackName]-Settings-[ID]
 
-Each table is configured for auto scaling by the CloudFormation template. The default DynamoDB read and write capacity set by the CloudFormation template is 5. Each table is set to scale out when recent operations exceed 50% of its R/W capacity. Each table is limited to scale out to 5,000 R/W capacity units if needed. Each table will automatically scale in when R/W capacity needs reduce.
+Each table is configured for on-demand capacity by the CloudFormation template. This allows MSAM to automatically scale it's data handling capacity from small to very large Media Services installations.
 
-Consider setting alarms and notify via email or text message if any throttling events occur on any table, if any of these tables breach the 75% level of their current capacity, or if any table exceeds a certain R/W capacity unit level.
 
 ## Versions and Updates
 
@@ -151,9 +191,9 @@ Any updates provided will be done via updates to the CloudFormation template fil
 
 ## Raw Web Content
 
-The MSAM browser application in zipped form is available from the following URL.
+The MSAM browser application in zipped form is available from the following URL. The numeric value at the end of this file is the same as other files from the same build.
 
-`https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-web.zip`
+`https://s3-us-west-2.amazonaws.com/rodeolabz-us-west-2/msam/msam-web-NNNNNNNNNN.zip`
 
 This file can be extracted into a web server or another type of hosting environment. Take this approach if you prefer not to use the CloudFormation template to host the application in an S3 bucket.
 

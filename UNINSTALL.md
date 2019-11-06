@@ -20,7 +20,7 @@ To delete a stack:
 
 ## Warning
 
-Remember to remove the DynamoDB stack last as other stacks are running software that accesses the tables. Removing the table before removing the running software has the potential to create excessive error rates in your account which may result in service usage throttling.
+Remember to remove the DynamoDB stack last as other stacks are running software that access the tables. Removing the tables before removing the running software has the potential to create excessive error rates in your account which may result in service usage throttling.
 
 ## Navigate
 

@@ -11,18 +11,23 @@
 * MSAM is installed into an AWS account with several CloudFormation templates
 
 
-### Global Model
+### Diagrams
 
-* The tool visualizes cloud resources as nodes on a diagram, and connections between resources as directed edges
+* The user builds one or more diagrams with discovered resources from their AWS account. Diagram contents can be organized in any way that makes sense for the user's environment.
 
-![Simple Workflow](images/simple-workflow.jpeg)
+* The tool visualizes cloud resources as nodes and logical connections between resources as directed edges
+
+* Edges (connections) on diagrams generally represent some type of data flow
+
+![Simple Workflow](images/diagram-nodes-edges.png)
  
 * Simple and complex workflows of Media Services resources can be discovered and represented
 * Different types of service resources are visualized with unique color and textual indicators
+* MSAM includes graphical tools to quickly build diagrams of related resources
 
-The following image shows a complex workflow including resources for AWS S3 buckets, CloudFront, MediaLive, MediaStore, MediaPackage, and a SPEKE key server.
+The following image shows a diagram with several workflows including resources for AWS S3 buckets, CloudFront, MediaLive, MediaStore, MediaPackage, and a SPEKE key server.
 
-![Complex Workflow](images/complex-workflow.jpeg)
+![Complex Workflow](images/diagram-complex.png)
 
 * MSAM is designed to be extended with new node types, connection discovery, visualization overlays, and tools
 * Custom nodes can be added within the browser application directly, or cached into a database through a cloud-side task
@@ -37,14 +42,15 @@ The following image shows the JSON configuration of a diagram node when it is se
 
 ![Selected Item JSON](images/selected-item-json.jpeg)
 
-### Channel Tiles
+### Tiles
 
-* The tile view aggregates resources into a single item that collectively provide a streaming video channel
+* The tile view aggregates several related cloud resources into a single visual item
+* Tiles are often used to represent a _streaming channel_ for monitoring
 * Tiles can be created interactively, or through the REST API for bulk operations
 
-The following image shows a tile view with seven tiles defined. Each tile indicates the number of alerts and alarms aggregated from the underlying resources associated with the tile. Each tile also provides navigation back to the tile's resources on the diagram.
+The following image shows a tile view with several tiles. Each tile indicates the number of alerts and alarms aggregated from the underlying resources associated with the tile. Each tile also provides navigation back to the tile's resources on the diagram.
 
-![Customized Nodes](images/channel-tiles.jpeg)
+![Customized Nodes](images/channel-tiles.png)
 
 * The tile view displays the aggregated media service configuration information for all resources included in the tile
 
@@ -54,10 +60,10 @@ The following image shows the aggregated JSON configuration of all the diagram e
 
 ### Resource Monitoring
 
-* MSAM integrates with CloudWatch events and alarms to indicate operational problems from a top-down view
+* MSAM can be configured to automatcally display MediaLive pipeline alerts on MediaLive channel nodes
+* The tool integrates with CloudWatch alarms to indicate operational problems from a top-down view
 * Any CloudWatch alarm can be associated with any node on the diagram
 * CloudWatch alarm indicators are visualized as color and text on the node
-* Displays MediaLive pipeline alerts on MediaLive channel nodes
 * CloudWatch high-resolution alarms can be used for frequent ten-second notification intervals
 
 The following image shows a MediaLive input with an alarm status, and a MediaLive channel with an alarm status and three set alerts on pipeline 1.
@@ -70,9 +76,9 @@ The following image shows the Monitor tab after selecting a MediaLive channel in
 
 ![CloudWatch Support](images/monitor-tab.jpeg)
 
-Channel tiles aggregate all configuration and status from the underlying assigned elements. If any diagram node goes into alert or alarm status, the channel tiles associated with that node will also show the same status. See the image below.
+A tile aggregates all structure, configuration and status from the underlying assigned resources. If any resource's CloudWatch alarm assigned to a tile goes into alarm status, the tiles associated with that resource will also show the same status. See the image below.
 
-![CloudWatch Support](images/cloudwatch-channel-tile.jpeg)
+![CloudWatch Support](images/alarm-channel-tiles.png)
 
 ### REST API
 

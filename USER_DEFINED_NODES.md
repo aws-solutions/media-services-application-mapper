@@ -61,7 +61,7 @@ The above JSON fragment shows two user-defined nodes representing on-premise vid
 The HTTPie or Curl tools can be used here. The following example uses HTTPie.
 
 
-http POST **MSAM_ENDPOINT**>/cached "x-api-key:**MSAM_APIKEY** < **JSON_FILE**
+http POST **MSAM_ENDPOINT**/cached "x-api-key:**MSAM_APIKEY** < **JSON_FILE**
 
 You will receive an acknowledgment from the API.
 
