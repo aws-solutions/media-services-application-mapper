@@ -3,18 +3,18 @@
 This workshop guides the user through basic understanding of MSAM including installation, configuration, tuning, and resource monitoring.
 
 
-## Workshop Agenda (re:Invent 2018)
+## Workshop Agenda (re:Invent 2019)
 
 * Overview of Media Services Application Mapper
 * Install MSAM into your AWS account using CloudFormation
 * MSAM browser application
-	* Content cache tuning
 	* First run!
-	* Review navigation, diagram layout, searching
-	* Tiles
+	* Review navigation, searching, menus
+	* Diagram management and layout
+	* Tile management
 * CloudWatch Integration
-	* Understand monitoring, alarms, alerts
-	* Create a pipeline alert
+	* Understand monitoring, alarms, pipeline alerts
+	* Create a MediaLive pipeline alert
 
 
 ## Part 1: Tool Overview
@@ -57,7 +57,8 @@ MSAM integrates with CloudWatch alarms and MediaLive pipeline alerts, and can vi
 
 ### Create a pipeline alert
 
-Pause one of your pipelines to trigger a pipeline alert on your MediaLive channel. 
+Pause one of your pipelines to trigger a pipeline alert on your MediaLive channel.
+
 1. Navigate to the MediaLive console.
 1. Click on your channel.  
 1. From the **Schedule** tab, click on **Create** button.
