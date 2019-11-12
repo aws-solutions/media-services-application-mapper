@@ -70,10 +70,21 @@ Pause one of your pipelines to trigger a pipeline alert on your MediaLive channe
 1. From **Pipelines Id** dropdown, select **PIPELINE_0**.
 1. Click on **Create** button.
 1. Find the MediaLive Channel in MSAM.
-1. Wait for the pipeline alert to show on the MediaLive node. The alert show up once the pause event gets triggered at the scheduled time.
+1. Wait for the pipeline alert to show on the MediaLive node. The alert should show up once the pause event gets triggered at the scheduled time.
 1. Select the channel and click the monitor tab to view the alert.
-1. Repeat steps 1-10 above when ready to un-pause the pipeline. This should clear the alert.
 
+### Clear the pipeline alert
+
+1. Navigate to the MediaLive console.
+1. Click on your channel.  
+1. From the **Schedule** tab, click on **Create** button.
+1. Provide an action name like `Unpause`.
+1. Leave the Start Type as **Fixed**.
+1. Provide a UTC time that’s at least 15 seconds from current UTC time.  You can look up current UTC time by going to sites like: https://time.is/UTC
+1. From **Action Type** dropdown, select **Pause**.
+1. Click on **Create** button.
+1. Find the MediaLive Channel in MSAM.
+1. Wait for the pipeline alert to clear on the MediaLive node. The alert should clear up once the pause event gets triggered at the scheduled time.
 
 ## Removal and Clean Up
 
