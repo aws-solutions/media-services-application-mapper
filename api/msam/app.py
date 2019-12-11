@@ -19,7 +19,7 @@ import chalicelib.settings as msam_settings
 app = Chalice(app_name='msam')
 
 # update one region at this interval
-NODE_UPDATE_RATE_MINUTES = 15
+NODE_UPDATE_RATE_MINUTES = 5
 
 # update connections at this interval
 CONNECTION_UPDATE_RATE_MINUTES = 5

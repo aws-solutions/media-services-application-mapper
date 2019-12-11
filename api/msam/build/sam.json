@@ -200,9 +200,9 @@
         "Handler": "app.incoming_cloudwatch_alarm",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.11.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.12.0:stage=dev:app=msam"
         },
-        "Timeout": 900,
+        "Timeout": 300,
         "MemorySize": 2560,
         "Environment": {
           "Variables": {
@@ -397,9 +397,9 @@
         "Handler": "app.update_nodes",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.11.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.12.0:stage=dev:app=msam"
         },
-        "Timeout": 900,
+        "Timeout": 300,
         "MemorySize": 2560,
         "Environment": {
           "Variables": {
@@ -423,7 +423,7 @@
           "UpdateNodesEvent": {
             "Type": "Schedule",
             "Properties": {
-              "Schedule": "rate(15 minutes)"
+              "Schedule": "rate(5 minutes)"
             }
           }
         }
@@ -602,9 +602,9 @@
         "Handler": "app.update_connections",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.11.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.12.0:stage=dev:app=msam"
         },
-        "Timeout": 900,
+        "Timeout": 300,
         "MemorySize": 2560,
         "Environment": {
           "Variables": {
@@ -807,9 +807,9 @@
         "Handler": "app.update_alarms",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.11.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.12.0:stage=dev:app=msam"
         },
-        "Timeout": 900,
+        "Timeout": 300,
         "MemorySize": 2560,
         "Environment": {
           "Variables": {
@@ -1012,9 +1012,9 @@
         "Handler": "app.update_from_tags",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.11.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.12.0:stage=dev:app=msam"
         },
-        "Timeout": 900,
+        "Timeout": 300,
         "MemorySize": 2560,
         "Environment": {
           "Variables": {
@@ -3449,9 +3449,9 @@
         "Handler": "app.app",
         "CodeUri": "./deployment.zip",
         "Tags": {
-          "aws-chalice": "version=1.11.1:stage=dev:app=msam"
+          "aws-chalice": "version=1.12.0:stage=dev:app=msam"
         },
-        "Timeout": 900,
+        "Timeout": 300,
         "MemorySize": 2560,
         "Environment": {
           "Variables": {
