@@ -48,7 +48,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
 
         var update = function() {
             fuse_model = new Fuse(model.nodes.get(), model_options);
-            channels.cached_channel_list().then(function(channels) {
+            channels.channel_list().then(function(channels) {
                 cached_tile_names = channels;
             });
         };

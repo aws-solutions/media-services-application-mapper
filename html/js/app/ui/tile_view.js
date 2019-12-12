@@ -242,9 +242,15 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                                 var members = channel_members;
                                 return function() {
                                     selection_listener(name, members);
-                                    click_listeners.forEach(function(f) {
-                                        f(name, members);
-                                    });
+                                    for (var f of click_listeners) {
+                                        new Promise((resolve, reject) => {
+                                            try {
+                                                f(name, members);
+                                            } catch (error) {
+                                                console.log(error);
+                                            }
+                                        });
+                                    }
                                 };
                             };
                             $("#" + header_id).on("click", header_click_closure());

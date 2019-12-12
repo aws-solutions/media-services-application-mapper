@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "lodash", "machina", "app/ui/global_view", "app/plugins", "app/api_check", "app/ui/confirmation"],
-    function(connections, regions_promise, model, settings_menu, _, machina, global_view, plugins, api_check, confirmation) {
+define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "lodash", "machina", "app/plugins", "app/api_check", "app/ui/confirmation"],
+    function(connections, regions_promise, model, settings_menu, _, machina, plugins, api_check, confirmation) {
 
         // This FSM tracks the state of configuration loading at tool startup
         var configurationStateMachine = new machina.Fsm({

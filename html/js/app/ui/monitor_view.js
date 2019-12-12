@@ -82,16 +82,16 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             var data = [];
             $("#nav-monitor-selected-item").html(node.header);
             // event alerts
-            event_alerts.get_cached_events().current.forEach(function(event_value) {
+            for (var event_value of event_alerts.get_cached_events().current) {
                 if (event_value.resource_arn == node.id) {
                     event_value.detail.name = node.name;
                     data.push(event_value.detail);
                 }
-            });
+            }
             alert_tabulator.replaceData(data);
             // alarms
             require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
-                console.log(subscriptions);
+                // console.log(subscriptions);
                 for (subscription of subscriptions) {
                     if (subscription.StateUpdated) {
                         subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
@@ -108,22 +108,22 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             var alert_data = [];
             var alarm_data = [];
             var promises = [];
-            $.each(members, function(member_index, member_value) {
+            for (var member_value of members) {
                 var node = model.nodes.get(member_value.id);
                 if (node) {
-                    $.each(event_alerts.get_cached_events().current, function(event_index, event_value) {
+                    for (var event_value of event_alerts.get_cached_events().current) {
                         if (member_value.id == event_value.resource_arn) {
                             event_value.detail.name = node.name;
                             alert_data.push(event_value.detail);
                         }
-                    });
+                    }
                     promises.push(new Promise(function(resolve, reject) {
                         var local_node_id = member_value.id;
                         var local_node_name = node.name;
                         require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
                             // console.log(subscriptions);
                             for (subscription of subscriptions) {
-                                if (subscription.StateUpdated) {
+                                if (Number.isInteger(subscription.StateUpdated)) {
                                     subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
                                 }
                                 subscription.ARN = local_node_id;
@@ -134,10 +134,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
                         });
                     }));
                 }
-            });
+            }
             Promise.all(promises).then(function() {
                 alarm_tabulator.replaceData(alarm_data);
                 alert_tabulator.replaceData(alert_data);
+                alarm_tabulator.redraw();
+                alert_tabulator.redraw();
             });
         };
 
@@ -189,9 +191,9 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
                 (selected_alarms.length == 1 ? "" : "s") + "?",
                 function() {
                     var promises = [];
-                    selected_alarms.forEach(function(alarm) {
+                    for (var alarm of selected_alarms) {
                         promises.push(alarms.unsubscribe_from_alarm(alarm.Region, alarm.AlarmName, selected_nodes));
-                    });
+                    }
                     Promise.all(promises).then(function() {
                         refresh();
                     });

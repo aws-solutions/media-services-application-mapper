@@ -3,9 +3,8 @@
 
 define(["lodash", "app/server", "app/connections"], function(_, server, connections) {
 
-    var last_channel_list;
 
-    function have_any(node_ids) {
+    var have_any = _.memoize(function(node_ids) {
         // console.log(node_ids);
         var matches = [];
         // return a list of channel names that have any of these nodes
@@ -35,11 +34,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
                 outer_resolve(matches);
             });
         });
-    }
-
-    function have_all(node_ids) {
-        // return a list of channel name that have all of these nodes
-    }
+    });
 
     var create_channel = function(name, nodes) {
         var current_connection = connections.get_current();
@@ -49,6 +44,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         return new Promise(function(resolve, reject) {
             var data = nodes;
             server.post(current_endpoint, api_key, data).then(function(response) {
+                clear_function_cache();
                 resolve(response);
             }).catch(function(error) {
                 console.log(error);
@@ -66,6 +62,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         var current_endpoint = `${url}/channel/${name}`;
         return new Promise((resolve, reject) => {
             server.delete_method(current_endpoint, api_key).then((response) => {
+                clear_function_cache();
                 resolve(response);
             }).catch(function(error) {
                 console.log(error);
@@ -74,7 +71,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         });
     };
 
-    var retrieve_channel = function(name) {
+    var retrieve_channel = _.memoize(function(name) {
         var current_connection = connections.get_current();
         var url = current_connection[0];
         var api_key = current_connection[1];
@@ -87,25 +84,24 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
                 reject(error);
             });
         });
-    };
+    });
 
-    var channel_list = function() {
+    var channel_list = _.memoize(function() {
         var current_connection = connections.get_current();
         var url = current_connection[0];
         var api_key = current_connection[1];
         var current_endpoint = `${url}/channels`;
         return new Promise(function(resolve, reject) {
             server.get(current_endpoint, api_key).then(function(response) {
-                last_channel_list = response;
                 resolve(response);
             }).catch(function(error) {
                 console.log(error);
                 reject(error);
             });
         });
-    };
+    });
 
-    var arn_to_channels = function(arn) {
+    var arn_to_channels = _.memoize(function(arn) {
         return new Promise(function(outerResolve, outerReject) {
             channel_list().then(function(channels) {
                 var matches = [];
@@ -131,14 +127,13 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
                 outerReject(error);
             });
         });
-    };
+    });
 
-    var cached_channel_list = function() {
-        if (!last_channel_list) {
-            return channel_list();
-        } else {
-            return Promise.resolve(last_channel_list);
-        }
+    var clear_function_cache = function() {
+        have_any.cache.clear();
+        retrieve_channel.cache.clear();
+        channel_list.cache.clear();
+        arn_to_channels.cache.clear();
     };
 
     return {
@@ -148,8 +143,6 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         "retrieve_channel": retrieve_channel,
         "channel_list": channel_list,
         "arn_to_channels": arn_to_channels,
-        "cached_channel_list": cached_channel_list,
-        "have_any": have_any,
-        "have_all": have_all
+        "have_any": have_any
     };
 });

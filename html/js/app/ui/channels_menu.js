@@ -40,7 +40,7 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
             var node_ids = diagram.network.getSelectedNodes();
             channels.create_channel(channel_name, node_ids).then(function(response) {
                 console.log(response);
-                alert.show("Channel created");
+                alert.show("Tile created");
                 var tile_view = require("app/ui/tile_view");
                 tile_view.redraw_tiles();
             }).catch(function(error) {
@@ -182,7 +182,7 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
                     channels.create_channel(channel_name, node_ids).then(function(response) {
                         console.log(response);
                         $("#quick_new_tile_dialog").modal('hide');
-                        alert.show("Channel created");
+                        alert.show("Tile created");
                         var tile_view = require("app/ui/tile_view");
                         tile_view.redraw_tiles();
                     }).catch(function(error) {

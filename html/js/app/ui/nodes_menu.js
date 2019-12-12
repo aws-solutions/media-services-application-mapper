@@ -1,32 +1,12 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/alarms", "app/regions", "app/ui/layout", "app/ui/alert", "app/ui/diagrams", "app/ui/confirmation"],
-    function(_, $, model, global_view, ui_util, alarms, regions_promise, layout, alert, diagrams, confirmation) {
+define(["lodash", "jquery", "app/ui/util", "app/ui/layout", "app/ui/alert", "app/ui/diagrams"],
+    function(_, $, ui_util, layout, alert, diagrams) {
 
         var selected_alarm_arn = [];
 
         var view_name = "global";
-
-        // $("#channel-tiles-tab").on("show.bs.tab", function(event) {
-        //     $("#nodes_dropdown").addClass("disabled");
-        //     $("#nodes_dropdown").attr("aria-disabled", true);
-        // });
-
-        // $("#global-model-tab").on("show.bs.tab", function(event) {
-        //     $("#nodes_dropdown").removeClass("disabled");
-        //     $("#nodes_dropdown").attr("aria-disabled", false);
-        // });
-
-        // $("#nodes_dropdown").on("click", function(event) {
-        //     if (global_view.get_selected().nodes.length == 0) {
-        //         $("#nodes_associate_alarms_button").addClass("disabled");
-        //         $("#nodes_associate_alarms_button").attr("aria-disabled", true);
-        //     } else {
-        //         $("#nodes_associate_alarms_button").removeClass("disabled");
-        //         $("#nodes_associate_alarms_button").attr("aria-disabled", false);
-        //     }
-        // });
 
         $("#nodes_layout_vertical").on("click", function(event) {
             // global_view.vertical_layout();

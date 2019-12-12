@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/alarms", "app/regions", "app/ui/layout", "app/ui/alert", "app/ui/diagrams", "app/ui/confirmation"],
-    function(_, $, model, global_view, ui_util, alarms, regions_promise, layout, alert, diagrams, confirmation) {
+define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/ui/layout", "app/ui/alert", "app/ui/diagrams", "app/ui/confirmation"],
+    function(_, $, model, global_view, ui_util, layout, alert, diagrams, confirmation) {
 
         var vary_multiplier = 8;
 

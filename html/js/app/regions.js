@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["app/server", "app/connections", "app/settings"],
-    function(server, connections, settings) {
+define(["app/server", "app/connections", "app/settings", "lodash"],
+    function(server, connections, settings, _) {
         var selected = [];
         var available = [];
 
@@ -21,13 +21,14 @@ define(["app/server", "app/connections", "app/settings"],
                 } else {
                     settings.put("regions", regions).then(function(response) {
                         selected = regions;
+                        refresh.cache.clear();
                         resolve();
                     });
                 }
             });
         };
 
-        var refresh = function() {
+        var refresh = _.memoize(function() {
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
@@ -65,7 +66,7 @@ define(["app/server", "app/connections", "app/settings"],
                     reject(error);
                 });
             });
-        };
+        });
 
         // regions returns an unexecuted promise; use refresh().then(function(module){})
         return refresh;

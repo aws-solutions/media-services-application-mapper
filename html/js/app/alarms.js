@@ -57,7 +57,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             });
         };
 
-        var alarms_for_subscriber = function(arn) {
+        var alarms_for_subscriber = _.memoize(function(arn) {
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
@@ -71,7 +71,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                     reject(error);
                 });
             });
-        };
+        });
 
         var subscribe_to_alarm = function(region, alarm_name, resource_arns) {
             var current_connection = connections.get_current();
@@ -82,6 +82,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     // console.log(response);
+                    alarms_for_subscriber.cache.clear();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -100,6 +101,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     console.log(response);
+                    alarms_for_subscriber.cache.clear();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -120,9 +122,9 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                 // console.log(added);
                 // console.log(removed);
                 if (added.length || removed.length) {
-                    listeners.forEach(function(f) {
+                    for (var f of listeners) {
                         f(current_subscribers_with_alarms, previous_subscribers_with_alarms);
-                    });
+                    }
                 }
                 // }
             }).catch(function(error) {

@@ -44,9 +44,9 @@ define(["app/server", "app/connections", "app/settings"],
                 var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
                 var removed = _.differenceBy(previous_set_events, current_set_events, "alarm_id");
                 if (added.length || removed.length) {
-                    listeners.forEach(function(f) {
+                    for (var f of listeners) {
                         f(current_set_events, previous_set_events);
-                    });
+                    }
                 }
             }).catch(function(error) {
                 console.log(error);

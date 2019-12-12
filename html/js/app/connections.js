@@ -3,7 +3,7 @@
 
 'use strict';
 
-define(["jquery", "cookie", "app/window", "object_hash"], function($, cookie, window, hash) {
+define(["jquery", "cookie", "app/window", "object_hash", "lodash"], function($, cookie, window, hash, _) {
     // Cookie: MSAM_CURRENT = "Cookie Name" or missing (not saved)
     // Cookie: MSAM_ENDPOINT_<ID> = "{ URL, Key, Last }"
 
@@ -13,42 +13,21 @@ define(["jquery", "cookie", "app/window", "object_hash"], function($, cookie, wi
         max_age = 7,
 
         // return the stored connection objects
-        get_remembered = function() {
+        get_remembered = _.memoize(function() {
             var history = [],
                 cookies = cookie.get();
-            Object.keys(cookies).forEach(function(name) {
+            for (var name of Object.keys(cookies)) {
                 if (name.startsWith(cookie_name_prefix)) {
                     var payload = cookies[name],
                         content = JSON.parse(window.atob(payload));
                     history.push(content);
                 }
-            });
-            return history;
-        },
-
-        // update the history with another connection
-        set_current = function(url, api_key, store = true) {
-            var current = [url, api_key];
-            window.sessionStorage.setItem(session_current, window.btoa(JSON.stringify(current)));
-            var cookie_name = cookie_name_prefix + hash.sha1(url);
-            var encoded = window.btoa(JSON.stringify(current));
-            if (store) {
-                // add or update MSAM_ENDPOINT_<ID> cookie
-                cookie.set(cookie_name, encoded, {
-                    expires: max_age
-                });
-                // rewrite MSAM_CURRENT cookie
-                cookie.set(cookie_name_current, cookie_name, {
-                    expires: max_age
-                });
-            } else {
-                cookie.remove(cookie_name_current);
-                cookie.remove(cookie_name);
             }
-        },
+            return history;
+        }),
 
         // return the session copy or the cookie copy, or null
-        get_current = function() {
+        get_current = _.memoize(function() {
             var current = null;
             var encoded = window.sessionStorage.getItem(session_current);
             if (encoded) {
@@ -77,6 +56,29 @@ define(["jquery", "cookie", "app/window", "object_hash"], function($, cookie, wi
                 }
             }
             return current;
+        }),
+
+        // update the history with another connection
+        set_current = function(url, api_key, store = true) {
+            get_current.cache.clear();
+            get_remembered.cache.clear();
+            var current = [url, api_key];
+            window.sessionStorage.setItem(session_current, window.btoa(JSON.stringify(current)));
+            var cookie_name = cookie_name_prefix + hash.sha1(url);
+            var encoded = window.btoa(JSON.stringify(current));
+            if (store) {
+                // add or update MSAM_ENDPOINT_<ID> cookie
+                cookie.set(cookie_name, encoded, {
+                    expires: max_age
+                });
+                // rewrite MSAM_CURRENT cookie
+                cookie.set(cookie_name_current, cookie_name, {
+                    expires: max_age
+                });
+            } else {
+                cookie.remove(cookie_name_current);
+                cookie.remove(cookie_name);
+            }
         },
 
         // is there a connection override on the URL parameters?
@@ -85,7 +87,12 @@ define(["jquery", "cookie", "app/window", "object_hash"], function($, cookie, wi
         key = current_url.searchParams.get("key");
 
     if (endpoint && key) {
-        console.log("Connection override with URL paramteres");
+        // strip any trailing slashes
+        if (endpoint.endsWith("/")) {
+            var length = endpoint.length - 1;
+            endpoint = endpoint.substr(0, length);
+        }
+        console.log("Connection override with URL parameters");
         set_current(endpoint, key, false);
     };
 

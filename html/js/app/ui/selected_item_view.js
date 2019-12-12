@@ -19,7 +19,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             var found_on = diagrams.have_all(node.id);
             var diagram_links = "";
             var diagram_link_ids = [];
-            found_on.forEach(function(diagram) {
+            for (var diagram of found_on) {
                 var id = ui_util.makeid();
                 var html = `<a href="#" data-diagram-name="${diagram.name}" draggable="true" id="${id}">${diagram.name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                 diagram_link_ids.push({
@@ -28,14 +28,14 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                     diagram: diagram
                 });
                 diagram_links += html;
-            });
+            }
             var diagram_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Diagrams:</b>&nbsp;&nbsp;${diagram_links}</p>`;
             channels.arn_to_channels(node.id).then(function(tile_names) {
                 var channel_tile_link_ids = [];
                 var tile_html = "";
                 if (tile_names.length > 0) {
                     var tile_links = "";
-                    $.each(tile_names, function(index, name) {
+                    for (var name of tile_names) {
                         var id = ui_util.makeid();
                         channel_tile_link_ids.push({
                             id: id,
@@ -43,7 +43,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                         });
                         var html = `<a href="#" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                         tile_links = tile_links + html;
-                    });
+                    }
                     tile_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Tiles:</b>&nbsp;&nbsp;${tile_links}</p>`;
                 }
                 var cache_html = "";
@@ -73,7 +73,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                     json
                 );
                 // attach click handlers to tile links
-                $.each(channel_tile_link_ids, function(index, link) {
+                for (var link of channel_tile_link_ids) {
                     var name = link.name;
                     var id = link.id;
                     var view = tile_view;
@@ -87,9 +87,9 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                         };
                     }();
                     $("#" + id).on("click", eventClosure);
-                });
+                }
                 // attach click handlers to diagram links
-                $.each(diagram_link_ids, function(index, item) {
+                for (var item of diagram_link_ids) {
                     var my_diagram = item.diagram;
                     var id = item.id;
                     var node_id = item.node_id;
@@ -108,7 +108,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                         };
                     }();
                     $("#" + id).on("click", eventClosure);
-                });
+                }
             });
             // });
         };
@@ -141,14 +141,14 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             renderjson.set_show_to_level(2);
             var data = [];
             var missing = [];
-            $.each(members, function(member_index, member_value) {
+            for (var member_value of members) {
                 var node = model.nodes.get(member_value.id);
                 if (node) {
                     data.push(node.data);
                 } else {
                     missing.push(member_value.id);
                 }
-            });
+            }
             data.push({ "missing-nodes": missing });
             var html = `
             <h6 class="card-subtitle mb-2 text-muted" id="${div_id}-subtitle">Channel: ${name}</h6>
@@ -167,58 +167,6 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             // $("#search_input").val("");
         };
 
-        var global_view_listener = function(event) {
-            if (event.nodes.length > 0) {
-                // show();
-                $.each(event.nodes, function(index, id) {
-                    display_selected_node(model.nodes.get(id), (index == 0));
-                });
-                // zoom into the node on a double-[tap,click]
-                if (event.event.type === "doubletap") {
-                    global_view.fit([event.nodes[0]]);
-                }
-            } else if (event.edges.length > 0) {
-                // show();
-                $.each(event.edges, function(index, id) {
-                    display_selected_edge(model.edges.get(id), (index == 0));
-                });
-            } else if (event.event.type === "doubletap" && event.nodes.length == 0 && event.edges.length == 0) {
-                // get the vis canvas location of the doubletap
-                var click_x = event.pointer.canvas.x;
-                var click_y = event.pointer.canvas.y;
-                var network = global_view.get_network();
-                var closest = null;
-                // get all the node locations
-                var positions = network.getPositions();
-                // find the node closest to the doubletap
-                Object.entries(positions).forEach(function(p) {
-                    if (closest == null) {
-                        closest = {
-                            id: p[0],
-                            dx: Math.abs(click_x - p[1].x),
-                            dy: Math.abs(click_y - p[1].y)
-                        };
-                    } else {
-                        var dx = Math.abs(click_x - p[1].x);
-                        var dy = Math.abs(click_y - p[1].y);
-                        // update the closest node if better one is found
-                        if (dx + dy < closest.dx + closest.dy) {
-                            closest = {
-                                id: p[0],
-                                dx: dx,
-                                dy: dy
-                            };
-                        }
-                    }
-                });
-                console.log(JSON.stringify(closest));
-                if (closest != null) {
-                    // zoom to the closest node to the doubletap
-                    global_view.fit([closest.id]);
-                }
-            }
-        };
-
         var tile_view_listener = function(name, members) {
             var selected = tile_view.selected();
             if (selected === name) {
@@ -232,7 +180,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
         };
 
         diagrams.add_selection_callback(function(diagram, event) {
-            console.log(event);
+            // console.log(event);
             if (event.nodes.length > 0) {
                 display_selected_nodes(diagram, event.nodes);
             } else
