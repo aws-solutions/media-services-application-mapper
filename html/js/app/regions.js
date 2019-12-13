@@ -21,7 +21,7 @@ define(["app/server", "app/connections", "app/settings", "lodash"],
                 } else {
                     settings.put("regions", regions).then(function(response) {
                         selected = regions;
-                        refresh.cache.clear();
+                        clear_function_cache();
                         resolve();
                     });
                 }
@@ -67,6 +67,11 @@ define(["app/server", "app/connections", "app/settings", "lodash"],
                 });
             });
         });
+
+        var clear_function_cache = function() {
+            refresh.cache.clear();
+        };
+
 
         // regions returns an unexecuted promise; use refresh().then(function(module){})
         return refresh;

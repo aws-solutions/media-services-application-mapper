@@ -13,7 +13,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var node_type = "MediaStore Container";
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/mediastore-container/" + regionName, api_key).then((cache_entries) => {
-                    for (var cache_entry of cache_entries) {
+                    for (let cache_entry of cache_entries) {
                         var container = JSON.parse(cache_entry.data);
                         var name = container.Name;
                         var id = container.ARN;

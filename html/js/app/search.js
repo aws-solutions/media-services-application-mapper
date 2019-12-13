@@ -44,8 +44,6 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
 
         var cached_tile_names;
 
-        var update_timer;
-
         var update = function() {
             fuse_model = new Fuse(model.nodes.get(), model_options);
             channels.channel_list().then(function(channels) {
@@ -59,22 +57,12 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
 
         var search_tiles = function(text) {
             var matches = [];
-            cached_tile_names.forEach(function(name) {
+            for (let name of cached_tile_names) {
                 if (name.toLowerCase().includes(text.toLowerCase())) {
                     matches.push(name);
                 }
-            });
-            return matches;
-        };
-
-        // update at most once/second
-        var update_needed = function() {
-            if (undefined === update_timer) {
-                update_timer = setTimeout(function() {
-                    update_timer = undefined;
-                    update();
-                }, 1000);
             }
+            return matches;
         };
 
         function search(text) {
@@ -96,7 +84,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                 var contained_by = diagrams.have_any(node_ids);
                 results.diagram_contents = contained_by;
                 // find diagram name matches
-                for (var name of Object.keys(diagrams.get_all())) {
+                for (let name of Object.keys(diagrams.get_all())) {
                     var includes = name.toLowerCase().includes(text.toLowerCase());
                     if (includes) {
                         results.diagram_names.push(name);
@@ -109,7 +97,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                 // find tiles with the text or containing the model nodes
                 var processed = 0;
                 channels.channel_list().then(function(channel_names) {
-                    channel_names.forEach(function(channel_name, index) {
+                    for (let channel_name of channel_names) {
                         // check for a name partial match
                         var includes = channel_name.toLowerCase().includes(text.toLowerCase());
                         if (includes) {
@@ -130,7 +118,7 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                                 outer_resolve(results);
                             }
                         });
-                    });
+                    }
                 });
             });
         }

@@ -16,7 +16,7 @@ define(["jquery", "cookie", "app/window", "object_hash", "lodash"], function($, 
         get_remembered = _.memoize(function() {
             var history = [],
                 cookies = cookie.get();
-            for (var name of Object.keys(cookies)) {
+            for (let name of Object.keys(cookies)) {
                 if (name.startsWith(cookie_name_prefix)) {
                     var payload = cookies[name],
                         content = JSON.parse(window.atob(payload));
@@ -60,8 +60,7 @@ define(["jquery", "cookie", "app/window", "object_hash", "lodash"], function($, 
 
         // update the history with another connection
         set_current = function(url, api_key, store = true) {
-            get_current.cache.clear();
-            get_remembered.cache.clear();
+            clear_function_cache();
             var current = [url, api_key];
             window.sessionStorage.setItem(session_current, window.btoa(JSON.stringify(current)));
             var cookie_name = cookie_name_prefix + hash.sha1(url);
@@ -80,6 +79,12 @@ define(["jquery", "cookie", "app/window", "object_hash", "lodash"], function($, 
                 cookie.remove(cookie_name);
             }
         },
+
+        clear_function_cache = function() {
+            get_current.cache.clear();
+            get_remembered.cache.clear();
+        },
+
 
         // is there a connection override on the URL parameters?
         current_url = new URL(window.location),

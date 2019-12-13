@@ -242,7 +242,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                                 var members = channel_members;
                                 return function() {
                                     selection_listener(name, members);
-                                    for (var f of click_listeners) {
+                                    for (let f of click_listeners) {
                                         new Promise((resolve, reject) => {
                                             try {
                                                 f(name, members);

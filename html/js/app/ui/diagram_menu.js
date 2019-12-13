@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "app/ui/layout", "app/ui/alert", "app/ui/diagrams", "app/ui/confirmation"],
-    function(_, $, model, global_view, ui_util, layout, alert, diagrams, confirmation) {
+define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui/alert", "app/ui/diagrams", "app/ui/confirmation"],
+    function(_, $, model, ui_util, layout, alert, diagrams, confirmation) {
 
         var vary_multiplier = 8;
 
@@ -109,19 +109,6 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             }
         });
 
-        $("#nodes_save_layout").on("click", function(event) {
-            alert.show("Saving layout");
-            var network = global_view.get_network();
-            $.each(model.nodes.get(), function(index, node) {
-                var positions = network.getPositions([node.id]);
-                layout.save_node(view_name, node, positions[node.id].x, positions[node.id].y).then(function(response) {
-                    // console.log("ok");
-                }).catch(function(error) {
-                    console.log(error);
-                });
-            });
-        });
-
         $("#diagram_add_downstream").on("click", function(event) {
             add_downstream_nodes();
         });
@@ -131,7 +118,7 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             if (shown) {
                 var selected = shown.network.getSelectedNodes();
                 var connected = [];
-                for (var node_id of selected) {
+                for (let node_id of selected) {
                     if (!connected.includes(node_id)) {
                         connected.push(node_id);
                         ui_util.get_downstream(model.edges, node_id, connected);
@@ -161,7 +148,7 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
             if (shown) {
                 var selected = shown.network.getSelectedNodes();
                 var connected = [];
-                for (var node_id of selected) {
+                for (let node_id of selected) {
                     if (!connected.includes(node_id)) {
                         connected.push(node_id);
                         ui_util.get_upstream(model.edges, node_id, connected);
@@ -255,7 +242,7 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
                         var new_diagram = diagrams.add(name, _.snakeCase(name), true);
                         new_diagram.nodes.update(current_diagram.nodes.get());
                         var positions = current_diagram.network.getPositions();
-                        for (var key of Object.keys(positions)) {
+                        for (let key of Object.keys(positions)) {
                             new_diagram.network.moveNode(key, positions[key].x, positions[key].y);
                         }
                         layout.save_layout(new_diagram);
@@ -317,7 +304,7 @@ define(["lodash", "jquery", "app/model", "app/ui/global_view", "app/ui/util", "a
 
         $("#remove-selected-from-diagram").on("click", function() {
             var selectedRows = diagram_tabulator.getSelectedRows();
-            for (var row of selectedRows) {
+            for (let row of selectedRows) {
                 row.delete();
             }
         });

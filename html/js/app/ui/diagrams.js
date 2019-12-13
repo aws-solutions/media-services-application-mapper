@@ -9,7 +9,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
 
         var shown_diagram = function() {
             var shown = null;
-            for (var d of Object.values(diagrams)) {
+            for (let d of Object.values(diagrams)) {
                 if (d.shown()) {
                     shown = d;
                     break;
@@ -101,7 +101,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             if (!Array.isArray(node_ids)) {
                 node_ids = [node_ids];
             }
-            for (var name in diagrams) {
+            for (let name in diagrams) {
                 var diagram = diagrams[name];
                 var found = _.compact(diagram.nodes.get(node_ids));
                 if (found.length === node_ids.length) {

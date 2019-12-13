@@ -11,7 +11,7 @@ define(["jquery", "lodash", "app/model", "app/plugins"], function($, _, model, p
 
     var update_overlay = function() {
         // get all the overlays
-        for (var module_name of plugins.overlays) {
+        for (let module_name of plugins.overlays) {
             var ov = require(module_name);
             if (ov.informational == true) {
                 var nodes = model.nodes.get({

@@ -6,7 +6,7 @@ define([], function() {
     var makeid = function(id_len = 10) {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (var i = 0; i < id_len; i++) {
+        for (let i = 0; i < id_len; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
@@ -26,7 +26,7 @@ define([], function() {
                 return item.from === node_id;
             }
         });
-        for (var edge of downstream_edges) {
+        for (let edge of downstream_edges) {
             if (!connected_nodes.includes(edge.to)) {
                 connected_nodes.push(edge.to);
                 get_downstream(edges, edge.to, connected_nodes);
@@ -40,7 +40,7 @@ define([], function() {
                 return item.to === node_id;
             }
         });
-        for (var edge of upstream_edges) {
+        for (let edge of upstream_edges) {
             if (!connected_nodes.includes(edge.from)) {
                 connected_nodes.push(edge.from);
                 get_upstream(edges, edge.from, connected_nodes);

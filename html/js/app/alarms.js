@@ -12,9 +12,6 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
         var current_subscribers_with_alarms = [];
         var previous_subscribers_with_alarms = [];
 
-        var current_alarm_count = 0;
-        var previous_alarm_count = 0;
-
         // interval in millis to update the cache
 
         var update_interval;
@@ -82,7 +79,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     // console.log(response);
-                    alarms_for_subscriber.cache.clear();
+                    clear_function_cache();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -101,13 +98,17 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     console.log(response);
-                    alarms_for_subscriber.cache.clear();
+                    clear_function_cache();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
                     reject(error);
                 });
             });
+        };
+
+        var clear_function_cache = function() {
+            alarms_for_subscriber.cache.clear();
         };
 
         var cache_update = function() {
@@ -117,12 +118,8 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                 current_subscribers_with_alarms = _.sortBy(response, "ResourceArn");
                 var added = _.differenceBy(current_subscribers_with_alarms, previous_subscribers_with_alarms, "ResourceArn");
                 var removed = _.differenceBy(previous_subscribers_with_alarms, current_subscribers_with_alarms, "ResourceArn");
-                // console.log(previous_subscribers_with_alarms);
-                // console.log(current_subscribers_with_alarms);
-                // console.log(added);
-                // console.log(removed);
                 if (added.length || removed.length) {
-                    for (var f of listeners) {
+                    for (let f of listeners) {
                         f(current_subscribers_with_alarms, previous_subscribers_with_alarms);
                     }
                 }
@@ -155,10 +152,6 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             intervalID = setInterval(cache_update, update_interval);
             console.log("alarms: interval scheduled " + update_interval + "ms");
         };
-
-        // load_update_interval().then(function() {
-        //     schedule_interval();
-        // });
 
         load_update_interval();
 

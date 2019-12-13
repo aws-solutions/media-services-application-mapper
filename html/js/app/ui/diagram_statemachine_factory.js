@@ -68,10 +68,10 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         // take a copy of the one-shots in case more get added during event handling
                                         var one_time = Array.from(my_diagram.node_dataset_callbacks_once);
                                         my_diagram.node_dataset_callbacks_once = [];
-                                        for (var callback of one_time) {
+                                        for (let callback of one_time) {
                                             callback(event, properties, senderId);
                                         }
-                                        for (var callback of my_diagram.node_dataset_callbacks) {
+                                        for (let callback of my_diagram.node_dataset_callbacks) {
                                             callback(event, properties, senderId);
                                         }
                                     };
@@ -85,10 +85,10 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         // take a copy of the one-shots in case more get added during event handling
                                         var one_time = Array.from(my_diagram.click_callbacks_once);
                                         my_diagram.click_callbacks_once = [];
-                                        for (var callback of one_time) {
+                                        for (let callback of one_time) {
                                             callback(my_diagram, event);
                                         }
-                                        for (var callback of my_diagram.click_callbacks) {
+                                        for (let callback of my_diagram.click_callbacks) {
                                             callback(my_diagram, event);
                                         }
                                     }
@@ -99,10 +99,10 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         // take a copy of the one-shots in case more get added during event handling
                                         var one_time = Array.from(my_diagram.doubleclick_callbacks_once);
                                         my_diagram.doubleclick_callbacks_once = [];
-                                        for (var callback of one_time) {
+                                        for (let callback of one_time) {
                                             callback(my_diagram, event);
                                         }
-                                        for (var callback of my_diagram.doubleclick_callbacks) {
+                                        for (let callback of my_diagram.doubleclick_callbacks) {
                                             callback(my_diagram, event);
                                         }
                                         // zoom

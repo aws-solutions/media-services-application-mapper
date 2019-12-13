@@ -201,9 +201,6 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                 },
                 "update-visual-model": {
                     _onEnter: function() {
-                        // update global view
-                        // global_view.init();
-                        // global_view.show();
                         this.handle("visualModelReady")
                     },
                     "visualModelReady": "visual-model-fresh"

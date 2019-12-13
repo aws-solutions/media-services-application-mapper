@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util", "app/ui/tile_view", "app/ui/diagrams"],
-    function($, model, search, global_view, ui_util, tile_view, diagrams) {
+define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", "app/ui/diagrams"],
+    function($, model, search, ui_util, tile_view, diagrams) {
 
         var tab_id = "nav-search-tab";
 
@@ -279,35 +279,6 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             $("#nav-status-tab").tab("show");
         };
 
-        var set_node_filter = function(name, visible_node_ids) {
-            // set the channel name in the search field
-            $("#search_input").val(name);
-            // make the search field read only
-            $("#search_input").prop("readonly", true);
-            $("#search_input").attr("aria-disabled", "true");
-            // make the show matches button disabled
-            $("#only-show-matches-button").prop("disabled", true);
-            $("#only-show-matches-button").attr("aria-disabled", "true");
-            $.each(model.nodes.get(), function(node_index, node) {
-                var found = false;
-                $.each(visible_node_ids, (id_index, id) => {
-                    found = node.id === id;
-                    if (found) {
-                        node.hidden = false;
-                        return false;
-                    }
-                });
-                if (!found) {
-                    node.hidden = true;
-                }
-                // console.log("node.id = " + node.id + " hidden = " + node.hidden);
-                model.nodes.update(node);
-            });
-            setTimeout(function() {
-                global_view.fit(visible_node_ids);
-            }, 1000);
-        };
-
         var only_show_matches = function(toggle) {
             if (toggle) {
                 $("#only-show-matches-button").addClass("active");
@@ -361,10 +332,5 @@ define(["jquery", "app/model", "app/search", "app/ui/global_view", "app/ui/util"
             }, 100);
             return false;
         });
-
-        return {
-            "set_node_filter": set_node_filter,
-            "clear_search": clear_search
-        }
 
     });

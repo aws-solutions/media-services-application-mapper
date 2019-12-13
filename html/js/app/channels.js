@@ -11,7 +11,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         return new Promise(function(outer_resolve, outer_reject) {
             var promises = [];
             channel_list().then(function(channel_names) {
-                for (var name of channel_names) {
+                for (let name of channel_names) {
                     promises.push(
                         new Promise(function(resolve, reject) {
                             // console.log(name);

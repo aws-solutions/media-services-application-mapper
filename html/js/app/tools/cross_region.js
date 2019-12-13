@@ -9,7 +9,7 @@ define(["jquery", "app/model"], function($, model) {
         return new Promise(function(resolve, reject) {
             var row_num = 1;
             var rows = "";
-            for (var edge of model.edges.get()) {
+            for (let edge of model.edges.get()) {
                 var node_from = model.nodes.get(edge.from);
                 var node_to = model.nodes.get(edge.to);
                 if (node_from && node_to) {

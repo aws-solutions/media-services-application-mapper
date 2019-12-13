@@ -93,7 +93,7 @@ define(["jquery", "lodash", "app/ui/diagrams", "app/model", "app/ui/alert"],
                 });
                 // refresh each diagram containing to and from nodes
                 var matches = diagrams.have_all([record.to, record.from]);
-                for (var match of matches) {
+                for (let match of matches) {
                     // we only need to sync one side of the connection
                     match.synchronize_edges("add", [record.from]);
                 }
@@ -122,7 +122,7 @@ define(["jquery", "lodash", "app/ui/diagrams", "app/model", "app/ui/alert"],
                 model.edges.remove(edge.id);
                 // refresh each diagram containing to and from nodes
                 var matches = diagrams.have_all([edge.to, edge.from]);
-                for (var match of matches) {
+                for (let match of matches) {
                     // we only need to sync one side of the connection
                     match.edges.remove(edge.id);
                 }
@@ -197,7 +197,7 @@ define(["jquery", "lodash", "app/ui/diagrams", "app/model", "app/ui/alert"],
                 model.edges.update(updated_edge);
                 // refresh each diagram containing to and from nodes
                 var matches = diagrams.have_all([edge.to, edge.from]);
-                for (var match of matches) {
+                for (let match of matches) {
                     match.edges.update(updated_edge);
                 }
             } else {

@@ -82,7 +82,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             var data = [];
             $("#nav-monitor-selected-item").html(node.header);
             // event alerts
-            for (var event_value of event_alerts.get_cached_events().current) {
+            for (let event_value of event_alerts.get_cached_events().current) {
                 if (event_value.resource_arn == node.id) {
                     event_value.detail.name = node.name;
                     data.push(event_value.detail);
@@ -93,7 +93,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
                 // console.log(subscriptions);
                 for (subscription of subscriptions) {
-                    if (subscription.StateUpdated) {
+                    if (Number.isInteger(subscription.StateUpdated)) {
                         subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
                     }
                     subscription.ARN = node.id;
@@ -108,10 +108,10 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             var alert_data = [];
             var alarm_data = [];
             var promises = [];
-            for (var member_value of members) {
+            for (let member_value of members) {
                 var node = model.nodes.get(member_value.id);
                 if (node) {
-                    for (var event_value of event_alerts.get_cached_events().current) {
+                    for (let event_value of event_alerts.get_cached_events().current) {
                         if (member_value.id == event_value.resource_arn) {
                             event_value.detail.name = node.name;
                             alert_data.push(event_value.detail);
@@ -191,7 +191,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
                 (selected_alarms.length == 1 ? "" : "s") + "?",
                 function() {
                     var promises = [];
-                    for (var alarm of selected_alarms) {
+                    for (let alarm of selected_alarms) {
                         promises.push(alarms.unsubscribe_from_alarm(alarm.Region, alarm.AlarmName, selected_nodes));
                     }
                     Promise.all(promises).then(function() {

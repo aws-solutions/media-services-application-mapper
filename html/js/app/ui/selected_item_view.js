@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/tile_view", "app/ui/util", "app/ui/diagrams"],
-    function($, model, global_view, channels, tile_view, ui_util, diagrams) {
+define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util", "app/ui/diagrams"],
+    function($, model, channels, tile_view, ui_util, diagrams) {
 
         var tab_id = "nav-data-tab";
         var div_id = "nav-data";
@@ -19,7 +19,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             var found_on = diagrams.have_all(node.id);
             var diagram_links = "";
             var diagram_link_ids = [];
-            for (var diagram of found_on) {
+            for (let diagram of found_on) {
                 var id = ui_util.makeid();
                 var html = `<a href="#" data-diagram-name="${diagram.name}" draggable="true" id="${id}">${diagram.name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                 diagram_link_ids.push({
@@ -35,7 +35,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                 var tile_html = "";
                 if (tile_names.length > 0) {
                     var tile_links = "";
-                    for (var name of tile_names) {
+                    for (let name of tile_names) {
                         var id = ui_util.makeid();
                         channel_tile_link_ids.push({
                             id: id,
@@ -73,7 +73,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                     json
                 );
                 // attach click handlers to tile links
-                for (var link of channel_tile_link_ids) {
+                for (let link of channel_tile_link_ids) {
                     var name = link.name;
                     var id = link.id;
                     var view = tile_view;
@@ -89,7 +89,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
                     $("#" + id).on("click", eventClosure);
                 }
                 // attach click handlers to diagram links
-                for (var item of diagram_link_ids) {
+                for (let item of diagram_link_ids) {
                     var my_diagram = item.diagram;
                     var id = item.id;
                     var node_id = item.node_id;
@@ -141,7 +141,7 @@ define(["jquery", "app/model", "app/ui/global_view", "app/channels", "app/ui/til
             renderjson.set_show_to_level(2);
             var data = [];
             var missing = [];
-            for (var member_value of members) {
+            for (let member_value of members) {
                 var node = model.nodes.get(member_value.id);
                 if (node) {
                     data.push(node.data);

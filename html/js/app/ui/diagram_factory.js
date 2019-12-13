@@ -115,7 +115,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 var dimensions = diagram.node_dimensions();
                 var pad_x = Math.ceil(dimensions.max_width * 1.25);
                 var pad_y = Math.ceil(dimensions.max_height * 1.25);
-                isolated.forEach(function(value, key, map) {
+                for (let value of isolated) {
                     var node_ids = value;
                     var bounds = diagram.bounds();
                     // extra padding at the start
@@ -135,7 +135,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             current_y += pad_y;
                         }
                     });
-                });
+                }
                 if (save) {
                     layout.save_layout(diagram);
                 }
@@ -220,12 +220,12 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         inner_promise = Promise.resolve(layout_items);
                     }
                     inner_promise.then(function(layout_items) {
-                        layout_items.forEach(function(item) {
+                        for (let item of layout_items) {
                             var node = diagram.nodes.get(item.id);
                             if (node) {
                                 diagram.network.moveNode(item.id, item.x, item.y);
                             }
-                        });
+                        }
                         resolve(layout_items);
                     }).catch(function(error) {
                         console.log(error);
@@ -235,7 +235,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
             }
 
             restore_edges() {
-                for (var node_id of this.nodes.getIds()) {
+                for (let node_id of this.nodes.getIds()) {
                     // find all edges connected to this node
                     var matches = model.edges.get({
                         filter: function(edge) {
@@ -243,7 +243,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         }
                     });
                     // add each edge if both nodes are present
-                    for (var edge of matches) {
+                    for (let edge of matches) {
                         if (this.edges.get(edge.id) == null) {
                             // compact nulls, do we have both ends?
                             var ends = _.compact(this.nodes.get([edge.to, edge.from]));
@@ -259,7 +259,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
             synchronize_edges(event, node_ids) {
                 var diagram = this;
                 if (event == "add" || event == "update") {
-                    for (var id of node_ids) {
+                    for (let id of node_ids) {
                         // query all edges from the model with this node
                         model.edges.forEach(function(edge) {
                             if (edge.to == id) {
@@ -284,7 +284,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     }
                 } else
                 if (event == "remove") {
-                    for (var id of node_ids) {
+                    for (let id of node_ids) {
                         // query all edges on the diagram 
                         diagram.edges.forEach(function(edge) {
                             console.log("removing unneeded edge");
@@ -343,7 +343,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 // get all the node locations
                 var positions = network.getPositions();
                 // find the node closest to the doubletap
-                for (var p of Object.entries(positions)) {
+                for (let p of Object.entries(positions)) {
                     if (closest == null) {
                         closest = {
                             id: p[0],
@@ -387,7 +387,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 var yRange = this.get_start_to_end(this.drag_rect.startY, this.drag_rect.h);
 
                 var allNodes = this.nodes.get();
-                for (var i = 0; i < allNodes.length; i++) {
+                for (let i = 0; i < allNodes.length; i++) {
                     var curNode = allNodes[i];
                     var nodePosition = this.network.getPositions([curNode.id]);
                     var nodeXY = this.network.canvasToDOM({

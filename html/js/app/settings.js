@@ -31,7 +31,7 @@ define(["app/server", "app/connections", "lodash"], function(server, connections
         return new Promise((resolve, reject) => {
             var data = value;
             server.post(current_endpoint, api_key, data).then((response) => {
-                get_setting.cache.clear();
+                clear_function_cache();
                 resolve();
             }).catch(function(error) {
                 console.log(error);
@@ -49,13 +49,17 @@ define(["app/server", "app/connections", "lodash"], function(server, connections
         var current_endpoint = `${url}/settings/${id}`;
         return new Promise((resolve, reject) => {
             server.delete_method(current_endpoint, api_key).then((response) => {
-                get_setting.cache.clear();
+                clear_function_cache();
                 resolve(response);
             }).catch(function(error) {
                 console.log(error);
                 reject(error);
             });
         });
+    };
+
+    var clear_function_cache = function() {
+        get_setting.cache.clear();
     };
 
     return {

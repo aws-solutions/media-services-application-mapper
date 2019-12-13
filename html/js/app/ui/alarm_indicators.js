@@ -25,25 +25,25 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
                             model.nodes.update(node);
                             var matches = diagrams.have_all([node.id]);
                             // console.log(matches);
-                            matches.forEach(function(diagram) {
+                            for (let diagram of matches) {
                                 diagram.nodes.update(node);
                                 diagram.alert(true);
-                            });
+                            }
                         }
                     }
                 }
             });
 
             // calculate the current alerts not included in the previous alerts
-            previous_alarming_subscribers.forEach(function(subscriber) {
+            for (let subscriber of previous_alarming_subscribers) {
                 var found = false;
-                alarming_nodes.forEach(function(node_id) {
+                for (let node_id of alarming_nodes) {
                     found = found || node_id == subscriber.ResourceArn;
-                });
+                }
                 if (!found) {
                     inactive_nodes.push(subscriber.ResourceArn);
                 }
-            });
+            }
 
             // 'unalert' the nodes that are no longer alerting
             $.each(inactive_nodes, function(index, node_id) {
@@ -59,10 +59,10 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
                         model.nodes.update(node);
                         var matches = diagrams.have_all([node.id]);
                         // console.log(matches);
-                        matches.forEach(function(diagram) {
+                        for (let diagram of matches) {
                             diagram.nodes.update(node);
                             diagram.alert(false);
-                        });
+                        }
                     }
                 }
             });
