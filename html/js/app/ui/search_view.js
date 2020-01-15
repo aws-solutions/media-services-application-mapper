@@ -197,60 +197,6 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
 
         }
 
-        var update_node_visibility = function(only_matches) {
-            only_matches = only_matches | ($("#only-show-matches-button").attr("aria-pressed") === "true");
-            if (!only_matches) {
-                // remove hidden property from all nodes
-                console.log("setting hidden to false");
-                $.each(model.nodes.get(), function(index, node) {
-                    node.hidden = false;
-                    model.nodes.update(node);
-                });
-            } else {
-                var text = $("#search_input").val().trim();
-                if (text !== "") {
-                    var matches = search.search_nodes(text);
-                    if (matches.length > 0) {
-                        $.each(model.nodes.get(), function(index, node) {
-                            var found = false;
-                            $.each(matches, (index, match) => {
-                                found = node.id === match.id;
-                                if (found) {
-                                    node.hidden = false;
-                                    return false;
-                                }
-                            });
-                            if (!found) {
-                                node.hidden = true;
-                            }
-                            // console.log("node.id = " + node.id + " hidden = " + node.hidden);
-                            model.nodes.update(node);
-                        });
-                    }
-                }
-            }
-        };
-
-        var update_tile_visibility = function(only_matches) {
-            only_matches = only_matches | ($("#only-show-matches-button").attr("aria-pressed") === "true");
-            if (!only_matches) {
-                // remove hidden property from all tiles
-                $("[data-channel-name]").show();
-            } else {
-                var text = $("#search_input").val().trim();
-                if (text !== "") {
-                    $("[data-channel-name]").hide();
-                    var matches = search.search_tiles(text);
-                    if (matches.length > 0) {
-                        $.each(matches, (index, match) => {
-                            var query = `[data-channel-name='${match}']`;
-                            $(query).show();
-                        });
-                    }
-                }
-            }
-        };
-
         var clear_search = function() {
             // enable the show matches button
             $("#only-show-matches-button").prop("disabled", false);

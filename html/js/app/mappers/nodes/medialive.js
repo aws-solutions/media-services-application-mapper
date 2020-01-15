@@ -10,9 +10,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
                 server.get(url + "/cached/medialive-channel/" + regionName, api_key).then(function(channels) {
-                    $.each(channels, function(index, cache_entry) {
+                    for (let cache_entry of channels) {
                         map_channel(cache_entry);
-                    });
+                    }
                     resolve();
                 }).catch(function(error) {
                     console.log(error);
@@ -27,9 +27,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var api_key = current[1];
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/medialive-input/" + regionName, api_key).then((inputs) => {
-                    $.each(inputs, function(index, cache_entry) {
+                    for (let cache_entry of inputs) {
                         map_input(cache_entry);
-                    });
+                    }
                     resolve();
                 }).catch(function(error) {
                     console.log(error);
@@ -198,10 +198,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
                     var promises = [];
-                    $.each(regions.get_selected(), function(index, regionName) {
-                        promises.push(update_channels(regionName));
-                        promises.push(update_inputs(regionName));
-                    });
+                    for (let region_name of regions.get_selected()) {
+                        promises.push(update_channels(region_name));
+                        promises.push(update_inputs(region_name));
+                    }
                     Promise.all(promises).then(function() {
                         resolve();
                     }).catch(function() {

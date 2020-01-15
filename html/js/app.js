@@ -16,7 +16,7 @@ requirejs.config({
         "vis": "https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min"
     },
     // add a cache-buster for module loading
-    // "urlArgs": "t=" + (new Date()).getTime(),
+    "urlArgs": "t=" + (new Date()).getTime(),
     "waitSeconds": 15
 });
 // load the main module and go

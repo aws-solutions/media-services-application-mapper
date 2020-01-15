@@ -14,10 +14,10 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
         new Promise(function(resolve, reject) {
             var promises = [];
             require(plugins.nodes, function() {
-                $.each(arguments, function(index, mapper) {
+                for (let mapper of arguments) {
                     console.log(mapper.name);
                     promises.push(mapper.update());
-                });
+                }
                 Promise.all(promises).then(function() {
                     resolve();
                 });
@@ -25,10 +25,10 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
         }).then(function() {
             var promises = [];
             require(plugins.connections, function() {
-                $.each(arguments, function(index, mapper) {
+                for (let mapper of arguments) {
                     console.log(mapper.name);
                     promises.push(mapper.update());
-                });
+                }
                 Promise.all(promises).then(function() {
                     if (typeof callback !== 'undefined') {
                         callback();

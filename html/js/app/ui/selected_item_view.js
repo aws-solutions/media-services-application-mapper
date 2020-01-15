@@ -15,8 +15,10 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
 
         var display_selected_nodes = function(diagram, node_ids) {
             nodes_ids = (Array.isArray(node_ids) ? node_ids : [node_ids]);
+            // console.log(node_ids[0]);
             var node = model.nodes.get(node_ids[0]);
             var found_on = diagrams.have_all(node.id);
+            // console.log(found_on);
             var diagram_links = "";
             var diagram_link_ids = [];
             for (let diagram of found_on) {
@@ -53,6 +55,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                     cache_html = `<p class="card-text small text-muted mt-0 pt-0"><b>Updated:</b> ${updated.toString()}</p>`;
                 }
                 var data = node.data;
+                // console.log(data);
                 // $("#search_input").val("");
                 // $("#nav-data-subtitle").html(node.title);
                 renderjson.set_icons("+", "-");

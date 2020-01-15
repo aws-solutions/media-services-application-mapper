@@ -35,6 +35,8 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
             var node = model.nodes.get(id);
             if (node) {
                 var state = node.data.Status;
+                // console.log(state);
+                // console.log(node.data.Source);
                 var source_type = "Standard";
                 if (node.data.Source.EntitlementArn) {
                     //console.log("found entitlement arn: " + node.data.Source.EntitlementArn)

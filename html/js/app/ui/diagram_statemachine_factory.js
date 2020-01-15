@@ -26,7 +26,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                 // skip Tiles tab
                                 var existing_tabs = $("#" + my_diagram.tab_container_id + " a[data-diagram-name]");
                                 var added = false;
-                                existing_tabs.each(function(index, item) {
+                                for (let item of existing_tabs) {
                                     // console.log(index, item);
                                     if ($(item).attr("data-diagram-name") > my_diagram.name) {
                                         var id = $(item).attr("id");
@@ -34,7 +34,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         added = true;
                                         return false;
                                     }
-                                });
+                                }
                                 if (!added) {
                                     $("#" + my_diagram.tab_container_id).append(tab);
                                 }

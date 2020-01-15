@@ -99,9 +99,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
                     var promises = [];
-                    $.each(regions.get_selected(), function(index, regionName) {
-                        promises.push(update_containers(regionName));
-                    });
+                    for (let region_name of regions.get_selected()) {
+                        promises.push(update_containers(region_name));
+                    }
                     Promise.all(promises).then(function() {
                         resolve();
                     });

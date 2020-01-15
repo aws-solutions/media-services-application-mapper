@@ -8,7 +8,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             // iterate through current 'set' alerts
             var alerting_nodes = [];
             var inactive_nodes = [];
-            $.each(current_alerts, function(index, item) {
+            for (let item of current_alerts) {
                 var node = model.nodes.get(item.resource_arn);
                 if (node) {
                     node.alerting = true;
@@ -24,28 +24,31 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                             model.nodes.update(node);
                             var matches = diagrams.have_all([node.id]);
                             // console.log(matches);
-                            matches.forEach(function(diagram) {
+                            for (let diagram of matches) {
                                 diagram.nodes.update(node);
                                 diagram.alert(true);
-                            });
+                            }
                         }
                     }
                 }
-            });
+            }
 
             // calculate the current alerts not included in the previous alerts
-            previous_alerts.forEach(function(previous) {
+            for (let previous of previous_alerts) {
                 var found = false;
-                alerting_nodes.forEach(function(arn) {
+                for (let arn of alerting_nodes) {
                     found = found || arn == previous.resource_arn;
-                });
+                    if (found) {
+                        break;
+                    }
+                }
                 if (!found) {
                     inactive_nodes.push(previous.resource_arn);
                 }
-            });
+            }
 
             // 'unalert' the nodes that are no longer alerting
-            $.each(inactive_nodes, function(index, arn) {
+            for (let arn of inactive_nodes) {
                 var node = model.nodes.get(arn);
                 if (node) {
                     node.alerting = false;
@@ -57,13 +60,13 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                         model.nodes.update(node);
                         var matches = diagrams.have_all([node.id]);
                         // console.log(matches);
-                        matches.forEach(function(diagram) {
+                        for (let diagram of matches) {
                             diagram.nodes.update(node);
                             diagram.alert(false);
-                        });
+                        }
                     }
                 }
-            });
+            }
         };
 
         event_alerts.add_callback(updateEventAlertState);

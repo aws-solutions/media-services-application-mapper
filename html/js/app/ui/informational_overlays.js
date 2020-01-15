@@ -10,6 +10,7 @@ define(["jquery", "lodash", "app/model", "app/plugins"], function($, _, model, p
     var intervalID;
 
     var update_overlay = function() {
+        // console.log("info overlay update");
         // get all the overlays
         for (let module_name of plugins.overlays) {
             var ov = require(module_name);
@@ -19,7 +20,7 @@ define(["jquery", "lodash", "app/model", "app/plugins"], function($, _, model, p
                         return ov.match_type == item.title;
                     }
                 });
-                $.each(nodes, function(index, node) {
+                for (let node of nodes) {
                     if (node.alerting || node.alarming) {
                         var selected = node.render.alert_selected();
                         var unselected = node.render.alert_unselected();
@@ -38,7 +39,7 @@ define(["jquery", "lodash", "app/model", "app/plugins"], function($, _, model, p
                             model.nodes.update(node);
                         }
                     }
-                });
+                }
             }
         }
     };
@@ -48,7 +49,7 @@ define(["jquery", "lodash", "app/model", "app/plugins"], function($, _, model, p
             clearInterval(intervalID);
         }
         intervalID = setInterval(update_overlay, update_interval);
-        console.log("informational overlays: interval scheduled " + update_interval + "ms");
+        console.log("informational overlays: interval scheduled " + update_interval + "ms, intervalID = " + intervalID);
     };
 
     schedule_interval();

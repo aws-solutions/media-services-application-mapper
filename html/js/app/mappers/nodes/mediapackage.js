@@ -13,7 +13,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var rgb = "#007DBC";
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/mediapackage-channel/" + regionName, api_key).then((channels) => {
-                    $.each(channels, function(index, cache_entry) {
+                    for (let cache_entry of channels) {
                         var channel = JSON.parse(cache_entry.data);
                         var name = channel.Id;
                         var id = channel.Arn;
@@ -87,7 +87,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         node_data.image.selected = node_data.render.normal_selected();
                         node_data.image.unselected = node_data.render.normal_unselected();
                         nodes.update(node_data);
-                    });
+                    }
                     resolve();
                 }).catch(function(error) {
                     console.log(error);
@@ -104,8 +104,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var node_type = "MediaPackage Endpoint";
             var rgb = "#00A1C9";
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/mediapackage-origin-endpoint/" + regionName, api_key).then((originEndpoints) => {
-                    $.each(originEndpoints, function(index, cache_entry) {
+                server.get(url + "/cached/mediapackage-origin-endpoint/" + regionName, api_key).then((origin_endpoints) => {
+                    for (let cache_entry of origin_endpoints) {
                         var endpoint = JSON.parse(cache_entry.data);
                         var name = endpoint.Id;
                         var id = endpoint.Arn;
@@ -180,7 +180,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         node_data.image.selected = node_data.render.normal_selected();
                         node_data.image.unselected = node_data.render.normal_unselected();
                         nodes.update(node_data);
-                    });
+                    }
                     resolve();
                 }).catch(function(error) {
                     console.log(error);
@@ -193,10 +193,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
                     var promises = [];
-                    $.each(regions.get_selected(), function(index, regionName) {
-                        promises.push(update_channels(regionName));
-                        promises.push(update_endpoints(regionName));
-                    });
+                    for (let region_name of regions.get_selected()) {
+                        promises.push(update_channels(region_name));
+                        promises.push(update_endpoints(region_name));
+                    }
                     Promise.all(promises).then(function() {
                         resolve();
                     })

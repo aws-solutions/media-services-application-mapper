@@ -44,7 +44,7 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         typeLabel.cx(width / 2);
         pos_y += inc_y;
         var lines = wordWrap(node_name, max_line_length);
-        lines.forEach(function(value, index, list) {
+        for (let value of lines) {
             var nameLabel = drawing.text(value).y(pos_y);
             nameLabel.font({
                 family: 'Arial',
@@ -52,17 +52,17 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
             });
             nameLabel.cx(width / 2);
             pos_y += inc_y;
-        });
+        }
 
         // give matching overlays a chance to supplement 'drawing'
         var overlays = plugins.overlays;
-        overlays.forEach(function(module) {
+        for (let module of overlays) {
             var overlay = require(module);
             if (overlay.match_type == type_name) {
                 // console.log("applying overlay " + overlay.name);
                 overlay.decorate(drawing, font_size, width, height, id);
             }
-        });
+        }
 
         // export the SVG and turn it into an encoded inline image
         var code = drawing.svg();

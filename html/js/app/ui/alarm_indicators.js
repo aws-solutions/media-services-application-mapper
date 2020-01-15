@@ -8,7 +8,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
             // iterate through current 'set' alerts
             var alarming_nodes = [];
             var inactive_nodes = [];
-            $.each(current_alarming_subscribers, function(index, subscriber) {
+            for (let subscriber of current_alarming_subscribers) {
                 var node = model.nodes.get(subscriber.ResourceArn);
                 if (node) {
                     node.alarming = true;
@@ -32,7 +32,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
                         }
                     }
                 }
-            });
+            }
 
             // calculate the current alerts not included in the previous alerts
             for (let subscriber of previous_alarming_subscribers) {
@@ -46,7 +46,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
             }
 
             // 'unalert' the nodes that are no longer alerting
-            $.each(inactive_nodes, function(index, node_id) {
+            for (let node_id of inactive_nodes) {
                 var node = model.nodes.get(node_id);
                 if (node) {
                     node.alarming = false;
@@ -65,7 +65,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
                         }
                     }
                 }
-            });
+            }
         };
 
         alarms.add_callback(updateAlarmState);

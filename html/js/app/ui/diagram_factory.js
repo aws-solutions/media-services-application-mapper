@@ -99,7 +99,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
             layout_isolated(save) {
                 var isolated = new Map();
                 var diagram = this;
-                $.each(this.nodes.getIds(), function(id_index, node_id) {
+                for (let node_id of this.nodes.getIds()) {
                     var connected = diagram.network.getConnectedNodes(node_id);
                     if (connected.length === 0) {
                         var node = diagram.nodes.get(node_id);
@@ -111,11 +111,13 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                         }
                         isolated.set(node.title, group);
                     }
-                });
+                }
+                // console.log(isolated);
                 var dimensions = diagram.node_dimensions();
                 var pad_x = Math.ceil(dimensions.max_width * 1.25);
                 var pad_y = Math.ceil(dimensions.max_height * 1.25);
-                for (let value of isolated) {
+                for (let value of isolated.values()) {
+                    // console.log(value);
                     var node_ids = value;
                     var bounds = diagram.bounds();
                     // extra padding at the start
@@ -124,7 +126,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     var current_y = bounds.min_y + pad_y;
                     var nodes_per_row = Math.ceil(Math.sqrt(node_ids.length));
                     var current_row_nodes = 0;
-                    $.each(node_ids, function(id_index, id) {
+                    for (let id of node_ids) {
+                        console.log(id, current_x, current_y);
                         diagram.network.moveNode(id, current_x, current_y);
                         current_row_nodes += 1;
                         if (current_row_nodes < nodes_per_row) {
@@ -134,7 +137,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             current_x = start_x;
                             current_y += pad_y;
                         }
-                    });
+                    }
                 }
                 if (save) {
                     layout.save_layout(diagram);
@@ -173,7 +176,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 var min_y = Number.MAX_SAFE_INTEGER;
                 var max_y = Number.MIN_SAFE_INTEGER;
                 var positions = this.network.getPositions();
-                $.each(positions, function(pos_index, pos_value) {
+                for (let pos_value of positions) {
                     if (pos_value.x > max_x) {
                         max_x = pos_value.x;
                     }
@@ -186,7 +189,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     if (pos_value.y < min_y) {
                         min_y = pos_value.y;
                     }
-                });
+                }
                 return {
                     "min_x": min_x,
                     "max_x": max_x,
@@ -261,7 +264,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 if (event == "add" || event == "update") {
                     for (let id of node_ids) {
                         // query all edges from the model with this node
-                        model.edges.forEach(function(edge) {
+                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id });
+                        for (let edge of filtered) {
                             if (edge.to == id) {
                                 // check 'from' node is on diagram
                                 if (diagram.nodes.get(edge.from)) {
@@ -276,24 +280,17 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                                     diagram.edges.update(edge);
                                 }
                             }
-                        }, {
-                            filter: function(edge) {
-                                return edge.to == id || edge.from == id;
-                            }
-                        });
+                        }
                     }
                 } else
                 if (event == "remove") {
                     for (let id of node_ids) {
                         // query all edges on the diagram 
-                        diagram.edges.forEach(function(edge) {
+                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id });
+                        for (let edge of filtered) {
                             console.log("removing unneeded edge");
                             diagram.edges.remove(edge.id);
-                        }, {
-                            filter: function(edge) {
-                                return edge.to == id || edge.from == id;
-                            }
-                        });
+                        }
                     }
                 }
             }

@@ -59,10 +59,11 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
             $("#channel_definition_modal_items").empty();
             var channel_content = "";
             var diagram = diagrams.shown();
-            $.each(diagram.network.getSelectedNodes(), function(index, id) {
+            let index = 0;
+            for (let id of diagram.network.getSelectedNodes()) {
                 var node = model.nodes.get(id);
-                channel_content += `<tr><th scope="row">${index+1}</th><td>${node.title}</td><td>${node.id}</td></tr>`;
-            });
+                channel_content += `<tr><th scope="row">${++index}</th><td>${node.title}</td><td>${node.id}</td></tr>`;
+            }
             var html = `
         <table class="table table-sm table-hover">
             <thead>
@@ -86,10 +87,11 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
         $("#channel_add_node_modal").on("show.bs.modal", function(event) {
             var channel_content = "";
             var diagram = diagrams.shown();
-            $.each(diagram.network.getSelectedNodes(), function(index, id) {
+            let index = 0;
+            for (let id of diagram.network.getSelectedNodes()) {
                 var node = model.nodes.get(id);
-                channel_content += `<tr><th scope="row">${index+1}</th><td>${node.title}</td><td draggable="true" data-node-id="${node.id}">${node.id}</td></tr>`;
-            });
+                channel_content += `<tr><th scope="row">${++index}</th><td>${node.title}</td><td draggable="true" data-node-id="${node.id}">${node.id}</td></tr>`;
+            }
             var html = `
         <table class="my-3 table table-sm table-hover">
             <thead>
@@ -106,11 +108,12 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
             $("#channel_add_node_modal_items").html(html);
             channels.channel_list().then(function(channel_list) {
                 var channel_content = "";
-                $.each(channel_list.sort(), function(index, member) {
+                let index = 0;
+                for (let member of channel_list.sort()) {
                     // var data = JSON.stringify(node.data);
                     var checkbox_id = ui_util.makeid();
                     channel_content += `
-                    <tr><th scope="row">${index+1}</th>
+                    <tr><th scope="row">${++index}</th>
                     <td>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member}">
@@ -118,7 +121,7 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
                     </td>
                     <td>${member}</td></tr>
                 `;
-                });
+                }
                 var html = `
                 <table id="channel_add_node_modal_items_table" class="my-3 table table-sm table-hover">
                     <thead>
@@ -139,16 +142,16 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
         $("#save_channel_add_node").on("click", function(event) {
             var members = $("#channel_add_node_modal_items td[data-node-id]");
             var node_ids = [];
-            $.each(members, function(index, item) {
+            for (let item of members) {
                 node_ids.push(item.dataset.nodeId);
-            });
+            }
             var channel_checks = $("#channel_add_node_modal_channels input[type='checkbox']");
             var promises = [];
-            $.each(channel_checks, function(index, item) {
+            for (let item in channel_checks) {
                 if (item.checked === true) {
                     promises.push(channels.update_channel(item.value, node_ids));
                 }
-            });
+            }
             Promise.all(promises).then(function() {
                 var tile_view = require("app/ui/tile_view");
                 tile_view.redraw_tiles();

@@ -177,9 +177,9 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 }
                 return compare;
             });
-            tiles.each(function(ignore, tile) {
+            for (let tile of files) {
                 $("[data-tile-row]").append(tile);
-            });
+            }
         };
 
         var redraw_tiles = function() {
@@ -401,11 +401,11 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             channels.delete_channel(original_name).then(function() {
                 console.log("removed channel members");
                 var members = [];
-                member_checkboxes.each(function(ignore, item) {
+                for (let item of member_checkboxes) {
                     if (item.checked === false) {
                         members.push(item.value);
                     }
-                });
+                }
                 return channels.create_channel(edited_name, members);
             }).then(function() {
                 console.log("added channel members");

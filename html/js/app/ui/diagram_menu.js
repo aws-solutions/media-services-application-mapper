@@ -130,10 +130,10 @@ define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui
                 var nodes = _.compact(model.nodes.get(add_nodes));
                 var view = shown.network.getViewPosition();
                 shown.nodes.update(nodes);
-                Array.from(nodes).forEach(function(node) {
+                for (let node of nodes) {
                     shown.network.moveNode(node.id, ui_util.vary(view.x, node.size * vary_multiplier), ui_util.vary(view.y, node.size * vary_multiplier));
-                });
-                var node_ids = _.map(Array.from(nodes), "id");
+                }
+                var node_ids = _.map(nodes, "id");
                 layout.save_layout(shown, node_ids);
                 shown.network.fit();
             }
@@ -160,10 +160,10 @@ define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui
                 var nodes = _.compact(model.nodes.get(add_nodes));
                 var view = shown.network.getViewPosition();
                 shown.nodes.update(nodes);
-                Array.from(nodes).forEach(function(node) {
+                for (let node of nodes) {
                     shown.network.moveNode(node.id, ui_util.vary(view.x, node.size * vary_multiplier), ui_util.vary(view.y, node.size * vary_multiplier));
-                });
-                var node_ids = _.map(Array.from(nodes), "id");
+                }
+                var node_ids = _.map(nodes, "id");
                 layout.save_layout(shown, node_ids);
                 shown.network.fit();
             }

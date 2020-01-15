@@ -14,7 +14,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             return new Promise(function(resolve, reject) {
                 var channels;
                 server.get(url + "/cached/s3/global", api_key).then(function(cache_entries) {
-                    $.each(cache_entries, function(index, cache_entry) {
+                    for (let cache_entry of cache_entries) {
                         var bucket = JSON.parse(cache_entry.data);
                         bucket.Arn = "arn:aws:s3:::" + bucket.Name;
                         var name = bucket.Name;
@@ -87,7 +87,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                         node_data.image.selected = node_data.render.normal_selected();
                         node_data.image.unselected = node_data.render.normal_unselected();
                         nodes.update(node_data);
-                    });
+                    }
                     resolve();
                 }).catch(function(error) {
                     console.log(error);

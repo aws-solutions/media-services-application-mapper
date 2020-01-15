@@ -10,10 +10,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
                 server.get(url + "/cached/mediaconnect-flow/" + regionName, api_key).then(function(flows) {
-                    $.each(flows, function(index, cache_entry) {
+                    for (let cache_entry of flows) {
                         // console.log(cache_entry);
                         map_flow(cache_entry);
-                    });
+                    }
                     resolve();
                 }).catch(function(error) {
                     console.log(error);
@@ -105,9 +105,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
                     var promises = [];
-                    $.each(regions.get_selected(), function(index, regionName) {
-                        promises.push(update_flows(regionName));
-                    });
+                    for (let region_name of regions.get_selected()) {
+                        promises.push(update_flows(region_name));
+                    }
                     Promise.all(promises).then(function() {
                         resolve();
                     }).catch(function() {

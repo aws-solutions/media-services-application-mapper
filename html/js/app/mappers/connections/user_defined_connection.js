@@ -20,7 +20,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             var api_key = current[1];
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/user-defined-connection/global", api_key).then((connections) => {
-                    $.each(connections, function(index, connection) {
+                    for (let connection of connections) {
                         var data;
                         if (!connection.data) {
                             data = {};
@@ -38,7 +38,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                                 "color": "black"
                             }
                         });
-                    });
+                    }
                     resolve();
                 });
             });

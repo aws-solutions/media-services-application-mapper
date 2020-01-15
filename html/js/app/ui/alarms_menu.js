@@ -135,9 +135,9 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
             // var diagram = diagrams.shown();
             var node_ids = JSON.parse($("#subscribe_to_alarms_modal").attr("data-node-ids"));
             var promises = [];
-            $.each(selected_alarm_data, function(index, alarm) {
+            for (let alarm of selected_alarm_data) {
                 promises.push(alarms.subscribe_to_alarm(selected_alarm_region, alarm.AlarmName, node_ids));
-            });
+            }
             Promise.all(promises).then(function() {
                 alert.show("Saved");
                 require("app/ui/monitor_view").refresh();
@@ -159,7 +159,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
         regions_promise().then(function(module) {
             $("#subscribe_to_alarms_region_dropdown").empty();
             regions_list = module.get_available();
-            $.each(regions_list, (index, region) => {
+            for (let region of regions_list) {
                 var id = `alarm_subscribe_region_${region.RegionName}`;
                 var button_html = `<a class="dropdown-item" href="#" id="${id}">${region.RegionName}</button><br>`;
                 $("#subscribe_to_alarms_region_dropdown").append(button_html);
@@ -170,7 +170,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
                         populate_alarms_from_region(local_name);
                     };
                 })());
-            });
+            }
             var first_region = "us-east-1";
             $("#dropdownMenuButton").text(first_region);
             populate_alarms_from_region(first_region);

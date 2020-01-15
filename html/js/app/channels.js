@@ -106,19 +106,19 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
             channel_list().then(function(channels) {
                 var matches = [];
                 var promises = [];
-                $.each(channels, function(channel_index, channel_name) {
+                for (let channel_name of channels) {
                     promises.push(new Promise(function(resolve, reject) {
                         retrieve_channel(channel_name).then(function(members) {
-                            $.each(members, function(member_index, member_value) {
+                            for (let member_value of members) {
                                 if (member_value.id === arn) {
                                     matches.push(channel_name);
-                                    return false;
+                                    break;
                                 }
-                            });
+                            }
                             resolve();
                         });
                     }));
-                });
+                }
                 Promise.all(promises).then(function() {
                     outerResolve(matches.sort());
                 });

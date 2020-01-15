@@ -6,7 +6,7 @@ define(["jquery", "lodash", "app/plugins", "app/ui/util"], function($, _, plugin
     var div_id = "tools-dropdown-menu";
 
     require(plugins.tools, function() {
-        $.each(arguments, function(index, tool_module) {
+        for (let tool_module of arguments) {
             var menu_id = ui_util.makeid();
             var html = `<a class="dropdown-item" href="#" id="${menu_id}">${tool_module.name}</a>`;
             $("#" + div_id).append(html);
@@ -30,7 +30,7 @@ define(["jquery", "lodash", "app/plugins", "app/ui/util"], function($, _, plugin
                     });
                 };
             })());
-        });
+        }
     });
 
 });

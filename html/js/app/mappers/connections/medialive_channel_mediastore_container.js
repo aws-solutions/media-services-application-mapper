@@ -10,7 +10,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             var api_key = current[1];
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/medialive-channel-mediastore-container/global", api_key).then((connections) => {
-                    $.each(connections, function(index, connection) {
+                    for (let connection of connections) {
                         var data = JSON.parse(connection.data);
                         model.edges.update({
                             "id": connection.arn,
@@ -23,7 +23,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                                 "color": "black"
                             }
                         });
-                    });
+                    }
                     resolve();
                 });
             });

@@ -35,13 +35,13 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 save_diagrams();
             }
             diagram.add_singleclick_callback(function(diagram, event) {
-                selection_callbacks.forEach(function(callback) {
+                for (let callback of selection_callbacks) {
                     try {
                         callback(diagram, event);
                     } catch (error) {
                         console.log(error);
                     }
-                });
+                }
             });
             return diagram;
         };
@@ -83,9 +83,9 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 settings.get("diagrams").then(function(diagrams) {
                     console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
                     if (Array.isArray(diagrams)) {
-                        diagrams.forEach(function(diagram) {
+                        for (let diagram of diagrams) {
                             add_diagram(diagram.name, diagram.view_id, false);
-                        });
+                        }
                     } else {
                         // no diagrams, create default View from previous Global View
                         console.log("no used-defined diagrams, creating default global diagram");
@@ -118,7 +118,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 node_ids = [node_ids];
             }
             node_ids = node_ids.sort();
-            Object.values(diagrams).forEach(function(diagram) {
+            for (let diagram of Object.values(diagrams)) {
                 var intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids);
                 if (intersect.length > 0) {
                     results.push({
@@ -126,7 +126,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                         found: intersect
                     });
                 }
-            });
+            }
             return _.orderBy(results, ["diagram"]);;
         }
 
