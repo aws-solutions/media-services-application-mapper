@@ -92,7 +92,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             // alarms
             require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
                 // console.log(subscriptions);
-                for (subscription of subscriptions) {
+                for (let subscription of subscriptions) {
                     if (Number.isInteger(subscription.StateUpdated)) {
                         subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
                     }
@@ -122,7 +122,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
                         var local_node_name = node.name;
                         require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
                             // console.log(subscriptions);
-                            for (subscription of subscriptions) {
+                            for (let subscription of subscriptions) {
                                 if (Number.isInteger(subscription.StateUpdated)) {
                                     subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
                                 }

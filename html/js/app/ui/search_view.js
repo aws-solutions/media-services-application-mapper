@@ -31,11 +31,11 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
         function display_results_model_matches(results) {
             $("#inventory-match-count").text(results.model.length);
             var html = `<ol>`;
-            results.model.forEach(function(node, index) {
+            for (let node of results.model) {
                 var id = ui_util.makeid();
                 var line = `<li><b>${node.title}:</b> <a href="#" title="Drag to a Diagram or Tile" data-node-id="${node.id}" draggable="true" id="${id}">${node.name}</a></li>`;
                 html += line;
-            });
+            }
             var close = `</ol>`;
             html += close;
             $("#global-model-search").html(html);
@@ -45,7 +45,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             var anchor_handler_data = [];
             $("#diagram-names-match-count").text(results.diagram_names.length);
             var html = `<ol>`;
-            results.diagram_names.forEach(function(name, index) {
+            for (let name of results.diagram_names) {
                 var id = ui_util.makeid();
                 var line = `<li><a href="#" data-diagram-name="${name}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${name}</a></li>`;
                 html += line;
@@ -53,11 +53,11 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                     diagram: diagrams.get_by_name(name),
                     anchor_id: id
                 });
-            });
+            }
             var close = `</ol>`;
             html += close;
             $("#diagram-names-match").html(html);
-            anchor_handler_data.forEach(function(item) {
+            for (let item of anchor_handler_data) {
                 var anchor_id = item.anchor_id;
                 var eventClosure = function() {
                     var diagram = item.diagram;
@@ -76,17 +76,16 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                     };
                 }();
                 $("#" + anchor_id).on("click", eventClosure);
-            });
-
+            }
         }
 
         function display_results_diagram_contents_matches(results) {
             var anchor_handler_data = [];
             $("#diagram-contents-match-count").text(results.diagram_contents.length);
             var html = `<ol>`;
-            results.diagram_contents.forEach(function(entry, index) {
+            for (let entry of results.diagram_contents) {
                 var name = entry.diagram;
-                entry.found.forEach(function(node_id, index) {
+                for (let node_id of entry.found) {
                     var node = model.nodes.get(node_id)
                     var id = ui_util.makeid();
                     var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${node.name}</a></li>`;
@@ -96,12 +95,12 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                         node_id: node.id,
                         anchor_id: id
                     });
-                });
-            });
+                }
+            }
             var close = `</ol>`;
             html += close;
             $("#diagram-contents-match").html(html);
-            anchor_handler_data.forEach(function(item) {
+            for (let item of anchor_handler_data) {
                 var anchor_id = item.anchor_id;
                 var eventClosure = function() {
                     var diagram = item.diagram;
@@ -130,14 +129,14 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                     };
                 }();
                 $("#" + anchor_id).on("click", eventClosure);
-            });
+            }
         }
 
         function display_results_tile_name_matches(results) {
             var anchor_handler_data = [];
             $("#tile-names-match-count").text(results.tile_names.length);
             var html = `<ol>`;
-            results.tile_names.forEach(function(name, index) {
+            for (let name of results.tile_names) {
                 var id = ui_util.makeid();
                 var line = `<li><a href="#" title="Click or Drag to a Diagram or Tile" data-tile-name="${name}" draggable="true" id="${id}">${name}</a></li>`;
                 html += line;
@@ -145,11 +144,11 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                     tile: name,
                     anchor_id: id
                 });
-            });
+            }
             var close = `</ol>`;
             html += close;
             $("#tile-names-match").html(html);
-            anchor_handler_data.forEach(function(item) {
+            for (let item of anchor_handler_data) {
                 var anchor_id = item.anchor_id;
                 var eventClosure = function() {
                     var name = item.tile;
@@ -159,17 +158,16 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                     };
                 }();
                 $("#" + anchor_id).on("click", eventClosure);
-            });
-
+            }
         }
 
         function display_results_tile_contents_matches(results) {
             var anchor_handler_data = [];
             $("#tile-contents-match-count").text(results.tile_contents.length);
             var html = `<ol>`;
-            results.tile_contents.forEach(function(entry, index) {
+            for (let entry of results.tile_contents) {
                 var name = entry.tile;
-                entry.found.forEach(function(node_id, index) {
+                for (let node_id of entry.found) {
                     var node = model.nodes.get(node_id)
                     var id = ui_util.makeid();
                     var line = `<li><b><a href="#" title="Click or Drag to a Diagram or Tile" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>: </b>${node.title}: <a href="#" draggable="true" title="Drag to a Diagram or Tile" data-node-id="${node.id}">${node.name}</a></li>`;
@@ -178,12 +176,12 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                         tile: name,
                         anchor_id: id
                     });
-                });
-            });
+                }
+            }
             var close = `</ol>`;
             html += close;
             $("#tile-contents-match").html(html);
-            anchor_handler_data.forEach(function(item) {
+            for (let item of anchor_handler_data) {
                 var anchor_id = item.anchor_id;
                 var eventClosure = function() {
                     var name = item.tile;
@@ -193,8 +191,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                     };
                 }();
                 $("#" + anchor_id).on("click", eventClosure);
-            });
-
+            }
         }
 
         var clear_search = function() {

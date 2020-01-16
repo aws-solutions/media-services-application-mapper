@@ -77,37 +77,38 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 );
                 // attach click handlers to tile links
                 for (let link of channel_tile_link_ids) {
-                    var name = link.name;
                     var id = link.id;
-                    var view = tile_view;
                     var eventClosure = function() {
+                        var local_view = tile_view;
+                        var local_name = link.name;
                         return function(event) {
                             var tab = $("#channel-tiles-tab");
                             if (tab.attr("aria-selected") == "false") {
                                 $("#channel-tiles-tab").tab("show");
                             }
-                            view.blink(name);
+                            local_view.blink(local_name);
                         };
                     }();
                     $("#" + id).on("click", eventClosure);
                 }
                 // attach click handlers to diagram links
                 for (let item of diagram_link_ids) {
-                    var my_diagram = item.diagram;
                     var id = item.id;
-                    var node_id = item.node_id;
                     var eventClosure = function() {
+                        var local_diagram = item.diagram;
+                        var local_node_id = item.node_id;
+                        var local_blinks = blinks;
                         return function(event) {
-                            my_diagram.network.once("afterDrawing", (function() {
+                            local_diagram.network.once("afterDrawing", (function() {
                                 return function() {
-                                    my_diagram.network.fit({
-                                        nodes: [node_id],
+                                    local_diagram.network.fit({
+                                        nodes: [local_node_id],
                                         animation: true
                                     });
-                                    my_diagram.blink(blinks, node_id);
+                                    local_diagram.blink(local_blinks, local_node_id);
                                 };
                             })());
-                            my_diagram.show();
+                            local_diagram.show();
                         };
                     }();
                     $("#" + id).on("click", eventClosure);

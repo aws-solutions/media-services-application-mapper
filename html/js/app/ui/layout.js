@@ -18,10 +18,10 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
         var current_connection = connections.get_current();
         var url = current_connection[0];
         var api_key = current_connection[1];
-        node_ids.forEach(function(node_id) {
+        for (let node_id of node_ids) {
             var current_endpoint = `${url}/layout/nodes/${encodeURIComponent(diagram.view_id)}/${encodeURIComponent(node_id)}`;
             server.delete_method(current_endpoint, api_key);
-        });
+        }
     };
 
     var save_layout = function(diagram, node_ids) {
@@ -30,7 +30,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
         var network = diagram.network;
         var positions = network.getPositions(node_ids);
         var layout = [];
-        Object.keys(positions).forEach(function(key) {
+        for (let key of Object.keys(positions)) {
             var entry = {
                 view: diagram.view_id,
                 id: key,
@@ -38,7 +38,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
                 y: positions[key].y
             };
             layout.push(entry);
-        });
+        }
         var current_connection = connections.get_current();
         var url = current_connection[0];
         var api_key = current_connection[1];

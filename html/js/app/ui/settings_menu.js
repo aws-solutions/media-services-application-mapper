@@ -5,7 +5,8 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
     function($, connections, regions_promise, util, api_check, settings) {
 
         var history_to_buttons = function(history) {
-            $.each(history, function(index, item) {
+            let index = 0;
+            for (let item of history) {
                 // console.log(item);
                 var id = util.makeid();
                 var url = item[0];
@@ -25,7 +26,8 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                         $("#input_endpoint_key").val(k);
                     }
                 })());
-            });
+                index++;
+            }
         };
 
         var updateConnectionDialog = function() {
@@ -54,11 +56,11 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 var selected = Array.from(regions.get_selected());
                 var button_group = $("#region_toggles");
                 button_group.empty();
-                $.each(regions.get_available(), (index, region) => {
+                for (let region of regions.get_available()) {
                     var toggled = (selected.indexOf(region.RegionName) >= 0);
                     var button_html = '<button type="button" id="button_toggle_' + region.RegionName + '" class="region-button mx-3 my-1 btn btn-sm btn-outline-primary ' + (toggled ? " active" : "") + '" data-toggle="button" aria-pressed="' + toggled + '" autocomplete="off">' + region.RegionName + '</button><br>';
                     button_group.append(button_html);
-                });
+                }
             }).catch(function(error) {
                 console.log(error);
             });
@@ -130,11 +132,11 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             regions_promise().then(function(regions) {
                 var toggles = $('.region-button');
                 var selected = [];
-                $.each(toggles, (index, button) => {
+                for (let button of toggles) {
                     if (button.attributes['aria-pressed'].value == "true") {
                         selected.push(button.textContent);
                     }
-                });
+                }
                 console.log(selected);
                 if (selected.length === 0) {
                     setRegionSelectionAlert("You must select at least one region to continue");

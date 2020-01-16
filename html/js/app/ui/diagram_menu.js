@@ -62,38 +62,6 @@ define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui
             }]
         });
 
-        $("#nodes_remove_disconnected_button").on("click", () => {
-            var remove_nodes = [];
-            $.each(model.nodes.get(), (nodeIndex, node) => {
-                var found = false;
-                $.each(model.edges.get(), (edgeIndex, edge) => {
-                    found = found || (edge.to == node.id || edge.from == node.id);
-                });
-                if (!found) {
-                    remove_nodes.push(node);
-                }
-            });
-            if (remove_nodes.length > 0) {
-                model.nodes.remove(remove_nodes);
-            }
-        });
-
-        $("#nodes_remove_connected_button").on("click", () => {
-            var remove_nodes = [];
-            $.each(model.nodes.get(), (nodeIndex, node) => {
-                var found = false;
-                $.each(model.edges.get(), (edgeIndex, edge) => {
-                    found = found || (edge.to == node.id || edge.from == node.id);
-                });
-                if (found) {
-                    remove_nodes.push(node);
-                }
-            });
-            if (remove_nodes.length > 0) {
-                model.nodes.remove(remove_nodes);
-            }
-        });
-
         $("#diagram_remove_selected").on("click", function(event) {
             var shown = diagrams.shown();
             if (shown) {

@@ -32,7 +32,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         var id = $(item).attr("id");
                                         $("#" + id).before(tab);
                                         added = true;
-                                        return false;
+                                        break;
                                     }
                                 }
                                 if (!added) {

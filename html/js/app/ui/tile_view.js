@@ -119,7 +119,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         var update_tile_info = function() {
             var cached_events = event_alerts.get_cached_events();
             var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-            current_channel_list.forEach(function(channel_name) {
+            for (let channel_name of current_channel_list) {
                 var channel_members = current_channel_members[channel_name];
                 if (channel_members) {
                     var query = `[data-channel-name='${channel_name}']`;
@@ -132,20 +132,20 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     var alert_count = 0;
                     var alarm_count = 0;
                     var border_class = "border-success";
-                    channel_members.forEach(function(member) {
-                        cached_events.current.forEach(function(event_value) {
+                    for (let member of channel_members) {
+                        for (let event_value of cached_events.current) {
                             if (member.id === event_value.resource_arn) {
                                 border_class = "border-danger";
                                 alert_count += 1;
                             }
-                        });
-                        cached_alarming_subscribers.current.forEach(function(alarm_value) {
+                        }
+                        for (let alarm_value of cached_alarming_subscribers.current) {
                             if (member.id === alarm_value.ResourceArn) {
                                 border_class = "border-danger";
                                 alarm_count += 1;
                             }
-                        });
-                    });
+                        }
+                    }
                     if (border_class === "border-success") {
                         $("#" + tile_id).removeClass("border-danger");
                     } else {
@@ -158,7 +158,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     $("#" + event_count_id).html(`${alert_count} alert event${(alert_count === 1 ? "" : "s")}`);
                     $("#" + alarm_count_id).html(`${alarm_count} alarm${(alarm_count === 1 ? "" : "s")}`);
                 }
-            });
+            }
             sort_tiles();
             tab_alert($("#" + content_div + " .border-danger").length > 0);
         };
@@ -177,7 +177,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 }
                 return compare;
             });
-            for (let tile of files) {
+            for (let tile of tiles) {
                 $("[data-tile-row]").append(tile);
             }
         };
@@ -193,7 +193,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     current_channel_list = channel_list;
                     var cached_events = event_alerts.get_cached_events();
                     var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-                    channel_list.forEach(function(channel_name) {
+                    for (let channel_name of channel_list) {
                         var border_class = "border-success";
                         channels.retrieve_channel(channel_name).then(function(channel_members) {
                             // console.log(channel_members);
@@ -201,20 +201,20 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                             var service_count = channel_members.length;
                             var alert_count = 0;
                             var alarm_count = 0;
-                            channel_members.forEach(function(member) {
-                                cached_events.current.forEach(function(event_value) {
+                            for (let member of channel_members) {
+                                for (let event_value of cached_events.current) {
                                     if (member.id === event_value.resource_arn) {
                                         border_class = "border-danger";
                                         alert_count += 1;
                                     }
-                                });
-                                cached_alarming_subscribers.current.forEach(function(alarm_value) {
+                                }
+                                for (let alarm_value of cached_alarming_subscribers.current) {
                                     if (member.id === alarm_value.ResourceArn) {
                                         border_class = "border-danger";
                                         alarm_count += 1;
                                     }
-                                });
-                            });
+                                }
+                            }
                             if (channel_name === selected()) {
                                 border_class = border_class + " selected-channel-tile";
                             }
@@ -282,10 +282,10 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                                             diagram.show();
                                         });
                                     } else {
-                                        matches.forEach(function(diagram) {
+                                        for (let diagram of matches) {
                                             html = `<option value="${diagram.name}">${diagram.name}</option>`;
                                             $("#view_tile_diagram_selected_diagram").append(html);
-                                        });
+                                        }
                                         $("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
                                         $("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
                                         $("#view_tile_diagram_dialog").modal("show");
@@ -300,7 +300,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                         }).catch(function(error) {
                             console.log(error);
                         });
-                    });
+                    }
                 }).catch(function(error) {
                     console.log(error);
                 });
@@ -316,7 +316,8 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             $("#channel_edit_name").attr("data-original-name", name);
             $("#channel_edit_modal_items").empty();
             var channel_content = "";
-            $.each(members, function(index, member) {
+            let index = 0;
+            for (let member of members) {
                 var node = model.nodes.get(member.id);
                 // var data = JSON.stringify(node.data);
                 var checkbox_id = ui_util.makeid();
@@ -341,7 +342,8 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                                         <td>Expired</td><td>Expired</td></tr>
                                     `;
                 }
-            });
+                index++;
+            }
             var html = `
                         <table id="channel_edit_members_table" class="table table-sm table-hover">
                             <thead>

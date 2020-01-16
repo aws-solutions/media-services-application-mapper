@@ -8,25 +8,13 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
 
         var decorate_alarms = function(drawing, font_size, width, height, id) {
             var alarm_count = 0;
-            alarms.get_subscribers_with_alarms().current.forEach(function(item) {
+            for (let item of alarms.get_subscribers_with_alarms().current) {
                 if (item.ResourceArn == id) {
-                    alarm_count = item.AlarmCount;
+                    alarm_count += item.AlarmCount;
                 }
-            });
+            }
             tools.set_alarm_text("Active alarms: " + alarm_count, drawing, font_size, width);
         };
-
-        //    var decorate_events = function(drawing, font_size, width, height, id) {
-        //        // console.log(id);
-        //        var pipeline_alerts = [0, 0];
-        //        alert_events.get_cached_events().current.forEach(function(item) {
-        //            // console.log(item);
-        //            if (item.resource_arn == id) {
-        //                pipeline_alerts[parseInt(item.detail.pipeline)] += 1;
-        //            }
-        //        });
-        //        tools.set_event_text("Pipeline alerts: " + JSON.stringify(pipeline_alerts), drawing, font_size, width);
-        //    };
 
         var decorate_information = function(drawing, font_size, width, height, id) {
             // var node = await model.update(id);

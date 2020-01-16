@@ -8,11 +8,11 @@ define(["jquery", "lodash", "app/alarms", "app/ui/overlays/overlay_tools"],
 
         var decorate_alarms = function(drawing, font_size, width, height, id) {
             var alarm_count = 0;
-            alarms.get_subscribers_with_alarms().current.forEach(function(item) {
+            for (let item of alarms.get_subscribers_with_alarms().current) {
                 if (item.ResourceArn == id) {
-                    alarm_count = item.AlarmCount;
+                    alarm_count += item.AlarmCount;
                 }
-            });
+            }
             tools.set_alarm_text("Active alarms: " + alarm_count, drawing, font_size, width);
         };
 
