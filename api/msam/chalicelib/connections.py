@@ -60,6 +60,8 @@ def update_connection_ddb_items():
         content.put_ddb_items(mediapackage_endpoint_mediatailor_configuration_ddb_items())
         content.put_ddb_items(s3_bucket_mediatailor_configuration_ddb_items())
         content.put_ddb_items(mediastore_container_mediatailor_configuration_ddb_items())
+        content.put_ddb_items(medialive_channel_multiplex_ddb_items())
+        content.put_ddb_items(multiplex_mediaconnect_flow_ddb_items())
     except ClientError as error:
         print(error)
 
@@ -175,6 +177,34 @@ def medialive_channel_mediastore_container_ddb_items():
     return items
 
 
+def medialive_channel_multiplex_ddb_items():
+    """
+    Identify and format MediaLive channel to EML Multiplex connections for cache storage.
+    """
+    items = []
+    try:
+        # get medialive channels
+        medialive_ch_cached = cache.cached_by_service("medialive-channel")
+        # get multiplexes
+        medialive_mp_cached = cache.cached_by_service("medialive-multiplex")
+        for ml_channel in medialive_ch_cached:
+            ml_channel_data = json.loads(ml_channel["data"])
+            for destination in ml_channel_data["Destinations"]:
+                if "MultiplexSettings" in destination:
+                    multiplex_id = destination["MultiplexSettings"]["MultiplexId"]
+                    program_name = destination["MultiplexSettings"]["ProgramName"]
+                    for ml_multiplex in medialive_mp_cached:
+                        ml_multiplex_data = json.loads(ml_multiplex["data"])
+                        if multiplex_id == ml_multiplex_data["Id"]:
+                            # create a 'connection' out of matches
+                            config = {"from": ml_channel_data["Arn"], "to": ml_multiplex_data["Arn"], "program": program_name}
+                            print(config)
+                            items.append(connection_to_ddb_item(ml_channel_data["Arn"], ml_multiplex_data["Arn"], "medialive-channel-multiplex", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+
 def medialive_input_medialive_channel_ddb_items():
     """
     Identify and format MediaLive input to MediaLive channel connections for cache storage.
@@ -231,6 +261,40 @@ def mediapackage_channel_mediapackage_endpoint_ddb_items():
     except ClientError as error:
         print(error)
     return items
+
+
+def multiplex_mediaconnect_flow_ddb_items():
+    """
+    Identify and format Multiplex to MediaConnect flow connections for cache storage.
+    """
+    source_arn_expr = parse('$..Source.EntitlementArn')
+    destination_arn_expr = parse('$..Destinations[*].MediaConnectSettings.EntitlementArn')
+    items = []
+    try:
+        # get multiplexes
+        multiplex_cached = cache.cached_by_service("medialive-multiplex")
+        # get mediaconnect flows
+        mediaconnect_flows_cached = cache.cached_by_service("mediaconnect-flow")
+        for multiplex in multiplex_cached:
+            multiplex_data = json.loads(multiplex["data"])
+            # retrieve the multiplex's exported entitlements
+            entitlement_arns = [match.value for match in destination_arn_expr.find(multiplex_data)]
+            # print(entitlement_arns)
+            # search each flow for the same entitlement arns as sources
+            for flow in mediaconnect_flows_cached:
+                flow_data = json.loads(flow["data"])
+                source_arns = [match.value for match in source_arn_expr.find(flow_data)]
+                # print(source_arns)
+                for arn in source_arns:
+                    if arn in entitlement_arns:
+                        # create a 'connection' out of matches
+                        config = {"from": multiplex_data["Arn"], "to": flow_data["FlowArn"], "entitlement": arn}
+                        print(config)
+                        items.append(connection_to_ddb_item(multiplex_data["Arn"], flow_data["FlowArn"], "multiplex-mediaconnect-flow", config))
+    except ClientError as error:
+        print(error)
+    return items
+
 
 
 def s3_bucket_cloudfront_distribution_ddb_items():
@@ -502,7 +566,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                     config = {"from": outer_flow_data["Source"]["EntitlementArn"], "to": outer_flow_data["FlowArn"], "scheme": "ENTITLEMENT"}
                     items.append(connection_to_ddb_item(outer_flow_data["Source"]["EntitlementArn"], outer_flow_data["FlowArn"], connection_type, config))
             except Exception as error:
-                print(error)
+                # print(error)
+                pass
             # also, process each flow against each of the same set of flows for regular IP push (standard)
             outer_flow_egress_ip = outer_flow_data["EgressIp"]
 
@@ -515,7 +580,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                             config = {"from": inner_flow_data["FlowArn"], "to": outer_flow_data["FlowArn"], "scheme": flow_output["Transport"]["Protocol"].upper()}
                             items.append(connection_to_ddb_item(inner_flow_data["FlowArn"], outer_flow_data["FlowArn"], connection_type, config))
                     except Exception as error:
-                        print(error)
+                        # print(error)
+                        pass
     except ClientError as error:
         print(error)
     return items

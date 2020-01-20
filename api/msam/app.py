@@ -46,8 +46,7 @@ DYNAMO_CLIENT = boto3.client("dynamodb")
 DYNAMO_RESOURCE = boto3.resource("dynamodb")
 
 
-@app.route(
-    '/layout/view/{view}', cors=True, api_key_required=True, methods=['GET'])
+@app.route('/layout/view/{view}', cors=True, api_key_required=True, methods=['GET'])
 def get_view_layout(view):
     """
     API entry point for retrieving all item positions in a view.
@@ -55,11 +54,7 @@ def get_view_layout(view):
     return node_layout.get_view_layout(app.current_request, view)
 
 
-@app.route(
-    '/layout/nodes/{view}/{node_id}',
-    cors=True,
-    api_key_required=True,
-    methods=['DELETE'])
+@app.route('/layout/nodes/{view}/{node_id}', cors=True, api_key_required=True, methods=['DELETE'])
 def delete_view_layout(view, node_id):
     """
     API entry point for removing nodes from a view.
@@ -67,12 +62,7 @@ def delete_view_layout(view, node_id):
     return node_layout.delete_node_layout(view, node_id)
 
 
-@app.route(
-    '/layout/nodes',
-    cors=True,
-    api_key_required=True,
-    methods=['PUT', 'POST'],
-    content_types=['application/json', 'application/x-www-form-urlencoded'])
+@app.route('/layout/nodes', cors=True, api_key_required=True, methods=['PUT', 'POST'], content_types=['application/json', 'application/x-www-form-urlencoded'])
 def set_view_layout():
     """
     API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.
@@ -88,12 +78,7 @@ def get_channel_list():
     return channel_tiles.get_channel_list()
 
 
-@app.route(
-    '/channel/{name}',
-    cors=True,
-    api_key_required=True,
-    methods=['PUT', 'POST'],
-    content_types=['application/json', 'application/x-www-form-urlencoded'])
+@app.route('/channel/{name}', cors=True, api_key_required=True, methods=['PUT', 'POST'], content_types=['application/json', 'application/x-www-form-urlencoded'])
 def set_channel_nodes(name):
     """
      API entry point to set the nodes for a given channel name.
@@ -101,8 +86,7 @@ def set_channel_nodes(name):
     return channel_tiles.set_channel_nodes(name, app.current_request.json_body)
 
 
-@app.route(
-    '/channel/{name}', cors=True, api_key_required=True, methods=['GET'])
+@app.route('/channel/{name}', cors=True, api_key_required=True, methods=['GET'])
 def get_channel_nodes(name):
     """
     API entry point to get the nodes for a given channel name.
@@ -110,8 +94,7 @@ def get_channel_nodes(name):
     return channel_tiles.get_channel_nodes(name)
 
 
-@app.route(
-    '/channel/{name}', cors=True, api_key_required=True, methods=['DELETE'])
+@app.route('/channel/{name}', cors=True, api_key_required=True, methods=['DELETE'])
 def delete_channel_nodes(name):
     """
     API entry point to delete a channel.
@@ -119,12 +102,7 @@ def delete_channel_nodes(name):
     return channel_tiles.delete_channel_nodes(app.current_request, name)
 
 
-@app.route(
-    '/settings/{item_key}',
-    cors=True,
-    api_key_required=True,
-    methods=['GET', 'PUT', 'POST', "DELETE"],
-    content_types=['application/json', 'application/x-www-form-urlencoded'])
+@app.route('/settings/{item_key}', cors=True, api_key_required=True, methods=['GET', 'PUT', 'POST', "DELETE"], content_types=['application/json', 'application/x-www-form-urlencoded'])
 def application_settings(item_key):
     """
     API entry point to get or set the object value for a setting.
@@ -132,11 +110,7 @@ def application_settings(item_key):
     return msam_settings.application_settings(app.current_request, item_key)
 
 
-@app.route(
-    '/cached/{service}/{region}',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cached/{service}/{region}', cors=True, api_key_required=True, methods=['GET'])
 def cached_by_service_region(service, region):
     """
     API entry point to retrieve items from the cache under the service and region name.
@@ -144,8 +118,7 @@ def cached_by_service_region(service, region):
     return cache.cached_by_service_region(service, region)
 
 
-@app.route(
-    '/cached/arn/{arn}', cors=True, api_key_required=True, methods=['GET'])
+@app.route('/cached/arn/{arn}', cors=True, api_key_required=True, methods=['GET'])
 def cached_by_arn(arn):
     """
     API entry point to retrieve items from the cache by arn.
@@ -153,12 +126,7 @@ def cached_by_arn(arn):
     return cache.cached_by_arn(arn)
 
 
-@app.route(
-    '/cached',
-    cors=True,
-    api_key_required=True,
-    methods=['PUT', 'POST'],
-    content_types=['application/json', 'application/x-www-form-urlencoded'])
+@app.route('/cached', cors=True, api_key_required=True, methods=['PUT', 'POST'], content_types=['application/json', 'application/x-www-form-urlencoded'])
 def put_cached_data():
     """
     API entry point to add items to the cache.
@@ -166,8 +134,7 @@ def put_cached_data():
     return cache.put_cached_data(app.current_request)
 
 
-@app.route(
-    '/cached/arn/{arn}', cors=True, api_key_required=True, methods=['DELETE'])
+@app.route('/cached/arn/{arn}', cors=True, api_key_required=True, methods=['DELETE'])
 def delete_cached_data(arn):
     """
     API entry point to delete items from the cache.
@@ -183,11 +150,7 @@ def regions():
     return cache.regions()
 
 
-@app.route(
-    '/cloudwatch/alarms/all/{region}',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cloudwatch/alarms/all/{region}', cors=True, api_key_required=True, methods=['GET'])
 def get_cloudwatch_alarms_region(region):
     """
     API entry point to retrieve all CloudWatch alarms for a given region.
@@ -203,37 +166,23 @@ def incoming_cloudwatch_alarm(event, _):
     return cloudwatch_data.incoming_cloudwatch_alarm(event, _)
 
 
-@app.route(
-    '/cloudwatch/alarm/{alarm_name}/region/{region}/subscribe',
-    cors=True,
-    api_key_required=True,
-    methods=['PUT', 'POST'])
+@app.route('/cloudwatch/alarm/{alarm_name}/region/{region}/subscribe', cors=True, api_key_required=True, methods=['PUT', 'POST'])
 def subscribe_resource_to_alarm(alarm_name, region):
     """
     API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.
     """
-    return cloudwatch_data.subscribe_resource_to_alarm(app.current_request,
-                                                       alarm_name, region)
+    return cloudwatch_data.subscribe_resource_to_alarm(app.current_request, alarm_name, region)
 
 
-@app.route(
-    '/cloudwatch/alarm/{alarm_name}/region/{region}/unsubscribe',
-    cors=True,
-    api_key_required=True,
-    methods=['PUT', 'POST'])
+@app.route('/cloudwatch/alarm/{alarm_name}/region/{region}/unsubscribe', cors=True, api_key_required=True, methods=['PUT', 'POST'])
 def unsubscribe_resource_from_alarm(alarm_name, region):
     """
     API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.
     """
-    return cloudwatch_data.unsubscribe_resource_from_alarm(
-        app.current_request, alarm_name, region)
+    return cloudwatch_data.unsubscribe_resource_from_alarm(app.current_request, alarm_name, region)
 
 
-@app.route(
-    '/cloudwatch/alarm/{alarm_name}/region/{region}/subscribers',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cloudwatch/alarm/{alarm_name}/region/{region}/subscribers', cors=True, api_key_required=True, methods=['GET'])
 def subscribers_to_alarm(alarm_name, region):
     """
     API entry point to return subscribed nodes of a CloudWatch alarm in a region.
@@ -241,11 +190,7 @@ def subscribers_to_alarm(alarm_name, region):
     return cloudwatch_data.subscribers_to_alarm(alarm_name, region)
 
 
-@app.route(
-    '/cloudwatch/alarms/{alarm_state}/subscribers',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cloudwatch/alarms/{alarm_state}/subscribers', cors=True, api_key_required=True, methods=['GET'])
 def subscribed_with_state(alarm_state):
     """
     API entry point to return nodes subscribed to alarms in a given alarm state (OK, ALARM, INSUFFICIENT_DATA).
@@ -253,11 +198,7 @@ def subscribed_with_state(alarm_state):
     return cloudwatch_data.subscribed_with_state(alarm_state)
 
 
-@app.route(
-    '/cloudwatch/alarms/subscriber/{resource_arn}',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cloudwatch/alarms/subscriber/{resource_arn}', cors=True, api_key_required=True, methods=['GET'])
 def alarms_for_subscriber(resource_arn):
     """
     API entry point to return all alarms subscribed to by a node.
@@ -265,11 +206,7 @@ def alarms_for_subscriber(resource_arn):
     return cloudwatch_data.alarms_for_subscriber(resource_arn)
 
 
-@app.route(
-    '/cloudwatch/alarms/subscribed',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cloudwatch/alarms/subscribed', cors=True, api_key_required=True, methods=['GET'])
 def all_subscribed_alarms():
     """
     API entry point to return a unique list of all subscribed alarms in the database.
@@ -277,11 +214,7 @@ def all_subscribed_alarms():
     return cloudwatch_data.all_subscribed_alarms()
 
 
-@app.route(
-    '/cloudwatch/events/state/{state}',
-    cors=True,
-    api_key_required=True,
-    methods=['GET'])
+@app.route('/cloudwatch/events/state/{state}', cors=True, api_key_required=True, methods=['GET'])
 def get_cloudwatch_events_state(state):
     """
     API entry point to retrieve all pipeline events in a given state (set, clear).
@@ -304,8 +237,7 @@ def update_nodes(event):
     """
     # get this lambda's timeout value
     lambda_client = boto3.client("lambda")
-    this_lambda = lambda_client.get_function(
-        FunctionName=event.context.invoked_function_arn)
+    this_lambda = lambda_client.get_function(FunctionName=event.context.invoked_function_arn)
     # calculate millis
     total_ms = int(this_lambda['Configuration']['Timeout']) * 1000
     # we need 25% of our total run time remaining to keep going
@@ -314,8 +246,7 @@ def update_nodes(event):
     while min_remain_ms < event.context.get_remaining_time_in_millis():
         periodic_handlers.update_nodes()
         # print the stats
-        print("remaining time {}ms".format(
-            event.context.get_remaining_time_in_millis()))
+        print("remaining time {}ms".format(event.context.get_remaining_time_in_millis()))
         print("required remaining time {}ms".format(min_remain_ms))
 
 

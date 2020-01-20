@@ -25,6 +25,7 @@ define(["jquery", "lodash", "app/alarms"], function($, _, alarms) {
         var typeLabel = drawing.text(text).y(event_y);
         draw_font_set_position(typeLabel, font_size, width);
     }
+
     var set_info_text = function(text, drawing, font_size, width) {
         var typeLabel = drawing.text(text).y(info_y);
         draw_font_set_position(typeLabel, font_size, width);

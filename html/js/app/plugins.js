@@ -22,6 +22,8 @@ define({
         "app/mappers/connections/medialive_channel_mediapackage_channel",
         "app/mappers/connections/medialive_channel_mediastore_container",
         "app/mappers/connections/medialive_input_channel",
+        "app/mappers/connections/medialive_channel_multiplex",
+        "app/mappers/connections/multiplex_mediaconnect_flow",
         "app/mappers/connections/mediapackage_channel_endpoint",
         "app/mappers/connections/mediapackage_endpoint_cloudfront",
         "app/mappers/connections/mediastore_container_medialive_input",
@@ -55,5 +57,6 @@ define({
         "app/ui/overlays/mediatailor_configuration",
         "app/ui/overlays/ec2_instance",
         "app/ui/overlays/ssm_managed_instance"
-    ]
+    ],
+    "default-overlay": "app/ui/overlays/default_overlay"
 });

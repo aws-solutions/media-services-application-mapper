@@ -38,6 +38,23 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
+        var update_multiplexes = function(regionName) {
+            var current = connections.get_current();
+            var url = current[0];
+            var api_key = current[1];
+            return new Promise((resolve, reject) => {
+                server.get(url + "/cached/medialive-multiplex/" + regionName, api_key).then((inputs) => {
+                    for (let cache_entry of inputs) {
+                        map_multiplex(cache_entry);
+                    }
+                    resolve();
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        };
+
         var map_channel = function(cache_entry) {
             var channel = JSON.parse(cache_entry.data);
             var name = channel.Name;
@@ -194,6 +211,84 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
+        var map_multiplex = function(cache_entry) {
+            var input = JSON.parse(cache_entry.data);
+            var name = input.Name;
+            var id = input.Arn;
+            var nodes = model.nodes;
+            var node_type = "MediaLive Multiplex";
+            // var rgb = "#456e26";
+            var rgb = "#6a8258";
+            var node_data = {
+                "cache_update": cache_entry.updated,
+                "id": input.Arn,
+                "region": cache_entry.region,
+                "shape": "image",
+                "image": {
+                    "unselected": null,
+                    "selected": null
+                },
+                "header": "<b>" + node_type + ":</b> " + name,
+                "data": input,
+                "title": node_type,
+                "name": name,
+                "size": 55,
+                "render": {
+                    normal_unselected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_rgb = rgb;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                        };
+                    })(),
+                    normal_selected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_rgb = rgb;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                        };
+                    })(),
+                    alert_unselected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                        };
+                    })(),
+                    alert_selected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                        };
+                    })()
+                },
+                "console_link": (function() {
+                    var id = input.Id;
+                    var region = input.Arn.split(":")[3];
+                    return function() {
+                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#/inputs/${id}`;
+                        return html;
+                    };
+                })(),
+                "cloudwatch_link": (function() {
+                    return function() {
+                        var html = `https://console.aws.amazon.com/cloudwatch/home`;
+                        return html;
+                    };
+                })()
+            };
+            node_data.image.selected = node_data.render.normal_selected();
+            node_data.image.unselected = node_data.render.normal_unselected();
+            nodes.update(node_data);
+        };
+
         var update = function() {
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
@@ -201,6 +296,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     for (let region_name of regions.get_selected()) {
                         promises.push(update_channels(region_name));
                         promises.push(update_inputs(region_name));
+                        promises.push(update_multiplexes(region_name));
                     }
                     Promise.all(promises).then(function() {
                         resolve();
@@ -215,11 +311,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
         };
 
         return {
-            "name": "MediaLive Inputs and Channels",
-            "arn_matches": {
-                ".+medialive.+channel.+": map_channel,
-                ".+medialive.+input.+": map_input
-            },
+            "name": "MediaLive Inputs, Channels, Multiplexes",
             "update": update
         };
     });

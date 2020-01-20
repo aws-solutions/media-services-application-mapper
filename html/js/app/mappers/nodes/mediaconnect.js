@@ -122,9 +122,6 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
         return {
             "name": "MediaConnect Flows",
-            "arn_matches": {
-                ".+mediaconnect.+flow.+": map_flow
-            },
             "update": update
         };
     });

@@ -56,12 +56,20 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
 
         // give matching overlays a chance to supplement 'drawing'
         var overlays = plugins.overlays;
+        let found = false;
         for (let module of overlays) {
             var overlay = require(module);
             if (overlay.match_type == type_name) {
                 // console.log("applying overlay " + overlay.name);
                 overlay.decorate(drawing, font_size, width, height, id);
+                found = true;
             }
+        }
+        // use the default overlay if needed
+        if (!found) {
+            console.log("using default overlay for " + id)
+            let overlay = require(plugins["default-overlay"]);
+            overlay.decorate(drawing, font_size, width, height, id);
         }
 
         // export the SVG and turn it into an encoded inline image

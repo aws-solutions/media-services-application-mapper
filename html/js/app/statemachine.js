@@ -142,7 +142,7 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                     _onEnter: function() {
                         var ref = this;
                         // load the overlays
-                        require(plugins.overlays, function() {
+                        require(Array.from(plugins.overlays).concat(plugins["default-overlay"]), function() {
                             // create a closed callback
                             var f = (function() {
                                 return function() {
