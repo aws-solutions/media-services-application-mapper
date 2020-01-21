@@ -42,21 +42,8 @@ define({
         "app/tools/duplicate_names"
     ],
     "overlays": [
-        "app/ui/overlays/cloudfront_distribution",
-        "app/ui/overlays/ec2_firewall",
-        "app/ui/overlays/elemental_live_encoder",
         "app/ui/overlays/mediaconnect_flow",
         "app/ui/overlays/medialive_channel",
-        "app/ui/overlays/medialive_input",
-        "app/ui/overlays/mediapackage_channel",
-        "app/ui/overlays/mediapackage_endpoint",
-        "app/ui/overlays/mediastore_container",
-        "app/ui/overlays/overlay_tools",
-        "app/ui/overlays/s3_bucket",
-        "app/ui/overlays/speke_keyserver",
-        "app/ui/overlays/mediatailor_configuration",
-        "app/ui/overlays/ec2_instance",
-        "app/ui/overlays/ssm_managed_instance"
     ],
-    "default-overlay": "app/ui/overlays/default_overlay"
+    "default-overlay": "app/ui/overlays/alarms_only"
 });

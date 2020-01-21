@@ -19,19 +19,16 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
         var decorate_information = function(drawing, font_size, width, height, id) {
             var node = model.nodes.get(id);
             if (node) {
-                // var state = node.data.Status;
                 var source_type = "Standard";
                 if (node.data.Source.EntitlementArn) {
                     source_type = "Entitlement";
                 }
-                //tools.set_info_text("Type: " + source_type + " (" + state + ")", drawing, font_size, width);
                 tools.set_info_text("Type: " + source_type, drawing, font_size, width);
             }
         };
 
         var decorate = function(drawing, font_size, width, height, id) {
             decorate_alarms(drawing, font_size, width, height, id);
-            //decorate_events(drawing, font_size, width, height, id);
             decorate_information(drawing, font_size, width, height, id);
         };
 

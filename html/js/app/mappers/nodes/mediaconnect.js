@@ -82,15 +82,19 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     })()
                 },
                 "console_link": (function() {
-                    var region = id.split(":")[3];
+                    var split_id = id.split(":");
+                    var region = split_id[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/mediaconnect/home?region=${region}#/flows/${id}`;
+                        var html = `https://${region}.console.aws.amazon.com/mediaconnect/home?region=${region}#/flows/${id}`;
                         return html;
                     };
                 })(),
                 "cloudwatch_link": (function() {
+                    var split_id = id.split(":");
+                    var region = split_id[3];
+                    var name = split_id[split_id.length - 1];
                     return function() {
-                        var html = `#`;
+                        var html = `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fMediaConnect*2cFlowARN*7d*20${name}`;
                         return html;
                     };
                 })()
