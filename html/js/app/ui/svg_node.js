@@ -67,7 +67,7 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
         }
         // use the default overlay if needed
         if (!found) {
-            console.log("using default overlay for " + id)
+            // console.log("using default overlay for " + id)
             let overlay = require(plugins["default-overlay"]);
             overlay.decorate(drawing, font_size, width, height, id);
         }
