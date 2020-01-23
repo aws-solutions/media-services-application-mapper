@@ -1,4 +1,4 @@
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release-1575580717.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release-1575580717.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release-1575580717.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1575580717.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release-1579745101.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release-1579745101.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release-1579745101.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1579745101.template

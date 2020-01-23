@@ -193,7 +193,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/d433424f2981e3a2c8bfe9bcdee739e7",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/2c09ec2576dbd44a42f2b7faac596378",
                 "Tags": {
                     "aws-chalice": "version=1.12.0:stage=dev:app=msam"
                 },
@@ -385,7 +385,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/d433424f2981e3a2c8bfe9bcdee739e7",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/2c09ec2576dbd44a42f2b7faac596378",
                 "Tags": {
                     "aws-chalice": "version=1.12.0:stage=dev:app=msam"
                 },
@@ -585,7 +585,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/d433424f2981e3a2c8bfe9bcdee739e7",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/2c09ec2576dbd44a42f2b7faac596378",
                 "Tags": {
                     "aws-chalice": "version=1.12.0:stage=dev:app=msam"
                 },
@@ -785,7 +785,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/d433424f2981e3a2c8bfe9bcdee739e7",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/2c09ec2576dbd44a42f2b7faac596378",
                 "Tags": {
                     "aws-chalice": "version=1.12.0:stage=dev:app=msam"
                 },
@@ -985,7 +985,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/d433424f2981e3a2c8bfe9bcdee739e7",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/2c09ec2576dbd44a42f2b7faac596378",
                 "Tags": {
                     "aws-chalice": "version=1.12.0:stage=dev:app=msam"
                 },
@@ -3320,7 +3320,7 @@
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.app",
-                "CodeUri": "s3://rodeolabz-us-west-2/msam/d433424f2981e3a2c8bfe9bcdee739e7",
+                "CodeUri": "s3://rodeolabz-us-west-2/msam/2c09ec2576dbd44a42f2b7faac596378",
                 "Tags": {
                     "aws-chalice": "version=1.12.0:stage=dev:app=msam"
                 },
