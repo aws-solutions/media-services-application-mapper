@@ -5,16 +5,25 @@
 
 ORIGIN=`pwd`
 BUCKET_BASENAME='rodeolabz' 
+BUILD_PROFILE='default'
+
 # MSAM core template
 
-# ./build.sh mybucket
+# ./build.sh mybucket myprofile
 
 # override default 
+
 if [ "$1" != "" ]; then
     BUCKET_BASENAME=$1
 fi
 
-echo $BUCKET_BASENAME
+echo Bucket Base = $BUCKET_BASENAME
+
+if [ "$2" != "" ]; then
+    BUILD_PROFILE=$2
+fi
+
+echo AWS Profile = $BUILD_PROFILE
 
 echo
 echo ------------------------------------
@@ -25,7 +34,7 @@ echo
 cd msam
 chalice package build/
 cd build/
-aws cloudformation package --template-file sam.json --s3-bucket $BUCKET_BASENAME-us-west-2 --s3-prefix msam --use-json --output-template-file msam-core-release.json --profile default
+aws cloudformation package --template-file sam.json --s3-bucket $BUCKET_BASENAME-us-west-2 --s3-prefix msam --use-json --output-template-file msam-core-release.json --profile $BUILD_PROFILE
 # update env vars and code uris; add description and parameters
 python update_core_template.py 
 cd $ORIGIN
@@ -40,8 +49,8 @@ echo
 
 cd events
 # sam build first to include dependencies in requirements. txt
-sam build --template MSAMEventCollector.yml --manifest requirements.txt --region us-west-2 --profile default
-aws cloudformation package --template-file .aws-sam/build/template.yaml --s3-bucket $BUCKET_BASENAME-us-west-2 --s3-prefix msam --use-json --output-template-file msam-events-release.json --profile default
+sam build --template MSAMEventCollector.yml --manifest requirements.txt --region us-west-2 --profile $BUILD_PROFILE
+aws cloudformation package --template-file .aws-sam/build/template.yaml --s3-bucket $BUCKET_BASENAME-us-west-2 --s3-prefix msam --use-json --output-template-file msam-events-release.json --profile $BUILD_PROFILE
 # replace code uris with a dynamic one
 python update_event_template.py
 
