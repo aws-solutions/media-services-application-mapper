@@ -7,10 +7,25 @@
 ORIGIN=`pwd`
 DIST=$ORIGIN/dist
 
+# ./deploy.sh release/dev, bucketbasename, regionsfordeploy, awsprofiletouse
+# ./deploy.sh dev mybucket us-west-2 default
 # AWS settings
 BUCKET="rodeolabz"
+if [ "$2" != "" ]; then
+    BUCKET=$2
+fi
+
 REGIONS="ap-south-1 eu-west-3 eu-north-1 eu-west-2 eu-west-1 ap-northeast-2 ap-northeast-1 sa-east-1 ca-central-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1 us-west-2"
+if [ "$3" != "" ]; then
+    REGIONS=$3
+fi
+
 DEPLOY_PROFILE="msam-release"
+if [ "$4" != "" ]; then
+    DEPLOY_PROFILE=$4
+fi
+
+echo $BUCKET $REGIONS $DEPLOY_PROFILE
 
 # date stamp for this deploy
 STAMP=`date +%s`
@@ -55,6 +70,7 @@ cp -f $ORIGIN/web-cloudformation/webcontent_resource.zip $STAGE/webcontent_resou
 cp -f $ORIGIN/api/msam/db/dynamodb_resource.zip $STAGE/dynamodb_resource_$STAMP.zip
 
 # copy stock templates to staging
+cp -f $ORIGIN/api/msam/build/msam-all-resources-release.json $STAGE/
 cp -f $ORIGIN/api/msam/build/msam-core-release.json $STAGE/
 cp -f $ORIGIN/api/msam/build/msam-dynamodb-release.json $STAGE/
 cp -f $ORIGIN/api/events/msam-events-release.json $STAGE/

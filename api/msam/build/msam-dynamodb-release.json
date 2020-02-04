@@ -44,7 +44,9 @@
                     "S3Bucket": {
                         "Fn::Join": [
                             "-", [
-                                "rodeolabz",
+                                {
+                                    "Ref": "BucketBasename"
+                                },
                                 {
                                     "Ref": "AWS::Region"
                                 }
@@ -316,6 +318,45 @@
                     }
                 }]
             }
+        },
+        "CloudWatchEvents": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "resource_arn",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "timestamp",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "resource_arn",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "timestamp",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "TimeToLiveSpecification": {
+                    "AttributeName": "expires",
+                    "Enabled": true
+                }
+            }
+        }
+    },
+    "Parameters": {
+        "BucketBasename": {
+            "Default": "rodeolabz",
+            "Description": "This is basename of the bucket that holds the MSAM code base.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
         }
     },
     "Outputs": {
@@ -354,6 +395,12 @@
                 "Ref": "Settings"
             },
             "Description": "Settings table resource name"
+        },
+        "CloudWatchEventsTable": {
+            "Value": {
+                "Ref": "CloudWatchEvents"
+            },
+            "Description": "CloudWatchEvents table resource name"
         }
     }
 }

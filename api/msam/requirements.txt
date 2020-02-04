@@ -4,3 +4,4 @@ chalice
 jsonpath_ng
 fuzzywuzzy
 stringcase
+requests

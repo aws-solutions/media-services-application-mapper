@@ -59,8 +59,9 @@ def replace_bucket_contents(bucket_name):
     client = boto3.client("s3")
     region = os.environ["AWS_REGION"]
     stamp = os.environ["BUILD_STAMP"]
-    source = "https://rodeolabz-{region}.s3.amazonaws.com/msam/msam-web-{stamp}.zip".format(region=region, stamp=stamp)
-
+    code_bucket = os.environ["BUCKET_BASENAME"]
+    source = "https://{code_bucket}-{region}.s3.amazonaws.com/msam/msam-web-{stamp}.zip".format(code_bucket=code_bucket, region=region, stamp=stamp)
+    
     # empty the bucket
     delete_bucket_contents(bucket_name)
 

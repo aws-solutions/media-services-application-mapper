@@ -8,8 +8,7 @@ completion response from a custom resource.
 
 import json
 from botocore.exceptions import ClientError
-from botocore.vendored import requests
-
+import requests
 
 def send(event, context, response_status, response_data, physical_resource_id):
     """

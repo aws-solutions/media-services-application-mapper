@@ -7,4 +7,8 @@ ORIGIN=`pwd`
 ZIP="$ORIGIN/dynamodb_resource.zip"
 
 rm -f $ZIP
-zip -r $ZIP lambda_function.py resource_tools.py
+pip install --target ./package requests
+cd package
+zip -r9 $ZIP .
+cd $ORIGIN
+zip -g $ZIP lambda_function.py resource_tools.py
