@@ -127,7 +127,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     var nodes_per_row = Math.ceil(Math.sqrt(node_ids.length));
                     var current_row_nodes = 0;
                     for (let id of node_ids) {
-                        console.log(id, current_x, current_y);
+                        // console.log(id, current_x, current_y);
                         diagram.network.moveNode(id, current_x, current_y);
                         current_row_nodes += 1;
                         if (current_row_nodes < nodes_per_row) {
@@ -176,7 +176,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 var min_y = Number.MAX_SAFE_INTEGER;
                 var max_y = Number.MIN_SAFE_INTEGER;
                 var positions = this.network.getPositions();
-                for (let pos_value of positions) {
+                for (let pos_value of Object.values(positions)) {
                     if (pos_value.x > max_x) {
                         max_x = pos_value.x;
                     }
