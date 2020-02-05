@@ -66,9 +66,13 @@ def replace_bucket_contents(bucket_name):
     delete_bucket_contents(bucket_name)
 
     # execute these commands to download the zip and extract it locally
+    # command_list = [
+    #     "rm -f /tmp/msam-web-{stamp}.zip".format(stamp=stamp), "rm -rf {folder}".format(folder=WEB_FOLDER), "curl --silent -o /tmp/msam-web-{stamp}.zip {url}".format(url=source, stamp=stamp),
+    #     "mkdir {folder}".format(folder=WEB_FOLDER), "unzip /tmp/msam-web-{stamp}.zip -d {folder}".format(stamp=stamp, folder=WEB_FOLDER), "ls -l {folder}".format(folder=WEB_FOLDER)
+    # ]
     command_list = [
-        "rm -f /tmp/msam-web-{stamp}.zip".format(stamp=stamp), "rm -rf {folder}".format(folder=WEB_FOLDER), "curl --silent -o /tmp/msam-web-{stamp}.zip {url}".format(url=source, stamp=stamp),
-        "mkdir {folder}".format(folder=WEB_FOLDER), "unzip /tmp/msam-web-{stamp}.zip -d {folder}".format(stamp=stamp, folder=WEB_FOLDER), "ls -l {folder}".format(folder=WEB_FOLDER)
+        "rm -f /tmp/msam-web-{stamp}.zip".format(stamp=stamp), "rm -rf {folder}".format(folder=WEB_FOLDER),
+        "mkdir {folder}".format(folder=WEB_FOLDER), "unzip msam-web-{stamp}.zip -d {folder}".format(stamp=stamp, folder=WEB_FOLDER), "ls -l {folder}".format(folder=WEB_FOLDER)
     ]
     for command in command_list:
         print(call(command, shell=True))
@@ -85,7 +89,7 @@ def replace_bucket_contents(bucket_name):
                 content_type = "text/html"
             else:
                 content_type = "binary/octet-stream"
-            client.put_object(Bucket=bucket_name, Key=remote, ACL='public-read', Body=open(local, 'rb'), ContentType=content_type)
+            client.put_object(Bucket=bucket_name, Key=remote, Body=open(local, 'rb'), ContentType=content_type)
 
 
 def delete_bucket_contents(bucket_name):

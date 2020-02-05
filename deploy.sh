@@ -7,25 +7,50 @@
 ORIGIN=`pwd`
 DIST=$ORIGIN/dist
 
-# ./deploy.sh release/dev, bucketbasename, regionsfordeploy, awsprofiletouse
-# ./deploy.sh dev mybucket us-west-2 default
 # AWS settings
 BUCKET="rodeolabz"
-if [ "$2" != "" ]; then
-    BUCKET=$2
-fi
-
 REGIONS="ap-south-1 eu-west-3 eu-north-1 eu-west-2 eu-west-1 ap-northeast-2 ap-northeast-1 sa-east-1 ca-central-1 ap-southeast-1 ap-southeast-2 eu-central-1 us-east-1 us-east-2 us-west-1 us-west-2"
-if [ "$3" != "" ]; then
-    REGIONS=$3
-fi
-
 DEPLOY_PROFILE="msam-release"
-if [ "$4" != "" ]; then
-    DEPLOY_PROFILE=$4
-fi
+ACL="public-read"
+DEPLOY_TYPE="dev"
 
-echo $BUCKET $REGIONS $DEPLOY_PROFILE
+# ./deploy.sh dev -b mybucket -r "us-west-2 us-east-1" -d default -a none
+while getopts 'b:r:p:a:t:h' OPTION; do
+  case "$OPTION" in
+    b)
+      BUCKET="$OPTARG"
+      ;;
+    r)
+      REGIONS="$OPTARG"
+      ;;
+    p)
+      DEPLOY_PROFILE="$OPTARG"
+      ;;
+    a)
+      ACL="$OPTARG"
+      ;;
+    t)
+      DEPLOY_TYPE="$OPTARG"
+      ;;
+    h)
+      echo "script usage: $(basename $0) [-b BucketBasename] [-r RegionsForDeploy] [-p AWSProfile] [-a ACLSettings(public-read|none)] [-t DeployType(dev|release)]" >&2
+      echo "example usage: $(basename $0) -b mybucket -r \"us-west-2 us-east-1\" -p default -a public-read -t dev" >&2
+      exit 1
+      ;;
+    ?)
+      echo "script usage: $(basename $0) [-b BucketBasename] [-r RegionsForDeploy] [-p AWSProfile] [-a ACLSettings(public-read|none)] [-t DeployType(dev|release)]" >&2
+      exit 1
+      ;;
+  esac
+done
+shift "$(($OPTIND -1))"
+
+
+echo AWS Profile = $DEPLOY_PROFILE
+echo Bucket Basename = $BUCKET
+echo Regions = $REGIONS
+echo ACL Setting = $ACL
+echo Deploy Type = $DEPLOY_TYPE
 
 # date stamp for this deploy
 STAMP=`date +%s`
@@ -58,9 +83,10 @@ cd $ORIGIN
 SHATEXT="`sha1sum $STAGE/msam-web-$STAMP.zip | awk '{ print $1 }'`"
 echo web content archive SHA1 is $SHATEXT
 
-# update webcontent_resource.zip
+# update webcontent_resource.zip 
 cd $ORIGIN/web-cloudformation
-./makezip.sh
+cp $STAGE/msam-web-$STAMP.zip .
+./makezip.sh msam-web-$STAMP.zip
 cd $ORIGIN
 
 # place web content archive into staging
@@ -123,7 +149,7 @@ sort </tmp/current.txt >$DIST/current.txt
 cp -f *.json $DIST/
 
 # remove release templates before push?
-if [ "$1" == "release" ]; then
+if [ $DEPLOY_TYPE == "release" ]; then
     echo "keeping release templates"
 else
     echo "removing release templates"
@@ -132,11 +158,19 @@ fi
 
 cd $ORIGIN
 # sync to us-west-2
-aws s3 sync $STAGE/ s3://$BUCKET-us-west-2/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+if [ $ACL == "public-read" ]; then
+    aws s3 sync $STAGE/ s3://$BUCKET-us-west-2/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+else
+    aws s3 sync $STAGE/ s3://$BUCKET-us-west-2/msam --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+fi
 
 # sync the buckets
 for R in $REGIONS; do 
     if [ "$R" != "us-west-2" ]; then
-        aws s3 sync s3://$BUCKET-us-west-2/msam s3://$BUCKET-$R/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+        if [ $ACL == "public-read" ]; then
+            aws s3 sync s3://$BUCKET-us-west-2/msam s3://$BUCKET-$R/msam --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+        else
+            aws s3 sync s3://$BUCKET-us-west-2/msam s3://$BUCKET-$R/msam --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+        fi
     fi
 done
