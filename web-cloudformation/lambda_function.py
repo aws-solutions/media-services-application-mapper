@@ -66,10 +66,6 @@ def replace_bucket_contents(bucket_name):
     delete_bucket_contents(bucket_name)
 
     # execute these commands to download the zip and extract it locally
-    # command_list = [
-    #     "rm -f /tmp/msam-web-{stamp}.zip".format(stamp=stamp), "rm -rf {folder}".format(folder=WEB_FOLDER), "curl --silent -o /tmp/msam-web-{stamp}.zip {url}".format(url=source, stamp=stamp),
-    #     "mkdir {folder}".format(folder=WEB_FOLDER), "unzip /tmp/msam-web-{stamp}.zip -d {folder}".format(stamp=stamp, folder=WEB_FOLDER), "ls -l {folder}".format(folder=WEB_FOLDER)
-    # ]
     command_list = [
         "rm -f /tmp/msam-web-{stamp}.zip".format(stamp=stamp), "rm -rf {folder}".format(folder=WEB_FOLDER),
         "mkdir {folder}".format(folder=WEB_FOLDER), "unzip msam-web-{stamp}.zip -d {folder}".format(stamp=stamp, folder=WEB_FOLDER), "ls -l {folder}".format(folder=WEB_FOLDER)

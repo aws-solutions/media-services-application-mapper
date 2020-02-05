@@ -8,7 +8,7 @@ ZIP="$ORIGIN/webcontent_resource.zip"
 HTML_ZIP=$1
 
 rm -f $ZIP
-pip install --target ./package requests
+pip install --force-reinstall --target ./package requests
 cd package
 zip -r9 $ZIP .
 cd $ORIGIN

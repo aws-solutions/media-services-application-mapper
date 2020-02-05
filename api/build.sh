@@ -5,24 +5,35 @@
 
 ORIGIN=`pwd`
 BUCKET_BASENAME='rodeolabz' 
-BUILD_PROFILE='default'
+BUILD_PROFILE='msam-release'
 
 # MSAM core template
 
 # ./build.sh mybucket myprofile
 
 # override default 
-
-if [ "$1" != "" ]; then
-    BUCKET_BASENAME=$1
-fi
+while getopts 'b:p:h' OPTION; do
+  case "$OPTION" in
+    b)
+      BUCKET_BASENAME="$OPTARG"
+      ;;
+    p)
+      BUILD_PROFILE="$OPTARG"
+      ;;
+    h)
+      echo "script usage: $(basename $0) [-b BucketBasename]  [-p AWSProfile]" >&2
+      echo "example usage: $(basename $0) -b mybucket  -p default" >&2
+      exit 1
+      ;;
+    ?)
+      echo "script usage: $(basename $0) [-b BucketBasename] [-p AWSProfile]" >&2
+      exit 1
+      ;;
+  esac
+done
+shift "$(($OPTIND -1))"
 
 echo Bucket Base = $BUCKET_BASENAME
-
-if [ "$2" != "" ]; then
-    BUILD_PROFILE=$2
-fi
-
 echo AWS Profile = $BUILD_PROFILE
 
 echo

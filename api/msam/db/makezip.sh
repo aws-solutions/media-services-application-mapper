@@ -7,7 +7,7 @@ ORIGIN=`pwd`
 ZIP="$ORIGIN/dynamodb_resource.zip"
 
 rm -f $ZIP
-pip install --target ./package requests
+pip install --force-reinstall --target ./package requests
 cd package
 zip -r9 $ZIP .
 cd $ORIGIN
