@@ -10,31 +10,49 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/452a58e6eb01d6c7f472294998d4d836",
+                    "Key": "msam/5b0965be2295620f1875818382bf9568",
                     "Bucket": {
-                        "Fn::Sub": "rodeolabz-${AWS::Region}"
+                        "Fn::Join": [
+                            "-",
+                            [
+                                {
+                                    "Ref": "BucketBasename"
+                                },
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
                     }
                 },
                 "MemorySize": 2560,
                 "Timeout": 60,
-                "Policies": [{
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Action": [
-                            "dynamodb:PutItem"
-                        ],
-                        "Resource": "*"
-                    }]
-                }],
+                "Policies": [
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "dynamodb:PutItem",
+                                    "mediapackage:Describe*"
+                                ],
+                                "Resource": "*"
+                            }
+                        ]
+                    }
+                ],
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "DEV_0_0_0",
+                        "BUILD_STAMP": "DEV_0_0_0,",
                         "EVENTS_TABLE_REGION": {
                             "Ref": "EventsTableRegion"
                         },
                         "EVENTS_TABLE_NAME": {
                             "Ref": "EventsTableName"
+                        },
+                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
+                            "Ref": "CloudWatchEventsTableName"
                         },
                         "ITEM_TTL": {
                             "Ref": "ItemTTL"
@@ -49,7 +67,9 @@
                                 "source": [
                                     "aws.medialive",
                                     "aws.mediapackage",
-                                    "aws.mediastore"
+                                    "aws.mediastore",
+                                    "aws.mediatailor",
+                                    "aws.mediaconnect"
                                 ]
                             }
                         }
@@ -67,7 +87,7 @@
             "ConstraintDescription": "Please enter a value for this field."
         },
         "EventsTableName": {
-            "Description": "This is the DynamoDB table name that collects events for MSAM.",
+            "Description": "This is the DynamoDB table name that collects MediaLive alert events for MSAM.",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,
@@ -76,6 +96,21 @@
         "ItemTTL": {
             "Description": "The number of seconds before a record in the MSAM events table automatically expires and is removed (3600 = 1 hour, 86400 = 1 day, 604800 = 1 week).",
             "Default": "604800",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "CloudWatchEventsTableName": {
+            "Description": "This is the DynamoDB table name that collects all CloudWatch events for MSAM.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "BucketBasename": {
+            "Description": "This is the basename of the bucket that holds the MSAM code base.    ",
+            "Default": "rodeolabz",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

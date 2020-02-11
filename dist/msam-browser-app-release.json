@@ -1,10 +1,152 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1579745101)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1581382234)",
     "Resources": {
+        "MSAMAppBucketOriginAccessIdentity": {
+            "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+            "Properties": {
+                "CloudFrontOriginAccessIdentityConfig": {
+                    "Comment": {
+                        "Fn::Join": [
+                            "", [
+                                "Origin Access Identity for ",
+                                {
+                                    "Ref": "MSAMBrowserAppBucket"
+                                }
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "MSAMAppBucketCloudFrontDistribution": {
+            "Type": "AWS::CloudFront::Distribution",
+            "Properties": {
+                "DistributionConfig": {
+                    "Comment": {
+                        "Fn::Join": [
+                            "", [
+                                "CDN for ",
+                                {
+                                    "Ref": "MSAMBrowserAppBucket"
+                                }
+                            ]
+                        ]
+                    },
+                    "Enabled": true,
+                    "PriceClass": "PriceClass_All",
+                    "DefaultCacheBehavior": {
+                        "TargetOriginId": {
+                            "Ref": "MSAMBrowserAppBucket"
+                        },
+                        "ViewerProtocolPolicy": "https-only",
+                        "MinTTL": 0,
+                        "AllowedMethods": [
+                            "HEAD",
+                            "GET"
+                        ],
+                        "CachedMethods": [
+                            "HEAD",
+                            "GET"
+                        ],
+                        "ForwardedValues": {
+                            "QueryString": false
+                        }
+                    },
+                    "Origins": [{
+                        "DomainName": {
+                            "Fn::Join": [
+                                "", [{
+                                        "Ref": "MSAMBrowserAppBucket"
+                                    },
+                                    ".s3.amazonaws.com"
+                                ]
+                            ]
+                        },
+                        "Id": {
+                            "Ref": "MSAMBrowserAppBucket"
+                        },
+                        "S3OriginConfig": {
+                            "OriginAccessIdentity": {
+                                "Fn::Join": [
+                                    "", ["origin-access-identity/cloudfront/",
+                                        {
+                                            "Ref": "MSAMAppBucketOriginAccessIdentity"
+                                        }
+                                    ]
+                                ]
+                            }
+                        }
+                    }],
+                    "Restrictions": {
+                        "GeoRestriction": {
+                            "RestrictionType": "none",
+                            "Locations": []
+                        }
+                    },
+                    "ViewerCertificate": {
+                        "CloudFrontDefaultCertificate": "true",
+                        "MinimumProtocolVersion": "TLSv1"
+                    }
+                }
+            }
+        },
+        "MSAMAppBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "MSAMBrowserAppBucket"
+                },
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Id": "PolicyForCloudFrontPrivateContent",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                            "CanonicalUser": {
+                                "Fn::GetAtt": [
+                                    "MSAMAppBucketOriginAccessIdentity",
+                                    "S3CanonicalUserId"
+                                ]
+                            }
+                        },
+                        "Action": "s3:GetObject",
+                        "Resource": {
+                            "Fn::Join": [
+                                "", [{
+                                        "Fn::GetAtt": [
+                                            "MSAMBrowserAppBucket",
+                                            "Arn"
+                                        ]
+                                    },
+                                    "/*"
+                                ]
+                            ]
+                        }
+
+                    }]
+                }
+            }
+        },
         "MSAMBrowserAppBucket": {
             "Type": "AWS::S3::Bucket",
-            "Properties": {}
+            "Properties": {
+                "CorsConfiguration": {
+                    "CorsRules": [{
+                        "AllowedHeaders": [
+                            "*"
+                        ],
+                        "AllowedMethods": [
+                            "GET"
+                        ],
+                        "AllowedOrigins": [
+                            "*"
+                        ],
+                        "MaxAge": "3000"
+                    }]
+                }
+
+            }
         },
         "MSAMWebBucketLoaderRole": {
             "Type": "AWS::IAM::Role",
@@ -50,19 +192,22 @@
                     "S3Bucket": {
                         "Fn::Join": [
                             "-", [
-                                "rodeolabz",
+                                { 
+                                    "Ref": "BucketBasename"
+                                },
                                 {
                                     "Ref": "AWS::Region"
                                 }
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1579745101.zip"
+                    "S3Key": "msam/webcontent_resource_1581382234.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1579745101",
-                        "ZIP_DIGEST": "e2fb5bfe066cbef70304c3708f7a497a2524b184"
+                        "BUILD_STAMP": "1581382234",
+                        "ZIP_DIGEST": "69be4abc97c19c444867c6a9e028114d8381f018",
+                        "BUCKET_BASENAME": {"Ref": "BucketBasename"}
                     }
                 },
                 "Handler": "lambda_function.lambda_handler",
@@ -93,9 +238,19 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1579745101",
-                "ZIP_DIGEST": "e2fb5bfe066cbef70304c3708f7a497a2524b184"
+                "BUILD_STAMP": "1581382234",
+                "ZIP_DIGEST": "69be4abc97c19c444867c6a9e028114d8381f018"
             }
+        }
+    },
+    "Parameters": {
+        "BucketBasename": {
+            "Default": "rodeolabz",
+            "Description": "This is basename of the bucket that holds the MSAM code base.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
         }
     },
     "Outputs": {
@@ -105,13 +260,33 @@
                     "", [
                         "https://",
                         {
-                            "Ref": "MSAMBrowserAppBucket"
+                            "Fn::GetAtt": [
+                                "MSAMAppBucketCloudFrontDistribution",
+                                "DomainName"
+                            ]
                         },
-                        ".s3.amazonaws.com/index.html"
+                        "/index.html"
                     ]
                 ]
             },
-            "Description": "URL for the MSAM browser application"
+            "Description": "URL for the MSAM browser application via CloudFront"
+        },
+        "MSAMBrowserAppBucket": {
+            "Value": {
+                "Fn::Join": [
+                    "", [
+                        "https://s3.console.aws.amazon.com/s3/buckets/",
+                        {
+                            "Ref": "MSAMBrowserAppBucket"
+                        },
+                        "/?region=",
+                        {
+                            "Ref": "AWS::Region"
+                        }
+                    ]
+                ]
+            },
+            "Description": "MSAM browser application bucket"
         }
     }
 }
