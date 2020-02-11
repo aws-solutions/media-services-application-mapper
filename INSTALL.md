@@ -86,7 +86,9 @@ As of release v1.5.0, the CloudFormation templates distributed for MSAM include 
 
 Go to the Outputs section of the stack, and copy and save the URL value for EndpointURL and MSAMBrowserURL. Open the link for the APIKeyID, click the Show link in the main compartment for the API key, copy the API Key and save it with the other two URL values.
 
-After the template installation finishes, skip forward to [Template 3: CloudFormation for the Event Handler](INSTALL.md#template-3-cloudformation-for-the-event-handler) if you need to collect events from multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
+![Master Template Outputs](images/master-template-outputs.png)
+
+After the template installation finishes and you've recorded the outputs from the template, skip forward to [Template 3: CloudFormation for the Event Handler](INSTALL.md#template-3-cloudformation-for-the-event-handler) if you need to collect events from multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
 
 ### Individual Templates
 
