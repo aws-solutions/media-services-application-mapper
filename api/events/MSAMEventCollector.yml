@@ -23,7 +23,7 @@ Resources:
               Resource: '*'
       Environment:
         Variables:
-          BUILD_STAMP: DEV_0_0_0,
+          BUILD_STAMP: DEV_0_0_0
           EVENTS_TABLE_REGION: !Ref EventsTableRegion
           EVENTS_TABLE_NAME: !Ref EventsTableName
           CLOUDWATCH_EVENTS_TABLE_NAME: !Ref CloudWatchEventsTableName
