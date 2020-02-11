@@ -62,7 +62,7 @@ https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1581034203
 
 ## CloudFormation Stack Creation
 
-* Login to CloudFormation using the account used for creating / managing the MediaServices.
+* Login to CloudFormation using the same account used for creating / managing the MediaServices.
 * Click on Create Stack
 
 During the installation of the CloudFormation stacks you may be prompted to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Change Set" button where applicable, then press the Execute button.
