@@ -39,7 +39,7 @@ def lambda_handler(event, _):
             item["type"] = item["type"] + ": " + event["detail"]["eventName"]
 
         # catch all the various forms of ARN from the media services
-        arn_expr = parse('$..arn|aRN|resource-arn|channel_arn|flowArn|PlaybackConfigurationArn|resourceArn')
+        arn_expr = parse('$..arn|aRN|resource-arn|channel_arn|multiplex_arn|flowArn|PlaybackConfigurationArn|resourceArn')
         original_arns = [match.value for match in arn_expr.find(event)]
         arns = []
         # remove arn that is for userIdentity or inputSecurityGroup
@@ -58,7 +58,6 @@ def lambda_handler(event, _):
                 # multiplex pipeline alerts do not have a "detail.channel_arn" property.
                 if "Multiplex" in event["detail-type"]:
                     event["resource_arn"] = event["detail"]["multiplex_arn"]
-                    item["resource_arn"] = event["detail"]["multiplex_arn"]
                 else:
                     event["resource_arn"] = event["detail"]["channel_arn"]
                 event["alarm_id"] = event["detail"]["alarm_id"]
