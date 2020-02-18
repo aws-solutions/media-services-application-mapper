@@ -41,7 +41,7 @@ def lambda_handler(event, _):
         # catch all the various forms of ARN from the media services
         arn_expr = parse('$..arn|aRN|resource-arn|channel_arn|flowArn|PlaybackConfigurationArn|resourceArn')
         original_arns = [match.value for match in arn_expr.find(event)]
-        arns = []      
+        arns = []
         # remove arn that is for userIdentity or inputSecurityGroup
         # note: can't remove an item from a list that's being iterated over so doing it this way instead =P
         for arn in original_arns:
@@ -55,7 +55,12 @@ def lambda_handler(event, _):
         if event["source"] == "aws.medialive":
             # handle medialive pipeline alerts
             if "MediaLive" in event["detail-type"] and "Alert" in event["detail-type"]:
-                event["resource_arn"] = event["detail"]["channel_arn"]
+                # multiplex pipeline alerts do not have a "detail.channel_arn" property.
+                if "Multiplex" in event["detail-type"]:
+                    event["resource_arn"] = event["detail"]["multiplex_arn"]
+                    item["resource_arn"] = event["detail"]["multiplex_arn"]
+                else:
+                    event["resource_arn"] = event["detail"]["channel_arn"]
                 event["alarm_id"] = event["detail"]["alarm_id"]
                 event["alarm_state"] = event["detail"]["alarm_state"].lower()
                 event["timestamp"] = int(datetime.datetime.strptime(
@@ -64,7 +69,10 @@ def lambda_handler(event, _):
                     int(os.environ["ITEM_TTL"])
                 event["detail"]["time"] = event["time"]
                 DYNAMO_TABLE.put_item(Item=event)
-                print("MediaLive alert stored")
+                if "Multiplex" in event["detail-type"]:
+                    print("Multiplex alert stored")
+                else:
+                    print("MediaLive alert stored")
             if "BatchUpdateSchedule" in item["type"]:
                 print("Creating an ARN for BatchUpdateSchedule event.")
                 item["resource_arn"] = "arn:aws:medialive:" + event['region'] + ":" + \
