@@ -44,6 +44,7 @@ define({
     "overlays": [
         "app/ui/overlays/mediaconnect_flow",
         "app/ui/overlays/medialive_channel",
+        "app/ui/overlays/medialive_multiplex",
     ],
     "default-overlay": "app/ui/overlays/alarms_only"
 });
