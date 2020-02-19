@@ -162,18 +162,6 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     <div class="dropdown-menu" aria-labelledby="tools_dropdown" id="tools-dropdown-menu">
                     </div>
                 </li>
-                <!-- <li class="nav-item hidden-compartment" id="add-connection-button-li">
-                    <a class="nav-link btn btn-light" id="add-connection-button" href="#" role="button">Add Connection</a>
-                </li>
-                <li class="nav-item hidden-compartment" id="remove-connection-button-li">
-                    <a class="nav-link btn btn-light" id="remove-connection-button" href="#" role="button">Remove Connection</a>
-                </li>
-                <li class="nav-item hidden-compartment" id="label-edit-li">
-                    <form class="form-inline" onsubmit="return false;">
-                        <input class="form-control mx-1 ml-4" id="label-edit-input" placeholder="Connection Label" onsubmit="return false;">
-                        <a href="#" class="btn btn-outline-info mx-1 p-1 px-2" id="label-edit-button">Update</a>
-                    </form>
-                </li> -->
             </ul>
             <div id="alert_div" class="alert alert-dark my-0 py-1 px-4 mx-3" role="alert" style="display: none;">
                 Something happened.
@@ -194,7 +182,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </nav>
     <nav>
         <div draggable="false" class="nav nav-tabs" id="diagram-tab" role="tablist">
-            <a draggable="false" class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab" href="#channel-tiles-diagram" role="tab" aria-controls="channel-tiles-diagram" aria-selected="false">
+            <a draggable="false" class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab" href="#channel-tiles-outer" role="tab" aria-controls="channel-tiles-outer" aria-selected="false">
                 Tiles
                 <i id="channel-tiles-tab-icon" draggable="false" class="material-icons pl-1 small">
                     grid_on
@@ -204,7 +192,20 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </nav>
     <div id="diagram" style="height: 60%; width: 100%;">
         <div class="tab-content" id="diagram-tab-content" style="height: 100%; width: 100%;">
-            <div id="channel-tiles-diagram" class="tab-pane" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit; overflow-x: hidden; overflow-y: scroll;">
+            <div id="channel-tiles-outer" class="tab-pane" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit;">
+                <div class="btn-group dropleft m-2 float-right">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" id="tile-filter-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Showing All Tiles
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" id="tile-filter-show-all">Show All</a>
+                        <a class="dropdown-item" href="#" id="tile-filter-show-alarm">Show Only Alarm/Alert Tiles</a>
+                        <a class="dropdown-item" href="#" id="tile-filter-show-normal">Show Only Normal Tiles</a>
+                    </div>
+                    <div class="mx-3"></div>
+                </div>
+                <div id="channel-tiles-diagram" style="height: inherit; width: inherit; overflow-x: hidden; overflow-y: scroll;">
+                </div>
             </div>
         </div>
     </div>
@@ -309,12 +310,6 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div class="tab-pane mt-3 px-3" id="nav-monitor" role="tabpanel" aria-labelledby="nav-monitor-tab" style="width: 100%;">
                 <h6 class="mb-2 text-muted" id="nav-monitor-selected-item"></h6>
                 <p class="mb-2 text-muted mt-2"><b>Subscribed Alarms</b></p>
-                <!-- <button type="button" class="small btn btn-outline-danger d-inline float-right mx-1 p-1 pt-2 px-2 mb-1" id="monitor-unsubscribe-alarms-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Unsubscribe Selected Alarms">
-                        <i class="material-icons">clear</i>
-                    </button>
-                <button type="button" class="small btn btn-outline-success d-inline float-right mx-1 p-1 pt-2 px-2 mb-1" id="monitor-subscribe-alarms-button" aria-selected="false" data-toggle="tooltip" data-placement="top" title="Subscribe to Alarms">
-                        <i class="material-icons">add</i>
-                    </button> -->
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alarms-text"></p>
                 <p class="mb-2 text-muted mt-2"><b>Pipeline Alerts</b></p>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alerts-text"></p>
@@ -549,9 +544,6 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <div class="modal-header">
                     <div class="modal-title" id="tool_output_modal_title" style="width: 100%; text-align: center;">Tool Output
                     </div>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
-                                <span aria-hidden="true">&times;</span>
-                            </button> -->
                 </div>
                 <div class="modal-body">
                     <div class="container">
