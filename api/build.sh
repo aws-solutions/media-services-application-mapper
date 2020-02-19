@@ -36,6 +36,8 @@ shift "$(($OPTIND -1))"
 echo Bucket Base = $BUCKET_BASENAME
 echo AWS Profile = $BUILD_PROFILE
 
+# MSAM core template
+
 echo
 echo ------------------------------------
 echo MSAM Core Template
@@ -79,10 +81,23 @@ cd msam/db
 ./makezip.sh
 cd $ORIGIN
 
+# MSAM all resources template
+echo
+echo ------------------------------------
+echo MSAM All Resources Template
+echo ------------------------------------
+echo
+
+cd msam/build
+# the non-release template has a placeholder for the default bucket
+cp msam-all-resources.json msam-all-resources-release.json
+# replace the placeholder with provided bucket basename in the release template
+sed -i -e "s/BUCKET_BASENAME/$BUCKET_BASENAME/g" msam-all-resources-release.json
+rm msam-all-resources-release.json-e
+cd $ORIGIN
+
 echo
 echo ------------------------------------
 echo Finished
 echo ------------------------------------
-echo
-echo Merge the generated template changes into the release templates, then run deploy.sh
 echo
