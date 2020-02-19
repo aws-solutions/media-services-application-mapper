@@ -14,7 +14,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             layout: "fitColumns",
             columns: [{
                 title: "Event Source ARN",
-                field: "channel_arn"
+                field: "resource_arn"
             }, {
                 title: "Event Source Name",
                 field: "name"
@@ -85,6 +85,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             for (let event_value of event_alerts.get_cached_events().current) {
                 if (event_value.resource_arn == node.id) {
                     event_value.detail.name = node.name;
+                    event_value.detail.resource_arn = event_value.resource_arn;
                     data.push(event_value.detail);
                 }
             }
@@ -114,6 +115,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
                     for (let event_value of event_alerts.get_cached_events().current) {
                         if (member_value.id == event_value.resource_arn) {
                             event_value.detail.name = node.name;
+                            event_value.detail.resource_arn = event_value.resource_arn;
                             alert_data.push(event_value.detail);
                         }
                     }
