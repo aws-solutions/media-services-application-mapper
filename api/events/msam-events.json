@@ -38,7 +38,8 @@
                                 "source": [
                                     "aws.medialive",
                                     "aws.mediapackage",
-                                    "aws.mediastore"
+                                    "aws.mediastore",
+                                    "aws.mediaconnect"
                                 ]
                             }
                         }

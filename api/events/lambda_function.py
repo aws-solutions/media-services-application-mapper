@@ -39,7 +39,7 @@ def lambda_handler(event, _):
             item["type"] = item["type"] + ": " + event["detail"]["eventName"]
 
         # catch all the various forms of ARN from the media services
-        arn_expr = parse('$..arn|aRN|resource-arn|channel_arn|multiplex_arn|flowArn|PlaybackConfigurationArn|resourceArn')
+        arn_expr = parse('$..arn|aRN|resource-arn|channel_arn|multiplex_arn|flow_arn|flowArn|PlaybackConfigurationArn|resourceArn')
         original_arns = [match.value for match in arn_expr.find(event)]
         arns = []
         # remove arn that is for userIdentity or inputSecurityGroup
@@ -96,6 +96,19 @@ def lambda_handler(event, _):
                 if not arns and event["resources"]:
                     if "vod" not in event["resources"][0]:
                         item["resource_arn"] = event["resources"][0]
+        elif event["source"] == "aws.mediaconnect":
+            # handle medialive pipeline alerts
+            if "MediaConnect" in event["detail-type"] and "Alert" in event["detail-type"]:
+                event["resource_arn"] = event["detail"]["flow_arn"]
+                event["alarm_id"] = event["detail"]["alarm_id"]
+                event["alarm_state"] = event["detail"]["alarm_state"].lower()
+                event["timestamp"] = int(datetime.datetime.strptime(
+                    event["time"], '%Y-%m-%dT%H:%M:%SZ').timestamp())
+                event["expires"] = event["timestamp"] + \
+                    int(os.environ["ITEM_TTL"])
+                event["detail"]["time"] = event["time"]
+                DYNAMO_TABLE.put_item(Item=event)
+                print("MediaConnect alert stored")
         # if item has no resource arn, don't save in DB
         if "resource_arn" in item:
             print("Storing media service event.")
