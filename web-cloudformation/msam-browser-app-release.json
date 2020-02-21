@@ -33,8 +33,6 @@
                             ]
                         ]
                     },
-                    "Enabled": true,
-                    "PriceClass": "PriceClass_All",
                     "DefaultCacheBehavior": {
                         "TargetOriginId": {
                             "Ref": "MSAMBrowserAppBucket"
@@ -53,6 +51,8 @@
                             "QueryString": false
                         }
                     },
+                    "DefaultRootObject": "index.html",
+                    "Enabled": true,
                     "Origins": [{
                         "DomainName": {
                             "Fn::Join": [
@@ -78,6 +78,7 @@
                             }
                         }
                     }],
+                    "PriceClass": "PriceClass_All",
                     "Restrictions": {
                         "GeoRestriction": {
                             "RestrictionType": "none",
@@ -264,8 +265,7 @@
                                 "MSAMAppBucketCloudFrontDistribution",
                                 "DomainName"
                             ]
-                        },
-                        "/index.html"
+                        }
                     ]
                 ]
             },

@@ -25,6 +25,9 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         var current_channel_list = [];
         var current_channel_members = {};
 
+        var show_normal_tiles = true;
+        var show_alarm_tiles = true;
+
         var add_selection_callback = function(callback) {
             if (!click_listeners.includes(callback)) {
                 click_listeners.push(callback);
@@ -160,6 +163,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 }
             }
             sort_tiles();
+            filter_tiles();
             tab_alert($("#" + content_div + " .border-danger").length > 0);
         };
 
@@ -179,6 +183,29 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             });
             for (let tile of tiles) {
                 $("[data-tile-row]").append(tile);
+            }
+        };
+
+        var filter_tiles = function() {
+            let tiles = $("[data-channel-name]");
+            for (let tile of tiles) {
+                var total = (Number.parseInt($(tile).attr("data-alert-count")) + Number.parseInt($(tile).attr("data-alarm-count")));
+                var alarming = (total > 0);
+                if (show_alarm_tiles && show_normal_tiles) {
+                    $(tile).removeClass("d-none");
+                } else if (show_alarm_tiles) {
+                    if (alarming) {
+                        $(tile).removeClass("d-none");
+                    } else {
+                        $(tile).addClass("d-none");
+                    }
+                } else if (show_normal_tiles) {
+                    if (alarming) {
+                        $(tile).addClass("d-none");
+                    } else {
+                        $(tile).removeClass("d-none");
+                    }
+                }
             }
         };
 
@@ -224,7 +251,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                             var edit_button_id = channel_card_id + "_edit_button";
                             var header_id = channel_card_id + "_header";
                             var tile = `
-                                <div draggable="true" class="card ${border_class} ml-4 my-3" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
+                                <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
                                     <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${channel_name}</div>
                                     <div class="card-body text-info my-0 py-1">
                                         <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${(alert_count === 1 ? "" : "s")}</h5>
@@ -306,6 +333,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 });
             }).then(function() {
                 sort_tiles();
+                filter_tiles();
             });
 
         };
@@ -480,6 +508,31 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             intervalID = setInterval(cache_update, update_interval);
             console.log("tile view: interval scheduled " + update_interval + "ms");
         };
+
+        var update_filter_mode = function(text) {
+            $("#tile-filter-dropdown").text(text);
+        };
+
+        $("#tile-filter-show-all").click(function(event) {
+            update_filter_mode("Showing All Tiles");
+            show_alarm_tiles = true;
+            show_normal_tiles = true;
+            update_tile_info();
+        });
+
+        $("#tile-filter-show-alarm").click(function(event) {
+            update_filter_mode("Showing Alarm/Alert Tiles");
+            show_alarm_tiles = true;
+            show_normal_tiles = false;
+            update_tile_info();
+        });
+
+        $("#tile-filter-show-normal").click(function(event) {
+            update_filter_mode("Showing Normal Tiles");
+            show_alarm_tiles = false;
+            show_normal_tiles = true;
+            update_tile_info();
+        });
 
         // check for any tiles, create a default if needed, finish initialization
         channels.channel_list().then(function(channel_list) {

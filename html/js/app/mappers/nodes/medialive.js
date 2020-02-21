@@ -9,7 +9,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var url = current[0];
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
-                server.get(url + "/cached/medialive-channel/" + regionName, api_key).then(function(channels) {
+                server.get(`${url}/cached/medialive-channel/${regionName}`, api_key).then(function(channels) {
                     for (let cache_entry of channels) {
                         map_channel(cache_entry);
                     }
@@ -26,7 +26,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/medialive-input/" + regionName, api_key).then((inputs) => {
+                server.get(`${url}/cached/medialive-input/${regionName}`, api_key).then((inputs) => {
                     for (let cache_entry of inputs) {
                         map_input(cache_entry);
                     }
@@ -43,7 +43,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/medialive-multiplex/" + regionName, api_key).then((inputs) => {
+                server.get(`${url}/cached/medialive-multiplex/${regionName}`, api_key).then((inputs) => {
                     for (let cache_entry of inputs) {
                         map_multiplex(cache_entry);
                     }
@@ -63,20 +63,20 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var rgb = "#1E8900";
             var node_type = "MediaLive Channel";
             var node_data = {
-                "cache_update": cache_entry.updated,
-                "id": id,
-                "region": cache_entry.region,
-                "shape": "image",
-                "image": {
-                    "unselected": null,
-                    "selected": null
+                cache_update: cache_entry.updated,
+                id: id,
+                region: cache_entry.region,
+                shape: "image",
+                image: {
+                    unselected: null,
+                    selected: null
                 },
-                "header": "<b>" + node_type + ":</b> " + name,
-                "data": channel,
-                "title": node_type,
-                "name": name,
-                "size": 55,
-                "render": {
+                header: `<b>${node_type}:</b> ${name}`,
+                data: channel,
+                title: node_type,
+                name: name,
+                size: 55,
+                render: {
                     normal_unselected: (function() {
                         var local_node_type = node_type;
                         var local_name = name;
@@ -112,7 +112,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         };
                     })()
                 },
-                "console_link": (function() {
+                console_link: (function() {
                     var id = channel.Id;
                     var region = channel.Arn.split(":")[3];
                     return function() {
@@ -120,7 +120,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         return html;
                     };
                 })(),
-                "cloudwatch_link": (function() {
+                cloudwatch_link: (function() {
                     var id = channel.Id;
                     var region = channel.Arn.split(":")[3];
                     return function() {
@@ -142,20 +142,20 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var node_type = "MediaLive Input";
             var rgb = "#6AAF35";
             var node_data = {
-                "cache_update": cache_entry.updated,
-                "id": input.Arn,
-                "region": cache_entry.region,
-                "shape": "image",
-                "image": {
-                    "unselected": null,
-                    "selected": null
+                cache_update: cache_entry.updated,
+                id: input.Arn,
+                region: cache_entry.region,
+                shape: "image",
+                image: {
+                    unselected: null,
+                    selected: null
                 },
-                "header": "<b>" + node_type + ":</b> " + name,
-                "data": input,
-                "title": node_type,
-                "name": name,
-                "size": 55,
-                "render": {
+                header: `<b>${node_type}:</b> ${name}`,
+                data: input,
+                title: node_type,
+                name: name,
+                size: 55,
+                render: {
                     normal_unselected: (function() {
                         var local_node_type = node_type;
                         var local_name = name;
@@ -191,7 +191,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         };
                     })()
                 },
-                "console_link": (function() {
+                console_link: (function() {
                     var id = input.Id;
                     var region = input.Arn.split(":")[3];
                     return function() {
@@ -199,7 +199,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         return html;
                     };
                 })(),
-                "cloudwatch_link": (function() {
+                cloudwatch_link: (function() {
                     return function() {
                         var html = `https://console.aws.amazon.com/cloudwatch/home`;
                         return html;
@@ -220,20 +220,20 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             // var rgb = "#456e26";
             var rgb = "#6a8258";
             var node_data = {
-                "cache_update": cache_entry.updated,
-                "id": input.Arn,
-                "region": cache_entry.region,
-                "shape": "image",
-                "image": {
-                    "unselected": null,
-                    "selected": null
+                cache_update: cache_entry.updated,
+                id: input.Arn,
+                region: cache_entry.region,
+                shape: "image",
+                image: {
+                    unselected: null,
+                    selected: null
                 },
-                "header": "<b>" + node_type + ":</b> " + name,
-                "data": input,
-                "title": node_type,
-                "name": name,
-                "size": 55,
-                "render": {
+                header: `<b>${node_type}:</b> ${name}`,
+                data: input,
+                title: node_type,
+                name: name,
+                size: 55,
+                render: {
                     normal_unselected: (function() {
                         var local_node_type = node_type;
                         var local_name = name;
@@ -269,7 +269,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         };
                     })()
                 },
-                "console_link": (function() {
+                console_link: (function() {
                     var id = input.Id;
                     var region = input.Arn.split(":")[3];
                     return function() {
@@ -277,10 +277,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         return html;
                     };
                 })(),
-                "cloudwatch_link": (function() {
+                cloudwatch_link: (function() {
                     return function() {
-                        var html = `https://console.aws.amazon.com/cloudwatch/home`;
-                        return html;
+                        return 'https://console.aws.amazon.com/cloudwatch/home';
                     };
                 })()
             };
@@ -298,11 +297,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         promises.push(update_inputs(region_name));
                         promises.push(update_multiplexes(region_name));
                     }
-                    Promise.all(promises).then(function() {
-                        resolve();
-                    }).catch(function() {
-                        reject();
-                    });
+                    Promise.all(promises)
+                        .then(resolve)
+                        .catch(reject);
                 }).catch(function(error) {
                     console.log(error);
                     reject(error);
@@ -310,8 +307,5 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        return {
-            "name": "MediaLive Inputs, Channels, Multiplexes",
-            "update": update
-        };
+        return { name: "MediaLive Inputs, Channels, Multiplexes", update: update };
     });
