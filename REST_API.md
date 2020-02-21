@@ -1,10 +1,17 @@
 # REST API
 
 ## Amazon API Gateway
-Some information regarding the API can be found in the API Gateway. Using the Services menu in the AWS Console navigate to the 'API Gateway', from there choose 'msam', Finally from the 'API:msam' menu on the left choose Documentation.
+Some information regarding the API can be found in the API Gateway. 
+* Using the Services menu in the AWS Console navigate to the 'API Gateway' 
+* Choose 'msam'
+* Locate *API:msam* menu on the left and choose 'Documentation'
 ![API Key ID](images/api-gateway-documentation.png)
 
-## Adding a Channel to the Tile View
+each API call is represented by a block and each block has a _summary_ which can give you some idea as to what options are available from this API.
+
+## Tile View Example
+
+### Adding a Channel to the Tile View
 Channles, or blocks, on the Tile View can represent multiple things, but a common use of grouping items together is because the items represent a single entity, a _streaming channel_. This Channel might include: a MediaLive Input, a MediaLive Channel, and a MediaStore Container.
 
 Given that example: (MediaLive Input -> MediaLive Channel -> MediaStore Container) here to how to place those items into a Channel in the Tile View.
@@ -24,12 +31,12 @@ curl --location --request POST 'https://<API-Gateway-Endpoint>/msam/channel/Tile
 The response from the command line should be
 `{"message":"saved"}`
 
-From here you can refresh your browser and you will see the new Channel appear on the Tile View
+From here you can refresh your browser and you will see the new Channel appear on the Tile View.
 ![Tile-1 Added](images/added-tile.png)
 
-From the example above you might notice that the "--raw-data", parameter is what generates the items in your new Channel. It's a combination of the ARN numbers of those AWS objects.  This "raw-data" can be a single item or many items in json format.
+From the example above you might notice that the "--raw-data", parameter is what generates the items in your new Channel. It's a list of the ARN numbers for those AWS objects.  This "raw-data" can be a single arn number or multiple arn numbers in json format.
 
-## Deleteing a Channel from the Tile View
+### Deleteing a Channel from the Tile View
 This operation requests the same URL, however the key difference is what Type of request it is, in this case as opposed to `Post` this is a `Delete`
 ```
 curl --location --request DELETE 'https://<API-Gateway-Endpoint>/msam/channel/Tile-1' \
@@ -42,7 +49,7 @@ From here you can refresh your browser and you should see that 'Tile-1' has been
 ![Tile-1 Added](images/removed-tile.png)
 
 ## Other API Commands
-The best way to understand the existing API commands is to navigate to the Msam web page, open up developer tools in your web browser of choice and look through the 'Network' tab, from there you'll be able to see the commands being sent from your browser to the website.
+The best way to understand the existing API commands is to navigate to the MSAM web page, open up developer tools in your web browser of choice and look through the 'Network' tab. From there you'll be able to see the commands being sent from your browser to the website.
 
 
 ## Navigate
