@@ -4,13 +4,20 @@
 define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util", "app/ui/diagrams"],
     function($, model, channels, tile_view, ui_util, diagrams) {
 
-        var tab_id = "nav-data-tab";
-        var div_id = "nav-data";
+        var data_div_id = "nav-data";
+        var alerts_div_id = "nav-alerts";
+        var alarms_div_id = "nav-alarms";
+        var events_div_id = "nav-events";
+
+        var data_tab_id = "nav-data-tab";
+        var alerts_tab_id = "nav-alerts-tab";
+        var alarms_tab_id = "nav-alarms-tab";
+        var events_tab_id = "nav-events-tab";
 
         var blinks = 10;
 
         var show = function() {
-            $("#" + tab_id).tab("show");
+            $("#" + data_tab_id).tab("show");
         };
 
         var display_selected_nodes = function(diagram, node_ids) {
@@ -61,18 +68,18 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 renderjson.set_icons("+", "-");
                 renderjson.set_show_to_level(1);
                 var html = `
-                    <h6 class="card-subtitle mb-2 text-muted" id="${div_id}-subtitle">${node.header}&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
+                    <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">${node.header}&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
                     ${tile_html}
                     ${diagram_html}
                     ${cache_html}
-                    <p class="card-text small" id="${div_id}-text"></p>
+                    <p class="card-text small" id="${data_div_id}-text"></p>
                     `;
                 // if (empty) {
-                $("#" + div_id).empty();
+                $("#" + data_div_id).empty();
                 // }
-                $("#" + div_id).append(html);
+                $("#" + data_div_id).append(html);
                 var json = renderjson(data);
-                $("#" + div_id + "-text")[0].appendChild(
+                $("#" + data_div_id + "-text")[0].appendChild(
                     json
                 );
                 // attach click handlers to tile links
@@ -115,6 +122,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 }
             });
             // });
+            show_elements([data_div_id, alerts_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
         };
 
 
@@ -122,21 +130,23 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
             var edge = model.edges.get(edges[0]);
             var toNode = model.nodes.get(edge.to);
             var fromNode = model.nodes.get(edge.from);
-            $("#" + div_id).empty();
+            $("#" + data_div_id).empty();
             renderjson.set_icons("+", "-");
             renderjson.set_show_to_level(1);
             var html = `
                 <h6 class="card-subtitle mb-2 text-muted">Connection from ${fromNode.title} to ${toNode.title}</h6>
-                <p class="card-text small" id="${div_id}-data"></p>
+                <p class="card-text small" id="${data_div_id}-data"></p>
                 <h6 class="card-subtitle mb-2 text-muted">From</h6>
-                <p class="card-text small" id="${div_id}-from"></p>
+                <p class="card-text small" id="${data_div_id}-from"></p>
                 <h6 class="card-subtitle mb-2 text-muted">To</h6>
-                <p class="card-text small" id="${div_id}-to"></p>
+                <p class="card-text small" id="${data_div_id}-to"></p>
                 `;
-            $("#" + div_id).append(html);
-            $("#" + div_id + "-data").append(renderjson(edge.data));
-            $("#" + div_id + "-from").append(renderjson(fromNode.data));
-            $("#" + div_id + "-to").append(renderjson(toNode.data));
+            $("#" + data_div_id).append(html);
+            $("#" + data_div_id + "-data").append(renderjson(edge.data));
+            $("#" + data_div_id + "-from").append(renderjson(fromNode.data));
+            $("#" + data_div_id + "-to").append(renderjson(toNode.data));
+            show_elements([data_div_id, data_tab_id])
+            hide_elements([alarms_div_id, alerts_div_id, events_div_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
         };
 
 
@@ -155,21 +165,37 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
             }
             data.push({ "missing-nodes": missing });
             var html = `
-            <h6 class="card-subtitle mb-2 text-muted" id="${div_id}-subtitle">Channel: ${name}</h6>
-            <p class="card-text small" id="${div_id}-text"></p>
+            <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">Channel: ${name}</h6>
+            <p class="card-text small" id="${data_div_id}-text"></p>
             `;
-            $("#" + div_id).empty();
-            $("#" + div_id).append(html);
-            $("#" + div_id + "-text")[0].appendChild(
+            $("#" + data_div_id).empty();
+            $("#" + data_div_id).append(html);
+            $("#" + data_div_id + "-text")[0].appendChild(
                 renderjson(data)
             );
+            show_elements([data_tab_id, alarms_tab_id, alerts_tab_id, data_div_id, alarms_div_id, alerts_div_id]);
+            hide_elements([events_tab_id, events_div_id]);
         };
 
         var display_no_selection = function() {
-            $("#nav-data-text").empty();
-            $("#nav-data-subtitle").empty();
-            // $("#search_input").val("");
+            hide_elements([data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id, data_div_id, alerts_div_id, alarms_div_id, events_div_id]);
         };
+
+        // accepts a list of element IDs to hide
+        var hide_elements = function(element_list) {
+            for (id in element_list) {
+                $("#" + element_list[id]).addClass("d-none");
+            }
+        };
+
+        // accepts a list of element IDs to show
+        var show_elements = function(element_list) {
+            // iterate through tabs to show
+            for (id in element_list) {
+                $("#" + element_list[id]).removeClass("d-none");
+            }
+        };
+
 
         var tile_view_listener = function(name, members) {
             var selected = tile_view.selected();
@@ -180,6 +206,8 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 channels.retrieve_channel(selected).then((members) => {
                     display_selected_tile(selected, members);
                 });
+            } else {
+                display_no_selection();
             }
         };
 
@@ -190,6 +218,9 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
             } else
             if (event.edges.length > 0) {
                 display_selected_edges(diagram, event.edges);
+            } else
+            if (event.nodes.length == 0 && event.edges.length == 0) {
+                display_no_selection();
             }
         });
 

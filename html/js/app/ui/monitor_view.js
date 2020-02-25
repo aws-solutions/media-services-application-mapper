@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/ui/diagrams", "app/alarms", "app/ui/confirmation"],
-    function($, _, model, event_alerts, tile_view, diagrams, alarms, confirmation) {
+define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", "app/ui/tile_view", "app/ui/diagrams", "app/alarms", "app/ui/confirmation"],
+    function($, _, model, event_alerts, cw_events, tile_view, diagrams, alarms, confirmation) {
 
         var last_displayed;
 
@@ -76,11 +76,148 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             }]
         });
 
+        //custom header filter
+        var dateFilterEditor = function(cell, onRendered, success, cancel, editorParams){
+
+            var container = $("<span></span>")
+            //create and style input
+            var start = $("<input type='text' placeholder='Start'/>");
+            var end = $("<input type='text' placeholder='End'/>");
+
+            container.append(start).append(end);
+
+            var inputs = $("input", container);
+
+
+            inputs.css({
+                "padding":"4px",
+                "width":"50%",
+                "box-sizing":"border-box",
+            })
+            .val(cell.getValue());
+
+            function buildDateString(){
+                return {
+                    start:start.val(),
+                    end:end.val(),
+                };
+            }
+
+            //submit new value on blur
+            inputs.on("change blur", function(e){
+                success(buildDateString());
+            });
+
+            //submit new value on enter
+            inputs.on("keydown", function(e){
+                if(e.keyCode == 13){
+                    success(buildDateString());
+                }
+
+                if(e.keyCode == 27){
+                    cancel();
+                }
+            });
+
+            return container[0];
+        }
+
+        //custom filter function
+        function dateFilterFunction(headerValue, rowValue, rowData, filterParams){
+            //headerValue - the value of the header filter element
+            //rowValue - the value of the column in this row
+            //rowData - the data for the row being filtered
+            //filterParams - params object passed to the headerFilterFuncParams property
+
+            var format = filterParams.format || "DD/MM/YYYY";
+            var start = moment(headerValue.start);
+            var end = moment(headerValue.end);
+            var value = moment(rowValue, format)
+            // console.log(rowValue);
+            // console.log(headerValue.start);
+            // console.log(headerValue.end);
+            if(rowValue){
+                var current_row_millis = new Date(rowValue);
+                console.log("current_row_millis: ");
+                console.log(current_row_millis);
+                var start_millis = 0;
+                var end_millis = 0;
+                if(start.isValid()){ 
+                    if(end.isValid()){
+                        start_millis = new Date(start);
+                        end_millis = new Date(end);
+                        console.log("start and end are given");
+                        console.log(start_millis);
+                        console.log(end_millis);
+                        return current_row_millis >= start_millis && current_row_millis <= end_millis;
+                    }else{ //only start was given
+                        start_millis = new Date(start);
+                        console.log("only start was given");
+                        console.log(start_millis);
+                        return current_row_millis >= start_millis;
+                    }
+                }else{ // no start but there is end
+                    if(end.isValid()){
+                        end_millis = new Date(end);
+                        console.log("only end was given");
+                        console.log(end_millis);
+                        return current_row_millis <= end_millis;
+                    }
+                }
+            }
+            return true; //must return a boolean, true if it passes the filter.
+        }
+
+        var events_tabulator = new Tabulator("#nav-monitor-events-text", {
+            placeholder: "No Recent CloudWatch Events",
+            selectable: true,
+            height: 250,
+            layout: "fitColumns",
+            resizableRows:true,
+            initialSort:[
+                {column:"timestamp", dir:"desc"}
+            ],
+            columns: [{
+                title: "Time",
+                field: "timestamp",
+                headerFilter:dateFilterEditor,
+                headerFilterFunc:dateFilterFunction
+            }, {
+                title: "Event Type",
+                field: "type",
+                headerFilter:true
+            }, {
+                title: "Data",
+                field: "data",
+                formatter: "html",
+                headerFilter:true,
+                widthGrow: 2
+            }, {
+                tooltip: "Formatted Data View",
+                headerSort: false,
+                formatter: "tickCross",
+                formatterParams: {
+                    tickElement:"<i class='fa fa-info-circle' style='font-size:20px'></i>",
+                    crossElement:"<i class='fa fa-info-circle' style='font-size:20px'></i>"
+                },
+                width: 50,
+                align: "center",
+                cellClick: function(e, cell) {
+                    show_formatted_cloudwatch_event_data(cell.getRow()._row.data);
+                }
+            }
+        ]
+        });
+
+
         var display_selected_node = function(node_id) {
             var node = model.nodes.get(node_id);
             last_displayed = node_id;
             var data = [];
-            $("#nav-monitor-selected-item").html(node.header);
+            $("#nav-alarms-selected-item").html(node.header);
+            $("#nav-alerts-selected-item").html(node.header);
+            $("#nav-events-selected-item").html(node.header);
+
             // event alerts
             for (let event_value of event_alerts.get_cached_events().current) {
                 if (event_value.resource_arn == node.id) {
@@ -102,6 +239,14 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
                     subscription.id = node.id + ":" + subscription.Region + ":" + subscription.name;
                 }
                 alarm_tabulator.replaceData(subscriptions);
+            });
+            // cloudwatch events
+            cw_events.get_cloudwatch_events(node.id).then(function(events){
+                // console.log(events);
+                for (let event of events) {
+                    event.timestamp = new Date(event.timestamp).toISOString();
+                }
+                events_tabulator.replaceData(events);
             });
         };
 
@@ -222,7 +367,14 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/tile_view", "app/
             }
         };
 
-
+        function show_formatted_cloudwatch_event_data(row) {
+            console.log(row);
+            renderjson.set_show_to_level(1);
+            var data = JSON.parse(row.data);
+            var formatted_json = renderjson(data);
+            $("#cloudwatch_event_data_json").html(formatted_json);
+            $("#cloudwatch_event_data_view_modal").modal("show");
+        };
 
         function refresh() {
             if (typeof last_displayed == 'string') {
