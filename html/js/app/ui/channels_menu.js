@@ -143,13 +143,13 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
             var members = $("#channel_add_node_modal_items td[data-node-id]");
             var node_ids = [];
             for (let item of members) {
-                node_ids.push(item.dataset.nodeId);
+                node_ids.push($(item).attr("data-node-id"));
             }
             var channel_checks = $("#channel_add_node_modal_channels input[type='checkbox']");
             var promises = [];
-            for (let item in channel_checks) {
-                if (item.checked === true) {
-                    promises.push(channels.update_channel(item.value, node_ids));
+            for (let item of channel_checks) {
+                if ($(item).prop("checked") == true) {
+                    promises.push(channels.update_channel($(item).val(), node_ids));
                 }
             }
             Promise.all(promises).then(function() {
