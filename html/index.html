@@ -215,7 +215,9 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <a draggable="false" class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
             <a draggable="false" class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
             <a draggable="false" class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
-            <a draggable="false" class="nav-item nav-link" id="nav-monitor-tab" data-toggle="tab" href="#nav-monitor" role="tab" aria-controls="nav-monitor" aria-selected="false">Monitor</a>
+            <a draggable="false" class="nav-item nav-link d-none" id="nav-alarms-tab" data-toggle="tab" href="#nav-alarms" role="tab" aria-controls="nav-alarms" aria-selected="false">Subscribed Alarms</a>
+            <a draggable="false" class="nav-item nav-link d-none" id="nav-alerts-tab" data-toggle="tab" href="#nav-alerts" role="tab" aria-controls="nav-alerts" aria-selected="false">Pipeline Alerts</a>
+            <a draggable="false" class="nav-item nav-link d-none" id="nav-events-tab" data-toggle="tab" href="#nav-events" role="tab" aria-controls="nav-events" aria-selected="false">Recent CloudWatch Events</a>
         </div>
     </nav>
     <div id="information" style="height: 35%; width: 100%;">
@@ -307,12 +309,17 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <h6 class="card-subtitle mb-2 text-muted" id="nav-data-subtitle"></h6>
                 <p class="card-text small" id="nav-data-text"></p>
             </div>
-            <div class="tab-pane mt-3 px-3" id="nav-monitor" role="tabpanel" aria-labelledby="nav-monitor-tab" style="width: 100%;">
-                <h6 class="mb-2 text-muted" id="nav-monitor-selected-item"></h6>
-                <p class="mb-2 text-muted mt-2"><b>Subscribed Alarms</b></p>
+            <div class="tab-pane mt-3 px-3" id="nav-alarms" role="tabpanel" aria-labelledby="nav-alarms-tab" style="width: 100%;">
+                <h6 class="mb-2 text-muted" id="nav-alarms-selected-item"></h6>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alarms-text"></p>
-                <p class="mb-2 text-muted mt-2"><b>Pipeline Alerts</b></p>
+            </div>
+            <div class="tab-pane mt-3 px-3" id="nav-alerts" role="tabpanel" aria-labelledby="nav-alerts-tab" style="width: 100%;">
+                <h6 class="mb-2 text-muted" id="nav-alerts-selected-item"></h6>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alerts-text"></p>
+            </div>
+            <div class="tab-pane mt-3 px-3" id="nav-events" role="tabpanel" aria-labelledby="nav-events-tab" style="width: 100%;">
+                <h6 class="mb-2 text-muted" id="nav-events-selected-item"></h6>
+                <p class="small" style="max-width: 100%;" id="nav-monitor-events-text"></p>
             </div>
         </div>
     </div>
