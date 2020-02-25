@@ -91,11 +91,10 @@ def lambda_handler(event, _):
                     item["resource_arn"] = response["Arn"]
                 else:
                     print("Skipping this event. Origin ID not present in the HarvestJob event." + item["type"])
-            else:
-                # for certain events, the ARN is not labeled as an ARN but instead put in the resources list
-                if not arns and event["resources"]:
-                    if "vod" not in event["resources"][0]:
-                        item["resource_arn"] = event["resources"][0]
+        # for certain events, the ARN is not labeled as an ARN but instead put in the resources list
+        if not arns and event["resources"]:
+            if "vod" not in event["resources"][0]:
+                item["resource_arn"] = event["resources"][0]
         # if item has no resource arn, don't save in DB
         if "resource_arn" in item:
             print("Storing media service event.")
