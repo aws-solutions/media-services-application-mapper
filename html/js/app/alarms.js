@@ -172,7 +172,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             },
             "all_alarms_for_region": all_alarms_for_region,
             "subscribe_to_alarm": subscribe_to_alarm,
-            unsubscribe_from_alarm: unsubscribe_from_alarm,
+            "unsubscribe_from_alarm": unsubscribe_from_alarm,
             "alarms_for_subscriber": alarms_for_subscriber,
             "set_update_interval": function(seconds) {
                 set_update_interval(seconds).then(function() {

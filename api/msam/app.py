@@ -222,6 +222,30 @@ def get_cloudwatch_events_state(state):
     return cloudwatch_data.get_cloudwatch_events_state(state)
 
 
+@app.route('/cloudwatch/events/all/{resource_arn}', cors=True, api_key_required=True, methods=['GET'])
+def get_cloudwatch_events_resource(resource_arn):
+    """
+    API entry point to return all CloudWatch events related to a node.
+    """
+    return cloudwatch_data.get_cloudwatch_events_resource(resource_arn)
+
+
+@app.route('/cloudwatch/events/{resource_arn}/{start_time}', cors=True, api_key_required=True, methods=['GET'])
+def get_cloudwatch_events_resource(resource_arn, start_time):
+    """
+    API entry point to return all CloudWatch events related to a node from start_time to now.
+    """
+    return cloudwatch_data.get_cloudwatch_events_resource(resource_arn, start_time)
+
+
+@app.route('/cloudwatch/events/{resource_arn}/{start_time}/{end_time}', cors=True, api_key_required=True, methods=['GET'])
+def get_cloudwatch_events_resource(resource_arn, start_time, end_time):
+    """
+    API entry point to return all CloudWatch events related to a node for a given time range.
+    """
+    return cloudwatch_data.get_cloudwatch_events_resource(resource_arn, start_time, end_time)
+
+
 @app.route('/ping', cors=True, api_key_required=True, methods=['GET'])
 def ping():
     """
