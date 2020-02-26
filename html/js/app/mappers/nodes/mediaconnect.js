@@ -9,7 +9,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var url = current[0];
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
-                server.get(url + "/cached/mediaconnect-flow/" + regionName, api_key).then(function(flows) {
+                server.get(`${url}/cached/mediaconnect-flow/${regionName}`, api_key).then(function(flows) {
                     for (let cache_entry of flows) {
                         // console.log(cache_entry);
                         map_flow(cache_entry);
@@ -22,7 +22,6 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-
         var map_flow = function(cache_entry) {
             var flow = JSON.parse(cache_entry.data);
             var name = flow.Name;
@@ -31,21 +30,21 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var rgb = "#99ff33";
             var node_type = "MediaConnect Flow";
             var node_data = {
-                "overlay": "informational",
-                "cache_update": cache_entry.updated,
-                "id": id,
-                "region": cache_entry.region,
-                "shape": "image",
-                "image": {
-                    "unselected": null,
-                    "selected": null
+                overlay: "informational",
+                cache_update: cache_entry.updated,
+                id: id,
+                region: cache_entry.region,
+                shape: "image",
+                image: {
+                    unselected: null,
+                    selected: null
                 },
-                "header": "<b>" + node_type + ":</b> " + name,
-                "data": flow,
-                "title": node_type,
-                "name": name,
-                "size": 55,
-                "render": {
+                header: `<b>${node_type}:</b> ${name}`,
+                data: flow,
+                title: node_type,
+                name: name,
+                size: 55,
+                render: {
                     normal_unselected: (function() {
                         var local_node_type = node_type;
                         var local_name = name;
@@ -79,23 +78,37 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         return function() {
                             return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                         };
+                    })(),
+                    degrated_unselected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.selected(local_node_type, local_name, "#194D33", local_id);
+                        };
+                    })(),
+                    degrated_selected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.selected(local_node_type, local_name, "#194D33", local_id);
+                        };
                     })()
                 },
-                "console_link": (function() {
+                console_link: (function() {
                     var split_id = id.split(":");
                     var region = split_id[3];
                     return function() {
-                        var html = `https://${region}.console.aws.amazon.com/mediaconnect/home?region=${region}#/flows/${id}`;
-                        return html;
+                        return `https://${region}.console.aws.amazon.com/mediaconnect/home?region=${region}#/flows/${id}`;
                     };
                 })(),
-                "cloudwatch_link": (function() {
+                cloudwatch_link: (function() {
                     var split_id = id.split(":");
                     var region = split_id[3];
                     var name = split_id[split_id.length - 1];
                     return function() {
-                        var html = `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fMediaConnect*2cFlowARN*7d*20${name}`;
-                        return html;
+                        return `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fMediaConnect*2cFlowARN*7d*20${name}`;
                     };
                 })()
             };
@@ -104,7 +117,6 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-
         var update = function() {
             return new Promise((resolve, reject) => {
                 region_promise().then(function(regions) {
@@ -112,11 +124,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     for (let region_name of regions.get_selected()) {
                         promises.push(update_flows(region_name));
                     }
-                    Promise.all(promises).then(function() {
-                        resolve();
-                    }).catch(function() {
-                        reject();
-                    });
+                    Promise.all(promises)
+                        .then(resolve)
+                        .catch(reject);
                 }).catch(function(error) {
                     console.log(error);
                     reject(error);
@@ -124,8 +134,5 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        return {
-            "name": "MediaConnect Flows",
-            "update": update
-        };
+        return { name: "MediaConnect Flows", update: update };
     });
