@@ -195,6 +195,31 @@ Note that if you want to share the UI with a colleague you can do so easily by p
 
 Continue to the [Usage](USAGE.md) guide to start using the tool.
 
+### Optional Parameters
+
+As of 1.5.0, the MSAM browser URL is the root of a CloudFront distribution URL. For example:
+
+`https://d1c8z4f93zrlmx.cloudfront.net/`
+
+The following parameters can be used with the URL to customize the start-up of the browser tool.
+
+1. **diagram** -- The name of a diagram to show right after start-up
+2. **endpoint** -- The endpoint URL to use for the connection
+3. **key** -- The API to use with the chosen endpoint URL
+
+#### Examples
+
+Show a default diagram named Livestream on start-up
+
+`https://d1c8z4f93zrlmx.cloudfront.net/?diagram=Livestream`
+
+Automatically connect to an endpoint with an API key
+
+`https://d1c8z4f93zrlmx.cloudfront.net/?endpoint=https://oplfnxzh7l.execute-api.us-east-1.amazonaws.com/msam/&key=69ZSAV3tBX7YYfh1XTcsq2fLcE7Z0ETY4JXclqJJ`
+
+**NOTE: This above parameters should only be used for secure or demonstration environments. Anyone with this URL can connect and use MSAM.**
+
+
 ## DynamoDB Considerations
 
 There are six DynamoDB tables used by MSAM. They are:
