@@ -57,3 +57,34 @@ The following example shows the `MSAM-Diagram` and `MSAM-NodeType` used together
 After MSAM completes it's next scan for cloud resources in the AWS account, this resources will be contained by a diagram in the tool named `VOD` and the type displayed on the node is `Special Encoder`.
 
 ![EC2 NodeType Tag](images/ec2-diagram-nodetype.png)
+
+## CloudFront Associations to MediaPackage
+
+MSAM's connection mapping rules try to use the origin URLs in the CloudFront configuration to find the resource at the other end. There are cases where it is difficult to determine the exact origins used by CloudFront based on the URLs provided. Because of this, a tag can also be used to identify the MediaPackage origin. The tag is added to the CloudFront distribution and is checked each time MSAM updates its inventory. The connections identified via the tags are additive to any other connections found from matching origin URLs. Therefore, you should check if a connection match is made before adding one of these tags to your distribution.
+
+There are two possible tags used by MSAM to map a distribution back to a MediaPackage origin endpoint. Each tag is different, so review the following information carefully noting the difference in the values of each tag name.
+
+The following tag can be used to associate any CloudFront distribution to a **MediaPackage origin endpoint**. This tag has been used by several GitHub solutions that automatically build streaming video workflows including [Live Streaming on AWS](https://github.com/awslabs/live-stream-on-aws). 
+
+`MP-Endpoint-ARN`
+
+Set this tag's value to the ARN of the MediaPackage origin endpoint. For example:
+
+`arn:aws:mediapackage:us-east-1:458912307431:origin_endpoints/b471320ddb7a402ca438a5ec5e50f843`
+
+The tag below is used exclusively by MediaPackage when creating a new CloudFront distribution while also creating a new MediaPackage channel. This tag's value holds the ARN of the channel unlike the above tag's value which holds the ARN of the specific endpoint.
+
+`mediapackage:cloudfront_assoc`
+
+Set this tag's value to the ARN of the MediaPackage channel. For example:
+
+`arn:aws:mediapackage:us-east-1:258537707537:channels/28d17c4b3fbf570db3c4495f35f56a14`
+
+The following image from CloudFront shows where it is used in the tags section.
+
+![MediaPackage CloudFront Tag](images/mediapackage-cloudfront-tag.png)
+
+
+## Navigate
+
+Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md)
