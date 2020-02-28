@@ -201,7 +201,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "CodeUri": {
-                    "Key": "msam/87fd95386ed84ca5bd686344faf5d608",
+                    "Key": "msam/671927c6e03b664a606370ab8c24992e",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -431,7 +431,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
                 "CodeUri": {
-                    "Key": "msam/87fd95386ed84ca5bd686344faf5d608",
+                    "Key": "msam/671927c6e03b664a606370ab8c24992e",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -669,7 +669,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
                 "CodeUri": {
-                    "Key": "msam/87fd95386ed84ca5bd686344faf5d608",
+                    "Key": "msam/671927c6e03b664a606370ab8c24992e",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -907,7 +907,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
                 "CodeUri": {
-                    "Key": "msam/87fd95386ed84ca5bd686344faf5d608",
+                    "Key": "msam/671927c6e03b664a606370ab8c24992e",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -1145,7 +1145,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
                 "CodeUri": {
-                    "Key": "msam/87fd95386ed84ca5bd686344faf5d608",
+                    "Key": "msam/671927c6e03b664a606370ab8c24992e",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -3492,6 +3492,294 @@
                                 }
                             }
                         },
+                        "/cloudwatch/events/all/{resource_arn}": {
+                            "get": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to return all CloudWatch events related to a node.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "resource_arn",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "options": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        },
+                                        "headers": {
+                                            "Access-Control-Allow-Methods": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Origin": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Headers": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200",
+                                            "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                                            }
+                                        }
+                                    },
+                                    "requestTemplates": {
+                                        "application/json": "{\"statusCode\": 200}"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "type": "mock"
+                                }
+                            }
+                        },
+                        "/cloudwatch/events/{resource_arn}/{start_time}": {
+                            "get": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to return all CloudWatch events related to a node from start_time to now.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "resource_arn",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "start_time",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "options": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        },
+                                        "headers": {
+                                            "Access-Control-Allow-Methods": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Origin": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Headers": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200",
+                                            "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                                            }
+                                        }
+                                    },
+                                    "requestTemplates": {
+                                        "application/json": "{\"statusCode\": 200}"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "type": "mock"
+                                }
+                            }
+                        },
+                        "/cloudwatch/events/{resource_arn}/{start_time}/{end_time}": {
+                            "get": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to return all CloudWatch events related to a node for a given time range.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "resource_arn",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "start_time",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "end_time",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "options": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        },
+                                        "headers": {
+                                            "Access-Control-Allow-Methods": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Origin": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Headers": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200",
+                                            "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                                            }
+                                        }
+                                    },
+                                    "requestTemplates": {
+                                        "application/json": "{\"statusCode\": 200}"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "type": "mock"
+                                }
+                            }
+                        },
                         "/ping": {
                             "get": {
                                 "consumes": [
@@ -3615,7 +3903,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.app",
                 "CodeUri": {
-                    "Key": "msam/87fd95386ed84ca5bd686344faf5d608",
+                    "Key": "msam/671927c6e03b664a606370ab8c24992e",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
