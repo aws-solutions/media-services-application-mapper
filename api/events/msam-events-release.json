@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/d959bf8997d16d1a7fd1ac9d0aaa28af",
+                    "Key": "msam/1e1a7a749abb7c9d585b877ed969eda0",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
