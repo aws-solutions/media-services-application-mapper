@@ -17,7 +17,8 @@
                     "Statement": [{
                         "Effect": "Allow",
                         "Action": [
-                            "dynamodb:PutItem"
+                            "dynamodb:PutItem",
+                            "medialive:Describe*"
                         ],
                         "Resource": "*"
                     }]

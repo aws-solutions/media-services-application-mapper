@@ -3,7 +3,7 @@
 
        define(["app/server", "app/connections"],
        function(server, connections) {
-      
+
            var get_cloudwatch_events = function(arn) {
                //console.log(arn);
                var current_connection = connections.get_current();
@@ -19,8 +19,8 @@
                    });
                });
            };
-      
+
            return {
-               "get_cloudwatch_events": get_cloudwatch_events               
-           };   
+               "get_cloudwatch_events": get_cloudwatch_events
+           };
        });

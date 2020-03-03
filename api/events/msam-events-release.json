@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/1e1a7a749abb7c9d585b877ed969eda0",
+                    "Key": "msam/aea49df3bf9f5832c82ad644e1c877ac",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -35,6 +35,7 @@
                                 "Effect": "Allow",
                                 "Action": [
                                     "dynamodb:PutItem",
+                                    "medialive:Describe*",
                                     "mediapackage:Describe*"
                                 ],
                                 "Resource": "*"
@@ -109,7 +110,7 @@
             "ConstraintDescription": "Please enter a value for this field."
         },
         "BucketBasename": {
-            "Description": "This is the basename of the bucket that holds the MSAM code base.    ",
+            "Description": "This is the basename of the bucket that holds the MSAM code base.",
             "Default": "rodeolabz",
             "Type": "String",
             "AllowedPattern": "\\S+",

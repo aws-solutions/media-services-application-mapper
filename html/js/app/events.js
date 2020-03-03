@@ -8,16 +8,12 @@ define(["app/server", "app/connections", "app/settings"],
 
         // cache events in 'set' state
         // several modules use this at the same time
-
         var current_set_events = [];
         var previous_set_events = [];
 
         // interval in millis to update the cache
-
         var update_interval;
-
         var intervalID;
-
         var settings_key = "app-event-update-interval";
 
         var retrieve_for_state = function(state) {
@@ -25,13 +21,14 @@ define(["app/server", "app/connections", "app/settings"],
             var url = current_connection[0];
             var api_key = current_connection[1];
             var current_endpoint = `${url}/cloudwatch/events/state/${state}`;
+
             return new Promise(function(resolve, reject) {
-                server.get(current_endpoint, api_key).then(function(response) {
-                    resolve(response);
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
+                server.get(current_endpoint, api_key)
+                    .then(resolve)
+                    .catch(function(error) {
+                        console.log(error);
+                        reject(error);
+                    });
             });
         };
 
@@ -84,13 +81,13 @@ define(["app/server", "app/connections", "app/settings"],
         load_update_interval();
 
         return {
-            "get_cached_events": function() {
+            get_cached_events: function() {
                 return {
-                    "current": current_set_events,
-                    "previous": previous_set_events
+                    current: current_set_events,
+                    previous: previous_set_events
                 };
             },
-            "add_callback": function(f) {
+            add_callback: function(f) {
                 if (!listeners.includes(f)) {
                     listeners.push(f);
                 }
@@ -98,14 +95,13 @@ define(["app/server", "app/connections", "app/settings"],
                     schedule_interval();
                 }
             },
-            "set_update_interval": function(seconds) {
+            set_update_interval: function(seconds) {
                 set_update_interval(seconds).then(function() {
                     schedule_interval();
                 });
             },
-            "get_update_interval": function() {
+            get_update_interval: function() {
                 return update_interval;
             }
         };
-
     });
