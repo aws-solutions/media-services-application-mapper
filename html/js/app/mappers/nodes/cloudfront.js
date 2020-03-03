@@ -66,6 +66,22 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                                     return function() {
                                         return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
+                                })(),
+                                degrated_unselected: (function() {
+                                    var local_node_type = node_type;
+                                    var local_name = name;
+                                    var local_id = id;
+                                    return function() {
+                                        return svg_node.unselected(local_node_type, local_name, "#ffcccc", local_id);
+                                    };
+                                })(),
+                                degrated_selected: (function() {
+                                    var local_node_type = node_type;
+                                    var local_name = name;
+                                    var local_id = id;
+                                    return function() {
+                                        return svg_node.selected(local_node_type, local_name, "#ffcccc", local_id);
+                                    };
                                 })()
                             },
                             "console_link": (function() {

@@ -19,6 +19,7 @@ Resources:
             - Effect: Allow
               Action:
                 - dynamodb:PutItem
+                - medialive:Describe*
                 - mediapackage:Describe*
               Resource: '*'
       Environment:
@@ -76,7 +77,7 @@ Parameters:
     ConstraintDescription: Please enter a value for this field.
   BucketBasename:
     Description: >-
-      This is the basename of the bucket that holds the MSAM code base.    
+      This is the basename of the bucket that holds the MSAM code base.
     Default: 'rodeolabz'
     Type: String
     AllowedPattern: \S+

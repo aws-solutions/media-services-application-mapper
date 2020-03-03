@@ -6,6 +6,22 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
         var last_displayed;
 
+        const row_data_handler = row => {
+            if (row.data && typeof row.data === 'string') {
+                row.data = JSON.parse(row.data);
+            } else {
+                row.data = row.detail ? row.detail : {};
+            }
+
+            if (!row.type && _.has(row, 'detail-type')) {
+                row.type = row['detail-type'];
+            }
+
+            row.timestamp = new Date(row.timestamp).toISOString();
+
+            return row;
+        };
+
         var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
             placeholder: "No Recent Pipeline Alerts",
             tooltips: true,
@@ -142,7 +158,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 console.log(current_row_millis);
                 var start_millis = 0;
                 var end_millis = 0;
-                if(start.isValid()){ 
+                if(start.isValid()){
                     if(end.isValid()){
                         start_millis = new Date(start);
                         end_millis = new Date(end);
@@ -240,14 +256,21 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 }
                 alarm_tabulator.replaceData(subscriptions);
             });
+
             // cloudwatch events
-            cw_events.get_cloudwatch_events(node.id).then(function(events){
-                // console.log(events);
-                for (let event of events) {
-                    event.timestamp = new Date(event.timestamp).toISOString();
-                }
-                events_tabulator.replaceData(events);
-            });
+            cw_events.get_cloudwatch_state_events(node.id)
+                .then(events => {
+                    const data = [];
+                    for (let event of events) {
+                        const row = row_data_handler(event);
+                        if (row.data && typeof row.data !== 'string') {
+                            row.data = JSON.stringify(row.data);
+                        }
+                        data.push(row);
+                    }
+                    events_tabulator.replaceData(data);
+                })
+                .catch(console.log);
         };
 
         var display_selected_tile = function(name, members) {
@@ -367,11 +390,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             }
         };
 
-        function show_formatted_cloudwatch_event_data(row) {
-            console.log(row);
+        function show_formatted_cloudwatch_event_data(data) {
             renderjson.set_show_to_level(1);
-            var data = JSON.parse(row.data);
-            var formatted_json = renderjson(data);
+
+            const row = row_data_handler(data);
+            const formatted_json = renderjson(row);
+
             $("#cloudwatch_event_data_json").html(formatted_json);
             $("#cloudwatch_event_data_view_modal").modal("show");
         };

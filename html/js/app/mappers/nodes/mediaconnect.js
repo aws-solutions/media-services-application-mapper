@@ -84,7 +84,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         var local_name = name;
                         var local_id = id;
                         return function() {
-                            return svg_node.selected(local_node_type, local_name, "#194D33", local_id);
+                            return svg_node.unselected(local_node_type, local_name, "#ffcccc", local_id);
                         };
                     })(),
                     degrated_selected: (function() {
@@ -92,7 +92,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         var local_name = name;
                         var local_id = id;
                         return function() {
-                            return svg_node.selected(local_node_type, local_name, "#194D33", local_id);
+                            return svg_node.selected(local_node_type, local_name, "#ffcccc", local_id);
                         };
                     })()
                 },
