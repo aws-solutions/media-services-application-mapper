@@ -19,6 +19,7 @@ Resources:
             - Effect: Allow
               Action:
                 - dynamodb:PutItem
+                - medialive:Describe*
                 - mediapackage:Describe*
               Resource: '*'
       Environment:

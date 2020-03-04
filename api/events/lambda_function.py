@@ -17,8 +17,8 @@ from botocore.exceptions import ClientError
 from jsonpath_ng import parse
 
 DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=os.environ["EVENTS_TABLE_REGION"])
-DYNAMO_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
-CLOUDWATCH_EVENTS_TABLE_NAME = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
+EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
+CLOUDWATCH_EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
 
 
 def lambda_handler(event, _):
@@ -60,6 +60,7 @@ def lambda_handler(event, _):
                     event["resource_arn"] = event["detail"]["multiplex_arn"]
                 else:
                     event["resource_arn"] = event["detail"]["channel_arn"]
+                    event["detail"]["degraded"] = get_degraded_state(event, event["resource_arn"])
                 event["alarm_id"] = event["detail"]["alarm_id"]
                 event["alarm_state"] = event["detail"]["alarm_state"].lower()
                 event["timestamp"] = int(datetime.datetime.strptime(
@@ -67,7 +68,7 @@ def lambda_handler(event, _):
                 event["expires"] = event["timestamp"] + \
                     int(os.environ["ITEM_TTL"])
                 event["detail"]["time"] = event["time"]
-                DYNAMO_TABLE.put_item(Item=event)
+                EVENTS_TABLE.put_item(Item=event)
                 if "Multiplex" in event["detail-type"]:
                     print("Multiplex alert stored")
                 else:
@@ -99,10 +100,23 @@ def lambda_handler(event, _):
         if "resource_arn" in item:
             print("Storing media service event.")
             print(item)
-            CLOUDWATCH_EVENTS_TABLE_NAME.put_item(Item=item)
+            CLOUDWATCH_EVENTS_TABLE.put_item(Item=item)
         else:
             print("Skipping this event. " + item["type"])
 
     except ClientError as error:
         print(error)
     return True
+
+def get_degraded_state(event, resource_arn):
+    """
+    Check for degraded state only if channel (not multiplex)
+    """
+    degraded_state = bool(False)
+    if event["source"] == "aws.medialive" and "Multiplex" not in event["detail-type"]:
+        client = boto3.client('medialive')
+        res = client.describe_channel(ChannelId=resource_arn.split(":").pop())
+        if res["ChannelClass"] == "STANDARD":
+            if res["PipelinesRunningCount"] < 2 or res["State"] != "RUNNING":
+                degraded_state = bool(True)
+    return degraded_state;
