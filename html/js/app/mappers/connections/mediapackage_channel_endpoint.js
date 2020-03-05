@@ -13,14 +13,18 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                     for (let connection of connections) {
                         var data = JSON.parse(connection.data);
                         model.edges.update({
-                            "id": connection.arn,
-                            "to": connection.to,
-                            "from": connection.from,
-                            "data": data,
-                            "label": data.package,
-                            "arrows": "to",
-                            "color": {
-                                "color": "black"
+                            id: connection.arn,
+                            to: connection.to,
+                            from: connection.from,
+                            data: data,
+                            label: data.package,
+                            arrows: "to",
+                            color: {
+                                color: "black"
+                            },
+                            smooth: {
+                                enabled: true,
+                                type: 'discrete'
                             }
                         });
                     }

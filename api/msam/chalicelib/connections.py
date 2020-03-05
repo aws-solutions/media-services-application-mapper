@@ -21,13 +21,13 @@ from chalicelib import content
 CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
 
 
-def connection_to_ddb_item(from_arn, to_arn, service, config):
+def connection_item(arn, from_arn, to_arn, service, config):
     """
-    Structure a discovered connection into a cache item.
+    Structure a cache item.
     """
     now = int(time.time())
     item = {
-        "arn": "{}:{}".format(from_arn, to_arn),
+        "arn": arn,
         "from": from_arn,
         "to": to_arn,
         "region": "global",
@@ -37,6 +37,25 @@ def connection_to_ddb_item(from_arn, to_arn, service, config):
         "data": json.dumps(config, default=str)
     }
     return item
+
+
+def connection_to_ddb_item(from_arn, to_arn, service, config):
+    """
+    Structure a discovered connection into a cache item.
+    """
+    arn = "{}:{}".format(from_arn, to_arn)
+    return connection_item(arn, from_arn, to_arn, service, config)
+
+
+def connection_to_ddb_item_pl(from_arn, to_arn, service, config):
+    """
+    Structure a discovered connection into a cache item including its pipeline.
+    """
+    pipeline = 0
+    if config["pipeline"]:
+        pipeline = config["pipeline"]
+    arn = "{}:{}:{}".format(from_arn, to_arn, pipeline)
+    return connection_item(arn, from_arn, to_arn, service, config)
 
 
 def update_connection_ddb_items():
@@ -101,6 +120,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
     Identify and format MediaLive to MediaPackage channel connections for cache storage.
     """
     items = []
+    ml_service_name = "medialive-channel-mediapackage-channel"
     try:
         # get medialive channels
         medialive_ch_cached = cache.cached_by_service("medialive-channel")
@@ -116,10 +136,12 @@ def medialive_channel_mediapackage_channel_ddb_items():
                         for mp_channel in mediapackage_ch_cached:
                             mp_channel_data = json.loads(mp_channel["data"])
                             if mp_channel_data['Id'] == mp_setting['ChannelId']:
-                                # create a 'connection' out of matches
-                                config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"]}
-                                print(config)
-                                items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
+                                pipelines_count = ml_channel_data["PipelinesRunningCount"]
+                                for pl in range(pipelines_count):
+                                    # create a 'connection' out of matches
+                                    config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"], "pipeline": pl}
+                                    print(config)
+                                    items.append(connection_to_ddb_item_pl(ml_channel_data["Arn"], mp_channel_data["Arn"], ml_service_name, config))
                 # otherwise we check via URL endpoints
                 else:
                     for setting in destination["Settings"]:
@@ -139,7 +161,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
                                     # create a 'connection' out of matches
                                     config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"], "pipeline": destination["Settings"].index(setting)}
                                     print(config)
-                                    items.append(connection_to_ddb_item(ml_channel_data["Arn"], mp_channel_data["Arn"], "medialive-channel-mediapackage-channel", config))
+                                    items.append(connection_to_ddb_item_pl(ml_channel_data["Arn"], mp_channel_data["Arn"], ml_service_name, config))
     except ClientError as error:
         print(error)
     return items
@@ -210,6 +232,7 @@ def medialive_input_medialive_channel_ddb_items():
     Identify and format MediaLive input to MediaLive channel connections for cache storage.
     """
     items = []
+    ml_service_name = "medialive-input-medialive-channel"
     try:
         # get medialive channels
         medialive_ch_cached = cache.cached_by_service("medialive-channel")
@@ -223,9 +246,11 @@ def medialive_input_medialive_channel_ddb_items():
                 ml_input_data = json.loads(ml_input["data"])
                 for attached_id in ml_input_data["AttachedChannels"]:
                     if ml_channel_id == attached_id:
-                        config = {"from": ml_input_data["Arn"], "to": ml_channel_data["Arn"], "type": ml_input_data["Type"]}
-                        print(config)
-                        items.append(connection_to_ddb_item(ml_input_data["Arn"], ml_channel_data["Arn"], "medialive-input-medialive-channel", config))
+                        pipelines_count = ml_channel_data["PipelinesRunningCount"]
+                        for pl in range(pipelines_count):
+                            config = {"from": ml_input_data["Arn"], "to": ml_channel_data["Arn"], "type": ml_input_data["Type"], "pipeline": pl}
+                            print(config)
+                            items.append(connection_to_ddb_item_pl(ml_input_data["Arn"], ml_channel_data["Arn"], ml_service_name, config))
     except ClientError as error:
         print(error)
     return items

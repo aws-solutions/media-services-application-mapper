@@ -17,8 +17,8 @@ from botocore.exceptions import ClientError
 from jsonpath_ng import parse
 
 DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=os.environ["EVENTS_TABLE_REGION"])
-DYNAMO_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
-CLOUDWATCH_EVENTS_TABLE_NAME = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
+EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
+CLOUDWATCH_EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
 
 
 def lambda_handler(event, _):
@@ -67,7 +67,7 @@ def lambda_handler(event, _):
                 event["expires"] = event["timestamp"] + \
                     int(os.environ["ITEM_TTL"])
                 event["detail"]["time"] = event["time"]
-                DYNAMO_TABLE.put_item(Item=event)
+                EVENTS_TABLE.put_item(Item=event)
                 if "Multiplex" in event["detail-type"]:
                     print("Multiplex alert stored")
                 else:
@@ -99,7 +99,7 @@ def lambda_handler(event, _):
         if "resource_arn" in item:
             print("Storing media service event.")
             print(item)
-            CLOUDWATCH_EVENTS_TABLE_NAME.put_item(Item=item)
+            CLOUDWATCH_EVENTS_TABLE.put_item(Item=item)
         else:
             print("Skipping this event. " + item["type"])
 
