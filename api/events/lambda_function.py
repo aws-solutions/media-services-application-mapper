@@ -13,6 +13,7 @@ from random import randint
 from urllib.parse import unquote
 
 import boto3
+from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 from jsonpath_ng import parse
 
@@ -55,19 +56,18 @@ def lambda_handler(event, _):
         if event["source"] == "aws.medialive":
             # handle medialive pipeline alerts
             if "MediaLive" in event["detail-type"] and "Alert" in event["detail-type"]:
+                event["alarm_id"] = event["detail"]["alarm_id"]
+                event["alarm_state"] = event["detail"]["alarm_state"].lower()
+                event["timestamp"] = int(datetime.datetime.strptime(
+                    event["time"], '%Y-%m-%dT%H:%M:%SZ').timestamp())
+                event["expires"] = event["timestamp"] + int(os.environ["ITEM_TTL"])
+                event["detail"]["time"] = event["time"]
                 # multiplex pipeline alerts do not have a "detail.channel_arn" property.
                 if "Multiplex" in event["detail-type"]:
                     event["resource_arn"] = event["detail"]["multiplex_arn"]
                 else:
                     event["resource_arn"] = event["detail"]["channel_arn"]
                     event["detail"]["degraded"] = get_degraded_state(event, event["resource_arn"])
-                event["alarm_id"] = event["detail"]["alarm_id"]
-                event["alarm_state"] = event["detail"]["alarm_state"].lower()
-                event["timestamp"] = int(datetime.datetime.strptime(
-                    event["time"], '%Y-%m-%dT%H:%M:%SZ').timestamp())
-                event["expires"] = event["timestamp"] + \
-                    int(os.environ["ITEM_TTL"])
-                event["detail"]["time"] = event["time"]
                 EVENTS_TABLE.put_item(Item=event)
                 if "Multiplex" in event["detail-type"]:
                     print("Multiplex alert stored")
@@ -108,15 +108,55 @@ def lambda_handler(event, _):
         print(error)
     return True
 
+
 def get_degraded_state(event, resource_arn):
     """
     Check for degraded state only if channel (not multiplex)
     """
     degraded_state = bool(False)
-    if event["source"] == "aws.medialive" and "Multiplex" not in event["detail-type"]:
-        client = boto3.client('medialive')
-        res = client.describe_channel(ChannelId=resource_arn.split(":").pop())
-        if res["ChannelClass"] == "STANDARD":
-            if res["PipelinesRunningCount"] < 2 or res["State"] != "RUNNING":
-                degraded_state = bool(True)
-    return degraded_state;
+    try:
+        if event["source"] == "aws.medialive" and "Multiplex" not in event["detail-type"]:
+            client = boto3.client('medialive')
+            res = client.describe_channel(ChannelId=resource_arn.split(":").pop())
+            if res["ChannelClass"] == "STANDARD":
+                already_degraded = fetch_pipeline_degraded_state(event, resource_arn)
+                if not already_degraded and event["detail"]["alarm_state"] == "SET":
+                    degraded_state = bool(True)
+                    print('Updating degraded state to for', resource_arn)
+    except ClientError as error:
+        print(error)
+    return degraded_state
+
+
+def fetch_pipeline_degraded_state(event, resource_arn):
+    """
+    Fetches the given pipeline degraded state
+    """
+    pl = '0'
+    set_events = []
+    degraded_pipeline = bool(False)
+    ddb_index_name = 'ResourceAlarmStateIndex'
+    try:
+        if 'pipeline' in event['detail'] and event["detail"]["pipeline"] == pl:
+            pl = '1'
+        response = EVENTS_TABLE.query(
+            IndexName=ddb_index_name, 
+            KeyConditionExpression=Key('resource_arn').eq(resource_arn) & Key('alarm_state').eq('set'),
+            FilterExpression=Attr('detail.pipeline').exists() & Attr('detail.pipeline').eq(pl))
+        set_events = response["Items"]
+        while "LastEvaluatedKey" in response:
+            response = EVENTS_TABLE.query(
+                IndexName=ddb_index_name, 
+                KeyConditionExpression=Key('resource_arn').eq(resource_arn) & Key('alarm_state').eq('set'),
+                FilterExpression=Attr('detail.pipeline').exists() & Attr('detail.pipeline').eq(pl),
+                ExclusiveStartKey=response['LastEvaluatedKey'])
+            set_events = set_events + response["Items"]
+        for set_event in set_events:
+            if 'degraded' in set_event['detail']:
+                degraded_pipeline = bool(set_event['detail']['degraded'])
+            else:
+                set_event['detail']['degraded'] = bool(False)
+                EVENTS_TABLE.put_item(Item=set_event)
+    except ClientError as error:
+        print(error)
+    return degraded_pipeline

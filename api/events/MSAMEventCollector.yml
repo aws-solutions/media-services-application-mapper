@@ -18,6 +18,7 @@ Resources:
           Statement:
             - Effect: Allow
               Action:
+                - dynamodb:Query
                 - dynamodb:PutItem
                 - medialive:Describe*
                 - mediapackage:Describe*
