@@ -20,11 +20,11 @@ define(["app/server", "app/connections", "app/settings"],
 
         var settings_key = "app-event-update-interval";
 
-        var retrieve_for_state = function(state) {
+        var retrieve_for_state = function(state, groups) {
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
-            var current_endpoint = `${url}/cloudwatch/events/state/${state}`;
+            var current_endpoint = `${url}/cloudwatch/events/state/${state}?groups=${groups}`;
             return new Promise(function(resolve, reject) {
                 server.get(current_endpoint, api_key).then(function(response) {
                     resolve(response);
@@ -36,11 +36,17 @@ define(["app/server", "app/connections", "app/settings"],
         };
 
         var cache_update = function() {
-            retrieve_for_state("set").then(function(response) {
+            var groups = true;
+            retrieve_for_state("set", groups).then(function(res) {
                 // console.log("updated set event cache");
-                // console.log(response);
+                // console.log(res);
+                var events = res.events;
+                if (groups) {
+                    var grps = res.groups;
+                    events = grps.degraded.concat(grps.down).concat(grps.running);
+                }
                 previous_set_events = current_set_events;
-                current_set_events = response;
+                current_set_events = events;
                 var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
                 var removed = _.differenceBy(previous_set_events, current_set_events, "alarm_id");
                 if (added.length || removed.length) {

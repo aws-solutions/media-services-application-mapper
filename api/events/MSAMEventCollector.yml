@@ -28,6 +28,7 @@ Resources:
           BUILD_STAMP: DEV_0_0_0
           EVENTS_TABLE_REGION: !Ref EventsTableRegion
           EVENTS_TABLE_NAME: !Ref EventsTableName
+          CONTENT_TABLE_NAME: !Ref ContentTableName
           CLOUDWATCH_EVENTS_TABLE_NAME: !Ref CloudWatchEventsTableName
           ITEM_TTL: !Ref ItemTTL
       Events:
@@ -64,6 +65,14 @@ Parameters:
       automatically expires and is removed (3600 = 1 hour, 86400 = 1 day, 604800
       = 1 week).
     Default: '604800'
+    Type: String
+    AllowedPattern: \S+
+    MinLength: 1
+    ConstraintDescription: Please enter a value for this field.
+  ContentTableName:
+    Description: >-
+      This is the DynamoDB table name that collects all content for
+      MSAM.
     Type: String
     AllowedPattern: \S+
     MinLength: 1

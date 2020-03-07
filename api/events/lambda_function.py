@@ -20,6 +20,7 @@ from jsonpath_ng import parse
 DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=os.environ["EVENTS_TABLE_REGION"])
 EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
 CLOUDWATCH_EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
+CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 
 
 def lambda_handler(event, _):
@@ -67,7 +68,7 @@ def lambda_handler(event, _):
                     event["resource_arn"] = event["detail"]["multiplex_arn"]
                 else:
                     event["resource_arn"] = event["detail"]["channel_arn"]
-                    event["detail"]["degraded"] = get_degraded_state(event, event["resource_arn"])
+                    event["detail"]["pipeline_state"] = get_pipeline_state(event)
                 EVENTS_TABLE.put_item(Item=event)
                 if "Multiplex" in event["detail-type"]:
                     print("Multiplex alert stored")
@@ -103,60 +104,28 @@ def lambda_handler(event, _):
             CLOUDWATCH_EVENTS_TABLE.put_item(Item=item)
         else:
             print("Skipping this event. " + item["type"])
-
     except ClientError as error:
         print(error)
     return True
 
 
-def get_degraded_state(event, resource_arn):
+def get_pipeline_state(event):
     """
-    Check for degraded state only if channel (not multiplex)
+    Check for pipeline state only if channel (not multiplex)
     """
-    degraded_state = bool(False)
+    running_pipeline = bool(True)
+    resource_arn = event["resource_arn"]
     try:
         if event["source"] == "aws.medialive" and "Multiplex" not in event["detail-type"]:
-            client = boto3.client('medialive')
-            res = client.describe_channel(ChannelId=resource_arn.split(":").pop())
-            if res["ChannelClass"] == "STANDARD":
-                already_degraded = fetch_pipeline_degraded_state(event, resource_arn)
-                if not already_degraded and event["detail"]["alarm_state"] == "SET":
-                    degraded_state = bool(True)
-                    print('Updating degraded state to for', resource_arn)
+            resource = boto3.resource('dynamodb')
+            CONTENT_TABLE = resource.Table(CONTENT_TABLE_NAME)
+            response = CONTENT_TABLE.query(KeyConditionExpression=Key('arn').eq(resource_arn))
+            if "Items" in response:
+                item = response["Items"][0]
+                data = json.loads(item["data"])
+                if data["ChannelClass"] == "STANDARD" and event["detail"]["alarm_state"] == "SET":
+                    running_pipeline = bool(False)
     except ClientError as error:
         print(error)
-    return degraded_state
-
-
-def fetch_pipeline_degraded_state(event, resource_arn):
-    """
-    Fetches the given pipeline degraded state
-    """
-    pl = '0'
-    set_events = []
-    degraded_pipeline = bool(False)
-    ddb_index_name = 'ResourceAlarmStateIndex'
-    try:
-        if 'pipeline' in event['detail'] and event["detail"]["pipeline"] == pl:
-            pl = '1'
-        response = EVENTS_TABLE.query(
-            IndexName=ddb_index_name, 
-            KeyConditionExpression=Key('resource_arn').eq(resource_arn) & Key('alarm_state').eq('set'),
-            FilterExpression=Attr('detail.pipeline').exists() & Attr('detail.pipeline').eq(pl))
-        set_events = response["Items"]
-        while "LastEvaluatedKey" in response:
-            response = EVENTS_TABLE.query(
-                IndexName=ddb_index_name, 
-                KeyConditionExpression=Key('resource_arn').eq(resource_arn) & Key('alarm_state').eq('set'),
-                FilterExpression=Attr('detail.pipeline').exists() & Attr('detail.pipeline').eq(pl),
-                ExclusiveStartKey=response['LastEvaluatedKey'])
-            set_events = set_events + response["Items"]
-        for set_event in set_events:
-            if 'degraded' in set_event['detail']:
-                degraded_pipeline = bool(set_event['detail']['degraded'])
-            else:
-                set_event['detail']['degraded'] = bool(False)
-                EVENTS_TABLE.put_item(Item=set_event)
-    except ClientError as error:
-        print(error)
-    return degraded_pipeline
+    print('Pipeline state to for {} is {}'.format(resource_arn, running_pipeline))
+    return running_pipeline
