@@ -219,16 +219,15 @@ def get_cloudwatch_events_state(state):
     """
     API entry point to retrieve all pipeline events in a given state (set, clear).
     """
-    result = {'state': state}
-    result['events'] = cloudwatch_data.get_cloudwatch_events_state(state)
-    req = app.current_request
-    print("{} Request to /cloudwatch/events/state/{}".format(req.method, state))
-    if req.query_params is not None and "groups" in req.query_params and req.query_params["groups"] == "true":
-        print("Request has groups query param set to {}".format(req.query_params["groups"]))
-        result["groups"] = cloudwatch_data.get_cloudwatch_events_state_groups(result['events'])
-        print("Generated groups")
-        print(result["groups"])
-    return result
+    return cloudwatch_data.get_cloudwatch_events_state(state)
+
+
+@app.route('/cloudwatch/events/state/{state}/groups', cors=True, api_key_required=True, methods=['GET'])
+def get_cloudwatch_events_state_groups(state):
+    """
+    API entry point to retrieve all pipeline events in a given state (set, clear) and grouped by pipeline state (down, degraded, running)
+    """
+    return cloudwatch_data.get_cloudwatch_events_state_groups(state)
 
 
 @app.route('/cloudwatch/events/all/{resource_arn}', cors=True, api_key_required=True, methods=['GET'])

@@ -143,8 +143,7 @@ def get_cloudwatch_events_state(state):
     return events
 
 
-
-def get_cloudwatch_events_state_groups(events):
+def get_cloudwatch_events_state_groups(state):
     """
     Group all events by down, degraded and running pipelines
     """
@@ -152,6 +151,7 @@ def get_cloudwatch_events_state_groups(events):
     group["down"] = []
     group["running"] = []
     group["degraded"] = []
+    events = get_cloudwatch_events_state(state)
     for event in events:
         resource_arn = event["resource_arn"]
         def is_same_arn(i):
@@ -161,10 +161,13 @@ def get_cloudwatch_events_state_groups(events):
         same_events = list(filter(is_same_arn, events))
         down_pipelines = list(filter(is_pl_down, same_events))
         if len(down_pipelines) == 1:
+            event["detail"]["degraded"] = bool(True)
             group["degraded"].append(event)
         elif len(down_pipelines) > 1:
+            event["detail"]["degraded"] = bool(False)
             group["down"].append(event)
         else:
+            event["detail"]["degraded"] = bool(False)
             group["running"].append(event)
     return group
 

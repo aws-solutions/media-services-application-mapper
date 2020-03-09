@@ -20,33 +20,28 @@ define(["app/server", "app/connections", "app/settings"],
 
         var settings_key = "app-event-update-interval";
 
-        var retrieve_for_state = function(state, groups) {
+        var retrieve_for_state = function(state) {
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
-            var current_endpoint = `${url}/cloudwatch/events/state/${state}?groups=${groups}`;
+            var current_endpoint = `${url}/cloudwatch/events/state/${state}/groups`;
+
             return new Promise(function(resolve, reject) {
-                server.get(current_endpoint, api_key).then(function(response) {
-                    resolve(response);
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
+                server.get(current_endpoint, api_key)
+                    .then(resolve)
+                    .catch(function(error) {
+                        console.log(error);
+                        reject(error);
+                    });
             });
         };
 
         var cache_update = function() {
-            var groups = true;
-            retrieve_for_state("set", groups).then(function(res) {
+            retrieve_for_state("set").then(function(res) {
                 // console.log("updated set event cache");
                 // console.log(res);
-                var events = res.events;
-                if (groups) {
-                    var grps = res.groups;
-                    events = grps.degraded.concat(grps.down).concat(grps.running);
-                }
                 previous_set_events = current_set_events;
-                current_set_events = events;
+                current_set_events = res.degraded.concat(res.down).concat(res.running);
                 var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
                 var removed = _.differenceBy(previous_set_events, current_set_events, "alarm_id");
                 if (added.length || removed.length) {
