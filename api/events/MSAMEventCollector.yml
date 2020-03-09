@@ -71,8 +71,7 @@ Parameters:
     ConstraintDescription: Please enter a value for this field.
   ContentTableName:
     Description: >-
-      This is the DynamoDB table name that collects all content for
-      MSAM.
+      This is the DynamoDB table name that stores cached content for MSAM.
     Type: String
     AllowedPattern: \S+
     MinLength: 1
