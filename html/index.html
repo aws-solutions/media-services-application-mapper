@@ -852,6 +852,28 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
         </div>
     </div>
 
+    <!-- CloudWatch Event Data View dialog -->
+    <!-- Modal -->
+    <div class="modal fade" id="cloudwatch_event_data_view_modal" tabindex="-1" role="dialog" aria-labelledby="cloudwatch_event_data_view_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-xlg h-75 mh-75" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cloudwatch_event_data_view_title">CloudWatch Event Data</h5>
+                </div>
+                <div id="cloudwatch_event_data_view_alert">
+                </div>
+                <div class="modal-body">
+                   <!-- where my rendered json blob will go -->
+                   <div class="mw-25 mh-25 overflow-auto border border-info" id="cloudwatch_event_data_json">
+                   </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cloudwatch_event_data_view_close" class="btn btn-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </body>
 
 </html>
