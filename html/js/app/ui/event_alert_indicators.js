@@ -5,10 +5,19 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
     function ($, _, model, event_alerts, diagrams) {
 
         const updateAlertHandler = (node, alertState = true) => {
-            const selected = node.degraded ? node.render.degraded_selected()
-                : node.render.alert_selected();
-            const unselected = node.degraded ? node.render.degraded_unselected()
-                : node.render.alert_unselected();
+            let selected = null;
+            let unselected = null;
+
+            if (node.degraded) {
+                selected = node.render.degraded_selected();
+                unselected = node.render.degraded_unselected();
+            } else if (node.alerting) {
+                selected = node.render.alert_selected();
+                unselected = node.render.alert_unselected();
+            } else {
+                selected = node.render.normal_selected();
+                unselected = node.render.normal_unselected();
+            }
 
             if (selected != node.image.selected || unselected != node.image.unselected) {
                 node.image.selected = selected;

@@ -17,7 +17,8 @@ from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 from jsonpath_ng import parse
 
-DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=os.environ["EVENTS_TABLE_REGION"])
+DYNAMO_REGION_NAME=os.environ["EVENTS_TABLE_REGION"]
+DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME)
 EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
 CLOUDWATCH_EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
 CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
@@ -68,7 +69,7 @@ def lambda_handler(event, _):
                     event["resource_arn"] = event["detail"]["multiplex_arn"]
                 else:
                     event["resource_arn"] = event["detail"]["channel_arn"]
-                    event["detail"]["pipeline_state"] = get_pipeline_state(event)
+                event["detail"]["pipeline_state"] = get_pipeline_state(event)
                 EVENTS_TABLE.put_item(Item=event)
                 if "Multiplex" in event["detail-type"]:
                     print("Multiplex alert stored")
@@ -111,21 +112,26 @@ def lambda_handler(event, _):
 
 def get_pipeline_state(event):
     """
-    Check for pipeline state only if channel (not multiplex)
+    Check for pipeline state only if source is aws.medialive
     """
     running_pipeline = bool(True)
     resource_arn = event["resource_arn"]
     try:
-        if event["source"] == "aws.medialive" and "Multiplex" not in event["detail-type"]:
-            resource = boto3.resource('dynamodb')
+        if event["source"] == "aws.medialive" and event["detail"]["alarm_state"] == "SET":
+            resource = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME)
             CONTENT_TABLE = resource.Table(CONTENT_TABLE_NAME)
             response = CONTENT_TABLE.query(KeyConditionExpression=Key('arn').eq(resource_arn))
             if "Items" in response:
                 item = response["Items"][0]
-                data = json.loads(item["data"])
-                if data["ChannelClass"] == "STANDARD" and event["detail"]["alarm_state"] == "SET":
+                if "service" in item and item["service"] == "medialive-multiplex":
                     running_pipeline = bool(False)
+                else:
+                    data = json.loads(item["data"])
+                    if "ChannelClass" in data and data["ChannelClass"] == "STANDARD":
+                        running_pipeline = bool(False)
     except ClientError as error:
         print(error)
-    print('Pipeline state to for {} is {}'.format(resource_arn, running_pipeline))
+    if "pipeline" in event["detail"]:
+        log_msg = 'Pipeline {} state to for {} is {}'
+        print(log_msg.format(event["detail"]["pipeline"], resource_arn, running_pipeline))
     return running_pipeline

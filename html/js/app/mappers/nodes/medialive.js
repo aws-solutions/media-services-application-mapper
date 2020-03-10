@@ -70,7 +70,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var id = channel.Arn;
             var nodes = model.nodes;
             var rgb = "#1E8900";
-            var degraded_rgb = "#ffff33";
+            var degraded_rgb = svg_node.getDegradedRgb();
             var node_type = "MediaLive Channel";
             var node_data = {
                 cache_update: cache_entry.updated,
@@ -123,7 +123,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var nodes = model.nodes;
             var node_type = "MediaLive Input";
             var rgb = "#6AAF35";
-            var degraded_rgb = "#ffff33";
+            var degraded_rgb = svg_node.getDegradedRgb();
             var node_data = {
                 cache_update: cache_entry.updated,
                 id: input.Arn,
@@ -172,9 +172,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var id = input.Arn;
             var nodes = model.nodes;
             var node_type = "MediaLive Multiplex";
-            // var rgb = "#456e26";
             var rgb = "#6a8258";
-            var degraded_rgb = "#ffff33";
+            var degraded_rgb = svg_node.getDegradedRgb();
             var node_data = {
                 cache_update: cache_entry.updated,
                 id: input.Arn,
