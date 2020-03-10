@@ -4,7 +4,7 @@
 define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
     function ($, _, model, event_alerts, diagrams) {
 
-        const updateAlertHandler = node => {
+        const updateAlertHandler = (node, alertState = true) => {
             const selected = node.degraded ? node.render.degraded_selected()
                 : node.render.alert_selected();
             const unselected = node.degraded ? node.render.degraded_unselected()
@@ -19,24 +19,22 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
 
                 for (let diagram of matches) {
                     diagram.nodes.update(node);
-                    diagram.alert(true);
+                    diagram.alert(alertState);
                 }
             }
         };
 
         const updateEventAlertState = (current_alerts, previous_alerts) => {
-            // iterate through current 'set' alerts
+            /** iterate through current 'set' alerts */
             const alerting_nodes = [];
             const inactive_nodes = [];
             const degraded_nodes = [];
 
             for (let item of current_alerts) {
-
                 const node = model.nodes.get(item.resource_arn);
 
                 if (node) {
                     node.alerting = true;
-                    // node.degraded =  true;
                     node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded")
                         ? item.detail.degraded : false;
 
@@ -59,12 +57,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                 }
             }
 
-            // calculate the current alerts not included in the previous alerts
+            /** calculate the current alerts not included in the previous alerts */
             for (let previous of previous_alerts) {
                 let found = false;
 
                 for (let arn of alerting_nodes) {
-                    found = found || arn == previous.resource_arn;
+                    found = found || arn === previous.resource_arn;
                     if (found) {
                         break;
                     }
@@ -75,7 +73,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                 }
             }
 
-            // 'unalert' the nodes that are no longer alerting
+            /** 'unalert' the nodes that are no longer alerting */
             for (let arn of inactive_nodes) {
                 const node = model.nodes.get(arn);
 
@@ -83,7 +81,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                     node.alerting = false;
                     node.degraded = _.includes(degraded_nodes, arn);
 
-                    updateAlertHandler(node);
+                    updateAlertHandler(node, false);
                 }
             }
         };
