@@ -4,6 +4,15 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
+        const node_map_handler = (node_type, name, rgb, id, selected = true) => {
+            const local_id = id;
+            const local_rgb = rgb;
+            const local_name = name;
+            const local_node_type = node_type;
+            const method = selected ? 'selected' : 'unselected';
+            return () => svg_node[method](local_node_type, local_name, local_rgb, local_id);
+        };
+
         var update_channels = function(regionName) {
             var current = connections.get_current();
             var url = current[0];
@@ -61,6 +70,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var id = channel.Arn;
             var nodes = model.nodes;
             var rgb = "#1E8900";
+            var degraded_rgb = svg_node.getDegradedRgb();
             var node_type = "MediaLive Channel";
             var node_data = {
                 cache_update: cache_entry.updated,
@@ -77,40 +87,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 name: name,
                 size: 55,
                 render: {
-                    normal_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
-                        };
-                    })(),
-                    normal_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
-                        };
-                    })(),
-                    alert_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
-                        };
-                    })(),
-                    alert_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
-                        };
-                    })()
+                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false))(),
+                    normal_selected: (() => node_map_handler(node_type, name, rgb, id))(),
+                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false))(),
+                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id))(),
+                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false))(),
+                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id))(),
                 },
                 console_link: (function() {
                     var id = channel.Id;
@@ -141,6 +123,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var nodes = model.nodes;
             var node_type = "MediaLive Input";
             var rgb = "#6AAF35";
+            var degraded_rgb = svg_node.getDegradedRgb();
             var node_data = {
                 cache_update: cache_entry.updated,
                 id: input.Arn,
@@ -156,40 +139,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 name: name,
                 size: 55,
                 render: {
-                    normal_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
-                        };
-                    })(),
-                    normal_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
-                        };
-                    })(),
-                    alert_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
-                        };
-                    })(),
-                    alert_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
-                        };
-                    })()
+                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false))(),
+                    normal_selected: (() => node_map_handler(node_type, name, rgb, id))(),
+                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false))(),
+                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id))(),
+                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false))(),
+                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id))(),
                 },
                 console_link: (function() {
                     var id = input.Id;
@@ -217,8 +172,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var id = input.Arn;
             var nodes = model.nodes;
             var node_type = "MediaLive Multiplex";
-            // var rgb = "#456e26";
             var rgb = "#6a8258";
+            var degraded_rgb = svg_node.getDegradedRgb();
             var node_data = {
                 cache_update: cache_entry.updated,
                 id: input.Arn,
@@ -234,40 +189,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 name: name,
                 size: 55,
                 render: {
-                    normal_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
-                        };
-                    })(),
-                    normal_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
-                        };
-                    })(),
-                    alert_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
-                        };
-                    })(),
-                    alert_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
-                        return function() {
-                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
-                        };
-                    })()
+                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false))(),
+                    normal_selected: (() => node_map_handler(node_type, name, rgb, id))(),
+                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false))(),
+                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id))(),
+                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false))(),
+                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id))(),
                 },
                 console_link: (function() {
                     var id = input.Id;
@@ -288,24 +215,24 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-        var update = function() {
-            return new Promise((resolve, reject) => {
-                region_promise().then(function(regions) {
-                    var promises = [];
+        const update = () => new Promise((resolve, reject) => {
+            region_promise()
+                .then(regions => {
+                    const promises = [];
                     for (let region_name of regions.get_selected()) {
                         promises.push(update_channels(region_name));
                         promises.push(update_inputs(region_name));
                         promises.push(update_multiplexes(region_name));
                     }
-                    Promise.all(promises)
-                        .then(resolve)
-                        .catch(reject);
-                }).catch(function(error) {
+
+                    return Promise.all(promises);
+                })
+                .then(resolve)
+                .catch(error => {
                     console.log(error);
                     reject(error);
                 });
-            });
-        };
+        });
 
         return { name: "MediaLive Inputs, Channels, Multiplexes", update: update };
     });
