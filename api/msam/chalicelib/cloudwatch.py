@@ -134,14 +134,43 @@ def get_cloudwatch_events_state(state):
     """
     API entry point to retrieve all pipeline events in a given state (set, clear).
     """
+    events = []
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(EVENTS_TABLE_NAME)
     response = table.query(IndexName='AlarmStateIndex', KeyConditionExpression=Key('alarm_state').eq(state))
     if "Items" in response:
-        alarms = response["Items"]
-    else:
-        alarms = []
-    return alarms
+        events = response["Items"]
+    return events
+
+
+def get_cloudwatch_events_state_groups(state):
+    """
+    Group all events by down, degraded and running pipelines
+    """
+    group = {}
+    group["down"] = []
+    group["running"] = []
+    group["degraded"] = []
+    events = get_cloudwatch_events_state(state)
+    for event in events:
+        resource_arn = event["resource_arn"]
+        def is_same_arn(i):
+            return bool(i["resource_arn"] == resource_arn)
+        def is_pl_down(i):
+            return bool("pipeline_state" in i["detail"] and not i["detail"]["pipeline_state"])
+        same_events = list(filter(is_same_arn, events))
+        down_pipelines = list(filter(is_pl_down, same_events))
+        if len(down_pipelines) == 1:
+            event["detail"]["degraded"] = bool(True)
+            group["degraded"].append(event)
+        elif len(down_pipelines) > 1:
+            event["detail"]["degraded"] = bool(False)
+            group["down"].append(event)
+        else:
+            event["detail"]["degraded"] = bool(False)
+            group["running"].append(event)
+    return group
+
 
 def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0):
     """

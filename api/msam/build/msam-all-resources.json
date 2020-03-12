@@ -143,6 +143,12 @@
                             "Outputs.EventsTable"
                         ]
                     },
+                    "ContentTableName": {
+                        "Fn::GetAtt": [
+                            "DynamoDBModuleStack",
+                            "Outputs.ContentTable"
+                        ]
+                    },
                     "CloudWatchEventsTableName": {
                         "Fn::GetAtt": [
                             "DynamoDBModuleStack",

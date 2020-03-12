@@ -51,7 +51,7 @@ def connection_to_ddb_item_pl(from_arn, to_arn, service, config):
     """
     Structure a discovered connection into a cache item including its pipeline.
     """
-    pipeline = 0
+    pipeline = "0"
     if config["pipeline"]:
         pipeline = config["pipeline"]
     arn = "{}:{}:{}".format(from_arn, to_arn, pipeline)
@@ -319,7 +319,6 @@ def multiplex_mediaconnect_flow_ddb_items():
     except ClientError as error:
         print(error)
     return items
-
 
 
 def s3_bucket_cloudfront_distribution_ddb_items():

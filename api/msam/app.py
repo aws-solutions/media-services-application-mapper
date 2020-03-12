@@ -222,6 +222,14 @@ def get_cloudwatch_events_state(state):
     return cloudwatch_data.get_cloudwatch_events_state(state)
 
 
+@app.route('/cloudwatch/events/state/{state}/groups', cors=True, api_key_required=True, methods=['GET'])
+def get_cloudwatch_events_state_groups(state):
+    """
+    API entry point to retrieve all pipeline events in a given state (set, clear) and grouped by pipeline state (down, degraded, running)
+    """
+    return cloudwatch_data.get_cloudwatch_events_state_groups(state)
+
+
 @app.route('/cloudwatch/events/all/{resource_arn}', cors=True, api_key_required=True, methods=['GET'])
 def get_cloudwatch_events_resource(resource_arn):
     """
