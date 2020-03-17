@@ -11,29 +11,39 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/medialive-input-medialive-channel/global", api_key).then((connections) => {
                     for (let connection of connections) {
-                        var data = JSON.parse(connection.data);
-                        var human_type = data.type.replace(/\_/, " ");
-                        var smoothType = 'discrete';
-                        
-                        if (_.has(data, "pipeline")) {
-                            human_type += ` ${data.pipeline}`;
-                            smoothType = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
-                        }
-                        model.edges.update({
+                        const data = JSON.parse(connection.data);
+                        const options = {
                             id: connection.arn,
                             to: connection.to,
                             from: connection.from,
                             data: data,
-                            label: human_type,
+                            label: data.type.replace(/\_/, " "),
                             arrows: "to",
-                            color: {
-                                color: "black"
-                            },
-                            smooth: {
-                                enabled: true,
-                                type: smoothType
+                            color: { color: "black" },
+                        };
+                        const hasMoreConnections = _.filter(connections, function(o) { 
+                            if (o.from === connection.from && o.to === connection.to) {
+                                let shouldEndWith = '0';
+                                if (connection.arn.endsWith('0'))
+                                    shouldEndWith = '1';
+                                if (o.arn.endsWith(shouldEndWith))
+                                    return true;
                             }
+                            return false;
                         });
+
+                        if (hasMoreConnections.length) {
+                            /** curve it */
+                            options.smooth = { enabled: true };
+                            options.smooth.type = 'discrete';
+                            
+                            if (_.has(data, "pipeline")) {
+                                options.label += ` ${data.pipeline}`;
+                                options.smooth.type = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
+                            }
+                        }
+
+                        model.edges.update(options);
                     }
                     resolve();
                 });

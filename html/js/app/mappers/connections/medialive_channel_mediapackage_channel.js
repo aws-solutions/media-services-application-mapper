@@ -13,18 +13,38 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
                 server.get(`${url}/cached/medialive-channel-mediapackage-channel/global`, api_key).then((connections) => {
                     for (let connection of connections) {
                         const data = JSON.parse(connection.data);
-                        const smooth = { enabled: true, type: 'discrete' };
-                        const { arn: id, to, from } = connection;
-                        const arrows = 'to';
-                        const color = { color: 'black' };
-                        let label = 'HLS';
+                        const options = {
+                            id: connection.arn,
+                            to: connection.to,
+                            from: connection.from,
+                            data: data,
+                            label: 'HLS',
+                            arrows: "to",
+                            color: { color: "black" },
+                        };
+                        const hasMoreConnections = _.filter(connections, function(o) { 
+                            if (o.from === connection.from && o.to === connection.to) {
+                                let shouldEndWith = '0';
+                                if (connection.arn.endsWith('0'))
+                                    shouldEndWith = '1';
+                                if (o.arn.endsWith(shouldEndWith))
+                                    return true;
+                            }
+                            return false;
+                        });
 
-                        if (_.has(data, 'pipeline')) {
-                            label += ` ${data.pipeline}`;
-                            smooth.type = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
+                        if (hasMoreConnections.length) {
+                            /** curve it */
+                            options.smooth = { enabled: true };
+                            options.smooth.type = 'discrete';
+                            
+                            if (_.has(data, "pipeline")) {
+                                options.label += ` ${data.pipeline}`;
+                                options.smooth.type = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
+                            }
                         }
 
-                        model.edges.update({ id, to, from, data, label, smooth, arrows, color });
+                        model.edges.update(options);
                     }
                     resolve();
                 });
