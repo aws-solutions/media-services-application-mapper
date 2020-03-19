@@ -204,6 +204,7 @@ def medialive_channel_multiplex_ddb_items():
     Identify and format MediaLive channel to EML Multiplex connections for cache storage.
     """
     items = []
+    ml_service_name = "medialive-channel-multiplex"
     try:
         # get medialive channels
         medialive_ch_cached = cache.cached_by_service("medialive-channel")
@@ -218,10 +219,12 @@ def medialive_channel_multiplex_ddb_items():
                     for ml_multiplex in medialive_mp_cached:
                         ml_multiplex_data = json.loads(ml_multiplex["data"])
                         if multiplex_id == ml_multiplex_data["Id"]:
-                            # create a 'connection' out of matches
-                            config = {"from": ml_channel_data["Arn"], "to": ml_multiplex_data["Arn"], "program": program_name}
-                            print(config)
-                            items.append(connection_to_ddb_item(ml_channel_data["Arn"], ml_multiplex_data["Arn"], "medialive-channel-multiplex", config))
+                            pipelines_count = ml_channel_data["PipelinesRunningCount"]
+                            for pl in range(pipelines_count):
+                                # create a 'connection' out of matches
+                                config = {"from": ml_channel_data["Arn"], "to": ml_multiplex_data["Arn"], "program": program_name, "pipeline": pl}
+                                print(config)
+                                items.append(connection_to_ddb_item_pl(ml_channel_data["Arn"], ml_multiplex_data["Arn"], ml_service_name, config))
     except ClientError as error:
         print(error)
     return items

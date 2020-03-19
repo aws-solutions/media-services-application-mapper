@@ -4,44 +4,61 @@
 define(["jquery", "app/model", "app/server", "app/connections"],
     function($, model, server, connections) {
 
-        var update_connections = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            return new Promise((resolve, reject) => {
-                server.get(url + "/cached/medialive-channel-multiplex/global", api_key).then((connections) => {
-                    for (let connection of connections) {
-                        var data = JSON.parse(connection.data);
-                        model.edges.update({
-                            "id": connection.arn,
-                            "to": connection.to,
-                            "from": connection.from,
-                            "data": data,
-                            "label": data.program,
-                            "arrows": "to",
-                            "color": {
-                                "color": "black"
-                            }
-                        });
-                    }
-                    resolve();
-                });
-            });
-        }
+        const update_connections = () => {
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
 
-        var update = function() {
-            return new Promise((resolve, reject) => {
-                update_connections().then(function() {
-                    resolve();
-                }).catch(function(error) {
+            return new Promise(resolve => {
+                const endpoint = `${url}/cached/medialive-channel-multiplex/global`;
+                server.get(endpoint, api_key)
+                    .then(connections => {
+                        for (let connection of connections) {
+                            const data = JSON.parse(connection.data);
+                            const options = {
+                                id: connection.arn,
+                                to: connection.to,
+                                from: connection.from,
+                                data: data,
+                                label: data.program,
+                                arrows: 'to',
+                                color: { color: 'black' },
+                            };
+                            const shouldEndWith = connection.arn.endsWith('0') ? '1' : '0';
+                            const hasMoreConnections = _.filter(connections, function(o) { 
+                                if (o.from === connection.from && o.to === connection.to) {
+                                    if (o.arn.endsWith(shouldEndWith))
+                                        return true;
+                                }
+                                return false;
+                            });
+
+                            if (hasMoreConnections.length) {
+                                /** curve it */
+                                options.smooth = { enabled: true };
+                                options.smooth.type = 'discrete';
+
+                                if (_.has(data, 'pipeline')) {
+                                    options.label += ` ${data.pipeline}`;
+                                    options.smooth.type = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
+                                }
+                            }
+
+                            model.edges.update(options);
+                        }
+                        resolve();
+                    });
+            });
+        };
+
+        const update = () => new Promise((resolve, reject) => {
+            update_connections()
+                .then(resolve)
+                .catch(error => {
                     console.log(error);
                     reject(error);
                 });
-            });
-        }
+        });
 
-        return {
-            "name": "MediaLive Channel to Multiplex",
-            "update": update
-        };
+        return { name: 'MediaLive Channel to Multiplex', update };
     });
