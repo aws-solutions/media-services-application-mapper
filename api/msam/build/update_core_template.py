@@ -3,6 +3,8 @@ from jsonpath_ng import parse
 
 TEMPLATE_FILE = "msam-core-release.json"
 TEMPLATE_DESCRIPTION = "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: DEV_0_0_0)"
+
+SSM_DOCUMENTS = "ssm_documents.json"
 # replace the absolute path to the bucket of the code URI with a region-dependent one
 CODE_URI = {"Key": "msam/",
             "Bucket": {"Fn::Join": ["-",[{"Ref": "BucketBasename"},{"Ref": "AWS::Region"}]]}}
@@ -94,7 +96,7 @@ PARAMETERS = {
         "ConstraintDescription": "Please enter a value for this field."
     },
     "BucketBasename": {
-        "Description": "This is the basename of the bucket that holds the MSAM code base.    ",
+        "Description": "This is the basename of the bucket that holds the MSAM code base.",
         "Default": "rodeolabz",
         "Type": "String",
         "AllowedPattern": "\\S+",
@@ -162,10 +164,16 @@ UPDATE_CONNECTIONS_DESCRIPTION = "MSAM Lambda for peridically updating the conne
 UPDATE_ALARMS_DESCRIPTION = "MSAM Lambda for polling CloudWatch alarm states"
 UPDATE_FROM_TAGS_DESCRIPTION = "MSAM Lambda for handling diagram and tile updates from tags"
 API_HANDLER_DESCRIPTION = "MSAM Lambda for handling requests from clients"
-
+SSM_RUN_CMD_DESCRIPTION = "MSAM Lambda for running all applicable commands for a given managed instance"
+SSM_PROCESS_RUN_CMD_DESCRIPTION = "MSAM Lambda for processing outputs from running a command on a managed instance"
 
 def main():
     template = {}
+    ssm_doc_json = {}
+
+    with open(SSM_DOCUMENTS, "r") as json_file:
+        ssm_doc_json = json.load(json_file)
+
     # read file
     with open(TEMPLATE_FILE, "r") as read_file:
         template = json.load(read_file)
@@ -195,6 +203,11 @@ def main():
         template["Resources"]["UpdateAlarms"]["Properties"]["Description"] = UPDATE_ALARMS_DESCRIPTION
         template["Resources"]["UpdateFromTags"]["Properties"]["Description"] = UPDATE_FROM_TAGS_DESCRIPTION
         template["Resources"]["APIHandler"]["Properties"]["Description"] = API_HANDLER_DESCRIPTION
+        template["Resources"]["SsmRunCommand"]["Properties"]["Description"] = SSM_RUN_CMD_DESCRIPTION
+        template["Resources"]["ProcessSsmRunCommand"]["Properties"]["Description"] = SSM_PROCESS_RUN_CMD_DESCRIPTION
+        # add the SSM document resources
+        template["Resources"].update(ssm_doc_json)
+        
         # update outputs
         template["Outputs"] = OUTPUTS
     with open(TEMPLATE_FILE, "w") as write_file:

@@ -22,9 +22,9 @@ from chalicelib import cache
 # TTL provided via CloudFormation
 CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
 
+STAMP = os.environ["BUILD_STAMP"]
 # used to handle throttling, be very patient and back off a lot if needed
-BOTO3_RETRY_CONFIG = Config(retries={'max_attempts': 15})
-
+MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, user_agent="aws-media-services-applications-mapper/{stamp}/nodes.py".format(stamp=STAMP))
 
 def update_regional_ddb_items(region_name):
     """
@@ -254,6 +254,7 @@ def ssm_managed_instance_ddb_items(region):
     """
     items = []
     for managed_instance in ssm_managed_instances(region):
+        # update this to look like: "arn:aws:ec2:us-west-2:accountnumber:instance/mi-02da03b3021128289"
         arn = "arn:aws:ssm-managed-instance:" + region + "::" + managed_instance['Id']
         service = "ssm-managed-instance"
         items.append(node_to_ddb_item(arn, service, region, managed_instance))
@@ -286,7 +287,7 @@ def cloudfront_distributions():
     Retrieve all CloudFront distributions (global).
     Tags retrieved.
     """
-    service = boto3.client("cloudfront", config=BOTO3_RETRY_CONFIG)
+    service = boto3.client("cloudfront", config=MSAM_BOTO3_CONFIG)
     response = service.list_distributions()
     items = response["DistributionList"]["Items"]
     while "NextMarker" in response["DistributionList"]:
@@ -309,7 +310,7 @@ def s3_buckets():
     """
     Retrieve all S3 buckets (global).
     """
-    service = boto3.client("s3", config=BOTO3_RETRY_CONFIG)
+    service = boto3.client("s3", config=MSAM_BOTO3_CONFIG)
     buckets = service.list_buckets()
     for item in buckets["Buckets"]:
         item["CreationDate"] = str(item["CreationDate"])
@@ -332,7 +333,7 @@ def mediapackage_channels(region):
     items = []
     service_name = 'mediapackage'
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         jsonpath_expr = parse('$..Password')
         response = service.list_channels()
         items = items + response['Channels']
@@ -353,7 +354,7 @@ def mediapackage_origin_endpoints(region):
     items = []
     service_name = 'mediapackage'
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.list_origin_endpoints()
         items = items + response['OriginEndpoints']
         while "NextToken" in response:
@@ -372,7 +373,7 @@ def medialive_channels(region):
     items = []
     service_name = "medialive"
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.list_channels()
         items = items + response['Channels']
         while "NextToken" in response:
@@ -391,7 +392,7 @@ def medialive_inputs(region):
     items = []
     service_name = "medialive"
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.list_inputs()
         items = items + response['Inputs']
         while "NextToken" in response:
@@ -410,7 +411,7 @@ def medialive_multiplexes(region):
     items = []
     service_name = "medialive"
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         lm_response = service.list_multiplexes()
         for multiplex in lm_response["Multiplexes"]:
             multiplex_id = multiplex["Id"]
@@ -437,7 +438,7 @@ def mediastore_containers(region):
     items = []
     service_name = "mediastore"
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.list_containers()
         items = items + response['Containers']
         while "NextToken" in response:
@@ -458,7 +459,7 @@ def mediaconnect_flows(region):
     items = []
     service_name = 'mediaconnect'
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.list_flows()
         flows = response['Flows']
         while "NextToken" in response:
@@ -485,7 +486,7 @@ def mediatailor_configurations(region):
     items = []
     service_name = 'mediatailor'
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.list_playback_configurations()
         configs = response['Items']
         while "NextToken" in response:
@@ -509,7 +510,7 @@ def ssm_managed_instances(region):
     devices = []
     service_name = 'ssm'
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.get_inventory()
         devices = devices + response['Entities']
         while "NextToken" in response:
@@ -539,7 +540,7 @@ def ec2_instances(region):
     reservations = []
     service_name = 'ec2'
     if region in boto3.Session().get_available_regions(service_name):
-        service = boto3.client(service_name, region_name=region, config=BOTO3_RETRY_CONFIG)
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
         response = service.describe_instances()
         reservations = reservations + response['Reservations']
         while "NextToken" in response:

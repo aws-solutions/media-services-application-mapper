@@ -121,8 +121,14 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                     $("#" + id).on("click", eventClosure);
                 }
             });
-            // });
-            show_elements([data_div_id, alerts_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
+            // if node is managed instance, alerts and cloudwatch events don't apply
+            if (node_ids[0].includes("managed-instance")){
+                show_elements([data_div_id, alarms_div_id, data_tab_id, alarms_tab_id]);
+                hide_elements([alerts_div_id, events_div_id, alerts_tab_id, events_tab_id]);
+            }
+            else {
+                show_elements([data_div_id, alerts_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
+            }
         };
 
 
