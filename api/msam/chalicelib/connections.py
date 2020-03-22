@@ -11,7 +11,7 @@ import time
 from urllib.parse import urlparse
 
 from botocore.exceptions import ClientError
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 from jsonpath_ng import parse
 
 from chalicelib import cache

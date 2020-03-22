@@ -2,6 +2,6 @@ boto3
 botocore
 chalice
 jsonpath_ng
-fuzzywuzzy
+rapidfuzz
 stringcase
 requests
