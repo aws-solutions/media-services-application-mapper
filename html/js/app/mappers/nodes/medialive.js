@@ -1,7 +1,7 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
+define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"], 
     function($, server, connections, region_promise, model, svg_node) {
 
         const node_map_handler = (node_type, name, rgb, id, selected, data) => {
@@ -73,6 +73,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var id = channel.Arn;
             var nodes = model.nodes;
             var rgb = "#1E8900";
+            var idle_rgb = svg_node.getIdleRgb();
             var degraded_rgb = svg_node.getDegradedRgb();
             var node_type = "MediaLive Channel";
             var node_data = {
@@ -114,8 +115,15 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     };
                 })()
             };
-            node_data.image.selected = node_data.render.normal_selected();
-            node_data.image.unselected = node_data.render.normal_unselected();
+
+            if (channel.idle_state) {
+                node_data.image.selected = node_data.render.idle_selected();
+                node_data.image.unselected = node_data.render.idle_unselected();    
+            } else {
+                node_data.image.selected = node_data.render.normal_selected();
+                node_data.image.unselected = node_data.render.normal_unselected();
+            }
+            
             nodes.update(node_data);
         };
 
@@ -129,6 +137,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var nodes = model.nodes;
             var node_type = "MediaLive Input";
             var rgb = "#6AAF35";
+            var idle_rgb = svg_node.getIdleRgb();
             var degraded_rgb = svg_node.getDegradedRgb();
             var node_data = {
                 cache_update: cache_entry.updated,
@@ -182,6 +191,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var nodes = model.nodes;
             var node_type = "MediaLive Multiplex";
             var rgb = "#6a8258";
+            var idle_rgb = svg_node.getIdleRgb();
             var degraded_rgb = svg_node.getDegradedRgb();
             var node_data = {
                 cache_update: cache_entry.updated,
