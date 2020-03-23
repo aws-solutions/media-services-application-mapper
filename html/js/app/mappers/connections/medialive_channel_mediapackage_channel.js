@@ -22,7 +22,7 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
                             arrows: "to",
                             color: { color: "black" },
                         };
-                        const hasMoreConnections = _.filter(connections, function(o) { 
+                        const hasMoreConnections = _.filter(connections, function(o) {
                             if (o.from === connection.from && o.to === connection.to) {
                                 let shouldEndWith = '0';
                                 if (connection.arn.endsWith('0'))
@@ -37,10 +37,11 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
                             /** curve it */
                             options.smooth = { enabled: true };
                             options.smooth.type = 'discrete';
-                            
+
                             if (_.has(data, "pipeline")) {
                                 options.label += ` ${data.pipeline}`;
                                 options.smooth.type = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
+                                options.smooth.roundness = 0.15;
                             }
                         }
 

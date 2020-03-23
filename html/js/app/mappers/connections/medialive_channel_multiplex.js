@@ -25,7 +25,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                                 color: { color: 'black' },
                             };
                             const shouldEndWith = connection.arn.endsWith('0') ? '1' : '0';
-                            const hasMoreConnections = _.filter(connections, function(o) { 
+                            const hasMoreConnections = _.filter(connections, function(o) {
                                 if (o.from === connection.from && o.to === connection.to) {
                                     if (o.arn.endsWith(shouldEndWith))
                                         return true;
@@ -41,6 +41,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                                 if (_.has(data, 'pipeline')) {
                                     options.label += ` ${data.pipeline}`;
                                     options.smooth.type = data.pipeline === 1 ? 'curvedCCW' : 'curvedCW';
+                                    options.smooth.roundness = 0.15;
                                 }
                             }
 
