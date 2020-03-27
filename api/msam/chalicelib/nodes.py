@@ -254,8 +254,8 @@ def ssm_managed_instance_ddb_items(region):
     """
     items = []
     for managed_instance in ssm_managed_instances(region):
-        # update this to look like: "arn:aws:ec2:us-west-2:accountnumber:instance/mi-02da03b3021128289"
-        arn = "arn:aws:ssm-managed-instance:" + region + "::" + managed_instance['Id']
+        account_id = boto3.client('sts').get_caller_identity().get('Account')
+        arn = "arn:aws:ssm-managed-instance:" + region + ":" + account_id + ":instance/" + managed_instance['Id']
         service = "ssm-managed-instance"
         items.append(node_to_ddb_item(arn, service, region, managed_instance))
     return items

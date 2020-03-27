@@ -95,7 +95,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 "cloudwatch_link": (function() {
                     var region = id.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:`;
+                        var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bMSAM*2fSSMRunCommand*2c*22Instance*20ID*22*7d*20${name}`;
                         return html;
                     };
                 })()

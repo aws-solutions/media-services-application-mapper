@@ -148,18 +148,34 @@ def ssm_run_command():
         db_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         db_table = db_resource.Table(table_name)
         instance_ids = {}
-
+        items = []
         # get all the managed instances from the DB with tag MSAM-NodeType 
-        response = db_table.query(IndexName="ServiceRegionIndex", KeyConditionExpression=Key("service").eq("ssm-managed-instance"), FilterExpression="contains(#data, :tagname)", ExpressionAttributeNames={"#data": "data"}, ExpressionAttributeValues={":tagname": "MSAM-NodeType"})
-        #print(response)
+        response = db_table.query(
+            IndexName="ServiceRegionIndex", 
+            KeyConditionExpression=Key("service").eq("ssm-managed-instance"), 
+            FilterExpression="contains(#data, :tagname)", 
+            ExpressionAttributeNames={"#data": "data"}, 
+            ExpressionAttributeValues={":tagname": "MSAM-NodeType"}
+            )
+        if "Items" in response:
+            items = response["Items"]
+        while "LastEvaluatedKey" in response:
+            response = db_table.query(
+            IndexName="ServiceRegionIndex", 
+            KeyConditionExpression=Key("service").eq("ssm-managed-instance"), 
+            FilterExpression="contains(#data, :tagname)", 
+            ExpressionAttributeNames={"#data": "data"}, 
+            ExpressionAttributeValues={":tagname": "MSAM-NodeType"},
+            ExclusiveStartKey=response['LastEvaluatedKey']
+            )            
+            if "Items" in response:
+                items.append(response["Items"])
 
-        for item in response['Items']:
+        for item in items:
             data = json.loads(item['data'])
-            #print(data['Tags'])
             if "MSAM-NodeType" in data["Tags"]:
                 instance_ids[data['Id']] = data['Tags']['MSAM-NodeType']
 
-        print(instance_ids)
         # get all the SSM documents applicable to MSAM, filtering by MSAM-NodeType tag
         # When we support more than just ElementalLive, add to the list of values for MSAM-NodeType during filtering
         document_list = ssm_client.list_documents(
@@ -178,14 +194,33 @@ def ssm_run_command():
                 }
             ]
         )
-        
+        document_ids = document_list['DocumentIdentifiers']
+        while "NextToken" in document_list:
+            document_list = ssm_client.list_documents(
+                Filters=[
+                    {
+                        'Key': 'tag:MSAM-NodeType',
+                        'Values': [
+                            'ElementalLive',
+                        ]
+                    },
+                    {
+                        'Key': 'Owner',
+                        'Values': [
+                            'Self'
+                        ]
+                    }
+                ],
+                NextToken=document_list["NextToken"]
+            )
+            document_ids.append(document_list['DocumentIdentifiers'])
+
         document_names = {}
-        for document in document_list['DocumentIdentifiers']:
+        for document in document_ids:
             if "Tags" in document:
                 for tag in document["Tags"]:
                     if tag['Key'] == "MSAM-NodeType":
                         document_names[document["Name"]] = tag['Value']
-        #print(document_names)
         
         # loop over all instances and run applicable commands based on node type
         for id, id_type in instance_ids.items():
@@ -224,12 +259,13 @@ def process_ssm_run_command(event):
     cw_client = boto3.client('cloudwatch', config=MSAM_BOTO3_CONFIG)
     log_client = boto3.client('logs', config=MSAM_BOTO3_CONFIG)
     dimension_name = "Instance ID"
+    metric_name = command_name
+    status = 0
 
     try:
         if command_status == "Success":            
             # test to make sure stream names are always of this format, esp if you create your own SSM document
             log_stream_name = event_dict['detail']['command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
-            print(log_stream_name)
             
             response = log_client.get_log_events(
                 logGroupName=SSM_LOG_GROUP_NAME,
@@ -237,72 +273,52 @@ def process_ssm_run_command(event):
             )
             
             # process document name (command)
-            status = 0
-            print("command name: " + command_name)
             if "MSAMElementalLiveStatus" in command_name:
-                command_name = "MSAMElementalLiveStatus"
+                metric_name = "MSAMElementalLiveStatus"
                 for event in response['events']:
                     if "running" in event['message']:
-                        print("encoder is up and running")
                         status = 1
             elif "MSAMSsmSystemStatus" in command_name:
-                print("instance id: %s command name: %s" % (instance_id, command_name))
-                command_name = "MSAMSsmSystemStatus"
+                metric_name = "MSAMSsmSystemStatus"
                 status = 1
             elif "MSAMElementalLiveActiveAlerts" in command_name:
-                command_name = "MSAMElementalLiveActiveAlerts"
+                metric_name = "MSAMElementalLiveActiveAlerts"
                 root = ET.fromstring(response['events'][0]['message'])
                 status = len(list(root))
                 if status == 1 and root[0].tag == "empty":
                     status = 0
             else: 
                 if "MSAMElementalLiveCompletedEvents" in command_name:
-                    command_name = "MSAMElementalLiveCompletedEvents"
+                    metric_name = "MSAMElementalLiveCompletedEvents"
                 elif "MSAMElementalLiveErroredEvents" in command_name:
-                    command_name = "MSAMElementalLiveErroredEvents"
+                    metric_name = "MSAMElementalLiveErroredEvents"
                 elif "MSAMElementalLiveRunningEvents" in command_name:
-                    command_name = "MSAMElementalLiveRunningEvents"
+                    metric_name = "MSAMElementalLiveRunningEvents"
                 root = ET.fromstring(response['events'][0]['message'])
                 status = len(root.findall("./live_event"))
-
-            cw_client.put_metric_data(
-                Namespace = SSM_LOG_GROUP_NAME,
-                MetricData = [
-                    {
-                        'MetricName': command_name,
-                        'Dimensions': [
-                            {
-                                'Name' : dimension_name,
-                                'Value' : instance_id
-                            },
-                        ],
-                        "Value": status,
-                        "Unit": "Count"
-                    }
-                ]
-            )
         else:
             # log if command has timed out or failed
             print("SSM Command Status: Command %s sent to instance %s has %s" % (command_name, instance_id, command_status))
             # create a metric for it
             status = 1
-            cw_client.put_metric_data(
-                Namespace = SSM_LOG_GROUP_NAME,
-                MetricData = [
-                    {
-                        'MetricName': "MSAMSsmCommand"+command_status,
-                        'Dimensions': [
-                            {
-                                'Name' : dimension_name,
-                                'Value' : instance_id
-                            },
-                        ],
-                        "Value": status,
-                        "Unit": "Count"
-                    }
-                ]
-            )
+            metric_name = "MSAMSsmCommand"+command_status
 
+        cw_client.put_metric_data(
+            Namespace = SSM_LOG_GROUP_NAME,
+            MetricData = [
+                {
+                    'MetricName': metric_name,
+                    'Dimensions': [
+                        {
+                            'Name' : dimension_name,
+                            'Value' : instance_id
+                        },
+                    ],
+                    "Value": status,
+                    "Unit": "Count"
+                }
+            ]
+        )
     except ClientError as error:
         print(error)
 
