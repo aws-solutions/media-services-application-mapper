@@ -13,7 +13,8 @@
                 "mediatailor:Get*",
                 "mediatailor:List*",
                 "ssm:List*",
-                "ssm:Get*"
+                "ssm:Get*",
+                "ssm:SendCommand"
             ],
             "Effect": "Allow",
             "Resource": "*"
@@ -33,7 +34,8 @@
             "Action": [
                 "cloudwatch:ListMetrics",
                 "cloudwatch:GetMetricStatistics",
-                "cloudwatch:Describe*"
+                "cloudwatch:Describe*",
+                "cloudwatch:PutMetricData"
             ],
             "Resource": "*"
         },
@@ -120,7 +122,8 @@
             "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
-                "logs:PutLogEvents"
+                "logs:PutLogEvents",
+                "logs:GetLogEvents"
             ],
             "Effect": "Allow",
             "Resource": "*"
