@@ -76,13 +76,19 @@ def update_regional_ddb_items(region_name):
     except ClientError as error:
         print(error)
     try:
-        print("ssm-managed-instances")
-        content.put_ddb_items(ssm_managed_instance_ddb_items(region_name))
-    except ClientError as error:
-        print(error)
-    try:
         print("ec2-instances")
         content.put_ddb_items(ec2_instance_ddb_items(region_name))
+    except ClientError as error:
+        print(error)
+
+
+def update_regional_ssm_ddb_items(region_name):
+    """
+    Update ssm nodes in the cache for a region.
+    """
+    try:
+        print("ssm-managed-instances")
+        content.put_ddb_items(ssm_managed_instance_ddb_items(region_name))
     except ClientError as error:
         print(error)
 

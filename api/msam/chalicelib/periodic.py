@@ -81,6 +81,22 @@ def update_connections():
 
 
 def update_nodes():
+    return update_nodes_generic(
+        update_global_func=node_cache.update_global_ddb_items,
+        update_regional_func=node_cache.update_regional_ddb_items,
+        settings_key="cache-next-region")
+
+
+def update_ssm_nodes():
+    def skip():
+        print("skipping global region")
+    return update_nodes_generic(
+        update_global_func=skip,
+        update_regional_func=node_cache.update_regional_ssm_ddb_items,
+        settings_key="ssm-cache-next-region")
+
+
+def update_nodes_generic(update_global_func, update_regional_func, settings_key):
     """
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
@@ -89,7 +105,7 @@ def update_nodes():
         never_regions = msam_settings.get_setting(never_regions_key)
         if never_regions is None:
             never_regions = []
-        settings_key = "cache-next-region"
+        # settings_key = "cache-next-region"
         # make a region name list
         region_name_list = []
         for region in regions():
@@ -121,11 +137,11 @@ def update_nodes():
         # store it
         msam_settings.put_setting(settings_key, next_region)
         # update the region
-        print("updating region {}".format(region_name))
+        print("updating nodes for region {}".format(region_name))
         if region_name == "global":
-            node_cache.update_global_ddb_items()
+            update_global_func()
         else:
-            node_cache.update_regional_ddb_items(region_name)
+            update_regional_func(region_name)
     except ClientError as error:
         print(error)
     return region_name
@@ -138,6 +154,7 @@ def update_from_tags():
     tags.update_diagrams()
     tags.update_tiles()
 
+
 def ssm_run_command():
     """
     Runs all applicable SSM document commands on a given managed instance.
@@ -149,25 +166,25 @@ def ssm_run_command():
         db_table = db_resource.Table(table_name)
         instance_ids = {}
         items = []
-        # get all the managed instances from the DB with tag MSAM-NodeType 
+        # get all the managed instances from the DB with tag MSAM-NodeType
         response = db_table.query(
-            IndexName="ServiceRegionIndex", 
-            KeyConditionExpression=Key("service").eq("ssm-managed-instance"), 
-            FilterExpression="contains(#data, :tagname)", 
-            ExpressionAttributeNames={"#data": "data"}, 
+            IndexName="ServiceRegionIndex",
+            KeyConditionExpression=Key("service").eq("ssm-managed-instance"),
+            FilterExpression="contains(#data, :tagname)",
+            ExpressionAttributeNames={"#data": "data"},
             ExpressionAttributeValues={":tagname": "MSAM-NodeType"}
             )
         if "Items" in response:
             items = response["Items"]
         while "LastEvaluatedKey" in response:
             response = db_table.query(
-            IndexName="ServiceRegionIndex", 
-            KeyConditionExpression=Key("service").eq("ssm-managed-instance"), 
-            FilterExpression="contains(#data, :tagname)", 
-            ExpressionAttributeNames={"#data": "data"}, 
+            IndexName="ServiceRegionIndex",
+            KeyConditionExpression=Key("service").eq("ssm-managed-instance"),
+            FilterExpression="contains(#data, :tagname)",
+            ExpressionAttributeNames={"#data": "data"},
             ExpressionAttributeValues={":tagname": "MSAM-NodeType"},
             ExclusiveStartKey=response['LastEvaluatedKey']
-            )            
+            )
             if "Items" in response:
                 items.append(response["Items"])
 
@@ -221,11 +238,11 @@ def ssm_run_command():
                 for tag in document["Tags"]:
                     if tag['Key'] == "MSAM-NodeType":
                         document_names[document["Name"]] = tag['Value']
-        
+
         # loop over all instances and run applicable commands based on node type
         for id, id_type in instance_ids.items():
             for name, doc_type in document_names.items():
-                if id_type in doc_type: 
+                if id_type in doc_type:
                     # maybe eventually doc type could be comma-delimited string if doc applies to more than one type?
                     print("running command: %s on %s " % (name, id))
                     response = ssm_client.send_command(
@@ -263,15 +280,15 @@ def process_ssm_run_command(event):
     status = 0
 
     try:
-        if command_status == "Success":            
+        if command_status == "Success":
             # test to make sure stream names are always of this format, esp if you create your own SSM document
             log_stream_name = event_dict['detail']['command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
-            
+
             response = log_client.get_log_events(
                 logGroupName=SSM_LOG_GROUP_NAME,
                 logStreamName=log_stream_name,
             )
-            
+
             # process document name (command)
             if "MSAMElementalLiveStatus" in command_name:
                 metric_name = "MSAMElementalLiveStatus"
@@ -287,7 +304,7 @@ def process_ssm_run_command(event):
                 status = len(list(root))
                 if status == 1 and root[0].tag == "empty":
                     status = 0
-            else: 
+            else:
                 if "MSAMElementalLiveCompletedEvents" in command_name:
                     metric_name = "MSAMElementalLiveCompletedEvents"
                 elif "MSAMElementalLiveErroredEvents" in command_name:
@@ -321,4 +338,3 @@ def process_ssm_run_command(event):
         )
     except ClientError as error:
         print(error)
-
