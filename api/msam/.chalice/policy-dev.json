@@ -26,22 +26,12 @@
         },
         {
             "Effect": "Allow",
-            "Action": "elasticloadbalancing:Describe*",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
             "Action": [
                 "cloudwatch:ListMetrics",
                 "cloudwatch:GetMetricStatistics",
                 "cloudwatch:Describe*",
                 "cloudwatch:PutMetricData"
             ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "autoscaling:Describe*",
             "Resource": "*"
         },
         {
@@ -78,37 +68,6 @@
             ],
             "Effect": "Allow",
             "Resource": "*"
-        },
-        {
-            "Action": [
-                "iam:PassRole"
-            ],
-            "Effect": "Allow",
-            "Resource": "*",
-            "Condition": {
-                "StringLike": {
-                    "iam:PassedToService": [
-                        "application-autoscaling.amazonaws.com",
-                        "dax.amazonaws.com"
-                    ]
-                }
-            }
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "iam:CreateServiceLinkedRole"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "StringEquals": {
-                    "iam:AWSServiceName": [
-                        "replication.dynamodb.amazonaws.com",
-                        "dax.amazonaws.com",
-                        "dynamodb.application-autoscaling.amazonaws.com"
-                    ]
-                }
-            }
         },
         {
             "Effect": "Allow",
