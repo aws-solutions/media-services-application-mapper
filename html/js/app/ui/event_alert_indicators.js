@@ -51,10 +51,10 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"], funct
 
             if (node) {
                 node.alerting = true;
-                node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded")
+                node.degraded = _.has(item, 'detail') && _.has(item.detail, 'degraded')
                     ? item.detail.degraded : false;
-                node.idle = _.has(item, "detail") && _.has(item.detail, "idle_state")
-                    ? item.detail.idle_state : false;                    
+                node.idle = _.has(item, 'detail') && _.has(item.detail, 'idle_state')
+                    ? item.detail.idle_state : false;
 
                 if (node.idle) {
                     if (!idle_nodes.includes(item.resource_arn)) {

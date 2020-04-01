@@ -81,6 +81,7 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
             create(type_name, node_name, node_rgb, true, id, data),
         unselected: (type_name, node_name, node_rgb, id, data) =>
             create(type_name, node_name, node_rgb, false, id, data),
+        getIdleRgb: () => idle_rgb,
         getDegradedRgb: () => degraded_rgb,
     };
 });
