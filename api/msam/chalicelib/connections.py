@@ -58,6 +58,15 @@ def connection_to_ddb_item_pl(from_arn, to_arn, service, config):
     return connection_item(arn, from_arn, to_arn, service, config)
 
 
+def fetch_running_pipelines_count(data):
+    pipelines_count = 0
+    if "PipelinesRunningCount" in data:
+        pipelines_count = int(data["PipelinesRunningCount"])
+    if "Destinations" in data and len(data["Destinations"]) != pipelines_count:
+        pipelines_count = len(data["Destinations"])
+    return pipelines_count
+
+
 def update_connection_ddb_items():
     """
     Update all connections in the cache.
@@ -136,7 +145,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
                         for mp_channel in mediapackage_ch_cached:
                             mp_channel_data = json.loads(mp_channel["data"])
                             if mp_channel_data['Id'] == mp_setting['ChannelId']:
-                                pipelines_count = ml_channel_data["PipelinesRunningCount"]
+                                pipelines_count = fetch_running_pipelines_count(ml_channel_data)
                                 for pl in range(pipelines_count):
                                     # create a 'connection' out of matches
                                     config = {"from": ml_channel_data["Arn"], "to": mp_channel_data["Arn"], "pipeline": pl}
@@ -219,7 +228,7 @@ def medialive_channel_multiplex_ddb_items():
                     for ml_multiplex in medialive_mp_cached:
                         ml_multiplex_data = json.loads(ml_multiplex["data"])
                         if multiplex_id == ml_multiplex_data["Id"]:
-                            pipelines_count = ml_channel_data["PipelinesRunningCount"]
+                            pipelines_count = fetch_running_pipelines_count(ml_channel_data)
                             for pl in range(pipelines_count):
                                 # create a 'connection' out of matches
                                 config = {"from": ml_channel_data["Arn"], "to": ml_multiplex_data["Arn"], "program": program_name, "pipeline": pl}
@@ -249,7 +258,7 @@ def medialive_input_medialive_channel_ddb_items():
                 ml_input_data = json.loads(ml_input["data"])
                 for attached_id in ml_input_data["AttachedChannels"]:
                     if ml_channel_id == attached_id:
-                        pipelines_count = ml_channel_data["PipelinesRunningCount"]
+                        pipelines_count = fetch_running_pipelines_count(ml_channel_data)
                         for pl in range(pipelines_count):
                             config = {"from": ml_input_data["Arn"], "to": ml_channel_data["Arn"], "type": ml_input_data["Type"], "pipeline": pl}
                             print(config)
