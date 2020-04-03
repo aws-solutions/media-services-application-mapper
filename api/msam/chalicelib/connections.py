@@ -60,12 +60,18 @@ def connection_to_ddb_item_pl(from_arn, to_arn, service, config):
 
 def fetch_running_pipelines_count(data):
     pipelines_count = 0
-    if "PipelinesRunningCount" in data:
-        pipelines_count = int(data["PipelinesRunningCount"])
-    if "Destinations" in data and len(data["Destinations"]) != pipelines_count:
-        pipelines_count = len(data["Destinations"])
+    # this will take care of medialive
+    if 'ChannelClass' in data:
+        if data["ChannelClass"] == "STANDARD":
+            pipelines_count = 2
+        else:
+            pipelines_count = 1
+    else:
+        # this will take care of multiplex
+        if "Destinations" in data:
+            pipelines_count = len(data["Destinations"])
     return pipelines_count
-
+    
 
 def update_connection_ddb_items():
     """
