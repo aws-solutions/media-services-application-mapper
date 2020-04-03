@@ -166,6 +166,7 @@ UPDATE_FROM_TAGS_DESCRIPTION = "MSAM Lambda for handling diagram and tile update
 API_HANDLER_DESCRIPTION = "MSAM Lambda for handling requests from clients"
 SSM_RUN_CMD_DESCRIPTION = "MSAM Lambda for running all applicable commands for a given managed instance"
 SSM_PROCESS_RUN_CMD_DESCRIPTION = "MSAM Lambda for processing outputs from running a command on a managed instance"
+UPDATE_SSM_NODES_DESCRIPTION = "MSAM Lambda for periodically updating the managed instances node cache"
 
 def main():
     template = {}
@@ -205,6 +206,8 @@ def main():
         template["Resources"]["APIHandler"]["Properties"]["Description"] = API_HANDLER_DESCRIPTION
         template["Resources"]["SsmRunCommand"]["Properties"]["Description"] = SSM_RUN_CMD_DESCRIPTION
         template["Resources"]["ProcessSsmRunCommand"]["Properties"]["Description"] = SSM_PROCESS_RUN_CMD_DESCRIPTION
+        template["Resources"]["UpdateSsmNodes"]["Properties"]["Description"] = UPDATE_SSM_NODES_DESCRIPTION
+
         # add the SSM document resources
         template["Resources"].update(ssm_doc_json)
         
