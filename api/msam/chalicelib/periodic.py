@@ -338,3 +338,5 @@ def process_ssm_run_command(event):
         )
     except ClientError as error:
         print(error)
+        print("SSM Command Status: Command %s sent to instance %s has status %s" % (command_name, instance_id, command_status))
+        print("Log stream name is %s" % (log_stream_name))

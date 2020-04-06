@@ -517,7 +517,15 @@ def ssm_managed_instances(region):
     service_name = 'ssm'
     if region in boto3.Session().get_available_regions(service_name):
         service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
-        response = service.get_inventory()
+        response = service.get_inventory(Filters=[
+                {
+                    'Key': 'AWS:InstanceInformation.InstanceStatus',
+                    'Values': [
+                        'Terminated',
+                    ],
+                    'Type': 'NotEqual'
+                }
+        ])
         devices = devices + response['Entities']
         while "NextToken" in response:
             response = service.get_inventory(NextToken=response["NextToken"])
