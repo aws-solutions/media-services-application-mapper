@@ -62,7 +62,7 @@ https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1581034203
 
 ## CloudFormation Stack Creation
 
-* Login to CloudFormation using the same account used for creating / managing the MediaServices.
+* Login to CloudFormation using the same account used for creating and managing the Media Services
 * Click on Create Stack
 
 During the installation of the CloudFormation stacks you may be prompted to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Change Set" button where applicable, then press the Execute button.
@@ -80,7 +80,7 @@ As of release v1.5.0, the CloudFormation templates distributed for MSAM include 
 #### Input Parameters
 
 1. Provide a stack name
-2. Specify the time-to-live in seconds for cached data, alarms, and events; see the examples next to the input for common values
+2. Specify the time-to-live in seconds for all cached data, alarms, and events; see the examples next to the input for common values
 
 #### Outputs
 
@@ -191,7 +191,7 @@ Note that if you want to share the UI with a colleague you can do so easily by p
 
 ## Start the MSAM UI 
 
-**Wait about 5-10 minutes for the first data gathering of the services to complete. This is needed only the first time after creation of the MSAM instance.**
+**Wait about 5-10 minutes for the first data gathering of the services and connection mapping to complete. This is needed only the first time after creation of the MSAM instance.**
 
 Continue to the [Usage](USAGE.md) guide to start using the tool.
 

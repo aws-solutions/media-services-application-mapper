@@ -19,6 +19,8 @@
 
 * Edges (connections) on diagrams generally represent some type of data flow
 
+* Resources with redundant data paths are drawn with multiple, labeled connections
+
 ![Simple Workflow](images/diagram-nodes-edges.png)
  
 * Simple and complex workflows of Media Services resources can be discovered and represented
@@ -60,7 +62,7 @@ The following image shows the aggregated JSON configuration of all the diagram e
 
 ### Resource Monitoring
 
-* MSAM can be configured to automatically display MediaLive and MediaConnect pipeline alerts on those nodes
+* MSAM can be configured to automatically display MediaLive Channel, Multiplex and MediaConnect alerts
 * The tool integrates with CloudWatch alarms to indicate operational problems from a top-down view
 * Any CloudWatch alarm can be associated with any node on the diagram
 * CloudWatch alarm indicators are visualized as color and text on the node
@@ -70,13 +72,17 @@ The following image shows MediaConnect flows sending to a MediaLive input, a Med
 
 ![CloudWatch Support](images/cloudwatch-diagram.png)
 
-* MSAM provides three tabs in the lower compartment for Pipeline Alerts, Subscribed Alarms, and a recent CloudWatch event history. The following image shows the Pipeline Alerts tab after selecting the MediaLive channel shown above.
+MSAM provides three tabs in the lower compartment for Pipeline Alerts, Subscribed Alarms, and a recent CloudWatch event history. The following image shows the Pipeline Alerts tab after selecting the MediaLive channel shown above.
 
 ![CloudWatch Support](images/pipeline-alerts-tab.png)
 
 This image shows the Subscribed Alarms tab after selecting the MediaPackage channel shown above.
 
 ![CloudWatch Support](images/subscribed-alarms-tab.png)
+
+Use the Recent CloudWatch Events tab to see event detail for most resources that emit events. Below is a MediaPackage endpoint resource that emitted an Input Switch Event.
+
+![CloudWatch Support](images/recent-cloudwatch-events.png)
 
 A tile aggregates all structure, configuration and status from the underlying assigned resources. If any resource's CloudWatch alarm assigned to a tile goes into alarm status, the tiles associated with that resource will also show the same status. See the image below.
 

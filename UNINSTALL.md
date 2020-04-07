@@ -4,6 +4,18 @@ MSAM is removed from an AWS account using CloudFormation.
 
 ## CloudFormation Stack Deletion
 
+### Events Stack
+
+Delete the events stack from any other regions that were installed after you installed the main solution.
+
+### Master Template/All Resources Stacks
+
+If you used the **all-resources** template installation option, select the master stack in CloudFormation and click the Delete button. CloudFormation will uninstall the stacks in the opposite order they were installed.
+
+### Individual Stacks
+
+If you used separate templates to install the solution, be sure to delete the stacks in the opposite order they were installed.
+
 The order in which to delete the stacks are as follows:
 
 1. Delete MSAM Web stack 

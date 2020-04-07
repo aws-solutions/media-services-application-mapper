@@ -84,9 +84,9 @@ Once you have some inventory on the diagram, you will want to organize the nodes
 
 ### Navigation
 
-* Fit and magnification buttons are located at the bottom right of the diagram
+* Fit and magnification buttons are located at the bottom left of the diagram
 * The fit button will resize the entire diagram to the visible page
-* Movement buttons are located at the bottom left of the diagram
+* Movement buttons are also located at the bottom left of the diagram
 * Left-click and drag the background of the diagram to reposition
 * Double-click a node or near a node to zoom in to it
 
@@ -128,7 +128,7 @@ The following diagram image is an example of vertical alignment.
 
 ## Tiles
 
-A tile represents all of the cloud resources that make up a streaming channel, or some type of system or solution. A tile might include, for example, an on-premise video encoder, MediaConnect flows, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, MediaTailor instance, and CloudFront distribution. A cloud resource can be a member of more than one tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a tile's resources are aggregated and communicated by visual indications on the tile.
+A tile represents all of the cloud resources that make up a streaming channel, or some type of system or solution. A tile might include, for example, an on-premise video encoder, MediaConnect flows, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, MediaTailor instance, and CloudFront distribution. Any resource can be a member of more than one tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a tile's resources are aggregated and communicated by visual indications on the tile.
 
 Tiles are sorted by the total number of alarms and alerts, and then by tile name. Diagram nodes are peridically updated to visually reflect the state of subscribed alarms and alerts. Tiles reflect the aggregate status of all the cloud resources associated with the tile. The following image of a tile tab shows several tiles indicating an alarm, a selected tile (Portland Live Camera) with details in the lower compartment.
 
@@ -139,14 +139,14 @@ Tiles are sorted by the total number of alarms and alerts, and then by tile name
 A new tile is created several ways:
 
 * Select the Tile tab, and choose Tiles/Add New Tile and provide a name
-* Select the Tile tab, drag an existing tile to the background and provide a name to create a copy
-* Select the Tile tab, drag an existing diagram tab to the tile tab background to create a tile with the diagram's contents
+* Select the Tile tab, drag an existing tile to the white background and provide a name to create a copy
+* Select the Tile tab, drag an existing diagram tab to the tile tab white background to create a tile with the diagram's contents
 
 The new tile will appear in the Tile view. Tiles will automatically update every few seconds to show the latest status.
 
 ### Updating Tile Contents
 
-You can add cloud inventory to a tile in much the same way you add inventory to diagrams.
+You can add inventory to a tile in much the same way you add inventory to diagrams.
 
 * Use the keyword search at the top right of the page and drag results from the bottom of the page to the tile
 * Drag one tile on top of another tile to copy inventory from one tile to the other
@@ -156,13 +156,13 @@ You can add cloud inventory to a tile in much the same way you add inventory to 
 
 ## Monitoring Cloud Resources
 
-Select any item contained by a diagram or select a tile in the **Tiles** tab. Click the **Monitor** tab at the bottom of the page to view the subscribed CloudWatch Alarms and MediaLive pipeline alerts related to the resource.
+Select any item contained by a diagram or select a tile in the **Tiles** tab. Click the **Subscribed Alarms** tab or **Recent CloudWatch Events** tab at the bottom of the page to view alarms and alerts related to the resources contained by the tile.
 
-### AWS MediaLive and MediaConnect Pipeline Alerts
+### CloudWatch Events and Media Services Alerts
 
-Install the `msam-events-release.json` CloudFormation template in each region as your AWS MediaLive channels or MediaConnect flows. Pipeline alerts are automatically received into MSAM and indicated on the diagrams and tiles containing those channels. The visual items representing MediaLive will change color as Pipeline Alerts are set and cleared.
+Install the `msam-events-release.json` CloudFormation template in each region as your MediaLive Channels or Multiplexes, or MediaConnect flows. Events and Alerts are automatically received into MSAM and indicated on the diagrams and tiles containing those resources. The visual items representing MediaLive will change color as Pipeline Alerts are set and cleared.
 
-Pipeline Alerts are represented with the colors yellow and red depending on the resource's total number of pipelines and number of pipelines currently experiencing a problem. If the number of pipelines experiencing a problem is less than the total number of pipelines, the node is drawn in yellow to indicate the resource is still moving data but without full redundancy. If all the pipelines of a resource are experiencing a problem, then the node is drawn in red to indicate a failure.
+Media Services Alerts are represented with the colors yellow and red depending on the resource's total number of pipelines and number of pipelines currently experiencing a problem. If the number of pipelines experiencing a problem is less than the total number of pipelines, the node is drawn in yellow to indicate the resource is still moving data but without full redundancy. If all the pipelines of a resource are experiencing a problem, then the node is drawn in red to indicate a failure.
 
 ### Cloudwatch Alarms
 
@@ -178,9 +178,9 @@ All tiles and diagrams containing this node will reflect the current alarm state
 After a diagram node is subscribed to an alarm:
 
 1. Select the diagram node
-1. Select the Monitor tab
+1. Select the Subscribed Alarms tab
 
-The upper area of the Monitor tab contains subscribed alarms and the lower area contains MediaLive alerts. Use the control at the far right of the monitor tab to remove an alarm from a cloud resource. The diagram item will show a state change of any subscribed alarms.
+The upper area of the Subscribed Alarms tab contains subscribed alarms and the lower area contains MediaLive alerts. Use the control at the far right of the monitor tab to remove an alarm from a cloud resource. The diagram item will show a state change of any subscribed alarms.
 
 ## Menus
 
@@ -204,6 +204,7 @@ The upper area of the Monitor tab contains subscribed alarms and the lower area 
 	* Delete Selected Tile -- delete the selected tile in the Tiles tab (does not delete resources)
 
 * Diagrams
+	* Add New Diagram -- create an empty diagram with a name
 	* Manage Diagram Contents -- open the dialog to add and remove resources from the current diagram
 	* Add Downstream Connected Nodes -- add downstream resources connected to the currently selected diagram resource
 	* Add Upstream Connected Nodes -- add upstream resources connected to the currently selected diagram resource
@@ -216,7 +217,6 @@ The upper area of the Monitor tab contains subscribed alarms and the lower area 
 	* Layout Hierarchical Left-Right -- perform a layout of the current diagram organized from left to right
 	* Layout Isolated Nodes -- perform a box layout of unconnected nodes of the same type in the current diagram
 	* Remove Selected Nodes -- remove the selected nodes from the current diagram
-	* Add New Diagram -- create an empty diagram with a name
 	* Duplicate Current Diagram -- create a copy of the current diagram to a new diagram
 	* Remove Current Diagram -- remove the current diagram
 
