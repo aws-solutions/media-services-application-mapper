@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1583259275)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1586290481)",
     "Resources": {
         "MSAMAppBucketOriginAccessIdentity": {
             "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
@@ -202,12 +202,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1583259275.zip"
+                    "S3Key": "msam/webcontent_resource_1586290481.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1583259275",
-                        "ZIP_DIGEST": "2a807480db194a6473210053ca1bd9fd6e067dcc",
+                        "BUILD_STAMP": "1586290481",
+                        "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2",
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
@@ -239,8 +239,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1583259275",
-                "ZIP_DIGEST": "2a807480db194a6473210053ca1bd9fd6e067dcc"
+                "BUILD_STAMP": "1586290481",
+                "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2"
             }
         },
         "MSAMWebInvalidationResource": {
@@ -258,12 +258,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1583259275.zip"
+                    "S3Key": "msam/webcontent_resource_1586290481.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1583259275",
-                        "ZIP_DIGEST": "2a807480db194a6473210053ca1bd9fd6e067dcc",
+                        "BUILD_STAMP": "1586290481",
+                        "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2",
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
@@ -296,8 +296,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1583259275",
-                "ZIP_DIGEST": "2a807480db194a6473210053ca1bd9fd6e067dcc",
+                "BUILD_STAMP": "1586290481",
+                "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2",
                 "DistributionId": {
                     "Ref": "MSAMAppBucketCloudFrontDistribution"
                 }

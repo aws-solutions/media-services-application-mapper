@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/1e1a7a749abb7c9d585b877ed969eda0",
+                    "Key": "msam/88e8c7742b0d3cd70fbb23a7cafc8b02",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -34,7 +34,9 @@
                             {
                                 "Effect": "Allow",
                                 "Action": [
+                                    "dynamodb:Query",
                                     "dynamodb:PutItem",
+                                    "medialive:Describe*",
                                     "mediapackage:Describe*"
                                 ],
                                 "Resource": "*"
@@ -50,6 +52,9 @@
                         },
                         "EVENTS_TABLE_NAME": {
                             "Ref": "EventsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
                         },
                         "CLOUDWATCH_EVENTS_TABLE_NAME": {
                             "Ref": "CloudWatchEventsTableName"
@@ -96,6 +101,13 @@
         "ItemTTL": {
             "Description": "The number of seconds before a record in the MSAM events table automatically expires and is removed (3600 = 1 hour, 86400 = 1 day, 604800 = 1 week).",
             "Default": "604800",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "ContentTableName": {
+            "Description": "This is the DynamoDB table name that stores cached content for MSAM.",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

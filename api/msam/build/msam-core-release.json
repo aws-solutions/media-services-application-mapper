@@ -63,7 +63,8 @@
                                         "mediatailor:Get*",
                                         "mediatailor:List*",
                                         "ssm:List*",
-                                        "ssm:Get*"
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -75,21 +76,12 @@
                                 },
                                 {
                                     "Effect": "Allow",
-                                    "Action": "elasticloadbalancing:Describe*",
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
                                     "Action": [
                                         "cloudwatch:ListMetrics",
                                         "cloudwatch:GetMetricStatistics",
-                                        "cloudwatch:Describe*"
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "autoscaling:Describe*",
                                     "Resource": "*"
                                 },
                                 {
@@ -128,37 +120,6 @@
                                     "Resource": "*"
                                 },
                                 {
-                                    "Action": [
-                                        "iam:PassRole"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringLike": {
-                                            "iam:PassedToService": [
-                                                "application-autoscaling.amazonaws.com",
-                                                "dax.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "iam:CreateServiceLinkedRole"
-                                    ],
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringEquals": {
-                                            "iam:AWSServiceName": [
-                                                "replication.dynamodb.amazonaws.com",
-                                                "dax.amazonaws.com",
-                                                "dynamodb.application-autoscaling.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
                                     "Effect": "Allow",
                                     "Action": [
                                         "s3:Get*",
@@ -170,7 +131,8 @@
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -201,7 +163,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "CodeUri": {
-                    "Key": "msam/edd57e1c9ee79812cde0f363062d2a07",
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -217,7 +179,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -293,7 +255,8 @@
                                         "mediatailor:Get*",
                                         "mediatailor:List*",
                                         "ssm:List*",
-                                        "ssm:Get*"
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -305,21 +268,12 @@
                                 },
                                 {
                                     "Effect": "Allow",
-                                    "Action": "elasticloadbalancing:Describe*",
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
                                     "Action": [
                                         "cloudwatch:ListMetrics",
                                         "cloudwatch:GetMetricStatistics",
-                                        "cloudwatch:Describe*"
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "autoscaling:Describe*",
                                     "Resource": "*"
                                 },
                                 {
@@ -358,37 +312,6 @@
                                     "Resource": "*"
                                 },
                                 {
-                                    "Action": [
-                                        "iam:PassRole"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringLike": {
-                                            "iam:PassedToService": [
-                                                "application-autoscaling.amazonaws.com",
-                                                "dax.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "iam:CreateServiceLinkedRole"
-                                    ],
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringEquals": {
-                                            "iam:AWSServiceName": [
-                                                "replication.dynamodb.amazonaws.com",
-                                                "dax.amazonaws.com",
-                                                "dynamodb.application-autoscaling.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
                                     "Effect": "Allow",
                                     "Action": [
                                         "s3:Get*",
@@ -400,7 +323,8 @@
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -431,7 +355,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
                 "CodeUri": {
-                    "Key": "msam/edd57e1c9ee79812cde0f363062d2a07",
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -447,7 +371,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -531,7 +455,8 @@
                                         "mediatailor:Get*",
                                         "mediatailor:List*",
                                         "ssm:List*",
-                                        "ssm:Get*"
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -543,21 +468,12 @@
                                 },
                                 {
                                     "Effect": "Allow",
-                                    "Action": "elasticloadbalancing:Describe*",
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
                                     "Action": [
                                         "cloudwatch:ListMetrics",
                                         "cloudwatch:GetMetricStatistics",
-                                        "cloudwatch:Describe*"
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "autoscaling:Describe*",
                                     "Resource": "*"
                                 },
                                 {
@@ -596,37 +512,6 @@
                                     "Resource": "*"
                                 },
                                 {
-                                    "Action": [
-                                        "iam:PassRole"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringLike": {
-                                            "iam:PassedToService": [
-                                                "application-autoscaling.amazonaws.com",
-                                                "dax.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "iam:CreateServiceLinkedRole"
-                                    ],
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringEquals": {
-                                            "iam:AWSServiceName": [
-                                                "replication.dynamodb.amazonaws.com",
-                                                "dax.amazonaws.com",
-                                                "dynamodb.application-autoscaling.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
                                     "Effect": "Allow",
                                     "Action": [
                                         "s3:Get*",
@@ -638,7 +523,8 @@
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -669,7 +555,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
                 "CodeUri": {
-                    "Key": "msam/edd57e1c9ee79812cde0f363062d2a07",
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -685,7 +571,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -769,7 +655,8 @@
                                         "mediatailor:Get*",
                                         "mediatailor:List*",
                                         "ssm:List*",
-                                        "ssm:Get*"
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -781,21 +668,12 @@
                                 },
                                 {
                                     "Effect": "Allow",
-                                    "Action": "elasticloadbalancing:Describe*",
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
                                     "Action": [
                                         "cloudwatch:ListMetrics",
                                         "cloudwatch:GetMetricStatistics",
-                                        "cloudwatch:Describe*"
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "autoscaling:Describe*",
                                     "Resource": "*"
                                 },
                                 {
@@ -834,37 +712,6 @@
                                     "Resource": "*"
                                 },
                                 {
-                                    "Action": [
-                                        "iam:PassRole"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringLike": {
-                                            "iam:PassedToService": [
-                                                "application-autoscaling.amazonaws.com",
-                                                "dax.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "iam:CreateServiceLinkedRole"
-                                    ],
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringEquals": {
-                                            "iam:AWSServiceName": [
-                                                "replication.dynamodb.amazonaws.com",
-                                                "dax.amazonaws.com",
-                                                "dynamodb.application-autoscaling.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
                                     "Effect": "Allow",
                                     "Action": [
                                         "s3:Get*",
@@ -876,7 +723,8 @@
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -907,7 +755,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
                 "CodeUri": {
-                    "Key": "msam/edd57e1c9ee79812cde0f363062d2a07",
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -923,7 +771,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -1007,7 +855,8 @@
                                         "mediatailor:Get*",
                                         "mediatailor:List*",
                                         "ssm:List*",
-                                        "ssm:Get*"
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -1019,21 +868,12 @@
                                 },
                                 {
                                     "Effect": "Allow",
-                                    "Action": "elasticloadbalancing:Describe*",
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
                                     "Action": [
                                         "cloudwatch:ListMetrics",
                                         "cloudwatch:GetMetricStatistics",
-                                        "cloudwatch:Describe*"
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "autoscaling:Describe*",
                                     "Resource": "*"
                                 },
                                 {
@@ -1072,37 +912,6 @@
                                     "Resource": "*"
                                 },
                                 {
-                                    "Action": [
-                                        "iam:PassRole"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringLike": {
-                                            "iam:PassedToService": [
-                                                "application-autoscaling.amazonaws.com",
-                                                "dax.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "iam:CreateServiceLinkedRole"
-                                    ],
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringEquals": {
-                                            "iam:AWSServiceName": [
-                                                "replication.dynamodb.amazonaws.com",
-                                                "dax.amazonaws.com",
-                                                "dynamodb.application-autoscaling.amazonaws.com"
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
                                     "Effect": "Allow",
                                     "Action": [
                                         "s3:Get*",
@@ -1114,7 +923,8 @@
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -1145,7 +955,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
                 "CodeUri": {
-                    "Key": "msam/edd57e1c9ee79812cde0f363062d2a07",
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -1161,7 +971,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -1211,7 +1021,7 @@
                 "Description": "MSAM Lambda for handling diagram and tile updates from tags"
             }
         },
-        "ApiHandlerRole": {
+        "SsmRunCommandRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "AssumeRolePolicyDocument": {
@@ -1245,7 +1055,8 @@
                                         "mediatailor:Get*",
                                         "mediatailor:List*",
                                         "ssm:List*",
-                                        "ssm:Get*"
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -1257,21 +1068,12 @@
                                 },
                                 {
                                     "Effect": "Allow",
-                                    "Action": "elasticloadbalancing:Describe*",
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
                                     "Action": [
                                         "cloudwatch:ListMetrics",
                                         "cloudwatch:GetMetricStatistics",
-                                        "cloudwatch:Describe*"
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*"
-                                },
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "autoscaling:Describe*",
                                     "Resource": "*"
                                 },
                                 {
@@ -1310,35 +1112,204 @@
                                     "Resource": "*"
                                 },
                                 {
+                                    "Effect": "Allow",
                                     "Action": [
-                                        "iam:PassRole"
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringLike": {
-                                            "iam:PassedToService": [
-                                                "application-autoscaling.amazonaws.com",
-                                                "dax.amazonaws.com"
-                                            ]
-                                        }
-                                    }
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ]
+                        },
+                        "PolicyName": "SsmRunCommandRolePolicy"
+                    }
+                ]
+            }
+        },
+        "SsmRunCommand": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Runtime": "python3.6",
+                "Handler": "app.ssm_run_command",
+                "CodeUri": {
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
+                    "Bucket": {
+                        "Fn::Join": [
+                            "-",
+                            [
+                                {
+                                    "Ref": "BucketBasename"
+                                },
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "Tags": {
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                },
+                "Timeout": 300,
+                "MemorySize": 2560,
+                "Environment": {
+                    "Variables": {
+                        "ALARMS_TABLE_NAME": {
+                            "Ref": "AlarmsTableName"
+                        },
+                        "BUILD_STAMP": "DEV_0_0_0",
+                        "CACHE_ITEM_TTL": {
+                            "Ref": "CacheItemTTL"
+                        },
+                        "CHANNELS_TABLE_NAME": {
+                            "Ref": "ChannelsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
+                        },
+                        "EVENTS_TABLE_NAME": {
+                            "Ref": "EventsTableName"
+                        },
+                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
+                            "Ref": "CloudWatchEventsTableName"
+                        },
+                        "LAYOUT_TABLE_NAME": {
+                            "Ref": "LayoutTableName"
+                        },
+                        "SETTINGS_TABLE_NAME": {
+                            "Ref": "SettingsTableName"
+                        }
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "SsmRunCommandRole",
+                        "Arn"
+                    ]
+                },
+                "Events": {
+                    "SsmRunCommandEvent": {
+                        "Type": "Schedule",
+                        "Properties": {
+                            "Schedule": "rate(1 minute)"
+                        }
+                    }
+                },
+                "Description": "MSAM Lambda for running all applicable commands for a given managed instance"
+            }
+        },
+        "ProcessSsmRunCommandRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*",
+                                        "mediatailor:Get*",
+                                        "mediatailor:List*",
+                                        "ssm:List*",
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
                                 },
                                 {
                                     "Effect": "Allow",
                                     "Action": [
-                                        "iam:CreateServiceLinkedRole"
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
                                     ],
-                                    "Resource": "*",
-                                    "Condition": {
-                                        "StringEquals": {
-                                            "iam:AWSServiceName": [
-                                                "replication.dynamodb.amazonaws.com",
-                                                "dax.amazonaws.com",
-                                                "dynamodb.application-autoscaling.amazonaws.com"
-                                            ]
-                                        }
-                                    }
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Scan"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:List*",
+                                        "lambda:Get*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
                                 },
                                 {
                                     "Effect": "Allow",
@@ -1352,7 +1323,422 @@
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ]
+                        },
+                        "PolicyName": "ProcessSsmRunCommandRolePolicy"
+                    }
+                ]
+            }
+        },
+        "ProcessSsmRunCommand": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Runtime": "python3.6",
+                "Handler": "app.process_ssm_run_command",
+                "CodeUri": {
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
+                    "Bucket": {
+                        "Fn::Join": [
+                            "-",
+                            [
+                                {
+                                    "Ref": "BucketBasename"
+                                },
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "Tags": {
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                },
+                "Timeout": 300,
+                "MemorySize": 2560,
+                "Environment": {
+                    "Variables": {
+                        "ALARMS_TABLE_NAME": {
+                            "Ref": "AlarmsTableName"
+                        },
+                        "BUILD_STAMP": "DEV_0_0_0",
+                        "CACHE_ITEM_TTL": {
+                            "Ref": "CacheItemTTL"
+                        },
+                        "CHANNELS_TABLE_NAME": {
+                            "Ref": "ChannelsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
+                        },
+                        "EVENTS_TABLE_NAME": {
+                            "Ref": "EventsTableName"
+                        },
+                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
+                            "Ref": "CloudWatchEventsTableName"
+                        },
+                        "LAYOUT_TABLE_NAME": {
+                            "Ref": "LayoutTableName"
+                        },
+                        "SETTINGS_TABLE_NAME": {
+                            "Ref": "SettingsTableName"
+                        }
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "ProcessSsmRunCommandRole",
+                        "Arn"
+                    ]
+                },
+                "Events": {
+                    "ProcessSsmRunCommandEvent": {
+                        "Type": "CloudWatchEvent",
+                        "Properties": {
+                            "Pattern": {
+                                "source": [
+                                    "aws.ssm"
+                                ],
+                                "detail-type": [
+                                    "EC2 Command Invocation Status-change Notification"
+                                ],
+                                "detail": {
+                                    "status": [
+                                        "Success",
+                                        "Failed",
+                                        "TimedOut"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "Description": "MSAM Lambda for processing outputs from running a command on a managed instance"
+            }
+        },
+        "UpdateSsmNodesRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*",
+                                        "mediatailor:Get*",
+                                        "mediatailor:List*",
+                                        "ssm:List*",
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Scan"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:List*",
+                                        "lambda:Get*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "acm:ListCertificates",
+                                        "cloudfront:Get*",
+                                        "cloudfront:List*",
+                                        "iam:ListServerCertificates",
+                                        "route53:List*",
+                                        "waf:ListWebACLs",
+                                        "waf:GetWebACL"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ]
+                        },
+                        "PolicyName": "UpdateSsmNodesRolePolicy"
+                    }
+                ]
+            }
+        },
+        "UpdateSsmNodes": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Runtime": "python3.6",
+                "Handler": "app.update_ssm_nodes",
+                "CodeUri": {
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
+                    "Bucket": {
+                        "Fn::Join": [
+                            "-",
+                            [
+                                {
+                                    "Ref": "BucketBasename"
+                                },
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "Tags": {
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                },
+                "Timeout": 300,
+                "MemorySize": 2560,
+                "Environment": {
+                    "Variables": {
+                        "ALARMS_TABLE_NAME": {
+                            "Ref": "AlarmsTableName"
+                        },
+                        "BUILD_STAMP": "DEV_0_0_0",
+                        "CACHE_ITEM_TTL": {
+                            "Ref": "CacheItemTTL"
+                        },
+                        "CHANNELS_TABLE_NAME": {
+                            "Ref": "ChannelsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
+                        },
+                        "EVENTS_TABLE_NAME": {
+                            "Ref": "EventsTableName"
+                        },
+                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
+                            "Ref": "CloudWatchEventsTableName"
+                        },
+                        "LAYOUT_TABLE_NAME": {
+                            "Ref": "LayoutTableName"
+                        },
+                        "SETTINGS_TABLE_NAME": {
+                            "Ref": "SettingsTableName"
+                        }
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "UpdateSsmNodesRole",
+                        "Arn"
+                    ]
+                },
+                "Events": {
+                    "UpdateSsmNodesEvent": {
+                        "Type": "Schedule",
+                        "Properties": {
+                            "Schedule": "rate(5 minutes)"
+                        }
+                    }
+                },
+                "Description": "MSAM Lambda for periodically updating the managed instances node cache"
+            }
+        },
+        "ApiHandlerRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "mediapackage:List*",
+                                        "mediapackage:Describe*",
+                                        "medialive:List*",
+                                        "medialive:Describe*",
+                                        "mediastore:List*",
+                                        "mediastore:Get*",
+                                        "mediaconnect:List*",
+                                        "mediaconnect:Describe*",
+                                        "mediatailor:Get*",
+                                        "mediatailor:List*",
+                                        "ssm:List*",
+                                        "ssm:Get*",
+                                        "ssm:SendCommand"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "ec2:Describe*",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudwatch:ListMetrics",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:Describe*",
+                                        "cloudwatch:PutMetricData"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "dynamodb:Query",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Scan"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "application-autoscaling:DescribeScalableTargets",
+                                        "application-autoscaling:DescribeScalingActivities",
+                                        "application-autoscaling:DescribeScalingPolicies",
+                                        "cloudwatch:DescribeAlarmHistory",
+                                        "cloudwatch:DescribeAlarms",
+                                        "cloudwatch:DescribeAlarmsForMetric",
+                                        "cloudwatch:GetMetricStatistics",
+                                        "cloudwatch:ListMetrics",
+                                        "ec2:DescribeVpcs",
+                                        "ec2:DescribeSubnets",
+                                        "ec2:DescribeSecurityGroups",
+                                        "iam:GetRole",
+                                        "iam:ListRoles",
+                                        "sns:ListSubscriptions",
+                                        "sns:ListSubscriptionsByTopic",
+                                        "sns:ListTopics",
+                                        "lambda:List*",
+                                        "lambda:Get*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:Get*",
+                                        "s3:List*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents",
+                                        "logs:GetLogEvents"
                                     ],
                                     "Effect": "Allow",
                                     "Resource": "*"
@@ -3492,6 +3878,96 @@
                                 }
                             }
                         },
+                        "/cloudwatch/events/state/{state}/groups": {
+                            "get": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to retrieve all pipeline events in a given state (set, clear) and grouped by pipeline state (down, degraded, running)",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "state",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "options": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        },
+                                        "headers": {
+                                            "Access-Control-Allow-Methods": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Origin": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Headers": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200",
+                                            "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                                            }
+                                        }
+                                    },
+                                    "requestTemplates": {
+                                        "application/json": "{\"statusCode\": 200}"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "type": "mock"
+                                }
+                            }
+                        },
                         "/cloudwatch/events/all/{resource_arn}": {
                             "get": {
                                 "consumes": [
@@ -3903,7 +4379,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.app",
                 "CodeUri": {
-                    "Key": "msam/edd57e1c9ee79812cde0f363062d2a07",
+                    "Key": "msam/f6f40d4ba032b97877ee8fdb2adc2353",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -3919,7 +4395,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -4015,6 +4491,168 @@
                 "Description": "MSAM default API key",
                 "Enabled": "true"
             }
+        },
+        "MSAMElementalLiveCompletedEvents": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "schemaVersion": "1.2",
+                    "description": "How many Elemental Live events have completed?",
+                    "runtimeConfig": {
+                        "aws:runShellScript": {
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=complete"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
+            }
+        },
+        "MSAMElementalLiveErroredEvents": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "schemaVersion": "1.2",
+                    "description": "How many Elemental Live events have errored?",
+                    "runtimeConfig": {
+                        "aws:runShellScript": {
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=error"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
+            }
+        },
+        "MSAMElementalLiveRunningEvents": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "schemaVersion": "1.2",
+                    "description": "How many Elemental Live events are running?",
+                    "runtimeConfig": {
+                        "aws:runShellScript": {
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=running"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
+            }
+        },
+        "MSAMElementalLiveStatus": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "schemaVersion": "1.2",
+                    "description": "Is the Elemental Live process running?",
+                    "runtimeConfig": {
+                        "aws:runShellScript": {
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "sudo /etc/init.d/elemental_se status || sudo systemctl status elemental_se"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
+            }
+        },
+        "MSAMElementalLiveActiveAlerts": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "schemaVersion": "1.2",
+                    "description": "How many alerts are currently active on the encoder?",
+                    "runtimeConfig": {
+                        "aws:runShellScript": {
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl http://localhost/api/alerts.xml?filter=Active"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
+            }
+        },
+        "MSAMSsmSystemStatus": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "schemaVersion": "1.2",
+                    "description": "Is this instance reachable?",
+                    "runtimeConfig": {
+                        "aws:runShellScript": {
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "date"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
+            }
         }
     },
     "Parameters": {
@@ -4076,7 +4714,7 @@
             "ConstraintDescription": "Please enter a value for this field."
         },
         "BucketBasename": {
-            "Description": "This is the basename of the bucket that holds the MSAM code base.    ",
+            "Description": "This is the basename of the bucket that holds the MSAM code base.",
             "Default": "rodeolabz",
             "Type": "String",
             "AllowedPattern": "\\S+",
