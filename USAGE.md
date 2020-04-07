@@ -158,9 +158,11 @@ You can add cloud inventory to a tile in much the same way you add inventory to 
 
 Select any item contained by a diagram or select a tile in the **Tiles** tab. Click the **Monitor** tab at the bottom of the page to view the subscribed CloudWatch Alarms and MediaLive pipeline alerts related to the resource.
 
-### AWS MediaLive Pipeline Alerts
+### AWS MediaLive and MediaConnect Pipeline Alerts
 
-Install the `msam-events-release.json` CloudFormation template in each region as your AWS MediaLive channels. Pipeline alerts from MediaLive are automatically received into MSAM and indicated on the diagrams and tiles containing those channels. The visual items representing MediaLive will change color as Pipeline Alerts are set and cleared.
+Install the `msam-events-release.json` CloudFormation template in each region as your AWS MediaLive channels or MediaConnect flows. Pipeline alerts are automatically received into MSAM and indicated on the diagrams and tiles containing those channels. The visual items representing MediaLive will change color as Pipeline Alerts are set and cleared.
+
+Pipeline Alerts are represented with the colors yellow and red depending on the resource's total number of pipelines and number of pipelines currently experiencing a problem. If the number of pipelines experiencing a problem is less than the total number of pipelines, the node is drawn in yellow to indicate the resource is still moving data but without full redundancy. If all the pipelines of a resource are experiencing a problem, then the node is drawn in red to indicate a failure.
 
 ### Cloudwatch Alarms
 

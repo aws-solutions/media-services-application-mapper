@@ -1,8 +1,8 @@
 # Media Services Application Mapper (MSAM)
 
-**Installing? Use the detailed [installation instructions](INSTALL.md).**
+### Installing MSAM? Use the detailed [installation instructions](INSTALL.md).
 
-**Already using MSAM? Please [take our survey](https://amazonmr.au1.qualtrics.com/jfe/form/SV_cBbBD6QulbrGdyl) and tell us how it's working for you.**
+### Already using MSAM? Please [take our survey](https://amazonmr.au1.qualtrics.com/jfe/form/SV_cBbBD6QulbrGdyl) and tell us how it's working for you.
 
 ## Overview
 
@@ -60,21 +60,23 @@ The following image shows the aggregated JSON configuration of all the diagram e
 
 ### Resource Monitoring
 
-* MSAM can be configured to automatcally display MediaLive pipeline alerts on MediaLive channel nodes
+* MSAM can be configured to automatically display MediaLive and MediaConnect pipeline alerts on those nodes
 * The tool integrates with CloudWatch alarms to indicate operational problems from a top-down view
 * Any CloudWatch alarm can be associated with any node on the diagram
 * CloudWatch alarm indicators are visualized as color and text on the node
 * CloudWatch high-resolution alarms can be used for frequent ten-second notification intervals
 
-The following image shows a MediaLive input with an alarm status, and a MediaLive channel with an alarm status and three set alerts on pipeline 1.
+The following image shows MediaConnect flows sending to a MediaLive input, a MediaLive channel with an alert status on one of two pipelines shown in yellow color, and a MediaPackage channel with a custom alarm condition.
 
-![CloudWatch Support](images/cloudwatch-diagram.jpeg)
+![CloudWatch Support](images/cloudwatch-diagram.png)
 
-* MSAM's Monitor tab provides subscribed alarm and alert summary for each resource on the diagram
+* MSAM provides three tabs in the lower compartment for Pipeline Alerts, Subscribed Alarms, and a recent CloudWatch event history. The following image shows the Pipeline Alerts tab after selecting the MediaLive channel shown above.
 
-The following image shows the Monitor tab after selecting a MediaLive channel in the diagram that was showing several alarms and alerts.
+![CloudWatch Support](images/pipeline-alerts-tab.png)
 
-![CloudWatch Support](images/monitor-tab.jpeg)
+This image shows the Subscribed Alarms tab after selecting the MediaPackage channel shown above.
+
+![CloudWatch Support](images/subscribed-alarms-tab.png)
 
 A tile aggregates all structure, configuration and status from the underlying assigned resources. If any resource's CloudWatch alarm assigned to a tile goes into alarm status, the tiles associated with that resource will also show the same status. See the image below.
 
@@ -84,7 +86,7 @@ A tile aggregates all structure, configuration and status from the underlying as
 
 All browser actions are performed through an authenticated and SSL encrypted REST API hosted in the cloud. The API can be used by other tools to perform activities such as preloading tile definitions or adding custom content to the cache.
 
-Further information Regarding the API can be found here: [Rest API](REST_API.md)
+Further information regarding the API can be found here: [Rest API](REST_API.md)
 
 ## Navigate
 
