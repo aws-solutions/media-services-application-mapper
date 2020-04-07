@@ -22,8 +22,8 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
 
         var display_selected_nodes = function(diagram, node_ids) {
             nodes_ids = (Array.isArray(node_ids) ? node_ids : [node_ids]);
-            console.log("this node");
-            console.log(node_ids);
+            // console.log("this node");
+            // console.log(node_ids);
             var node = model.nodes.get(node_ids[0]);
             var found_on = diagrams.have_all(node.id);
             // console.log(found_on);
@@ -123,14 +123,12 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 }
             });
             // if node is managed instance, alerts and cloudwatch events don't apply
-            if (node_ids[0].includes("managed-instance")){
+            if (node_ids[0].includes("managed-instance")) {
                 show_elements([data_div_id, alarms_div_id, data_tab_id, alarms_tab_id]);
                 hide_elements([alerts_div_id, events_div_id, alerts_tab_id, events_tab_id]);
-            }
-            else if ((node_ids[0].includes("medialive") && node_ids[0].includes("channel")) || node_ids[0].includes("multiplex")) {
+            } else if ((node_ids[0].includes("medialive") && node_ids[0].includes("channel")) || node_ids[0].includes("multiplex")) {
                 show_elements([data_div_id, alerts_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
-            }
-            else {
+            } else {
                 show_elements([data_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, events_tab_id]);
                 hide_elements([alerts_div_id, alerts_tab_id]);
             }
