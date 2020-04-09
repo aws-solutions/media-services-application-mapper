@@ -222,7 +222,7 @@ Automatically connect to an endpoint with an API key
 
 ## Installation Permissions
 
-The CloudFormation templates provided for MSAM installation require permissions to create and configure several different types of cloud resources. The user launching the CloudFormation templates must have permissions to create the resources defined in the templates. CloudFormation will assume that user's premissions temporarily during installation to complete the steps. 
+The CloudFormation templates provided for MSAM installation require permissions to create and configure several different types of cloud resources. The user launching the CloudFormation templates must have permissions to create the resources defined in the templates. CloudFormation will assume that user's permissions temporarily during installation to complete the steps. 
 
 There are several options for the user installing the templates to have the correct permissions:
 
