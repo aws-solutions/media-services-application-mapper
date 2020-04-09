@@ -4,6 +4,8 @@ MSAM is removed from an AWS account using CloudFormation.
 
 ## CloudFormation Stack Deletion
 
+Before you begin, be sure you are signed-in to the AWS console as the same user who installed the stacks, or a user with equivalent permissions.
+
 ### Events Stack
 
 Delete the events stack from any other regions that were installed after you installed the main solution.

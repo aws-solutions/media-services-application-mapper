@@ -5,7 +5,7 @@ MSAM is installed into an AWS account using several CloudFormation templates.
 ## Requirements for MSAM
 
 * Amazon Web Services account
-* Signed-in as an IAM user with AdministratorAccess role, or [sufficient permissions](#installation-permissions) to install the tool
+* Signed-in to the AWS console as an IAM user with AdministratorAccess role, or [sufficient permissions](#installation-permissions) to install the tool
 * Google Chrome, Mozilla Firefox, Safari or another current browser with JavaScript enabled
 
 
