@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Action": [
+            "apigateway:*",
+            "cloudformation:*",
+            "cloudfront:*",
+            "cloudwatch:*",
+            "dynamodb:*",
+            "events:*",
+            "lambda:*",
+            "s3:*",
+            "sns:*",
+            "ssm:*"
+        ],
+        "Effect": "Allow",
+        "Resource": "*"
+    }, {
+        "Action": [
+            "iam:*"
+        ],
+        "Effect": "Allow",
+        "Resource": "*"
+    }]
+}
