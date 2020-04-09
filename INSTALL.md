@@ -4,7 +4,9 @@ MSAM is installed into an AWS account using several CloudFormation templates.
 
 ## Requirements for MSAM
 
-* Amazon Web Services account with root or Administrator permissions
+* Amazon Web Services account with root or Administrator permissions, **or**
+* IAM user with the MSAM installation policy applied to the user's permissions
+
 * Google Chrome, Mozilla Firefox, Safari or another current browser with JavaScript enabled
 
 
@@ -218,6 +220,16 @@ Automatically connect to an endpoint with an API key
 `https://d1c8z4f93zrlmx.cloudfront.net/?endpoint=https://oplfnxzh7l.execute-api.us-east-1.amazonaws.com/msam/&key=69ZSAV3tBX7YYfh1XTcsq2fLcE7Z0ETY4JXclqJJ`
 
 **NOTE: This above parameters should only be used for secure or demonstration environments. Anyone with this URL can connect and use MSAM.**
+
+## Installation Permissions
+
+The CloudFormation templates provided for MSAM installation require permissions to create and configure several different types of cloud resources. The user launching the CloudFormation templates must have permissions to create the resources defined in the templates. CloudFormation will assume that user's premissions temporarily during installation to complete the steps. 
+
+There are several options for the user installing the templates to have the correct permissions:
+
+1. An IAM user with AdministratorAccess role attached
+2. An IAM user with the policy file attached from [distribution files](dist/iam-install-policy.json)
+1. Use the root account if no other options are available; using the root account is generally [discouraged](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users)
 
 
 ## DynamoDB Considerations
