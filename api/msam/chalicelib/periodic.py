@@ -245,22 +245,27 @@ def ssm_run_command():
                 if id_type in doc_type:
                     # maybe eventually doc type could be comma-delimited string if doc applies to more than one type?
                     print("running command: %s on %s " % (name, id))
-                    response = ssm_client.send_command(
-                        InstanceIds=[
-                            id,
-                        ],
-                        DocumentName=name,
-                        TimeoutSeconds=600,
-                        Parameters={
-                        },
-                        MaxConcurrency='50',
-                        MaxErrors='0',
-                        CloudWatchOutputConfig={
-                            'CloudWatchLogGroupName': SSM_LOG_GROUP_NAME,
-                            'CloudWatchOutputEnabled': True
-                        }
-                    )
-                    print(response)
+                    try:
+                        response = ssm_client.send_command(
+                            InstanceIds=[
+                                id,
+                            ],
+                            DocumentName=name,
+                            TimeoutSeconds=600,
+                            Parameters={
+                            },
+                            MaxConcurrency='50',
+                            MaxErrors='0',
+                            CloudWatchOutputConfig={
+                                'CloudWatchLogGroupName': SSM_LOG_GROUP_NAME,
+                                'CloudWatchOutputEnabled': True
+                            }
+                        )
+                        print(response)
+                    except ClientError as error:
+                        print(error)
+                        if error.response['Error']['Code'] == "InvalidInstanceId":
+                            continue
     except ClientError as error:
         print(error)
 
@@ -280,21 +285,22 @@ def process_ssm_run_command(event):
     status = 0
 
     try:
-        if command_status == "Success":
-            # test to make sure stream names are always of this format, esp if you create your own SSM document
-            log_stream_name = event_dict['detail']['command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
-
-            response = log_client.get_log_events(
+        # test to make sure stream names are always of this format, esp if you create your own SSM document
+        log_stream_name = event_dict['detail']['command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
+        
+        response = log_client.get_log_events(
                 logGroupName=SSM_LOG_GROUP_NAME,
                 logStreamName=log_stream_name,
             )
-
+        #print(response)
+        if command_status == "Success":
             # process document name (command)
             if "MSAMElementalLiveStatus" in command_name:
                 metric_name = "MSAMElementalLiveStatus"
                 for event in response['events']:
                     if "running" in event['message']:
                         status = 1
+                        break
             elif "MSAMSsmSystemStatus" in command_name:
                 metric_name = "MSAMSsmSystemStatus"
                 status = 1
@@ -314,11 +320,19 @@ def process_ssm_run_command(event):
                 root = ET.fromstring(response['events'][0]['message'])
                 status = len(root.findall("./live_event"))
         else:
-            # log if command has timed out or failed
-            print("SSM Command Status: Command %s sent to instance %s has %s" % (command_name, instance_id, command_status))
-            # create a metric for it
-            status = 1
-            metric_name = "MSAMSsmCommand"+command_status
+            # for the elemental live status, the command itself returns a failure if process is not running at all
+            # which is different than when a command fails to execute altogether
+            if command_status == "Failed" and "MSAMElementalLiveStatus" in command_name:
+                for event in response['events']:
+                    if "Not Running" in event['message'] or "Active: failed" in event['message']:
+                        metric_name = "MSAMElementalLiveStatus"
+                        break
+            else:
+                # log if command has timed out or failed
+                print("SSM Command Status: Command %s sent to instance %s has %s" % (command_name, instance_id, command_status))
+                # create a metric for it
+                status = 1
+                metric_name = "MSAMSsmCommand"+command_status
 
         cw_client.put_metric_data(
             Namespace = SSM_LOG_GROUP_NAME,
