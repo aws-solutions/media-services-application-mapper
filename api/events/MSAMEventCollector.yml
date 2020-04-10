@@ -13,6 +13,7 @@ Resources:
       CodeUri: .
       MemorySize: 2560
       Timeout: 60
+      Role: !Ref EventsIAMRoleARN 
       Policies:
         - Version: '2012-10-17' # Policy Document
           Statement:
@@ -88,6 +89,13 @@ Parameters:
     Description: >-
       This is the basename of the bucket that holds the MSAM code base.    
     Default: 'rodeolabz'
+    Type: String
+    AllowedPattern: \S+
+    MinLength: 1
+    ConstraintDescription: Please enter a value for this field.
+  EventsIAMRoleARN:
+    Description: >-
+      This is the IAM Role ARN for the Events Lambda functions. .    
     Type: String
     AllowedPattern: \S+
     MinLength: 1

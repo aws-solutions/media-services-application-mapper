@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/88e8c7742b0d3cd70fbb23a7cafc8b02",
+                    "Key": "msam/8bd7af1b7d2acece95affce2028ed51d",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -27,6 +27,9 @@
                 },
                 "MemorySize": 2560,
                 "Timeout": 60,
+                "Role": {
+                    "Ref": "EventsIAMRoleARN"
+                },
                 "Policies": [
                     {
                         "Version": "2012-10-17",
@@ -123,6 +126,13 @@
         "BucketBasename": {
             "Description": "This is the basename of the bucket that holds the MSAM code base.    ",
             "Default": "rodeolabz",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "EventsIAMRoleARN": {
+            "Description": "This is the IAM Role ARN for the Events Lambda functions. .    ",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

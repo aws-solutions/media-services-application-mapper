@@ -101,6 +101,7 @@ cp -f $ORIGIN/api/msam/build/msam-core-release.json $STAGE/
 cp -f $ORIGIN/api/msam/build/msam-dynamodb-release.json $STAGE/
 cp -f $ORIGIN/api/events/msam-events-release.json $STAGE/
 cp -f $ORIGIN/web-cloudformation/msam-browser-app-release.json $STAGE/
+cp -f $ORIGIN/api/msam/build/msam-iam-roles-release.json $STAGE/
 
 # update symbols in templates
 echo "updating template symbols"

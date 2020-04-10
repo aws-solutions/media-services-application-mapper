@@ -102,6 +102,13 @@ PARAMETERS = {
         "AllowedPattern": "\\S+",
         "MinLength": 1,
         "ConstraintDescription": "Please enter a value for this field."
+    },
+    "CoreIAMRoleARN":  {
+        "Description": "This is the IAM Role ARN for the Core Lambda functions.",
+        "Type": "String",
+        "AllowedPattern": "\\S+",
+        "MinLength": 1,
+        "ConstraintDescription": "Please enter a value for this field."
     }
 }
 USAGE_PLAN_KEY = {
@@ -158,15 +165,18 @@ OUTPUTS = {
     }
 }
 
-CW_ALARM_DESCRIPTION = "MSAM Lambda for handling CloudWatch alarm notifications"
-UPDATE_NODES_DESCRIPTION = "MSAM Lambda for periodically updating the node cache"
-UPDATE_CONNECTIONS_DESCRIPTION = "MSAM Lambda for peridically updating the connection cache"
-UPDATE_ALARMS_DESCRIPTION = "MSAM Lambda for polling CloudWatch alarm states"
-UPDATE_FROM_TAGS_DESCRIPTION = "MSAM Lambda for handling diagram and tile updates from tags"
-API_HANDLER_DESCRIPTION = "MSAM Lambda for handling requests from clients"
-SSM_RUN_CMD_DESCRIPTION = "MSAM Lambda for running all applicable commands for a given managed instance"
-SSM_PROCESS_RUN_CMD_DESCRIPTION = "MSAM Lambda for processing outputs from running a command on a managed instance"
-UPDATE_SSM_NODES_DESCRIPTION = "MSAM Lambda for periodically updating the managed instances node cache"
+LAMBDA_FUNCTIONS_DESCRIPTIONS = {
+    "IncomingCloudwatchAlarm": "MSAM Lambda for handling CloudWatch alarm notifications",
+    "UpdateNodes": "MSAM Lambda for periodically updating the node cache",
+    "UpdateConnections": "MSAM Lambda for peridically updating the connection cache",
+    "UpdateAlarms": "MSAM Lambda for polling CloudWatch alarm states",
+    "UpdateFromTags": "MSAM Lambda for handling diagram and tile updates from tags",
+    "APIHandler": "MSAM Lambda for handling requests from clients",
+    "SsmRunCommand": "MSAM Lambda for running all applicable commands for a given managed instance",
+    "ProcessSsmRunCommand": "MSAM Lambda for processing outputs from running a command on a managed instance",
+    "UpdateSsmNodes": "MSAM Lambda for periodically updating the managed instances node cache"
+}
+CORE_IAM_ROLE_ARN = {"Ref": "CoreIAMRoleARN"}
 
 def main():
     template = {}
@@ -181,6 +191,7 @@ def main():
         uri_expr = parse('$..CodeUri')
         code_uris = [match.value for match in uri_expr.find(template)]
         env_var_expr = parse('$..Variables')
+        role_expr = parse('$..Role')
 
         # parse out the key
         key = code_uris[0].split('/')[-1]
@@ -189,6 +200,8 @@ def main():
         uri_expr.update(template, CODE_URI)
         # update all the env vars
         env_var_expr.update(template, ENV_VARS)
+        # update all the roles
+        role_expr.update(template, CORE_IAM_ROLE_ARN)
         # add parameters
         template["Parameters"] = PARAMETERS
         # add Description
@@ -197,20 +210,11 @@ def main():
         template["Resources"]["UsagePlanKeyAssociation"] = USAGE_PLAN_KEY
         template["Resources"]["UsagePlan"] = USAGE_PLAN
         template["Resources"]["APIKey"] = API_KEY
-        # update Lambda descriptions
-        template["Resources"]["IncomingCloudwatchAlarm"]["Properties"]["Description"] = CW_ALARM_DESCRIPTION
-        template["Resources"]["UpdateNodes"]["Properties"]["Description"] = UPDATE_NODES_DESCRIPTION
-        template["Resources"]["UpdateConnections"]["Properties"]["Description"] = UPDATE_CONNECTIONS_DESCRIPTION
-        template["Resources"]["UpdateAlarms"]["Properties"]["Description"] = UPDATE_ALARMS_DESCRIPTION
-        template["Resources"]["UpdateFromTags"]["Properties"]["Description"] = UPDATE_FROM_TAGS_DESCRIPTION
-        template["Resources"]["APIHandler"]["Properties"]["Description"] = API_HANDLER_DESCRIPTION
-        template["Resources"]["SsmRunCommand"]["Properties"]["Description"] = SSM_RUN_CMD_DESCRIPTION
-        template["Resources"]["ProcessSsmRunCommand"]["Properties"]["Description"] = SSM_PROCESS_RUN_CMD_DESCRIPTION
-        template["Resources"]["UpdateSsmNodes"]["Properties"]["Description"] = UPDATE_SSM_NODES_DESCRIPTION
-
+        # update each Lambda properties
+        for function_name, description in LAMBDA_FUNCTIONS_DESCRIPTIONS.items():
+            template["Resources"][function_name]["Properties"]["Description"] = description
         # add the SSM document resources
         template["Resources"].update(ssm_doc_json)
-        
         # update outputs
         template["Outputs"] = OUTPUTS
     with open(TEMPLATE_FILE, "w") as write_file:

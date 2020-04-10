@@ -2,41 +2,6 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: DEV_0_0_0)",
     "Resources": {
-        "DefaultSettingsResourceRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
-                "Policies": [{
-                    "PolicyName": "DefaultSettingsResourceRolePolicy",
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                            "Sid": "VisualEditor0",
-                            "Effect": "Allow",
-                            "Action": [
-                                "dynamodb:PutItem",
-                                "ec2:DescribeRegions"
-                            ],
-                            "Resource": "*"
-                        }]
-                    }
-                }],
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
-                            ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
-                }
-            }
-        },
         "DefaultSettingsResource": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
@@ -63,12 +28,7 @@
                         "BUILD_STAMP": "DEV_0_0_0"
                     }
                 },
-                "Role": {
-                    "Fn::GetAtt": [
-                        "DefaultSettingsResourceRole",
-                        "Arn"
-                    ]
-                },
+                "Role": { "Ref": "DynamoDBIAMRoleARN"},
                 "Runtime": "python3.6",
                 "Timeout": 300
             }
@@ -353,6 +313,13 @@
         "BucketBasename": {
             "Default": "rodeolabz",
             "Description": "This is basename of the bucket that holds the MSAM code base.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "DynamoDBIAMRoleARN": {
+            "Description": "This is the IAM Role ARN for the DynamoDB Lambda functions.",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,
