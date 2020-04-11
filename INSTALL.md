@@ -227,9 +227,14 @@ The CloudFormation templates provided for MSAM installation require permissions 
 There are several options for the user installing the templates to have the correct permissions:
 
 1. An IAM user with AdministratorAccess role attached
-2. An IAM user with the policy file attached from [distribution files](dist/iam-install-policy.json)
+2. An IAM user with the provided group attached to it, or the policy file attached inline from [distribution files](dist/iam-install-policy.json)
 1. Use the root account if no other options are available; using the root account is generally [discouraged](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users)
 
+### MSAM IAM Resources
+
+MSAM's IAM template will install a Group with an inline policy with permissions sifficient to install all the templates of the solution. The IAM Group is named `<stackname>-installationGroup-<ID>` and includes the same policy as [this file](dist/iam-install-policy.json). Add the users to this group who will be installing the solution if your organization has strict requirements about the AdministratorAccess managed policy.
+
+[This file](dist/iam-install-policy.json) is a policy that can be added inline to a user or role and defines sufficient permissions to install all the templates included with MSAM.
 
 ## DynamoDB Considerations
 

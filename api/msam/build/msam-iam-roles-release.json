@@ -8,40 +8,34 @@
                 "ManagedPolicyArns": [
                     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
                 ],
-                "Policies": [
-                    {
-                        "PolicyName": "EventsRolePolicy",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Sid": "VisualEditor0",
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "dynamodb:PutItem",
-                                        "mediapackage:Describe*"
-                                    ],
-                                    "Resource": "*"
-                                }
-                            ]
-                        }
+                "Policies": [{
+                    "PolicyName": "EventsRolePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:PutItem",
+                                "mediapackage:Describe*"
+                            ],
+                            "Resource": "*"
+                        }]
                     }
-                ],
+                }],
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            },
-                            "Action": [
-                                "sts:AssumeRole"
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [
+                                "lambda.amazonaws.com"
                             ]
-                        }
-                    ]
+                        },
+                        "Action": [
+                            "sts:AssumeRole"
+                        ]
+                    }]
                 }
             }
         },
@@ -85,22 +79,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Sid": "",
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": "lambda.amazonaws.com"
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
+                    "Statement": [{
+                        "Sid": "",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "lambda.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }]
                 },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [{
+                "Policies": [{
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
                                 "Action": [
                                     "mediapackage:List*",
                                     "mediapackage:Describe*",
@@ -201,10 +192,9 @@
                                 "Resource": "*"
                             }
                         ]
-                        },
-                        "PolicyName": "CoreRolePolicy"
-                    }
-                ]
+                    },
+                    "PolicyName": "CoreRolePolicy"
+                }]
             }
         },
         "WebRole": {
@@ -244,6 +234,40 @@
                     }
                 }]
             }
+        },
+        "InstallationPolicy": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "MSAM-Installation-Policy",
+                "PolicyDocument": {
+                    "Statement": [{
+                        "Action": [
+                            "apigateway:*",
+                            "cloudformation:*",
+                            "cloudfront:*",
+                            "cloudwatch:*",
+                            "dynamodb:*",
+                            "events:*",
+                            "lambda:*",
+                            "s3:*",
+                            "sns:*",
+                            "ssm:*"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": "*"
+                    }, {
+                        "Action": [
+                            "iam:*"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": "*"
+                    }]
+                },
+                "Groups": [{ "Ref": "InstallationGroup" }]
+            }
+        },
+        "InstallationGroup": {
+            "Type": "AWS::IAM::Group"
         }
     },
     "Outputs": {
@@ -255,7 +279,7 @@
                 ]
             },
             "Description": "IAM Role ARN for the Events module Lambda functions"
-        }, 
+        },
         "DynamoDBRoleARN": {
             "Value": {
                 "Fn::GetAtt": [
@@ -264,7 +288,7 @@
                 ]
             },
             "Description": "IAM Role ARN for the DynamoDB module Lambda functions"
-        }, 
+        },
         "CoreRoleARN": {
             "Value": {
                 "Fn::GetAtt": [
@@ -273,7 +297,7 @@
                 ]
             },
             "Description": "IAM Role ARN for the Core module Lambda functions"
-        }, 
+        },
         "WebRoleARN": {
             "Value": {
                 "Fn::GetAtt": [
@@ -282,6 +306,6 @@
                 ]
             },
             "Description": "IAM Role ARN for the Web app module Lambda functions"
-        } 
+        }
     }
 }
