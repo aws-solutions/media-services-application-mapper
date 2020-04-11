@@ -228,7 +228,7 @@ There are several options for the user installing the templates to have the corr
 
 1. An IAM user with AdministratorAccess role attached
 2. An IAM user with the provided [group](#msam-iam-resources) attached to it, or the policy file attached inline from [distribution files](dist/iam-install-policy.json)
-1. Use the root account if no other options are available; using the root account is [generally discouraged](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users)
+1. Use the root user if no other options are available; using the root user is [generally discouraged](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html)
 
 ### MSAM IAM Resources
 
