@@ -146,45 +146,6 @@
                         "MaxAge": "3000"
                     }]
                 }
-
-            }
-        },
-        "MSAMWebBucketLoaderRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
-                            ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
-                },
-                "Policies": [{
-                    "PolicyName": "MSAMWebBucketLoaderRolePolicy",
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                            "Sid": "VisualEditor0",
-                            "Effect": "Allow",
-                            "Action": [
-                                "s3:PutObject",
-                                "s3:ListBucket",
-                                "s3:DeleteObject",
-                                "s3:PutObjectAcl",
-                                "cloudfront:CreateInvalidation"
-                            ],
-                            "Resource": "*"
-                        }]
-                    }
-                }]
             }
         },
         "MSAMWebContentResource": {
@@ -215,10 +176,7 @@
                 "Description": "MSAM Lambda for custom CloudFormation resource for loading web application",
                 "MemorySize": 2560,
                 "Role": {
-                    "Fn::GetAtt": [
-                        "MSAMWebBucketLoaderRole",
-                        "Arn"
-                    ]
+                    "Ref": "WebIAMRoleARN"
                 },
                 "Runtime": "python3.6",
                 "Timeout": 300
@@ -271,10 +229,7 @@
                 "Description": "MSAM Lambda for custom resource for invalidating CloudFront after update",
                 "MemorySize": 2560,
                 "Role": {
-                    "Fn::GetAtt": [
-                        "MSAMWebBucketLoaderRole",
-                        "Arn"
-                    ]
+                    "Ref": "WebIAMRoleARN"
                 },
                 "Runtime": "python3.6",
                 "Timeout": 300
@@ -308,6 +263,13 @@
         "BucketBasename": {
             "Default": "rodeolabz",
             "Description": "This is basename of the bucket that holds the MSAM code base.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "WebIAMRoleARN": {
+            "Description": "This is the IAM Role ARN for the Web app Lambda functions.",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,
