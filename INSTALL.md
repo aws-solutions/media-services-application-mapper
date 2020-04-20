@@ -23,7 +23,7 @@ MSAM is installed into an AWS account using several CloudFormation templates.
 
 This folder in the repository contains files you can use to install MSAM into your AWS account. 
 
-The four CloudFormation templates located in this folder that end with `-release.json` are ready to use to install the latest release of MSAM.
+The CloudFormation templates located in this folder that end with `-release.json` are ready to use to install the latest release of MSAM.
 
 ```
 msam-all-resources-release.json
@@ -77,7 +77,7 @@ When you are installing a CloudFormation template listed below, from Choose a Te
 
 ### Master Template: All Resources
 
-As of release v1.5.0, the CloudFormation templates distributed for MSAM include a master template that installs the complete solution into a single region. The master template nests and deploys the existing four templates automatically.
+As of release v1.5.0, the CloudFormation templates distributed for MSAM include a master template that installs the complete solution into a single region. The master template nests and deploys the existing five templates automatically.
 
 `https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-all-resources-release.json`
 
@@ -158,9 +158,10 @@ This template will create a stack for the MSAM REST API, and periodic tasks used
 #### Input Parameters
 
 1. Provide a stack name
-2. Provide an alternate bucket base name (leave at `rodeolabz` unless you are installing custom builds)
-2. Paste each of the table names that were generated from the DynamoDB stack
-3. Specify the time-to-live for the content, event and alarm tables; content not refreshed before this time will be removed from the cache
+1. Provide an alternate bucket base name (leave at `rodeolabz` unless you are installing custom builds)
+1. Provide the ARN for the Core IAM role created by the IAM Resources template
+1. Paste each of the table names that were generated from the DynamoDB stack
+1. Specify the time-to-live for the content, event and alarm tables; content not refreshed before this time will be removed from the cache
 
 #### Outputs
 
@@ -177,10 +178,11 @@ This template creates a stack responsible for receiving events from Media Servic
 #### Input Parameters
 
 1. Provide a stack name
-2. Provide an alternate bucket base name (leave at `rodeolabz` unless you are installing custom builds)
-2. Paste the requested table names generated from the DynamoDB stack
-3. Specify the region of the DynamoDB stack (such as us-west-2, us-east-1, or eu-west-1, for example)
-4. Specify the time-to-live in seconds all recorded events; see the examples next to the input
+1. Provide an alternate bucket base name (leave at `rodeolabz` unless you are installing custom builds)
+1. Provide the ARN for the Events IAM role created by the IAM Resources template
+1. Paste the requested table names generated from the DynamoDB stack
+1. Specify the region of the DynamoDB stack (such as us-west-2, us-east-1, or eu-west-1, for example)
+1. Specify the time-to-live in seconds all recorded events; see the examples next to the input
 
 #### Outputs
 
@@ -196,6 +198,7 @@ This template will install a copy of the MSAM browser application into an S3 buc
 
 1. Provide a stack name
 2. Provide an alternate bucket base name (leave at `rodeolabz` unless you are installing custom builds)
+3. Provide the ARN for the Web IAM role created by the IAM Resources template
 
 ### Outputs
 
