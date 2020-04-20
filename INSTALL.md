@@ -93,7 +93,7 @@ Go to the Outputs section of the stack, and copy and save the URL value for Endp
 
 ![Master Template Outputs](images/master-template-outputs.png)
 
-After the template installation finishes and you've recorded the outputs from the template, skip forward to [Template 3: CloudFormation for the Event Handler](INSTALL.md#template-3-cloudformation-for-the-event-handler) if you need to collect events from multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
+After the template installation finishes and you've recorded the outputs from the template, skip forward to [Template 3: Core API and Periodic Tasks](INSTALL.md#template-3-cloudformation-for-the-event-handler) if you need to collect events from multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
 
 ### Individual Templates
 
@@ -186,7 +186,7 @@ This template creates a stack responsible for receiving events from Media Servic
 
 None
 
-### Template 4: Browser Application
+### Template 5: Browser Application
 
 This template will install a copy of the MSAM browser application into an S3 bucket. Files added by the CloudFormation template will have their ACL set to `public-read` to allow access over HTTPS.
 
