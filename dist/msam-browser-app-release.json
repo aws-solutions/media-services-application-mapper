@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1586290481)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1587415980)",
     "Resources": {
         "MSAMAppBucketOriginAccessIdentity": {
             "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
@@ -146,45 +146,6 @@
                         "MaxAge": "3000"
                     }]
                 }
-
-            }
-        },
-        "MSAMWebBucketLoaderRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
-                            ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
-                },
-                "Policies": [{
-                    "PolicyName": "MSAMWebBucketLoaderRolePolicy",
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [{
-                            "Sid": "VisualEditor0",
-                            "Effect": "Allow",
-                            "Action": [
-                                "s3:PutObject",
-                                "s3:ListBucket",
-                                "s3:DeleteObject",
-                                "s3:PutObjectAcl",
-                                "cloudfront:CreateInvalidation"
-                            ],
-                            "Resource": "*"
-                        }]
-                    }
-                }]
             }
         },
         "MSAMWebContentResource": {
@@ -202,12 +163,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1586290481.zip"
+                    "S3Key": "msam/webcontent_resource_1587415980.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1586290481",
-                        "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2",
+                        "BUILD_STAMP": "1587415980",
+                        "ZIP_DIGEST": "4de35e66de0856d3be445f4ecf1d7a52c0e61b2f",
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
@@ -215,10 +176,7 @@
                 "Description": "MSAM Lambda for custom CloudFormation resource for loading web application",
                 "MemorySize": 2560,
                 "Role": {
-                    "Fn::GetAtt": [
-                        "MSAMWebBucketLoaderRole",
-                        "Arn"
-                    ]
+                    "Ref": "WebIAMRoleARN"
                 },
                 "Runtime": "python3.6",
                 "Timeout": 300
@@ -239,8 +197,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1586290481",
-                "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2"
+                "BUILD_STAMP": "1587415980",
+                "ZIP_DIGEST": "4de35e66de0856d3be445f4ecf1d7a52c0e61b2f"
             }
         },
         "MSAMWebInvalidationResource": {
@@ -258,12 +216,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1586290481.zip"
+                    "S3Key": "msam/webcontent_resource_1587415980.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1586290481",
-                        "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2",
+                        "BUILD_STAMP": "1587415980",
+                        "ZIP_DIGEST": "4de35e66de0856d3be445f4ecf1d7a52c0e61b2f",
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
@@ -271,10 +229,7 @@
                 "Description": "MSAM Lambda for custom resource for invalidating CloudFront after update",
                 "MemorySize": 2560,
                 "Role": {
-                    "Fn::GetAtt": [
-                        "MSAMWebBucketLoaderRole",
-                        "Arn"
-                    ]
+                    "Ref": "WebIAMRoleARN"
                 },
                 "Runtime": "python3.6",
                 "Timeout": 300
@@ -296,8 +251,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1586290481",
-                "ZIP_DIGEST": "8fea563c43990998ce5a92a1ee2a3b464682b1d2",
+                "BUILD_STAMP": "1587415980",
+                "ZIP_DIGEST": "4de35e66de0856d3be445f4ecf1d7a52c0e61b2f",
                 "DistributionId": {
                     "Ref": "MSAMAppBucketCloudFrontDistribution"
                 }
@@ -308,6 +263,13 @@
         "BucketBasename": {
             "Default": "rodeolabz",
             "Description": "This is basename of the bucket that holds the MSAM code base.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "WebIAMRoleARN": {
+            "Description": "This is the IAM Role ARN for the Web app Lambda functions.",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

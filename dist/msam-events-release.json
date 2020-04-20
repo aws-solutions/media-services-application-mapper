@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Transform": "AWS::Serverless-2016-10-31",
-    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1586290481)",
+    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1587415980)",
     "Resources": {
         "Collector": {
             "Type": "AWS::Serverless::Function",
@@ -10,7 +10,7 @@
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
                 "Runtime": "python3.6",
                 "CodeUri": {
-                    "Key": "msam/88e8c7742b0d3cd70fbb23a7cafc8b02",
+                    "Key": "msam/47b5b0557d56b4be1bd0fd6f536e5778",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -27,6 +27,9 @@
                 },
                 "MemorySize": 2560,
                 "Timeout": 60,
+                "Role": {
+                    "Ref": "EventsIAMRoleARN"
+                },
                 "Policies": [
                     {
                         "Version": "2012-10-17",
@@ -46,7 +49,7 @@
                 ],
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1586290481",
+                        "BUILD_STAMP": "1587415980",
                         "EVENTS_TABLE_REGION": {
                             "Ref": "EventsTableRegion"
                         },
@@ -123,6 +126,13 @@
         "BucketBasename": {
             "Description": "This is the basename of the bucket that holds the MSAM code base.    ",
             "Default": "rodeolabz",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "EventsIAMRoleARN": {
+            "Description": "This is the IAM Role ARN for the Events Lambda functions. .    ",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

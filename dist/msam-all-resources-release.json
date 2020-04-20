@@ -1,7 +1,35 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) (SO0048) (ID: 1586290481)",
+    "Description": "Media Services Application Mapper (MSAM) (SO0048) (ID: 1587415980)",
     "Resources": {
+        "IAMModuleStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "https://",
+                                        {
+                                            "Ref": "BucketBasename"
+                                        },
+                                        "-",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        }
+                                    ]
+                                ]
+                            },
+                            ".s3.amazonaws.com/msam/msam-iam-roles-release-1587415980.template"
+                        ]
+                    ]
+                }
+            }
+        },
         "DynamoDBModuleStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
@@ -24,13 +52,19 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-dynamodb-release-1586290481.template"
+                            ".s3.amazonaws.com/msam/msam-dynamodb-release-1587415980.template"
                         ]
                     ]
                 },
                 "Parameters": {
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "DynamoDBIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.DynamoDBRoleARN"
+                        ]
                     }
                 }
             }
@@ -57,7 +91,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-core-release-1586290481.template"
+                            ".s3.amazonaws.com/msam/msam-core-release-1587415980.template"
                         ]
                     ]
                 },
@@ -106,6 +140,12 @@
                     },
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "CoreIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.CoreRoleARN"
+                        ]
                     }
                 }
             }
@@ -132,7 +172,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-events-release-1586290481.template"
+                            ".s3.amazonaws.com/msam/msam-events-release-1587415980.template"
                         ]
                     ]
                 },
@@ -163,6 +203,12 @@
                     },
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "EventsIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.EventsRoleARN"
+                        ]
                     }
                 }
             }
@@ -189,13 +235,19 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-browser-app-release-1586290481.template"
+                            ".s3.amazonaws.com/msam/msam-browser-app-release-1587415980.template"
                         ]
                     ]
                 },
                 "Parameters": {
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "WebIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.WebRoleARN"
+                        ]
                     }
                 }
             }
