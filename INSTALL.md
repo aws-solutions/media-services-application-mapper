@@ -97,7 +97,7 @@ After the template installation finishes and you've recorded the outputs from th
 
 ### Individual Templates
 
-You still have the option to install CloudFormation templates separately. This may be an option for you if you are performing a customized installation that requires special handling between stacks.
+You still have the option to install CloudFormation templates separately. This may be an option for you if you are performing a customized installation that requires special handling between stacks, or if you have distributed responsibilities within your organization for managing your AWS accounts.
 
 The order in which to create the stacks are as follows:
 
@@ -107,16 +107,13 @@ The order in which to create the stacks are as follows:
 1. Create the Event Handler stack
 1. Create the MSAM Web stack 
 
-Install the IAM, DynamoDB, Core and Web stacks in your main, or most accessed region only. The IAM resources installed by CloudFormation  
-The Event Handler stack is installed in each region Media Services are configured.
+Install the IAM, DynamoDB, Core and Web stacks in your main, or most accessed region only. The IAM resources installed by CloudFormation are global, although the stack you use to install them should be run in the same region as the DynamoDB, Core and other stacks. **The Event Handler stack is installed in each region Media Services are configured.**
 
 ### Template 1: IAM Resources
 
-This template will create a stack for the IAM resources needed by MSAM and operators installing the various stacks. for the software running in the AWS cloud. The 
+This template will create a stack for the IAM roles needed by MSAM and a group needed by operators for installing the stacks. 
 
-tables, indices, and on demand capacity settings. The first time a stack is created from this template, defaults are added to scan and display cloud resources in the current region only. These settings can be updated in the tool to expand the inventory coverage to other regions.
-
-`https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release.json`
+`https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-iam-roles-release.json`
 
 #### Input Parameters
 
@@ -124,7 +121,7 @@ tables, indices, and on demand capacity settings. The first time a stack is crea
 
 #### Outputs
 
-Go to the Outputs section of the stack and copy the four role ARNs to a notepad. You will need these as input parameters for the next templates. See the following image.
+Go to the Outputs section of the stack and copy the four role ARNs to a notepad. You will need these as input parameters for the next templates. Also, notice the link named `InstallationGroupLink`. This link will take you to IAM to review the group created for granting installation permissions to IAM users. See the following image.
 
 ![IAM Template Outputs](images/iam-template-outputs.png)
 
