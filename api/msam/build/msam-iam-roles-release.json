@@ -271,6 +271,20 @@
         }
     },
     "Outputs": {
+        "InstallationGroupLink": {
+            "Value": {
+                "Fn::Join": [
+                    "", [{
+                            "Fn::Sub": "https://console.aws.amazon.com/iam/home?#/groups/"
+                        },
+                        {
+                            "Ref": "InstallationGroup"
+                        }
+                    ]
+                ]
+            },
+            "Description": "Link to IAM to view and assign users to the installation group"
+        },
         "EventsRoleARN": {
             "Value": {
                 "Fn::GetAtt": [
