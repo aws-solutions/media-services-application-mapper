@@ -2,6 +2,34 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Media Services Application Mapper (MSAM) (SO0048) (ID: DEV_0_0_0)",
     "Resources": {
+        "IAMModuleStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "https://",
+                                        {
+                                            "Ref": "BucketBasename"
+                                        },
+                                        "-",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        }
+                                    ]
+                                ]
+                            },
+                            ".s3.amazonaws.com/msam/msam-iam-roles-release-DEV_0_0_0.template"
+                        ]
+                    ]
+                }
+            }
+        },
         "DynamoDBModuleStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
@@ -31,6 +59,12 @@
                 "Parameters": {
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "DynamoDBIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.DynamoDBRoleARN"
+                        ]
                     }
                 }
             }
@@ -106,6 +140,12 @@
                     },
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "CoreIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.CoreRoleARN"
+                        ]
                     }
                 }
             }
@@ -163,6 +203,12 @@
                     },
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "EventsIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.EventsRoleARN"
+                        ]
                     }
                 }
             }
@@ -196,6 +242,12 @@
                 "Parameters": {
                     "BucketBasename": {
                         "Ref": "BucketBasename"
+                    },
+                    "WebIAMRoleARN": {
+                        "Fn::GetAtt": [
+                            "IAMModuleStack",
+                            "Outputs.WebRoleARN"
+                        ]
                     }
                 }
             }

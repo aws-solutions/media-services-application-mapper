@@ -35,7 +35,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -51,7 +51,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -96,7 +96,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -112,7 +112,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -165,7 +165,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -181,7 +181,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -234,7 +234,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_alarms",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -250,7 +250,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -303,7 +303,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -319,7 +319,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -372,7 +372,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.ssm_run_command",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -388,7 +388,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -441,7 +441,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.process_ssm_run_command",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -457,7 +457,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -524,7 +524,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_ssm_nodes",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -540,7 +540,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -3203,7 +3203,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.app",
                 "CodeUri": {
-                    "Key": "msam/b8a578b6f7a7d6a858fa01586c64e909",
+                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -3219,7 +3219,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.12.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
