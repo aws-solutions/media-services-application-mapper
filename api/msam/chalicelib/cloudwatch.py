@@ -27,6 +27,9 @@ MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{s
 
 
 def update_alarm_records(region_name, alarm):
+    """
+    Update a single alarm's status in the table.
+    """
     try:
         ddb_table_name = ALARMS_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
@@ -55,7 +58,7 @@ def update_alarm_records(region_name, alarm):
 
 def update_alarms(region_name, alarm_names):
     """
-    Update a single alarm's status in the alarms table
+    Update a list of alarms' status in the alarms table for a given region.
     """
     try:
         print(f"update alarms {alarm_names} in region {region_name}")
