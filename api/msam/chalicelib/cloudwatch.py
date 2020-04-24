@@ -26,7 +26,7 @@ STAMP = os.environ["BUILD_STAMP"]
 MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/cloudwatch.py".format(stamp=STAMP))
 
 
-def update_alarm_records(region_name, alarm):
+def update_alarm_records(region_name, alarm, subscriber_arns):
     """
     Update a single alarm's status in the table.
     """
@@ -40,9 +40,7 @@ def update_alarm_records(region_name, alarm):
         else:
             namespace = "n/a"
         updated = int(time.time())
-        # look up the resources with this region alarm name
-        subscribers = subscribers_to_alarm(alarm["AlarmName"], region_name)
-        for resource_arn in subscribers:
+        for resource_arn in subscriber_arns:
             item = {
                 "RegionAlarmName": region_alarm_name,
                 "ResourceArn": resource_arn,
@@ -52,6 +50,21 @@ def update_alarm_records(region_name, alarm):
                 "Updated": updated
             }
             ddb_table.put_item(Item=item)
+    except ClientError as error:
+        print(error)
+
+
+def update_alarm_subscriber(region_name, alarm_name, subscriber_arn):
+    """
+    Update a single subscriber's alarm status in the alarms table.
+    """
+    try:
+        print(f"update subscriber {subscriber_arn} alarm {alarm_name} in region {region_name}")
+        cloudwatch = boto3.client('cloudwatch', region_name=region_name, config=MSAM_BOTO3_CONFIG)
+        response = cloudwatch.describe_alarms(AlarmNames=[alarm_name])
+        alarms = response['CompositeAlarms'] + response['MetricAlarms']
+        for alarm in alarms:
+            update_alarm_records(region_name, alarm, [subscriber_arn])
     except ClientError as error:
         print(error)
 
@@ -66,12 +79,18 @@ def update_alarms(region_name, alarm_names):
         response = cloudwatch.describe_alarms(AlarmNames=alarm_names)
         alarms = response['CompositeAlarms'] + response['MetricAlarms']
         for alarm in alarms:
-            update_alarm_records(region_name, alarm)
+            print(f"alarm {alarm['AlarmName']}")
+            subscribers = subscribers_to_alarm(alarm["AlarmName"], region_name)
+            print(f"subscribers {subscribers}")
+            update_alarm_records(region_name, alarm, subscribers)
         while "NextToken" in response:
             response = cloudwatch.describe_alarms(AlarmNames=alarm_names, NextToken=response["NextToken"])
             alarms = response['CompositeAlarms'] + response['MetricAlarms']
             for alarm in alarms:
-                update_alarm_records(region_name, alarm)
+                print(f"alarm {alarm['AlarmName']}")
+                subscribers = subscribers_to_alarm(alarm["AlarmName"], region_name)
+                print(f"subscribers {subscribers}")
+                update_alarm_records(region_name, alarm, subscribers)
     except ClientError as error:
         print(error)
 

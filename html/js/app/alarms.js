@@ -119,6 +119,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                 var added = _.differenceBy(current_subscribers_with_alarms, previous_subscribers_with_alarms, "ResourceArn");
                 var removed = _.differenceBy(previous_subscribers_with_alarms, current_subscribers_with_alarms, "ResourceArn");
                 if (added.length || removed.length) {
+                    alarms_for_subscriber.cache.clear();
                     for (let f of listeners) {
                         f(current_subscribers_with_alarms, previous_subscribers_with_alarms);
                     }
