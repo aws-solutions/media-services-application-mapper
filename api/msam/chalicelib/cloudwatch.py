@@ -25,6 +25,54 @@ CLOUDWATCH_EVENTS_TABLE_NAME = os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"]
 STAMP = os.environ["BUILD_STAMP"]
 MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/cloudwatch.py".format(stamp=STAMP))
 
+
+def update_alarm_records(region_name, alarm):
+    try:
+        ddb_table_name = ALARMS_TABLE_NAME
+        ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
+        ddb_table = ddb_resource.Table(ddb_table_name)
+        region_alarm_name = "{}:{}".format(region_name, alarm["AlarmName"])
+        if 'Namespace' in alarm:
+            namespace = alarm['Namespace']
+        else:
+            namespace = "n/a"
+        updated = int(time.time())
+        # look up the resources with this region alarm name
+        subscribers = subscribers_to_alarm(alarm["AlarmName"], region_name)
+        for resource_arn in subscribers:
+            item = {
+                "RegionAlarmName": region_alarm_name,
+                "ResourceArn": resource_arn,
+                "StateValue": alarm['StateValue'],
+                "Namespace": namespace,
+                "StateUpdated": int(alarm['StateUpdatedTimestamp'].timestamp()),
+                "Updated": updated
+            }
+            ddb_table.put_item(Item=item)
+    except ClientError as error:
+        print(error)
+
+
+def update_alarms(region_name, alarm_names):
+    """
+    Update a single alarm's status in the alarms table
+    """
+    try:
+        print(f"update alarms {alarm_names} in region {region_name}")
+        cloudwatch = boto3.client('cloudwatch', region_name=region_name, config=MSAM_BOTO3_CONFIG)
+        response = cloudwatch.describe_alarms(AlarmNames=alarm_names)
+        alarms = response['CompositeAlarms'] + response['MetricAlarms']
+        for alarm in alarms:
+            update_alarm_records(region_name, alarm)
+        while "NextToken" in response:
+            response = cloudwatch.describe_alarms(AlarmNames=alarm_names, NextToken=response["NextToken"])
+            alarms = response['CompositeAlarms'] + response['MetricAlarms']
+            for alarm in alarms:
+                update_alarm_records(region_name, alarm)
+    except ClientError as error:
+        print(error)
+
+
 def alarms_for_subscriber(resource_arn):
     """
     API entry point to return all alarms subscribed to by a node.

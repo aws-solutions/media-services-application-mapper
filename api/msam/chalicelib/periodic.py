@@ -31,39 +31,26 @@ MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{s
 
 SSM_LOG_GROUP_NAME = "MSAM/SSMRunCommand"
 
+
 def update_alarms():
     """
-    Entry point for the CloudWatch scheduled task to discover and cache services.
+    Entry point for the CloudWatch scheduled task to update subscribed alarm state.
     """
     try:
         print("update alarms")
-        resource_cache = {}
-        updated = int(time.time())
-        ddb_table_name = ALARMS_TABLE_NAME
-        ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
-        ddb_table = ddb_resource.Table(ddb_table_name)
+        alarm_groups = {}
+        # group everything by region
         for alarm in cloudwatch_data.all_subscribed_alarms():
-            region = alarm["Region"]
-            name = alarm["AlarmName"]
-            if region in resource_cache:
-                cloudwatch = resource_cache[region]
-            else:
-                cloudwatch = boto3.resource('cloudwatch', region_name=region, config=MSAM_BOTO3_CONFIG)
-                resource_cache[region] = cloudwatch
-            alarm = cloudwatch.Alarm(name)
-            region_alarm_name = "{}:{}".format(region, name)
-            # look up the resources with this region alarm name
-            subscribers = cloudwatch_data.subscribers_to_alarm(name, region)
-            for resource_arn in subscribers:
-                item = {
-                    "RegionAlarmName": region_alarm_name,
-                    "ResourceArn": resource_arn,
-                    "StateValue": alarm.state_value,
-                    "Namespace": alarm.namespace,
-                    "StateUpdated": int(alarm.state_updated_timestamp.timestamp()),
-                    "Updated": updated
-                }
-                ddb_table.put_item(Item=item)
+            region_name = alarm["Region"]
+            alarm_name = alarm["AlarmName"]
+            if region_name not in alarm_groups:
+                alarm_groups[region_name] = []
+            alarm_groups[region_name].append(alarm_name)
+        print(alarm_groups)
+        # update each grouped list for a region
+        for region_name in alarm_groups:
+            alarm_names = alarm_groups[region_name]
+            cloudwatch_data.update_alarms(region_name, alarm_names)
     except ClientError as error:
         print(error)
     return True
