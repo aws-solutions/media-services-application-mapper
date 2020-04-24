@@ -140,11 +140,9 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
             }
             Promise.all(promises).then(function() {
                 alert.show("Saved");
-                require("app/ui/monitor_view").refresh();
                 $("#subscribe_to_alarms_modal").modal('hide');
-                if (tile_view.shown()) {
-                    tile_view.redraw_tiles();
-                }
+                console.log("refresh monitor views");
+                require("app/ui/monitor_view").refresh();
             }).catch(function(error) {
                 alert("Error while saving");
             });

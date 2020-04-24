@@ -79,7 +79,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     // console.log(response);
-                    clear_function_cache();
+                    clear_alarms_for_subscriber_cache();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -98,7 +98,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     console.log(response);
-                    clear_function_cache();
+                    clear_alarms_for_subscriber_cache();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -107,7 +107,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             });
         };
 
-        var clear_function_cache = function() {
+        var clear_alarms_for_subscriber_cache = function() {
             alarms_for_subscriber.cache.clear();
         };
 
