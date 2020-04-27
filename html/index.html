@@ -73,16 +73,19 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             margin-right: 0;
             margin-left: 0;
         }
+        
         .vis-zoomIn {
             right: auto;
             left: 150px;
         }
+        
         .vis-zoomOut {
             right: auto;
             left: 190px;
         }
+        
         .vis-zoomExtends {
-		    bottom: 10px !important;
+            bottom: 10px !important;
             right: auto;
             left: 230px;
         }
@@ -206,8 +209,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </nav>
     <div id="diagram" style="height: 60%; width: 100%;">
         <div class="tab-content" id="diagram-tab-content" style="height: 100%; width: 100%;">
-            <div id="channel-tiles-outer" class="tab-pane" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit;">
-                <div class="btn-group dropleft m-2 float-right">
+            <div id="channel-tiles-outer" class="tab-pane" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit; overflow-y: scroll;">
+                <div class="btn-group dropright m-2">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" id="tile-filter-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Showing All Tiles
                     </button>
@@ -218,7 +221,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                     <div class="mx-3"></div>
                 </div>
-                <div id="channel-tiles-diagram" style="height: inherit; width: inherit; overflow-x: hidden; overflow-y: scroll;">
+                <div id="channel-tiles-diagram">
                 </div>
             </div>
         </div>
@@ -863,9 +866,9 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <div id="cloudwatch_event_data_view_alert">
                 </div>
                 <div class="modal-body">
-                   <!-- where my rendered json blob will go -->
-                   <div class="mw-25 mh-25 overflow-auto border border-info" id="cloudwatch_event_data_json">
-                   </div>
+                    <!-- where my rendered json blob will go -->
+                    <div class="mw-25 mh-25 overflow-auto border border-info" id="cloudwatch_event_data_json">
+                    </div>
                     <div class="modal-footer">
                         <button type="button" id="cloudwatch_event_data_view_close" class="btn btn-info" data-dismiss="modal">Close</button>
                     </div>
@@ -873,7 +876,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             </div>
         </div>
     </div>
-    
+
 </body>
 
 </html>

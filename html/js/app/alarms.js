@@ -79,7 +79,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     // console.log(response);
-                    clear_alarms_for_subscriber_cache();
+                    // clear_alarms_for_subscriber_cache();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -98,7 +98,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
                     console.log(response);
-                    clear_alarms_for_subscriber_cache();
+                    // clear_alarms_for_subscriber_cache();
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -107,11 +107,18 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             });
         };
 
-        var clear_alarms_for_subscriber_cache = function() {
-            alarms_for_subscriber.cache.clear();
+        var clear_alarms_for_subscriber_cache = function(subscribers) {
+            if (Array.isArray(subscribers)) {
+                for (let subscriber of subscribers) {
+                    alarms_for_subscriber.cache.delete(subscriber.ResourceArn);
+                }
+            } else {
+                alarms_for_subscriber.cache.clear();
+            }
         };
 
         var cache_update = function() {
+            // console.log("cache_update()");
             subscribers_with_alarm_state("ALARM").then(function(response) {
                 // console.log("updated set event cache");
                 previous_subscribers_with_alarms = current_subscribers_with_alarms;
@@ -119,7 +126,8 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                 var added = _.differenceBy(current_subscribers_with_alarms, previous_subscribers_with_alarms, "ResourceArn");
                 var removed = _.differenceBy(previous_subscribers_with_alarms, current_subscribers_with_alarms, "ResourceArn");
                 if (added.length || removed.length) {
-                    alarms_for_subscriber.cache.clear();
+                    clear_alarms_for_subscriber_cache(added);
+                    clear_alarms_for_subscriber_cache(removed);
                     for (let f of listeners) {
                         f(current_subscribers_with_alarms, previous_subscribers_with_alarms);
                     }
