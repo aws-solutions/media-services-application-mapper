@@ -177,6 +177,12 @@
                     ]
                 },
                 "Parameters": {
+                    "AlarmsTableName": {
+                        "Fn::GetAtt": [
+                            "DynamoDBModuleStack",
+                            "Outputs.AlarmsTable"
+                        ]
+                    },
                     "EventsTableName": {
                         "Fn::GetAtt": [
                             "DynamoDBModuleStack",

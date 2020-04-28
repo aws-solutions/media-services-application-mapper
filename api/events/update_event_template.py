@@ -1,4 +1,5 @@
 import json
+from jsonpath_ng import parse
 
 TEMPLATE_FILE = "msam-events-release.json"
 # replace the absolute path to the bucket of the code URI with a region-dependent one
@@ -9,12 +10,13 @@ def main():
     # read file
     with open(TEMPLATE_FILE, "r") as read_file:
         template = json.load(read_file)
-        current_uri = template["Resources"]["Collector"]["Properties"]["CodeUri"]        
-        #parse out the key
-        key = current_uri.split('/')[-1]
+        uri_expr = parse('$..CodeUri')
+        code_uris = [match.value for match in uri_expr.find(template)]
+        # parse out the key
+        key = code_uris[0].split('/')[-1]
         CODE_URI["Key"] = CODE_URI["Key"]+key
-        template["Resources"]["Collector"]["Properties"]["CodeUri"] = CODE_URI
-        #print(template)
+        # update all the code URIs
+        uri_expr.update(template, CODE_URI)
     with open(TEMPLATE_FILE, "w") as write_file:
         json.dump(template, write_file, indent=4)
 

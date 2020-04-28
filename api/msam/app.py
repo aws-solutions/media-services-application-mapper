@@ -28,9 +28,6 @@ SSM_NODE_UPDATE_RATE_MINUTES = 5
 # update connections at this interval
 CONNECTION_UPDATE_RATE_MINUTES = 5
 
-# update subscribed alarm states at this interval
-ALARM_UPDATE_RATE_MINUTES = 1
-
 # update MSAM visuals from tags at this interval
 TAG_UPDATE_RATE_MINUTES = 5
 
@@ -322,14 +319,6 @@ def update_connections(_):
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
     return periodic_handlers.update_connections()
-
-
-@app.schedule(Rate(ALARM_UPDATE_RATE_MINUTES, unit=Rate.MINUTES))
-def update_alarms(_):
-    """
-    Entry point for the CloudWatch scheduled task to discover and cache services.
-    """
-    return periodic_handlers.update_alarms()
 
 
 @app.schedule(Rate(TAG_UPDATE_RATE_MINUTES, unit=Rate.MINUTES))

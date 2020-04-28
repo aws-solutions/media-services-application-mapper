@@ -339,6 +339,7 @@ def subscribe_resource_to_alarm(request, alarm_name, region):
             # store it
             item = {"RegionAlarmName": region_alarm_name, "ResourceArn": resource_arn}
             ddb_table.put_item(Item=item)
+            update_alarm_subscriber(region, alarm_name, resource_arn)
         return True
     except ClientError as error:
         print(error)

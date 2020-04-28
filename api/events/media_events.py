@@ -15,10 +15,15 @@ from urllib.parse import unquote
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
+from botocore.config import Config
 from jsonpath_ng import parse
 
+# user-agent config
+STAMP = os.environ["BUILD_STAMP"]
+MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/media_events.py".format(stamp=STAMP))
+
 DYNAMO_REGION_NAME=os.environ["EVENTS_TABLE_REGION"]
-DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME)
+DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME, config=MSAM_BOTO3_CONFIG)
 EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["EVENTS_TABLE_NAME"])
 CLOUDWATCH_EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"])
 CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
