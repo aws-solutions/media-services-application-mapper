@@ -143,6 +143,14 @@ def cached_by_service_region(service, region):
     return cache.cached_by_service_region(service, region)
 
 
+@app.route('/cached/{service}', cors=True, api_key_required=True, methods=['GET'])
+def cached_by_service_region(service, region):
+    """
+    API entry point to retrieve items from the cache under the service.
+    """
+    return cache.cached_by_service(service)
+
+
 @app.route('/cached/arn/{arn}', cors=True, api_key_required=True, methods=['GET'])
 def cached_by_arn(arn):
     """
