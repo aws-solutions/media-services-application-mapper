@@ -7,7 +7,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
         var regions_list;
 
         var alarms_tabulator = new Tabulator("#subscribe_to_alarms_modal_alarm_selection", {
-            placeholder: "No Alarms Defined in this Region",
+            placeholder: "No Alarms to Show",
             tooltips: true,
             height: 400, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
             layout: "fitColumns", //fit columns to width of table (optional)
@@ -69,10 +69,11 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
         var populate_alarms_from_region = function(region) {
             selected_alarm_region = region;
             $("#subscribe_to_alarms_modal_alarm_selection_count").text("0");
+            alarms_tabulator.clearData();
             alarms.all_alarms_for_region(region).then(function(response) {
-                // $("#subscribe_to_alarms_modal_alarm_selection").tabulator("deselectRow"); //deselect all rows
-                // $("#subscribe_to_alarms_modal_alarm_selection").tabulator("setData", response);
-                alarms_tabulator.setData(response);
+                if (response.length > 0) {
+                    alarms_tabulator.setData(response);
+                }
             });
         };
 
@@ -98,15 +99,12 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
             }
         }
 
-        $("#alarms_manage_subscriptions_button").on("click", function(event) {
-            console.log("alarms_manage_subscriptions_button");
-        });
-
         $("#alarms_subscribe_button").on("click", function(event) {
             show_alarm_subscribe_dialog();
         });
 
         function show_alarm_subscribe_dialog() {
+            populate_alarms_from_region(selected_region());
             var diagram = diagrams.shown();
             if (diagram) {
                 if (diagram.network.getSelectedNodes().length > 0) {
@@ -144,7 +142,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
                 console.log("refresh monitor views");
                 require("app/ui/monitor_view").refresh();
             }).catch(function(error) {
-                alert("Error while saving");
+                alert.show("Error while saving");
             });
         });
 
@@ -171,8 +169,11 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
             }
             var first_region = "us-east-1";
             $("#dropdownMenuButton").text(first_region);
-            populate_alarms_from_region(first_region);
         });
+
+        var selected_region = function() {
+            return $("#dropdownMenuButton").text();
+        };
 
         return {
             show_alarm_subscribe_dialog: show_alarm_subscribe_dialog
