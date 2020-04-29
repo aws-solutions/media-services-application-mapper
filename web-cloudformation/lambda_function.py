@@ -83,6 +83,8 @@ def replace_bucket_contents(bucket_name):
                 content_type = "application/javascript"
             elif remote.endswith(".html"):
                 content_type = "text/html"
+            elif remote.endswith(".css"):
+                content_type = "text/css"
             else:
                 content_type = "binary/octet-stream"
             client.put_object(Bucket=bucket_name, Key=remote, Body=open(local, 'rb'), ContentType=content_type)
