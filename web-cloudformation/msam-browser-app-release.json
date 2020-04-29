@@ -38,7 +38,9 @@
                             "Ref": "MSAMBrowserAppBucket"
                         },
                         "ViewerProtocolPolicy": "https-only",
-                        "MinTTL": 0,
+                        "DefaultTTL": 31536000,
+                        "MinTTL": 31536000,
+                        "MaxTTL": 31536000,
                         "AllowedMethods": [
                             "HEAD",
                             "GET"
@@ -48,7 +50,7 @@
                             "GET"
                         ],
                         "ForwardedValues": {
-                            "QueryString": false
+                            "QueryString": true
                         }
                     },
                     "DefaultRootObject": "index.html",
