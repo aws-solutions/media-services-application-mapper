@@ -16,8 +16,12 @@
                             "Sid": "VisualEditor0",
                             "Effect": "Allow",
                             "Action": [
+                                "cloudwatch:DescribeAlarms",
                                 "dynamodb:PutItem",
-                                "mediapackage:Describe*"
+                                "dynamodb:Query",
+                                "dynamodb:UpdateItem",
+                                "mediapackage:Describe*",
+                                "medialive:Describe*"
                             ],
                             "Resource": "*"
                         }]

@@ -14,16 +14,6 @@ Resources:
       MemorySize: 2560
       Timeout: 60
       Role: !Ref EventsIAMRoleARN 
-      Policies:
-        - Version: '2012-10-17' # Policy Document
-          Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:Query
-                - dynamodb:PutItem
-                - medialive:Describe*
-                - mediapackage:Describe*
-              Resource: '*'
       Environment:
         Variables:
           BUILD_STAMP: DEV_0_0_0
@@ -49,18 +39,10 @@ Resources:
       Handler: cloudwatch_alarm.lambda_handler
       Description: MSAM Lambda for handling CloudWatch alarm state change events.
       Runtime: python3.6
+      Role: !Ref EventsIAMRoleARN 
       CodeUri: .
       MemorySize: 2560
       Timeout: 60
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:Query'
-                - 'dynamodb:UpdateItem'
-                - 'cloudwatch:DescribeAlarms'
-              Resource: '*'
       Environment:
         Variables:
           BUILD_STAMP: DEV_0_0_0
