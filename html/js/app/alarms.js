@@ -78,8 +78,9 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             var current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/subscribe`;
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
-                    // console.log(response);
-                    clear_alarms_for_subscriber_cache();
+                    for (let arn of resource_arns) {
+                        clear_alarms_for_subscriber_cache(arn);
+                    }
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -89,7 +90,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
         };
 
         var unsubscribe_from_alarm = function(region, alarm_name, resource_arns) {
-            console.log(region, alarm_name, resource_arns);
+            // console.log(region, alarm_name, resource_arns);
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
@@ -97,8 +98,9 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             var current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/unsubscribe`;
             return new Promise(function(resolve, reject) {
                 server.post(current_endpoint, api_key, resource_arns).then(function(response) {
-                    // console.log(response);
-                    clear_alarms_for_subscriber_cache();
+                    for (let arn of resource_arns) {
+                        clear_alarms_for_subscriber_cache(arn);
+                    }
                     resolve(response);
                 }).catch(function(error) {
                     console.log(error);
@@ -112,6 +114,8 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                 for (let subscriber of subscribers) {
                     alarms_for_subscriber.cache.delete(subscriber.ResourceArn);
                 }
+            } else if (typeof subscribers == 'string') {
+                alarms_for_subscriber.cache.delete(subscribers);
             } else {
                 alarms_for_subscriber.cache.clear();
             }
