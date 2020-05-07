@@ -244,6 +244,7 @@
             "Properties": {
                 "PolicyName": "MSAM-Installation-Policy",
                 "PolicyDocument": {
+                    "Version": "2012-10-17",
                     "Statement": [{
                         "Action": [
                             "apigateway:*",
@@ -277,24 +278,23 @@
             "Type": "AWS::IAM::ManagedPolicy",
             "Properties": {
                 "PolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "apigateway:*",
-                                "cloudformation:*",
-                                "cloudfront:*",
-                                "cloudwatch:*",
-                                "dynamodb:*",
-                                "events:*",
-                                "lambda:*",
-                                "s3:*",
-                                "sns:*",
-                                "ssm:*"
-                            ],
-                            "Effect": "Allow",
-                            "Resource": "*"
-                        }
-                    ]
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Action": [
+                            "apigateway:*",
+                            "cloudformation:*",
+                            "cloudfront:*",
+                            "cloudwatch:*",
+                            "dynamodb:*",
+                            "events:*",
+                            "lambda:*",
+                            "s3:*",
+                            "sns:*",
+                            "ssm:*"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": "*"
+                    }]
                 }
             }
         }

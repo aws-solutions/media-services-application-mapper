@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper(MSAM) IAM Roles (ID: 1587415980)",
+    "Description": "Media Services Application Mapper(MSAM) IAM Roles (ID: 1588876606)",
     "Resources": {
         "EventsRole": {
             "Type": "AWS::IAM::Role",
@@ -16,8 +16,12 @@
                             "Sid": "VisualEditor0",
                             "Effect": "Allow",
                             "Action": [
+                                "cloudwatch:DescribeAlarms",
                                 "dynamodb:PutItem",
-                                "mediapackage:Describe*"
+                                "dynamodb:Query",
+                                "dynamodb:UpdateItem",
+                                "mediapackage:Describe*",
+                                "medialive:Describe*"
                             ],
                             "Resource": "*"
                         }]
@@ -240,6 +244,7 @@
             "Properties": {
                 "PolicyName": "MSAM-Installation-Policy",
                 "PolicyDocument": {
+                    "Version": "2012-10-17",
                     "Statement": [{
                         "Action": [
                             "apigateway:*",
@@ -273,24 +278,23 @@
             "Type": "AWS::IAM::ManagedPolicy",
             "Properties": {
                 "PolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "apigateway:*",
-                                "cloudformation:*",
-                                "cloudfront:*",
-                                "cloudwatch:*",
-                                "dynamodb:*",
-                                "events:*",
-                                "lambda:*",
-                                "s3:*",
-                                "sns:*",
-                                "ssm:*"
-                            ],
-                            "Effect": "Allow",
-                            "Resource": "*"
-                        }
-                    ]
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Action": [
+                            "apigateway:*",
+                            "cloudformation:*",
+                            "cloudfront:*",
+                            "cloudwatch:*",
+                            "dynamodb:*",
+                            "events:*",
+                            "lambda:*",
+                            "s3:*",
+                            "sns:*",
+                            "ssm:*"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": "*"
+                    }]
                 }
             }
         }
