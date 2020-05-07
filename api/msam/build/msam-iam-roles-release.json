@@ -272,9 +272,37 @@
         },
         "InstallationGroup": {
             "Type": "AWS::IAM::Group"
+        },
+        "InstallationManagedPolicy": {
+            "Type": "AWS::IAM::ManagedPolicy",
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "apigateway:*",
+                                "cloudformation:*",
+                                "cloudfront:*",
+                                "cloudwatch:*",
+                                "dynamodb:*",
+                                "events:*",
+                                "lambda:*",
+                                "s3:*",
+                                "sns:*",
+                                "ssm:*"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ]
+                }
+            }
         }
     },
     "Outputs": {
+        "InstallationManagedPolicy": {
+            "Value": { "Ref": "InstallationManagedPolicy" }
+        },
         "InstallationGroupLink": {
             "Value": {
                 "Fn::Join": [
