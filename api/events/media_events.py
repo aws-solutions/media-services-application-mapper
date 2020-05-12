@@ -34,59 +34,70 @@ def lambda_handler(event, _):
     Entry point for CloudWatch event receipt.
     """
     try:
-        item = {}
         print(event)
-        item["timestamp"] = int(datetime.datetime.strptime(
+        event["timestamp"] = int(datetime.datetime.strptime(
             event["time"], '%Y-%m-%dT%H:%M:%SZ').timestamp())
-        item["expires"] = item["timestamp"] + int(os.environ["ITEM_TTL"])
-        # give timestamp a millisecond precision
-        item["timestamp"] = item["timestamp"] * 1000 + randint(1, 999)
-        item["data"] = json.dumps(event["detail"])
-        item["type"] = event["detail-type"]
-        if "eventName" in event["detail"]:
-            item["type"] = item["type"] + ": " + event["detail"]["eventName"]
+        event["expires"] = event["timestamp"] + int(os.environ["ITEM_TTL"])
+        event["detail"]["time"] = event["time"]
 
         # catch all the various forms of ARN from the media services
         arn_expr = parse('$..arn|aRN|resource-arn|channel_arn|multiplex_arn|flowArn|PlaybackConfigurationArn|resourceArn')
         original_arns = [match.value for match in arn_expr.find(event)]
         arns = []
         # remove arn that is for userIdentity or inputSecurityGroup
-        # note: can't remove an item from a list that's being iterated over so doing it this way instead =P
+        # note: can't remove an item from a list that's being iterated over so doing it this way
         for arn in original_arns:
             if "user" in arn or "role" in arn or "inputSecurityGroup" in arn:
                 pass
             else:
                 arns.append(arn)
         if arns:
-            item["resource_arn"] = unquote(arns[0])
+            event["resource_arn"] = unquote(arns[0])
+        # for certain events, the ARN is not labeled as an ARN but instead put in the resources list
+        if not arns and event["resources"]:
+            if "vod" not in event["resources"][0]:
+                event["resource_arn"] = event["resources"][0]
 
-        if event["source"] == "aws.medialive":
-            # handle medialive pipeline alerts
-            if "MediaLive" in event["detail-type"] and "Alert" in event["detail-type"]:
+        # handle alerts
+        if "Alert" in event["detail-type"]:
+            # medialive alerts
+            if "MediaLive" in event["detail-type"]:
                 event["alarm_id"] = event["detail"]["alarm_id"]
                 event["alarm_state"] = event["detail"]["alarm_state"].lower()
-                event["timestamp"] = int(datetime.datetime.strptime(
-                    event["time"], '%Y-%m-%dT%H:%M:%SZ').timestamp())
-                event["expires"] = event["timestamp"] + int(os.environ["ITEM_TTL"])
-                event["detail"]["time"] = event["time"]
-                # multiplex pipeline alerts do not have a "detail.channel_arn" property.
-                if "Multiplex" in event["detail-type"]:
-                    event["resource_arn"] = event["detail"]["multiplex_arn"]
-                else:
-                    event["resource_arn"] = event["detail"]["channel_arn"]
                 event["detail"]["pipeline_state"] = get_pipeline_state(event)
-                EVENTS_TABLE.put_item(Item=event)
-                if "Multiplex" in event["detail-type"]:
-                    print("Multiplex alert stored")
+
+            # mediaconnect alerts
+            elif "MediaConnect" in event["detail-type"]:
+                event["alarm_id"] = event["detail"]["error-id"]
+                if event["detail"]["errored"] == True:
+                    event["alarm_state"] = "set"
                 else:
-                    print("MediaLive alert stored")
-            if "BatchUpdateSchedule" in item["type"]:
-                print("Creating an ARN for BatchUpdateSchedule event.")
-                item["resource_arn"] = "arn:aws:medialive:" + event['region'] + ":" + \
-                    event['account'] + ":channel:" + \
-                    event['detail']['requestParameters']['channelId']
+                    event["alarm_state"] = "cleared"
+                event["detail"]["alert_type"] = event["detail"]["error-code"]
+                del event["detail"]["error-code"]
+                event["detail"]["message"] = event["detail"]["error-message"]
+                del event["detail"]["error-message"]
+            #print(event)
+            EVENTS_TABLE.put_item(Item=event)
+            print(event["detail-type"] + " stored.")
+        
+        # set the rest of the information needed for storing as regular CWE
+        # give timestamp a millisecond precision since it's sort key in CWE table
+        event["timestamp"] = event["timestamp"] * 1000 + randint(1, 999)
+        event["data"] = json.dumps(event["detail"])
+        event["type"] = event["detail-type"]
+        if "eventName" in event["detail"]:
+            event["type"] = event["type"] + ": " + event["detail"]["eventName"]
+
+        # handle specific cases depending on source
+        if event["source"] == "aws.medialive":
+            if "BatchUpdateSchedule" in event["type"]:
+                    print("Creating an ARN for BatchUpdateSchedule event.")
+                    event["resource_arn"] = "arn:aws:medialive:" + event['region'] + ":" + \
+                        event['account'] + ":channel:" + \
+                        event['detail']['requestParameters']['channelId']
         elif event["source"] == "aws.mediapackage":
-            if "HarvestJob" in item["type"]:
+            if "HarvestJob" in event["type"]:
                 print("Asking MediaPackage for the ARN of endpoint in a HarvestJob event.")
                 # to get the ARN, ask mediapackage to describe the origin endpoint
                 # the ARN available through resources is the HarvestJob ARN, not the endpoint
@@ -96,20 +107,23 @@ def lambda_handler(event, _):
                     emp_client = boto3.client('mediapackage')
                     response = emp_client.describe_origin_endpoint(
                         Id=orig_id[0])
-                    item["resource_arn"] = response["Arn"]
+                    event["resource_arn"] = response["Arn"]
                 else:
-                    print("Skipping this event. Origin ID not present in the HarvestJob event." + item["type"])
-        # for certain events, the ARN is not labeled as an ARN but instead put in the resources list
-        if not arns and event["resources"]:
-            if "vod" not in event["resources"][0]:
-                item["resource_arn"] = event["resources"][0]
+                    print("Skipping this event. Origin ID not present in the HarvestJob event." + event["type"])
+        elif event["source"] == "aws.mediastore":
+            # for object state change the resource is the object, not the container 
+            # so the captured arn needs to be fixed
+            if "MediaStore Object State Change" in event["type"]:
+                temp_arn = event["resource_arn"].split('/')
+                event["resource_arn"] = temp_arn[0] + "/" + temp_arn[1]
+        
         # if item has no resource arn, don't save in DB
-        if "resource_arn" in item:
+        if "resource_arn" in event:
+            #print(event)
             print("Storing media service event.")
-            print(item)
-            CLOUDWATCH_EVENTS_TABLE.put_item(Item=item)
+            CLOUDWATCH_EVENTS_TABLE.put_item(Item=event)
         else:
-            print("Skipping this event. " + item["type"])
+            print("Skipping this event. " + event["type"])
     except ClientError as error:
         print(error)
     return True

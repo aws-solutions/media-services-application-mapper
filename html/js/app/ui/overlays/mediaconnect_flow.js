@@ -27,8 +27,19 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
             }
         };
 
+        var decorate_alerts = function(drawing, font_size, width, height, id) {
+            var alert_count = 0;
+            for (let item of alert_events.get_cached_events().current_mediaconnect) {
+                if (item.resource_arn == id) {
+                    alert_count += 1; 
+                }
+            }
+            tools.set_event_text("Alerts: " + alert_count, drawing, font_size, width);
+        };
+
         var decorate = function(drawing, font_size, width, height, id) {
             decorate_alarms(drawing, font_size, width, height, id);
+            decorate_alerts(drawing, font_size, width, height, id);
             decorate_information(drawing, font_size, width, height, id);
         };
 

@@ -123,10 +123,11 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 }
             });
             // if node is managed instance, alerts and cloudwatch events don't apply
+            // if medialive channel/multiplex or mediaconnect flow, alerts apply
             if (node_ids[0].includes("managed-instance")) {
                 show_elements([data_div_id, alarms_div_id, data_tab_id, alarms_tab_id]);
                 hide_elements([alerts_div_id, events_div_id, alerts_tab_id, events_tab_id]);
-            } else if ((node_ids[0].includes("medialive") && node_ids[0].includes("channel")) || node_ids[0].includes("multiplex")) {
+            } else if ((node_ids[0].includes("medialive") && node_ids[0].includes("channel")) || node_ids[0].includes("multiplex") || node_ids[0].includes("mediaconnect")) {
                 show_elements([data_div_id, alerts_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
             } else {
                 show_elements([data_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, events_tab_id]);
@@ -174,7 +175,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
             }
             data.push({ "missing-nodes": missing });
             var html = `
-            <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">Channel: ${name}</h6>
+            <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">Tile: ${name}</h6>
             <p class="card-text small" id="${data_div_id}-text"></p>
             `;
             $("#" + data_div_id).empty();

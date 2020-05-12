@@ -18,7 +18,7 @@
 
            var decorate_events = function(drawing, font_size, width, height, id) {
                var pipeline_alerts = [0, 0];
-               for (let item of alert_events.get_cached_events().current) {
+               for (let item of alert_events.get_cached_events().current_medialive) {
                    if (item.resource_arn == id) {
                        pipeline_alerts[parseInt(item.detail.pipeline)] += 1;
                    }

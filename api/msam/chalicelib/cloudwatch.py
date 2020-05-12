@@ -217,16 +217,29 @@ def get_cloudwatch_events_state(state):
         events = response["Items"]
     return events
 
+def get_cloudwatch_events_state_source(state, source):
+    """
+    API entry point to retrieve all pipeline events in a given state (set, clear) from a specific source.
+    """
+    events = []
+    dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
+    table = dynamodb.Table(EVENTS_TABLE_NAME)
+    response = table.query(IndexName='AlarmStateSourceIndex', KeyConditionExpression=Key('alarm_state').eq(state) & Key('source').eq(source))
+    if "Items" in response:
+        events = response["Items"]
+    return events
+
 
 def get_cloudwatch_events_state_groups(state):
     """
-    Group all events by down, degraded and running pipelines
+    Group all events by down, degraded and running pipelines.
+    Currently only applicable to aws.medialive source which includes MediaLive channel and multiplex.
     """
     group = {}
     group["down"] = []
     group["running"] = []
     group["degraded"] = []
-    events = get_cloudwatch_events_state(state)
+    events = get_cloudwatch_events_state_source(state, "aws.medialive")
     for event in events:
         arn = event["resource_arn"]
         pl = event["detail"]["pipeline"]
