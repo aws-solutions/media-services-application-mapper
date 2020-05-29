@@ -97,6 +97,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id, true, channel))(),
                     degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false, channel))(),
                     degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, channel))(),
+                    idle_unselected: (() => node_map_handler(node_type, name, idle_rgb, id, false, channel))(),
+                    idle_selected: (() => node_map_handler(node_type, name, idle_rgb, id, true, channel))(),
                 },
                 console_link: (function() {
                     var id = channel.Id;
