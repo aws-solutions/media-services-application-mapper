@@ -13,7 +13,7 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
                     alarm_count += item.AlarmCount;
                 }
             }
-            tools.set_alarm_text("Active alarms: " + alarm_count, drawing, font_size, width);
+            tools.set_alarm_text(alarm_count, drawing, font_size, width);
         };
 
         var decorate_information = function(drawing, font_size, width, height, id) {
@@ -23,19 +23,25 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
                 if (node.data.Source.EntitlementArn) {
                     source_type = "Entitlement";
                 }
-                tools.set_info_text("Type: " + source_type, drawing, font_size, width);
+                tools.set_info_text(source_type, drawing, font_size, width);
             }
+        };
+
+        var decorate_alerts = function(drawing, font_size, width, height, id) {
+            var alert_count = 0;
+            for (let item of alert_events.get_cached_events().current_mediaconnect) {
+                if (item.resource_arn == id) {
+                    alert_count += 1; 
+                }
+            }
+            tools.set_event_text("Alerts: " + alert_count, drawing, font_size, width);
         };
 
         var decorate = function(drawing, font_size, width, height, id) {
             decorate_alarms(drawing, font_size, width, height, id);
+            decorate_alerts(drawing, font_size, width, height, id);
             decorate_information(drawing, font_size, width, height, id);
         };
 
-        return {
-            "match_type": match_type,
-            "decorate": decorate,
-            "informational": true
-        };
-
+        return { match_type, decorate, informational: true };
     });

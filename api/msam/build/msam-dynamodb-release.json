@@ -90,6 +90,10 @@
                     {
                         "AttributeName": "resource_arn",
                         "AttributeType": "S"
+                    }, 
+                    {
+                        "AttributeName": "source",
+                        "AttributeType": "S"
                     }
                 ],
                 "KeySchema": [{
@@ -115,6 +119,21 @@
                         "IndexName": "ResourceAlarmStateIndex",
                         "KeySchema": [{
                                 "AttributeName": "resource_arn",
+                                "KeyType": "HASH"
+                            },
+                            {
+                                "AttributeName": "alarm_state",
+                                "KeyType": "RANGE"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        }
+                    },
+                    {
+                        "IndexName": "AlarmStateSourceIndex",
+                        "KeySchema": [{
+                                "AttributeName": "source",
                                 "KeyType": "HASH"
                             },
                             {

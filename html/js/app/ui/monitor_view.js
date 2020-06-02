@@ -7,7 +7,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
         var last_displayed;
 
         var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
-            placeholder: "No Recent Pipeline Alerts",
+            placeholder: "No Recent Alerts",
             tooltips: true,
             selectable: false,
             height: 250,
@@ -254,6 +254,8 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             var alert_data = [];
             var alarm_data = [];
             var promises = [];
+            $("#nav-alarms-selected-item").html("Tile: ".concat(name));
+            $("#nav-alerts-selected-item").html("Tile: ".concat(name));
             for (let member_value of members) {
                 var node = model.nodes.get(member_value.id);
                 if (node) {

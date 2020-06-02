@@ -247,7 +247,15 @@ def all_subscribed_alarms():
 @app.route('/cloudwatch/events/state/{state}', cors=True, api_key_required=True, methods=['GET'])
 def get_cloudwatch_events_state(state):
     """
-    API entry point to retrieve all pipeline events in a given state (set, clear).
+    API entry point to retrieve all alert events in a given state (set, clear).
+    """
+    return cloudwatch_data.get_cloudwatch_events_state(state)
+
+
+@app.route('/cloudwatch/events/state/{state}/{source}', cors=True, api_key_required=True, methods=['GET'])
+def get_cloudwatch_events_state_source(state, source):
+    """
+    API entry point to retrieve all alert events in a given state (set, clear) from a specific source.
     """
     return cloudwatch_data.get_cloudwatch_events_state(state)
 
