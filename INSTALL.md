@@ -95,7 +95,7 @@ Go to the Outputs section of the stack, and copy and save the URL value for Endp
 
 ![Master Template Outputs](images/master-template-outputs.png)
 
-After the template installation finishes and you've recorded the outputs from the template, skip forward to [Template 3: Core API and Periodic Tasks](INSTALL.md#template-3-core-api-and-periodic-tasks) if you need to collect events from multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
+After the template installation finishes and you've recorded the outputs from the template, skip forward to [Template 4: CloudWatch Event Handler](INSTALL.md#template-4-cloudwatch-event-handler) if you need to collect events and monitor alarms across multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
 
 ### Individual Templates
 
@@ -170,7 +170,7 @@ Go to the Outputs section after the stack if created and copy the EndpointURL to
 
 ### Template 4: CloudWatch Event Handler
 
-This template creates a stack responsible for receiving events from Media Services and other related cloud resources, such as MediaLive pipeline alerts or other service state changes. Create a stack for this template in every region you will be creating and monitoring Media Services resources.
+This template creates a stack responsible for receiving events from Media Services and CloudWatch Alarm state changes. This includes MediaLive pipeline alerts or other service state changes. Create a stack for this template in every region you will be creating and monitoring Media Services resources using Events, Aleets, and Alarms.
 
 `https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release.json`
 
