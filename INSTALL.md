@@ -79,6 +79,8 @@ When you are installing a CloudFormation template listed below, from Choose a Te
 
 As of release v1.5.0, the CloudFormation templates distributed for MSAM include a master template that installs the complete solution into a single region. The master template nests and deploys the existing five templates automatically.
 
+If you need to upgrade your installation from the individual templates to the master template, see this note below about migrating your DynamoDB tables.
+
 `https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-all-resources-release.json`
 
 #### Input Parameters
@@ -228,25 +230,27 @@ Continue to the [Usage](USAGE.md) guide to start using the tool.
 
 ### Optional Parameters
 
-As of 1.5.0, the MSAM browser URL is the root of a CloudFront distribution URL. For example:
+As of 1.5.0, the MSAM browser URL can be the root of the CloudFront distribution URL or with `index.html` added. These two URLs are equivalent:
 
 `https://d1c8z4f93zrlmx.cloudfront.net/`
 
-The following parameters can be used with the URL to customize the start-up of the browser tool.
+`https://d1c8z4f93zrlmx.cloudfront.net/index.html`
 
-1. **diagram** -- The name of a diagram to show right after start-up
-2. **endpoint** -- The endpoint URL to use for the connection
-3. **key** -- The API to use with the chosen endpoint URL
+The following parameters can be used with the second form of the URL with `index.html` to customize the start-up of the browser tool.
+
+1. **diagram** - The name of a diagram to show right after start-up
+2. **endpoint** - The endpoint URL to use for the connection
+3. **key** - The API key to use with the chosen endpoint URL
 
 #### Examples
 
 Show a default diagram named Livestream on start-up
 
-`https://d1c8z4f93zrlmx.cloudfront.net/?diagram=Livestream`
+`https://d1c8z4f93zrlmx.cloudfront.net/index.html?diagram=Livestream`
 
 Automatically connect to an endpoint with an API key
 
-`https://d1c8z4f93zrlmx.cloudfront.net/?endpoint=https://oplfnxzh7l.execute-api.us-east-1.amazonaws.com/msam/&key=69ZSAV3tBX7YYfh1XTcsq2fLcE7Z0ETY4JXclqJJ`
+`https://d1c8z4f93zrlmx.cloudfront.net/index.html?endpoint=https://oplfnxzh7l.execute-api.us-east-1.amazonaws.com/msam/&key=69ZSAV3tBX7YYfh1XTcsq2fLcE7Z0ETY4JXclqJJ`
 
 **NOTE: This above parameters should only be used for secure or demonstration environments. Anyone with this URL can connect and use MSAM.**
 
@@ -268,10 +272,11 @@ MSAM's IAM template will install a Group with an inline policy with permissions 
 
 ## DynamoDB Considerations
 
-There are six DynamoDB tables used by MSAM. They are:
+There are seven DynamoDB tables used by MSAM. They are:
 
 * [StackName]-Alarms-[ID]
 * [StackName]-Channels-[ID]
+* [StackName]-CloudWatchEvents-[ID]
 * [StackName]-Content-[ID]
 * [StackName]-Events-[ID]
 * [StackName]-Layout-[ID]
@@ -292,6 +297,98 @@ Media Services Application Mapper (MSAM) cloud API (ID: 1537396573)
 You can also view the build timestamp in the tool by selecting the Tools menu and MSAM Build Numbers menu item. A dialog box will show the timestamps of each component and show a warning if they are seven or more days apart.
 
 Any updates provided will be done via updates to the CloudFormation template files. In the CloudFormation console, click on the specific stack to be updated. From the top-right select Update Stack and point it to the stack link, check the IAM resource check boxes (if they are applicable to this specific update), and update the stack. 
+
+### Upgrading Template Installation
+
+There is not a direct upgrade path from the multiple template installation process to the new master and nested template installation process. The recommended approach for moving from the old to new process is to install a new copy of MSAM using the master template and then use our DynamoDB tool to migrate all data from the old tables to the new tables.
+
+The advantage of this approach is that both systems can be running side-by-side after the data migration to verify everything has copied successfully. See the next section on the Migration Tool to learn more.
+
+## DynamoDB Table Migration Tool
+
+The Migration Tool is a Python program designed to copy data from one DynamoDB table to another. You can use this tool to copy the contents of each MSAM DynamoDB table from one installation to another. There are several reasons you might want to do this:
+
+* Setting up a duplicate system for production and test, with the same diagrams, alarms, and layout for both
+* Moving from an old to new installation of MSAM that cannot be upgraded with the templates
+
+### Requirements
+
+* Python 3.x installed and available from the command line
+* boto3 package is installed and accessible by the above Python
+* AWS CLI profile name that is configured to access the account and DynamoDB tables used by MSAM
+* Source and destination DynamoDB tables are located in the same account and same region
+
+
+### Usage
+
+```
+$ python copy_table.py -h
+
+usage: copy_table.py [-h] --source SOURCE --destination DESTINATION
+                     [--region REGION] [--profile PROFILE]
+
+Copy database items from one DynamoDB table to another.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --source SOURCE       source table name
+  --destination DESTINATION
+                        destination table name
+  --region REGION       the region where the tables reside (if not provided,
+                        default is us-west-2)
+  --profile PROFILE     the AWS profile to use (if not provided, default
+                        profile is used)
+```
+
+
+### Example: Duplicating Tables Between Two Stacks
+
+1. Sign-in to the AWS Console
+2. Navigate to the CloudFormation console
+3. Find the DynamoDB stack for the old and new stacks
+4. Record the table names for each stack
+5. Copy the tables from the old to new stack, skipping the Content table
+6. Start the new installation of MSAM and verify tiles, diagrams, layout, alarms, etc.
+
+#### Source Table Names
+
+```
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Alarms-1VM2MNB13D37Y
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Channels-OJ059JTCKFVL
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-CloudWatchEvents-1LA5KI02ULY10
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Content-JLLPFGYMS2LW
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Events-UB108ABQTFK
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Layout-SJVH87QY4VPM
+oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Settings-1IZ5B60KHU0IL
+```
+
+
+#### Destination Table Names
+
+```
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Alarms-EXEGD9CBBRVT
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Channels-S7H7V3GU06L8
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-CloudWatchEvents-18BSF813RQWLU
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Content-5ZTZ0BYLED9M
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Events-VK1R6QJ3HAL5
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Layout-1HQ6C00JC60ZJ
+freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Settings-HF5BF72M35KH
+```
+
+#### Commands
+
+**Note:** Skip the Content table because that is populated automatically with the inventory of the selected regions in the account. If your source stack is missing a table, such as CloudWatchEvents, you can safely skip it.
+
+```
+python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Alarms-1VM2MNB13D37Y --destination freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Alarms-EXEGD9CBBRVT --profile personal --region us-east-1
+python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Channels-OJ059JTCKFVL --destination freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Channels-S7H7V3GU06L8 --profile personal --region us-east-1
+python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-CloudWatchEvents-1LA5KI02ULY10 --destination freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-CloudWatchEvents-18BSF813RQWLU --profile personal --region us-east-1
+python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Events-UB108ABQTFK --destination freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Events-VK1R6QJ3HAL5 --profile personal --region us-east-1
+python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Layout-SJVH87QY4VPM --destination freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Layout-1HQ6C00JC60ZJ --profile personal --region us-east-1
+python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Settings-1IZ5B60KHU0IL --destination freshinstall-DynamoDBModuleStack-47U9UHHXPWO0-Settings-HF5BF72M35KH --profile personal --region us-east-1
+```
+
+
 
 ## Raw Web Content
 
