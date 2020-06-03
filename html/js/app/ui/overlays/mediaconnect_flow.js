@@ -13,7 +13,7 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
                     alarm_count += item.AlarmCount;
                 }
             }
-            tools.set_alarm_text(alarm_count, drawing, font_size, width);
+            tools.set_alarm_text("Active alarms: " + alarm_count, drawing, font_size, width);
         };
 
         var decorate_information = function(drawing, font_size, width, height, id) {
@@ -23,7 +23,7 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
                 if (node.data.Source.EntitlementArn) {
                     source_type = "Entitlement";
                 }
-                tools.set_info_text(source_type, drawing, font_size, width);
+                tools.set_info_text("Type: " + source_type, drawing, font_size, width);
             }
         };
 
@@ -43,5 +43,10 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
             decorate_information(drawing, font_size, width, height, id);
         };
 
-        return { match_type, decorate, informational: true };
+        return {
+            "match_type": match_type,
+            "decorate": decorate,
+            "informational": true
+        };
+
     });

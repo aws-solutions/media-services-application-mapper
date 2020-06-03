@@ -14,12 +14,17 @@ define(["jquery", "lodash", "app/alarms", "app/ui/overlays/overlay_tools"],
                     alarm_count += item.AlarmCount;
                 }
             }
-            tools.set_alarm_text(alarm_count, drawing, font_size, width);
+            tools.set_alarm_text("Active alarms: " + alarm_count, drawing, font_size, width);
         };
 
         var decorate = function(drawing, font_size, width, height, id) {
             decorate_alarms(drawing, font_size, width, height, id);
         };
 
-        return { match_type, decorate, informational: false };
+        return {
+            "match_type": match_type,
+            "decorate": decorate,
+            "informational": false
+        };
+
     });
