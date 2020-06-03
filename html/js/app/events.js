@@ -45,10 +45,9 @@ define(["app/server", "app/connections", "app/settings"],
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
-            if (source == "aws.medialive"){
+            if (source == "aws.medialive") {
                 var current_endpoint = `${url}/cloudwatch/events/state/${state}/groups`;
-            }
-            else {
+            } else {
                 var current_endpoint = `${url}/cloudwatch/events/state/${state}/${source}`;
             }
             return new Promise(function(resolve, reject) {
@@ -64,8 +63,6 @@ define(["app/server", "app/connections", "app/settings"],
         var cache_update = function() {
             retrieve_for_state("set").then(function(res) {
                 // console.log("updated set event cache");
-                console.log('retrieve for all set state');
-                console.log(res);
                 previous_set_events = current_set_events;
                 current_set_events = res;
                 var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
@@ -83,8 +80,6 @@ define(["app/server", "app/connections", "app/settings"],
             retrieve_for_state_source("set", "aws.medialive").then(function(res) {
                 previous_medialive_events = current_medialive_events;
                 current_medialive_events = res.degraded.concat(res.down).concat(res.running);
-                console.log("retrieve_for_state_source medialive");
-                console.log(res);
                 var added = _.differenceBy(current_medialive_events, previous_medialive_events, "alarm_id");
                 var removed = _.differenceBy(previous_medialive_events, current_medialive_events, "alarm_id");
                 if (added.length || removed.length) {
@@ -99,8 +94,6 @@ define(["app/server", "app/connections", "app/settings"],
             retrieve_for_state_source("set", "aws.mediaconnect").then(function(res) {
                 previous_mediaconnect_events = current_mediaconnect_events;
                 current_mediaconnect_events = res;
-                console.log("retrieve_for_state_source mediaconnect");
-                console.log(res);
                 var added = _.differenceBy(current_mediaconnect_events, previous_mediaconnect_events, "alarm_id");
                 var removed = _.differenceBy(previous_mediaconnect_events, current_mediaconnect_events, "alarm_id");
                 if (added.length || removed.length) {

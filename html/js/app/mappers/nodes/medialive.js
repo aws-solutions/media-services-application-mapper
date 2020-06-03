@@ -4,13 +4,13 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
-        const node_map_handler = (node_type, name, rgb, id, selected = true) => {
+        const node_map_handler = (node_type, name, rgb, id, selected, data) => {
             const local_id = id;
             const local_rgb = rgb;
             const local_name = name;
             const local_node_type = node_type;
             const method = selected ? 'selected' : 'unselected';
-            return () => svg_node[method](local_node_type, local_name, local_rgb, local_id);
+            return () => svg_node[method](local_node_type, local_name, local_rgb, local_id, data);
         };
 
         var update_channels = function(regionName) {
@@ -66,6 +66,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
         var map_channel = function(cache_entry) {
             var channel = JSON.parse(cache_entry.data);
+
+            // console.log('Channel: %o', channel);
+
             var name = channel.Name;
             var id = channel.Arn;
             var nodes = model.nodes;
@@ -87,12 +90,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 name: name,
                 size: 55,
                 render: {
-                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false))(),
-                    normal_selected: (() => node_map_handler(node_type, name, rgb, id))(),
-                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false))(),
-                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id))(),
-                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false))(),
-                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id))(),
+                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false, channel))(),
+                    normal_selected: (() => node_map_handler(node_type, name, rgb, id, true, channel))(),
+                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false, channel))(),
+                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id, true, channel))(),
+                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false, channel))(),
+                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, channel))(),
                 },
                 console_link: (function() {
                     var id = channel.Id;
@@ -118,6 +121,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
         var map_input = function(cache_entry) {
             var input = JSON.parse(cache_entry.data);
+
+            // console.log('Input: %o', input);
+
             var name = input.Name;
             var id = input.Arn;
             var nodes = model.nodes;
@@ -139,12 +145,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 name: name,
                 size: 55,
                 render: {
-                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false))(),
-                    normal_selected: (() => node_map_handler(node_type, name, rgb, id))(),
-                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false))(),
-                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id))(),
-                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false))(),
-                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id))(),
+                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false, input))(),
+                    normal_selected: (() => node_map_handler(node_type, name, rgb, id, true, input))(),
+                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false, input))(),
+                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id, true, input))(),
+                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false, input))(),
+                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, input))(),
                 },
                 console_link: (function() {
                     var id = input.Id;
@@ -168,6 +174,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
         var map_multiplex = function(cache_entry) {
             var input = JSON.parse(cache_entry.data);
+
+            // console.log('Input: %o', input);
+
             var name = input.Name;
             var id = input.Arn;
             var nodes = model.nodes;
@@ -189,12 +198,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 name: name,
                 size: 55,
                 render: {
-                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false))(),
-                    normal_selected: (() => node_map_handler(node_type, name, rgb, id))(),
-                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false))(),
-                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id))(),
-                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false))(),
-                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id))(),
+                    normal_unselected: (() => node_map_handler(node_type, name, rgb, id, false, input))(),
+                    normal_selected: (() => node_map_handler(node_type, name, rgb, id, true, input))(),
+                    alert_unselected: (() => node_map_handler(node_type, name, "#ff0000", id, false, input))(),
+                    alert_selected: (() => node_map_handler(node_type, name, "#ff0000", id, true, input))(),
+                    degraded_unselected: (() => node_map_handler(node_type, name, degraded_rgb, id, false, input))(),
+                    degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, input))(),
                 },
                 console_link: (function() {
                     var id = input.Id;
