@@ -34,7 +34,7 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
                     alert_count += 1;
                 }
             }
-            tools.set_event_text("Alerts: " + alert_count, drawing, font_size, width);
+            tools.set_event_text(alert_count, drawing, font_size, width, "Alerts");
         };
 
         var decorate = function(drawing, font_size, width, height, id) {

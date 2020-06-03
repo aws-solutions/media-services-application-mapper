@@ -52,8 +52,8 @@ define(['jquery', 'lodash', 'app/events', 'app/alarms'], function($, _, alert_ev
         draw_font_set_position(typeLabel, font_size, width);
     };
 
-    const set_event_text = function(data, drawing, font_size, width) {
-        const typeLabel = drawing.text(generateText('Pipeline alerts', data)).y(event_y);
+    const set_event_text = function(data, drawing, font_size, width, text = 'Pipeline alerts') {
+        const typeLabel = drawing.text(generateText(text, data)).y(event_y);
         draw_font_set_position(typeLabel, font_size, width);
     };
 
