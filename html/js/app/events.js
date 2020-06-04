@@ -29,7 +29,7 @@ define(["app/server", "app/connections", "app/settings"],
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
-            var current_endpoint = `${url}/cloudwatch/events/state/${state}`;
+            var current_endpoint = `${url}/cloudwatch/events/state/${state}/groups`;
 
             return new Promise(function(resolve, reject) {
                 server.get(current_endpoint, api_key)
@@ -64,41 +64,24 @@ define(["app/server", "app/connections", "app/settings"],
             retrieve_for_state("set").then(function(res) {
                 // console.log("updated set event cache");
                 previous_set_events = current_set_events;
-                current_set_events = res;
+                current_set_events = res.degraded.concat(res.down).concat(res.running);
+                previous_medialive_events = _.filter(previous_set_events, function(i) {
+                    return (i.source == "aws.medialive");
+                });
+                current_medialive_events = _.filter(current_set_events, function(i) {
+                    return (i.source == "aws.medialive");
+                });
+                previous_mediaconnect_events = _.filter(previous_set_events, function(i) {
+                    return (i.source == "aws.mediaconnect");
+                });
+                current_mediaconnect_events = _.filter(current_set_events, function(i) {
+                    return (i.source == "aws.mediaconnect");
+                });
                 var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
                 var removed = _.differenceBy(previous_set_events, current_set_events, "alarm_id");
                 if (added.length || removed.length) {
                     for (let f of listeners) {
                         f(current_set_events, previous_set_events);
-                    }
-                }
-            }).catch(function(error) {
-                console.log(error);
-            });
-
-            // for all medialive in set state, this includes multiplex
-            retrieve_for_state_source("set", "aws.medialive").then(function(res) {
-                previous_medialive_events = current_medialive_events;
-                current_medialive_events = res.degraded.concat(res.down).concat(res.running);
-                var added = _.differenceBy(current_medialive_events, previous_medialive_events, "alarm_id");
-                var removed = _.differenceBy(previous_medialive_events, current_medialive_events, "alarm_id");
-                if (added.length || removed.length) {
-                    for (let f of listeners) {
-                        f(current_medialive_events, previous_medialive_events);
-                    }
-                }
-            }).catch(function(error) {
-                console.log(error);
-            });
-
-            retrieve_for_state_source("set", "aws.mediaconnect").then(function(res) {
-                previous_mediaconnect_events = current_mediaconnect_events;
-                current_mediaconnect_events = res;
-                var added = _.differenceBy(current_mediaconnect_events, previous_mediaconnect_events, "alarm_id");
-                var removed = _.differenceBy(previous_mediaconnect_events, current_mediaconnect_events, "alarm_id");
-                if (added.length || removed.length) {
-                    for (let f of listeners) {
-                        f(current_mediaconnect_events, previous_mediaconnect_events);
                     }
                 }
             }).catch(function(error) {

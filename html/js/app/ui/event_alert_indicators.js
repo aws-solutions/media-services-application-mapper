@@ -2,7 +2,7 @@
        SPDX-License-Identifier: Apache-2.0 */
 
 define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
-    function ($, _, model, event_alerts, diagrams) {
+    function($, _, model, event_alerts, diagrams) {
 
         const updateAlertHandler = (node, alertState = true) => {
             let selected = null;
@@ -33,24 +33,19 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             }
         };
 
-        const updateEventAlertState = () => {
+        const updateEventAlertState = (current_alerts, previous_alerts) => {
             /** iterate through current 'set' alerts */
             const alerting_nodes = [];
             const inactive_nodes = [];
             const degraded_nodes = [];
-
-            console.log("event alert indicator get cached events");
-            //console.log(event_alerts.get_cached_events());
-            current_alerts = event_alerts.get_cached_events().current_medialive;
-            previous_alerts = event_alerts.get_cached_events().previous_medialive;
 
             for (let item of current_alerts) {
                 const node = model.nodes.get(item.resource_arn);
 
                 if (node) {
                     node.alerting = true;
-                    node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded")
-                        ? item.detail.degraded : false;
+                    node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded") ?
+                        item.detail.degraded : false;
 
                     if (node.degraded) {
                         if (!degraded_nodes.includes(item.resource_arn)) {

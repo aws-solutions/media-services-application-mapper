@@ -239,31 +239,35 @@ def get_cloudwatch_events_state_groups(state):
     group["down"] = []
     group["running"] = []
     group["degraded"] = []
-    events = get_cloudwatch_events_state_source(state, "aws.medialive")
+    events = get_cloudwatch_events_state(state)
     for event in events:
-        arn = event["resource_arn"]
-        pl = event["detail"]["pipeline"]
-        def is_same_arn(i):
-            return bool(i["resource_arn"] == arn)
-        def is_same_pl(i):
-            return bool("pipeline" in i["detail"] and i["detail"]["pipeline"] == pl)
-        def is_diff_pl(i):
-            return bool("pipeline" in i["detail"] and i["detail"]["pipeline"] != pl)
-        def is_pl_down(i):
-            return bool("pipeline_state" in i["detail"] and not i["detail"]["pipeline_state"])
-        same_arn_events = list(filter(is_same_arn, events))
-        all_down_pipelines = list(filter(is_pl_down, same_arn_events))
-        same_down_pipelines = list(filter(is_same_pl, all_down_pipelines))
-        diff_down_pipelines = list(filter(is_diff_pl, all_down_pipelines))
-        if len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0:
-            event["detail"]["degraded"] = bool(True)
-            group["degraded"].append(event)
-        elif len(diff_down_pipelines) == 0 and len(same_down_pipelines) > 0:
-            event["detail"]["degraded"] = bool(True)
-            group["degraded"].append(event)
-        elif len(diff_down_pipelines) > 0 and len(same_down_pipelines) > 0:
-            event["detail"]["degraded"] = bool(False)
-            group["down"].append(event)
+        if "pipeline" in event["detail"]:
+            arn = event["resource_arn"]
+            pl = event["detail"]["pipeline"]
+            def is_same_arn(i):
+                return bool(i["resource_arn"] == arn)
+            def is_same_pl(i):
+                return bool("pipeline" in i["detail"] and i["detail"]["pipeline"] == pl)
+            def is_diff_pl(i):
+                return bool("pipeline" in i["detail"] and i["detail"]["pipeline"] != pl)
+            def is_pl_down(i):
+                return bool("pipeline_state" in i["detail"] and not i["detail"]["pipeline_state"])
+            same_arn_events = list(filter(is_same_arn, events))
+            all_down_pipelines = list(filter(is_pl_down, same_arn_events))
+            same_down_pipelines = list(filter(is_same_pl, all_down_pipelines))
+            diff_down_pipelines = list(filter(is_diff_pl, all_down_pipelines))
+            if len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0:
+                event["detail"]["degraded"] = bool(True)
+                group["degraded"].append(event)
+            elif len(diff_down_pipelines) == 0 and len(same_down_pipelines) > 0:
+                event["detail"]["degraded"] = bool(True)
+                group["degraded"].append(event)
+            elif len(diff_down_pipelines) > 0 and len(same_down_pipelines) > 0:
+                event["detail"]["degraded"] = bool(False)
+                group["down"].append(event)
+            else:
+                event["detail"]["degraded"] = bool(False)
+                group["running"].append(event)
         else:
             event["detail"]["degraded"] = bool(False)
             group["running"].append(event)
