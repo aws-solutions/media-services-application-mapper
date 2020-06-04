@@ -34,7 +34,7 @@ define(['jquery', 'lodash', 'app/events', 'app/alarms'], function($, _, alert_ev
 
         const cached_events = alert_events.get_cached_events();
 
-        for (let item of cached_events.current) {
+        for (let item of cached_events.current_medialive) {
             if (item.resource_arn == id) pipelines[parseInt(item.detail.pipeline)] += 1;
             if (_.keys(pipelines).length > 1 && pipelines_count > 1) return false;
         }

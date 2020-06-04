@@ -33,11 +33,16 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             }
         };
 
-        const updateEventAlertState = (current_alerts, previous_alerts) => {
+        const updateEventAlertState = () => {
             /** iterate through current 'set' alerts */
             const alerting_nodes = [];
             const inactive_nodes = [];
             const degraded_nodes = [];
+
+            console.log("event alert indicator get cached events");
+            //console.log(event_alerts.get_cached_events());
+            current_alerts = event_alerts.get_cached_events().current_medialive;
+            previous_alerts = event_alerts.get_cached_events().previous_medialive;
 
             for (let item of current_alerts) {
                 const node = model.nodes.get(item.resource_arn);
