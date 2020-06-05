@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1587415980)",
+    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: 1591377724)",
     "Resources": {
         "DefaultSettingsResource": {
             "Type": "AWS::Lambda::Function",
@@ -18,14 +18,14 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/dynamodb_resource_1587415980.zip"
+                    "S3Key": "msam/dynamodb_resource_1591377724.zip"
                 },
                 "Handler": "lambda_function.lambda_handler",
                 "Description": "MSAM Lambda for adding defaults to the Settings table",
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1587415980"
+                        "BUILD_STAMP": "1591377724"
                     }
                 },
                 "Role": { "Ref": "DynamoDBIAMRoleARN"},
@@ -45,7 +45,7 @@
                 "SettingsTable": {
                     "Ref": "Settings"
                 },
-                "BUILD_STAMP": "1587415980",
+                "BUILD_STAMP": "1591377724",
                 "StackName": {
                     "Ref": "AWS::StackName"
                 }
@@ -90,6 +90,10 @@
                     {
                         "AttributeName": "resource_arn",
                         "AttributeType": "S"
+                    }, 
+                    {
+                        "AttributeName": "source",
+                        "AttributeType": "S"
                     }
                 ],
                 "KeySchema": [{
@@ -115,6 +119,21 @@
                         "IndexName": "ResourceAlarmStateIndex",
                         "KeySchema": [{
                                 "AttributeName": "resource_arn",
+                                "KeyType": "HASH"
+                            },
+                            {
+                                "AttributeName": "alarm_state",
+                                "KeyType": "RANGE"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        }
+                    },
+                    {
+                        "IndexName": "AlarmStateSourceIndex",
+                        "KeySchema": [{
+                                "AttributeName": "source",
                                 "KeyType": "HASH"
                             },
                             {

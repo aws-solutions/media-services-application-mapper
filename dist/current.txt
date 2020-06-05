@@ -1,6 +1,6 @@
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-all-resources-release-1587415980.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release-1587415980.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release-1587415980.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release-1587415980.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1587415980.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-iam-roles-release-1587415980.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-all-resources-release-1591377724.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-browser-app-release-1591377724.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-core-release-1591377724.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-dynamodb-release-1591377724.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-events-release-1591377724.template
+https://rodeolabz-us-west-2.s3.amazonaws.com/msam/msam-iam-roles-release-1591377724.template

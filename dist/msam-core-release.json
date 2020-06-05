@@ -35,7 +35,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -51,7 +51,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -60,7 +60,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -96,7 +96,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -112,7 +112,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -121,7 +121,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -165,7 +165,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -181,7 +181,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -190,7 +190,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -228,82 +228,13 @@
                 "Description": "MSAM Lambda for peridically updating the connection cache"
             }
         },
-        "UpdateAlarms": {
-            "Type": "AWS::Serverless::Function",
-            "Properties": {
-                "Runtime": "python3.6",
-                "Handler": "app.update_alarms",
-                "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
-                    "Bucket": {
-                        "Fn::Join": [
-                            "-",
-                            [
-                                {
-                                    "Ref": "BucketBasename"
-                                },
-                                {
-                                    "Ref": "AWS::Region"
-                                }
-                            ]
-                        ]
-                    }
-                },
-                "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
-                },
-                "Timeout": 300,
-                "MemorySize": 2560,
-                "Environment": {
-                    "Variables": {
-                        "ALARMS_TABLE_NAME": {
-                            "Ref": "AlarmsTableName"
-                        },
-                        "BUILD_STAMP": "1587415980",
-                        "CACHE_ITEM_TTL": {
-                            "Ref": "CacheItemTTL"
-                        },
-                        "CHANNELS_TABLE_NAME": {
-                            "Ref": "ChannelsTableName"
-                        },
-                        "CONTENT_TABLE_NAME": {
-                            "Ref": "ContentTableName"
-                        },
-                        "EVENTS_TABLE_NAME": {
-                            "Ref": "EventsTableName"
-                        },
-                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
-                            "Ref": "CloudWatchEventsTableName"
-                        },
-                        "LAYOUT_TABLE_NAME": {
-                            "Ref": "LayoutTableName"
-                        },
-                        "SETTINGS_TABLE_NAME": {
-                            "Ref": "SettingsTableName"
-                        }
-                    }
-                },
-                "Role": {
-                    "Ref": "CoreIAMRoleARN"
-                },
-                "Events": {
-                    "UpdateAlarmsEvent": {
-                        "Type": "Schedule",
-                        "Properties": {
-                            "Schedule": "rate(1 minute)"
-                        }
-                    }
-                },
-                "Description": "MSAM Lambda for polling CloudWatch alarm states"
-            }
-        },
         "UpdateFromTags": {
             "Type": "AWS::Serverless::Function",
             "Properties": {
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -319,7 +250,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -328,7 +259,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -372,7 +303,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.ssm_run_command",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -388,7 +319,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -397,7 +328,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -441,7 +372,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.process_ssm_run_command",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -457,7 +388,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -466,7 +397,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -524,7 +455,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_ssm_nodes",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -540,7 +471,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -549,7 +480,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -688,7 +619,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -784,7 +716,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -904,7 +837,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -986,7 +920,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1210,7 +1145,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1436,7 +1372,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1532,7 +1469,99 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
+                                }
+                            }
+                        },
+                        "/cached/{service}": {
+                            "get": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to retrieve items from the cache under the service.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "service",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "options": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        },
+                                        "headers": {
+                                            "Access-Control-Allow-Methods": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Origin": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Headers": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200",
+                                            "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                                            }
+                                        }
+                                    },
+                                    "requestTemplates": {
+                                        "application/json": "{\"statusCode\": 200}"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1666,7 +1695,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1786,7 +1816,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1868,7 +1899,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -1958,7 +1990,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2104,7 +2137,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2250,7 +2284,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2346,7 +2381,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2436,7 +2472,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2526,7 +2563,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2608,7 +2646,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2642,7 +2681,7 @@
                                     "contentHandling": "CONVERT_TO_TEXT",
                                     "type": "aws_proxy"
                                 },
-                                "summary": "API entry point to retrieve all pipeline events in a given state (set, clear).",
+                                "summary": "API entry point to retrieve all alert events in a given state (set, clear).",
                                 "security": [
                                     {
                                         "api_key": []
@@ -2698,7 +2737,105 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
+                                }
+                            }
+                        },
+                        "/cloudwatch/events/state/{state}/{source}": {
+                            "get": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200"
+                                        }
+                                    },
+                                    "uri": {
+                                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIHandler.Arn}/invocations"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "httpMethod": "POST",
+                                    "contentHandling": "CONVERT_TO_TEXT",
+                                    "type": "aws_proxy"
+                                },
+                                "summary": "API entry point to retrieve all alert events in a given state (set, clear) from a specific source.",
+                                "security": [
+                                    {
+                                        "api_key": []
+                                    }
+                                ],
+                                "parameters": [
+                                    {
+                                        "name": "state",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "source",
+                                        "in": "path",
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "options": {
+                                "consumes": [
+                                    "application/json"
+                                ],
+                                "produces": [
+                                    "application/json"
+                                ],
+                                "responses": {
+                                    "200": {
+                                        "description": "200 response",
+                                        "schema": {
+                                            "$ref": "#/definitions/Empty"
+                                        },
+                                        "headers": {
+                                            "Access-Control-Allow-Methods": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Origin": {
+                                                "type": "string"
+                                            },
+                                            "Access-Control-Allow-Headers": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "x-amazon-apigateway-integration": {
+                                    "responses": {
+                                        "default": {
+                                            "statusCode": "200",
+                                            "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'"
+                                            }
+                                        }
+                                    },
+                                    "requestTemplates": {
+                                        "application/json": "{\"statusCode\": 200}"
+                                    },
+                                    "passthroughBehavior": "when_no_match",
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2788,7 +2925,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2878,7 +3016,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -2974,7 +3113,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -3076,7 +3216,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         },
@@ -3158,7 +3299,8 @@
                                         "application/json": "{\"statusCode\": 200}"
                                     },
                                     "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
+                                    "type": "mock",
+                                    "contentHandling": "CONVERT_TO_TEXT"
                                 }
                             }
                         }
@@ -3203,7 +3345,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.app",
                 "CodeUri": {
-                    "Key": "msam/1f8c7c7dfbf31013c148d22f483967a4",
+                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -3219,7 +3361,7 @@
                     }
                 },
                 "Tags": {
-                    "aws-chalice": "version=1.13.0:stage=dev:app=msam"
+                    "aws-chalice": "version=1.14.0:stage=dev:app=msam"
                 },
                 "Timeout": 300,
                 "MemorySize": 2560,
@@ -3228,7 +3370,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1587415980",
+                        "BUILD_STAMP": "1591377724",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -3550,5 +3692,5 @@
             "ConstraintDescription": "Please enter a value for this field."
         }
     },
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1587415980)"
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1591377724)"
 }
