@@ -9,7 +9,7 @@ import json
 from urllib.parse import unquote
 
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 from botocore.config import Config
 
@@ -73,15 +73,29 @@ def cached_by_arn(arn):
     API entry point to retrieve an item from the cache under the ARN.
     """
     try:
-        arn = unquote(arn)
         ddb_table_name = CONTENT_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
-        response = ddb_table.query(KeyConditionExpression=Key('arn').eq(arn))
+        response = ddb_table.query(KeyConditionExpression=Key('arn').eq(str(arn)))
         items = response["Items"]
         while "LastEvaluatedKey" in response:
-            response = ddb_table.query(KeyConditionExpression=Key('arn').eq(arn), ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = ddb_table.query(KeyConditionExpression=Key('arn').eq(str(arn)), ExclusiveStartKey=response['LastEvaluatedKey'])
             items = items + response["Items"]
+        return items
+    except ClientError as error:
+        print(error)
+        return {"message": str(error)}
+    
+    
+def cached_by_arn_multi(arns):
+    """
+    API entry point to retrieve an array of items from the cache under the ARNs.
+    """
+    items = []
+    try:
+        for arn in arns:
+            item = cached_by_arn(arn)
+            items.append(item);
         return items
     except ClientError as error:
         print(error)
@@ -100,11 +114,11 @@ def cached_by_state(state):
             for cached_item in cached_items:
                 if "data" in cached_item:
                     item_data = json.loads(cached_item["data"])
-                    if "idle_state" in item_data and req_state == "IDLE":
-                        if item_data["idle_state"]:
+                    item_state = item_data["idle_state"]
+                    if item_state == req_state: 
+                        if req_state == "IDLE":
                             items.append(cached_item)
-                    elif "idle_state" in item_data and req_state == "RUNNING":
-                        if not item_data["idle_state"]:
+                        elif req_state == "RUNNING":
                             items.append(cached_item)
     except ClientError as error:
         print(error)
@@ -124,11 +138,11 @@ def cached_by_state_groups():
             for cached_item in cached_items:
                 if "data" in cached_item:
                     item_data = json.loads(cached_item["data"])
-                    if "idle_state" in item_data:
-                        if item_data["idle_state"]:
-                            group["idle"].append(cached_item)
-                        elif not item_data["idle_state"]:
-                            group["running"].append(cached_item)
+                    item_state = item_data["idle_state"]
+                    if item_state:
+                        group["idle"].append(cached_item)
+                    elif not item_state:
+                        group["running"].append(cached_item)
     except ClientError as error:
         print(error)
     return group
