@@ -267,7 +267,7 @@ def get_cloudwatch_events_state_groups(state):
                 cw_event = cw_events[-1]
                 last_cw_event_state = cw_event['detail']['state']
                 print("last_cw_event_state => " + last_cw_event_state)
-                if last_cw_event_state == 'STOPPED' or last_cw_event_state == 'IDLE':
+                if last_cw_event_state == 'STOPPED' or last_cw_event_state == 'STOPPING' or last_cw_event_state == 'IDLE':
                     group["state_changes"].append(event)
                     event["detail"]["idle"] = bool(True)
                     event["detail"]["idle_state"] = bool(True)
