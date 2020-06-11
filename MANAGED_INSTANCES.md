@@ -49,7 +49,7 @@ Refer to [this guide]( https://github.com/awslabs/aws-media-services-application
 
 Hybrid resources that have the tag:
 
-`MSAM-Nodetype: ElementalLive` 
+`MSAM-NodeType: ElementalLive` 
 
 are treated as an Elemental Live encoder by MSAM and have additional support.
 
