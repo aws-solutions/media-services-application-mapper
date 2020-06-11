@@ -108,6 +108,15 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"], funct
             }
 
             if (!found) {
+                for (let arn of idle_nodes) {
+                    found = found || arn === previous.resource_arn;
+                    if (found) {
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
                 inactive_nodes.push(previous.resource_arn);
             }
         }
