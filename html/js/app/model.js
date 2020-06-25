@@ -48,25 +48,16 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
         return new Promise(function(resolve, reject) {
             server.get(url + "/cached/arn/" + arn, api_key).then(function(cached) {
                 // we should get 0 or 1 results only
-                if (cached && cached.length == 1) {
-                    var cache_entry = cached[0];
-                    var data = JSON.parse(cache_entry.data);
-                    // node or connection?
-                    var node;
-                    if (data.to && data.from) {
-                        node = edges.get(arn);
-                    } else {
-                        node = nodes.get(arn);
-                    }
-                    if (!node) {
-                        reject("arn " + arn + " not found");
-                    } else {
-                        node.data = data;
-                        resolve(node);
-                    }
-                } else {
-                    reject("arn " + arn + " not found");
-                }
+                if (!cached || !cached.length) return reject(`arn ${arn} not found`);
+
+                var cache_entry = cached[0];
+                var data = JSON.parse(cache_entry.data);
+                // node or connection?
+                var node = data.to && data.from ? edges.get(arn) : nodes.get(arn);
+                if (!node) return reject(`arn ${arn} not found`);
+
+                node.data = data;
+                resolve(node);
             }).catch(function(error) {
                 console.log(error);
                 reject(error);
@@ -112,13 +103,5 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
     // clear the model at module definition
     reset();
 
-    return {
-        "nodes": nodes,
-        "edges": edges,
-        "reset": reset,
-        "map": map,
-        "update": update,
-        "put_records": put_records,
-        "delete_record": delete_record
-    }
+    return { nodes, edges, reset, map, update, put_records, delete_record }
 });

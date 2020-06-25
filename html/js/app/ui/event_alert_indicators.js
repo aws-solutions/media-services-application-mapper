@@ -4,14 +4,82 @@
 define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
     function($, _, model, event_alerts, diagrams) {
 
-        const updateAlertHandler = (node, alertState = true) => {
+        /**
+         * Retrieve all edges beginning with the given arn.
+         * @param {String} arn The assigned ARB 
+         * @returns {DataSet[]} The found DataSet edges.
+         */
+        const getEdges = arn => {
+            const edges = model.edges.get({
+                filter: ({ id, data = {} }) => (id.startsWith(arn) && data.from === arn),
+            });
+
+            return _.isArray(edges) ? edges : [edges];
+        };
+
+        /**
+         * Retrieve all edges beginning with the given arn and belonging to the given pipeline.
+         * @param {String} arn The assigned ARB 
+         * @param {Number} pipeline The assigned pipeline number
+         * @returns {DataSet[]} The found DataSet edges.
+         */
+        const getEdgesByPipeline = (arn, pipeline) => getEdges(arn)
+            .filter(({ id, data }) => (id.endsWith(`:${pipeline}`) && data.pipeline === pipeline));
+
+        /**
+         * Update the node on all containing diagrams
+         * @param {DataSet} node The DataSet node provided by the model.
+         * @param {Boolean} alertState If true, the containing diagram will update its alert indicator.
+         * @param {String} dataSet Default to 'nodes. Only other possible option is 'edges'.
+         */
+        const updateUIHandler = (node, alertState = true, dataSet = 'nodes') => {
+            let matches = diagrams.have_all([node.id]);
+
+            if (!matches || (_.isArray(matches) && !matches.length) && dataSet === 'edges') {
+                /**
+                 * When it comes to edges, the `diagrams.have_all([node.id])` is not reliant.
+                 * A diagram can very well contain the edge id and still return empty.
+                 * 
+                 * Therefore, only if the `dataSet === 'edges'` and no diagram matches came back,
+                 * we run thru this "double check" that essentially find diagrams that in fact do
+                 * contain the edge in question and adds the diagram to the list of matches.
+                 */
+                const plnum = parseInt(node.id.split(':').pop());
+                const all_diagrams = diagrams.get_all();
+
+                for (const key in all_diagrams) {
+                    if (all_diagrams.hasOwnProperty(key)) {
+                        const diag = all_diagrams[key];
+                        const foundEdge = diag[dataSet].get({ 
+                            filter: ({ id, data }) => {
+                                return (id === node.id && data.pipeline === plnum);
+                            },
+                        });
+
+                        if (foundEdge.length) {
+                            matches.push(diag);
+                        }
+                    }
+                }
+            }
+
+            for (let diagram of matches) {
+                diagram[dataSet].update(node);
+                diagram.alert(alertState);
+            }
+        };
+
+        const updateAlertHandler = (node, alertState = true, alertDetails = {}) => {
             let selected = null;
             let unselected = null;
+            let newState = 'normal';
 
             if (node.degraded) {
+                newState = 'degraded';
                 selected = node.render.degraded_selected();
                 unselected = node.render.degraded_unselected();
             } else if (node.alerting) {
+                newState = 'alerting';
                 selected = node.render.alert_selected();
                 unselected = node.render.alert_unselected();
             } else {
@@ -20,17 +88,29 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             }
 
             if (selected != node.image.selected || unselected != node.image.unselected) {
+                /** Update the node */
                 node.image.selected = selected;
                 node.image.unselected = unselected;
                 model.nodes.update(node);
-
-                const matches = diagrams.have_all([node.id]);
-
-                for (let diagram of matches) {
-                    diagram.nodes.update(node);
-                    diagram.alert(alertState);
-                }
+                updateUIHandler(node, alertState);
             }
+            
+            const newEdgeOpts = {
+                color: { color: newState !== 'normal' ? 'red' : 'black' },
+                dashes: newState !== 'normal',
+            };
+            const edges = !_.has(alertDetails, 'pipeline') ? getEdges(node.id) 
+                : getEdgesByPipeline(node.id, parseInt(alertDetails.pipeline || 0));
+
+            /** Update the edges */
+            edges.forEach(edge => {
+                if (edge.color.color !== newEdgeOpts.color.color || edge.dashes !== newEdgeOpts.dashes) {
+                    edge.color = newEdgeOpts.color;
+                    edge.dashes = newEdgeOpts.dashes;
+                    model.edges.update(edge);
+                    updateUIHandler(edge, alertState, 'edges');
+                }
+            });
         };
 
         const updateEventAlertState = (current_alerts, previous_alerts) => {
@@ -41,16 +121,17 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
 
             for (let item of current_alerts) {
                 const node = model.nodes.get(item.resource_arn);
-
+                
                 if (node) {
                     node.alerting = true;
-                    node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded") ?
-                        item.detail.degraded : false;
+                    node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded") 
+                        ? item.detail.degraded : false;
+                    
 
                     if (node.degraded) {
                         if (!degraded_nodes.includes(item.resource_arn)) {
                             degraded_nodes.push(item.resource_arn);
-                            updateAlertHandler(node);
+                            updateAlertHandler(node, true, item.detail);
                         }
                     } else {
                         /**
@@ -60,7 +141,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                          */
                         if (!alerting_nodes.includes(item.resource_arn) && !degraded_nodes.includes(item.resource_arn)) {
                             alerting_nodes.push(item.resource_arn);
-                            updateAlertHandler(node);
+                            updateAlertHandler(node, true, item.detail);
                         }
                     }
                 }
