@@ -102,6 +102,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             const newEdgeOpts = {
                 color: { color: newState !== 'normal' ? 'red' : 'black' },
                 dashes: newState !== 'normal',
+                hoverWidth: 1
             };
             const edges = !_.has(alertDetails, 'pipeline') ? getEdges(node.id) 
                 : getEdgesByPipeline(node.id, parseInt(alertDetails.pipeline || 0));
@@ -111,6 +112,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                 if (edge.color.color !== newEdgeOpts.color.color || edge.dashes !== newEdgeOpts.dashes) {
                     edge.color = newEdgeOpts.color;
                     edge.dashes = newEdgeOpts.dashes;
+                    edge.hoverWidth = newEdgeOpts.hoverWidth;
                     model.edges.update(edge);
                     updateUIHandler(edge, alertState, 'edges');
 
@@ -125,11 +127,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                     const otherEdges = getEdges(node.id, true)
                         .filter(e => e.data.pipeline === edge.data.pipeline);
                     console.log('Other Edges => %o', otherEdges);
-                    
+
                     otherEdges.forEach(oedge => {
                         if (oedge.color.color !== newEdgeOpts.color.color || oedge.dashes !== newEdgeOpts.dashes) {
                             oedge.color = newEdgeOpts.color;
                             oedge.dashes = newEdgeOpts.dashes;
+                            oedge.hoverWidth = newEdgeOpts.hoverWidth;
                             model.edges.update(oedge);
                             updateUIHandler(oedge, alertState, 'edges');
                         }
