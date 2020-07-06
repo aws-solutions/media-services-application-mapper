@@ -9,10 +9,14 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
          * @param {String} arn The assigned ARB 
          * @returns {DataSet[]} The found DataSet edges.
          */
-        const getEdges = arn => {
-            const edges = model.edges.get({
+        const getEdges = (arn, reverse) => {
+            const opts = {
                 filter: ({ id, data = {} }) => (id.startsWith(arn) && data.from === arn),
-            });
+            };
+            if (reverse) {
+                opts.filter = ({ data = {} }) => (data.to === arn);
+            }
+            const edges = model.edges.get(opts);
 
             return _.isArray(edges) ? edges : [edges];
         };
@@ -109,6 +113,27 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                     edge.dashes = newEdgeOpts.dashes;
                     model.edges.update(edge);
                     updateUIHandler(edge, alertState, 'edges');
+
+                    console.log(`
+                        Updating Pipeline ${edge.data.pipeline}
+                            From ${edge.from} To ${edge.to}
+                            Other Pipeline should be:
+                                Pipeline ${edge.data.pipeline} 
+                                    From 'Somewhere' To ${edge.from}
+                    `)
+
+                    const otherEdges = getEdges(node.id, true)
+                        .filter(e => e.data.pipeline === edge.data.pipeline);
+                    console.log('Other Edges => %o', otherEdges);
+                    
+                    otherEdges.forEach(oedge => {
+                        if (oedge.color.color !== newEdgeOpts.color.color || oedge.dashes !== newEdgeOpts.dashes) {
+                            oedge.color = newEdgeOpts.color;
+                            oedge.dashes = newEdgeOpts.dashes;
+                            model.edges.update(oedge);
+                            updateUIHandler(oedge, alertState, 'edges');
+                        }
+                    });
                 }
             });
         };
