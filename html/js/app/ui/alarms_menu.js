@@ -4,7 +4,9 @@
 define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/alert", "app/ui/diagrams", "app/ui/tile_view", "app/channels"],
     function($, _, model, alarms, regions_promise, alert, diagrams, tile_view, channels) {
 
-        var regions_list;
+        var set_progress_message = function(message) {
+            $("#subscribe_to_alarms_progress").html(message);
+        };
 
         var alarms_tabulator = new Tabulator("#subscribe_to_alarms_modal_alarm_selection", {
             placeholder: "No Alarms to Show",
@@ -15,12 +17,12 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
             selectableRangeMode: "click",
             columns: [ //Define Table Columns
                 {
-                    title: "Namespace",
-                    field: "Namespace",
-                    headerFilter: true
-                }, {
                     title: "Alarm",
                     field: "AlarmName",
+                    headerFilter: true
+                }, {
+                    title: "Namespace",
+                    field: "Namespace",
                     headerFilter: true
                 }, {
                     title: "Metric",
@@ -66,14 +68,58 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
         var selected_alarm_data;
         var selected_alarm_region;
 
+        var progress_value = 0;
+        var progress_start_time = 0;
+        var progress_timer_id = 0;
+
+        var progress_bar_html = function(value, text, color_class) {
+            var html = `<div class="m-2"><div class="progress"><div class="progress-bar ${color_class}" role="progressbar" style="width: ${value}%" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100">${text}</div></div></div>`;
+            return html;
+        };
+
+        var start_progress_message = function() {
+            end_progress_message();
+            progress_value = 0;
+            progress_start_time = new Date().getTime();
+            progress_timer_id = setInterval(function() {
+                update_progress_message();
+            }, 500);
+            update_progress_message();
+        };
+
+        var update_progress_message = function() {
+            var delta_ms = (new Date().getTime()) - progress_start_time;
+            var progress_duration_seconds = Math.round(delta_ms / 1000);
+            var html = progress_bar_html(progress_value, `Loading alarms (${progress_duration_seconds}s)`, "bg-warning");
+            set_progress_message(html);
+            progress_value += 5;
+            if (progress_value > 100) {
+                progress_value = 0;
+            }
+        };
+
+        var end_progress_message = function() {
+            if (progress_timer_id) {
+                clearInterval(progress_timer_id);
+            }
+        };
+
         var populate_alarms_from_region = function(region) {
             selected_alarm_region = region;
+            start_progress_message();
             $("#subscribe_to_alarms_modal_alarm_selection_count").text("0");
             alarms_tabulator.clearData();
             alarms.all_alarms_for_region(region).then(function(response) {
+                end_progress_message();
+                var html = progress_bar_html(100, `${response.length} alarm${response.length != 1 ? "s" : "" } in this region`, "bg-success");
+                set_progress_message(html);
                 if (response.length > 0) {
                     alarms_tabulator.setData(response);
                 }
+            }).catch(function(error) {
+                end_progress_message();
+                var html = progress_bar_html(100, `${error}`, "bg-danger");
+                set_progress_message(html);
             });
         };
 
@@ -154,8 +200,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
         // configure alarm subscription dialog
         regions_promise().then(function(module) {
             $("#subscribe_to_alarms_region_dropdown").empty();
-            regions_list = module.get_available();
-            for (let region of regions_list) {
+            for (let region of module.get_available()) {
                 var id = `alarm_subscribe_region_${region.RegionName}`;
                 var button_html = `<a class="dropdown-item" href="#" id="${id}">${region.RegionName}</button><br>`;
                 $("#subscribe_to_alarms_region_dropdown").append(button_html);

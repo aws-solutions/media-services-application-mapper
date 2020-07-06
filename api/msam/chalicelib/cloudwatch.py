@@ -157,25 +157,18 @@ def all_subscribed_alarms():
     return [dict(t) for t in {tuple(d.items()) for d in split_items}]
 
 
-def filtered_alarm(alarm):
+def filtered_alarm(alarm, substituteText=None):
     """
     Restructure a CloudWatch alarm into a simpler form.
     """
-    arn = [match.value for match in parse('$..AlarmArn').find(alarm)]
-    name = [match.value for match in parse('$..AlarmName').find(alarm)]
-    metric = [match.value for match in parse('$..MetricName').find(alarm)]
-    namespace = [match.value for match in parse('$..Namespace').find(alarm)]
-    state = [match.value for match in parse('$..StateValue').find(alarm)]
-    updated = [match.value for match in parse('$..StateUpdatedTimestamp').find(alarm)]
     filtered = {
-        "AlarmArn": arn[0] if arn else None,
-        "AlarmName": name[0] if name else None,
-        "MetricName": metric[0] if metric else None,
-        "Namespace": namespace[0] if namespace else None,
-        "StateValue": state[0] if state else None,
-        "StateUpdated": int(updated[0].timestamp()) if updated else None
+        "AlarmArn": alarm.get('AlarmArn', None),
+        "AlarmName": alarm.get('AlarmName', None),
+        "MetricName": alarm.get('MetricName', substituteText),
+        "Namespace": alarm.get('Namespace', substituteText),
+        "StateValue": alarm.get('StateValue', None),
+        "StateUpdated": int(alarm['StateUpdatedTimestamp'].timestamp()) if 'StateUpdatedTimestamp' in alarm else None
     }
-    print(filtered)
     return filtered
 
 
@@ -189,17 +182,16 @@ def get_cloudwatch_alarms_region(region):
         client = boto3.client('cloudwatch', region_name=region, config=MSAM_BOTO3_CONFIG)
         response = client.describe_alarms()
         # return the response or an empty object
-        if "MetricAlarms" in response:
-            for alarm in response["MetricAlarms"]:
-                # print(json.dumps(alarm, default=str))
-                alarms.append(filtered_alarm(alarm))
+        for alarm in response.get("MetricAlarms",[]):
+            alarms.append(filtered_alarm(alarm, substituteText="(anomaly detector)"))
+        for alarm in response.get('CompositeAlarms',[]):
+            alarms.append(filtered_alarm(alarm, substituteText="(composite)"))
         while "NextToken" in response:
             response = client.describe_alarms(NextToken=response["NextToken"])
-            # return the response or an empty object
-            if "MetricAlarms" in response:
-                for alarm in response["MetricAlarms"]:
-                    # print(json.dumps(alarm, default=str))
-                    alarms.append(filtered_alarm(alarm))
+            for alarm in response.get("MetricAlarms",[]):
+                alarms.append(filtered_alarm(alarm, substituteText="(anomaly detector)"))
+            for alarm in response.get('CompositeAlarms',[]):
+                alarms.append(filtered_alarm(alarm, substituteText="(composite)"))
     except ClientError as error:
         print(error)
     return alarms
