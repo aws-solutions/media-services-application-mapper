@@ -21,7 +21,8 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             "arrows": "to",
                             "color": {
                                 "color": "black"
-                            }
+                            },
+                            dashes: false,
                         });
                     }
                     resolve();

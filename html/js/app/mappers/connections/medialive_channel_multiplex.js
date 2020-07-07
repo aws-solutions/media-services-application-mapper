@@ -23,6 +23,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                                 label: data.program,
                                 arrows: 'to',
                                 color: { color: 'black' },
+                                dashes: false,
                             };
                             const shouldEndWith = connection.arn.endsWith('0') ? '1' : '0';
                             const hasMoreConnections = _.filter(connections, function(o) {

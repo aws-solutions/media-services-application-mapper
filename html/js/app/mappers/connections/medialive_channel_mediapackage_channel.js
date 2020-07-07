@@ -21,6 +21,7 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
                             label: 'HLS',
                             arrows: "to",
                             color: { color: "black" },
+                            dashes: false,
                         };
                         const hasMoreConnections = _.filter(connections, function(o) {
                             if (o.from === connection.from && o.to === connection.to) {
