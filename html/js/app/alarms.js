@@ -6,6 +6,8 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
 
         var listeners = [];
 
+        var region_cache_clear_interval_ms = 60000;
+
         // cache alarms in 'set' state
         // several modules use this at the same time
 
@@ -37,7 +39,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
         };
 
 
-        var all_alarms_for_region = function(region) {
+        var all_alarms_for_region = _.memoize(function(region) {
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
@@ -52,7 +54,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
                     reject(error);
                 });
             });
-        };
+        });
 
         var alarms_for_subscriber = _.memoize(function(arn) {
             var current_connection = connections.get_current();
@@ -167,6 +169,14 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
         };
 
         load_update_interval();
+
+        setInterval(function() {
+            try {
+                all_alarms_for_region.cache.clear();
+            } catch (error) {
+                console.log(error);
+            }
+        }, region_cache_clear_interval_ms);
 
         return {
             "get_subscribers_with_alarms": function() {
