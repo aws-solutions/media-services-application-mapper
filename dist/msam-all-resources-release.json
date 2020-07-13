@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) (SO0048) (ID: 1591377724)",
+    "Description": "Media Services Application Mapper (MSAM) (SO0048) (ID: 1594682397)",
     "Resources": {
         "IAMModuleStack": {
             "Type": "AWS::CloudFormation::Stack",
@@ -24,7 +24,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-iam-roles-release-1591377724.template"
+                            ".s3.amazonaws.com/msam/msam-iam-roles-release-1594682397.template"
                         ]
                     ]
                 }
@@ -52,7 +52,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-dynamodb-release-1591377724.template"
+                            ".s3.amazonaws.com/msam/msam-dynamodb-release-1594682397.template"
                         ]
                     ]
                 },
@@ -91,7 +91,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-core-release-1591377724.template"
+                            ".s3.amazonaws.com/msam/msam-core-release-1594682397.template"
                         ]
                     ]
                 },
@@ -172,7 +172,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-events-release-1591377724.template"
+                            ".s3.amazonaws.com/msam/msam-events-release-1594682397.template"
                         ]
                     ]
                 },
@@ -241,7 +241,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/msam/msam-browser-app-release-1591377724.template"
+                            ".s3.amazonaws.com/msam/msam-browser-app-release-1594682397.template"
                         ]
                     ]
                 },

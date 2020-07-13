@@ -35,7 +35,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.incoming_cloudwatch_alarm",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -60,7 +60,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -96,7 +96,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_nodes",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -121,7 +121,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -165,7 +165,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_connections",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -190,7 +190,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -234,7 +234,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_from_tags",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -259,7 +259,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -303,7 +303,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.ssm_run_command",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -328,7 +328,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -372,7 +372,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.process_ssm_run_command",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -397,7 +397,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -455,7 +455,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.update_ssm_nodes",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -480,7 +480,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -3345,7 +3345,7 @@
                 "Runtime": "python3.6",
                 "Handler": "app.app",
                 "CodeUri": {
-                    "Key": "msam/29dfb532dcf06cb4ca7a1cfb7f1514df",
+                    "Key": "msam/2c8a65cdc8da99834e7e01cc3a674ef9",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -3370,7 +3370,7 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "1591377724",
+                        "BUILD_STAMP": "1594682397",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -3692,5 +3692,5 @@
             "ConstraintDescription": "Please enter a value for this field."
         }
     },
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1591377724)"
+    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: 1594682397)"
 }
