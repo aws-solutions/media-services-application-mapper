@@ -25,12 +25,8 @@ def update_web_content(event, _):
     """
     This function is responsible for creating or updating web content
     """
-    logger.info(event)
-    try:
-        bucket_name = event["ResourceProperties"]["BucketName"]
-        replace_bucket_contents(bucket_name)
-    except Exception as exception:
-        logger.error(exception)
+    bucket_name = event["ResourceProperties"]["BucketName"]
+    replace_bucket_contents(bucket_name)
 
 
 @helper.delete
@@ -38,12 +34,8 @@ def delete_web_content(event, _):
     """
     This function is responsible for deleting web content
     """
-    logger.info(event)
-    try:
-        bucket_name = event["ResourceProperties"]["BucketName"]
-        delete_bucket_contents(bucket_name)
-    except Exception as exception:
-        logger.error(exception)
+    bucket_name = event["ResourceProperties"]["BucketName"]
+    delete_bucket_contents(bucket_name)
 
 
 def lambda_handler(event, context):
@@ -67,6 +59,7 @@ def replace_bucket_contents(bucket_name):
 
     # unzip the content if this is a cold start
     if not os.path.isdir(WEB_FOLDER):
+        logger.info("unzipping web content locally")
         os.mkdir(WEB_FOLDER)
         with zipfile.ZipFile(webzip, "r") as zip_ref:
             zip_ref.extractall(WEB_FOLDER)
@@ -76,7 +69,7 @@ def replace_bucket_contents(bucket_name):
         for name in filenames:
             local = "{}/{}".format(dirpath, name)
             remote = local.replace("{}/".format(WEB_FOLDER), "")
-            logger.info(f'put: {local}')
+            logger.info(f'put {local}')
             content_type = None
             if remote.endswith(".js"):
                 content_type = "application/javascript"
@@ -98,7 +91,13 @@ def delete_bucket_contents(bucket_name):
     """
     client = boto3.client("s3")
     response = client.list_objects_v2(Bucket=bucket_name)
-    if "Contents" in response:
-        for item in response["Contents"]:
-            logger.info(f'delete: {item["Key"]}')
+    for item in response.get("Contents", []):
+        logger.info(f'delete {item["Key"]}')
+        client.delete_object(Bucket=bucket_name, Key=item["Key"])
+    while response.get("NextContinuationToken", False):
+        response = client.list_objects_v2(
+            Bucket=bucket_name,
+            ContinuationToken=response.get("NextContinuationToken"))
+        for item in response.get("Contents", []):
+            logger.info(f'delete {item["Key"]}')
             client.delete_object(Bucket=bucket_name, Key=item["Key"])
