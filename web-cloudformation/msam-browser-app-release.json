@@ -38,19 +38,30 @@
                             "Ref": "MSAMBrowserAppBucket"
                         },
                         "ViewerProtocolPolicy": "https-only",
-                        "DefaultTTL": 31536000,
-                        "MinTTL": 31536000,
-                        "MaxTTL": 31536000,
+                        "MinTTL": 3600,
+                        "DefaultTTL": 43200,
+                        "MaxTTL": 86400,
                         "AllowedMethods": [
                             "HEAD",
-                            "GET"
+                            "GET",
+                            "OPTIONS"
                         ],
                         "CachedMethods": [
                             "HEAD",
-                            "GET"
+                            "GET",
+                            "OPTIONS"
                         ],
+                        "Compress": true,
                         "ForwardedValues": {
-                            "QueryString": true
+                            "QueryString": false,
+                            "Cookies": {
+                                "Forward": "none"
+                            },
+                            "Headers": [
+                                "Origin",
+                                "Access-Control-Request-Method",
+                                "Access-Control-Request-Headers"
+                            ]
                         }
                     },
                     "DefaultRootObject": "index.html",
@@ -144,8 +155,7 @@
                         ],
                         "AllowedOrigins": [
                             "*"
-                        ],
-                        "MaxAge": "3000"
+                        ]
                     }]
                 }
             }
@@ -180,7 +190,7 @@
                 "Role": {
                     "Ref": "WebIAMRoleARN"
                 },
-                "Runtime": "python3.6",
+                "Runtime": "python3.8",
                 "Timeout": 300
             }
         },
@@ -233,7 +243,7 @@
                 "Role": {
                     "Ref": "WebIAMRoleARN"
                 },
-                "Runtime": "python3.6",
+                "Runtime": "python3.8",
                 "Timeout": 300
             }
         },
