@@ -39,7 +39,7 @@
                         },
                         "ViewerProtocolPolicy": "https-only",
                         "MinTTL": 3600,
-                        "DefaultTTL": 43200,
+                        "DefaultTTL": 7200,
                         "MaxTTL": 86400,
                         "AllowedMethods": [
                             "HEAD",
