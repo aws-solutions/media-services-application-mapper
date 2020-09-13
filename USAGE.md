@@ -130,7 +130,7 @@ The following diagram image is an example of vertical alignment.
 
 A tile represents all of the cloud resources that make up a streaming channel, or some type of system or solution. A tile might include, for example, an on-premise video encoder, MediaConnect flows, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, MediaTailor instance, and CloudFront distribution. Any resource can be a member of more than one tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a tile's resources are aggregated and communicated by visual indications on the tile.
 
-Tiles are sorted by the total number of alarms and alerts, and then by tile name. Diagram nodes are peridically updated to visually reflect the state of subscribed alarms and alerts. Tiles reflect the aggregate status of all the cloud resources associated with the tile. The following image of a tile tab shows several tiles indicating an alarm, a selected tile (Portland Live Camera) with details in the lower compartment.
+Tiles are sorted by the total number of alarms and alerts, and then by tile name. Diagram nodes are periodically updated to visually reflect the state of subscribed alarms and alerts. Tiles reflect the aggregate status of all the cloud resources associated with the tile. The following image of a tile tab shows several tiles indicating an alarm, a selected tile (Portland Live Camera) with details in the lower compartment.
 
 ![Vertical alignment](images/tiles-overview.png)
 

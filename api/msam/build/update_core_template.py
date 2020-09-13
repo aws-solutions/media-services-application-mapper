@@ -168,7 +168,7 @@ OUTPUTS = {
 LAMBDA_FUNCTIONS_DESCRIPTIONS = {
     "IncomingCloudwatchAlarm": "MSAM Lambda for handling CloudWatch alarm notifications",
     "UpdateNodes": "MSAM Lambda for periodically updating the node cache",
-    "UpdateConnections": "MSAM Lambda for peridically updating the connection cache",
+    "UpdateConnections": "MSAM Lambda for periodically updating the connection cache",
     "UpdateFromTags": "MSAM Lambda for handling diagram and tile updates from tags",
     "APIHandler": "MSAM Lambda for handling requests from clients",
     "SsmRunCommand": "MSAM Lambda for running all applicable commands for a given managed instance",
