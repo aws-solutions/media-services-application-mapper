@@ -26,7 +26,8 @@ def update_web_content(event, _):
     This function is responsible for creating or updating web content
     """
     bucket_name = event["ResourceProperties"]["BucketName"]
-    replace_bucket_contents(bucket_name)
+    delete_bucket_contents(bucket_name)
+    put_bucket_contents(bucket_name)
 
 
 @helper.delete
@@ -38,14 +39,14 @@ def delete_web_content(event, _):
     delete_bucket_contents(bucket_name)
 
 
-def lambda_handler(event, context):
+def handler(event, context):
     """
     Lambda entry point.
     """
     helper(event, context)
 
 
-def replace_bucket_contents(bucket_name):
+def put_bucket_contents(bucket_name):
     """
     This function is responsible for removing any existing contents
     in the specified bucket, and adding contents from the zip archive.
@@ -53,9 +54,6 @@ def replace_bucket_contents(bucket_name):
     client = boto3.client("s3")
     stamp = os.environ["BUILD_STAMP"]
     webzip = "msam-web-{stamp}.zip".format(stamp=stamp)
-
-    # empty the bucket
-    delete_bucket_contents(bucket_name)
 
     # unzip the content if this is a cold start
     if not os.path.isdir(WEB_FOLDER):

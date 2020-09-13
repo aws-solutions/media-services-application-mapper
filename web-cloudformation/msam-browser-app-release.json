@@ -184,7 +184,7 @@
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
-                "Handler": "lambda_function.lambda_handler",
+                "Handler": "cfn_bucket_loader.handler",
                 "Description": "MSAM Lambda for custom CloudFormation resource for loading web application",
                 "MemorySize": 2560,
                 "Role": {

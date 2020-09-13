@@ -13,9 +13,8 @@ logger = logging.getLogger(__name__)
 helper = CfnResource()
 
 
-@helper.create
 @helper.update
-def create_update(event, _):
+def invalidate_on_update(event, _):
     """
     This function issues an invalidation command to CloudFront.
     """

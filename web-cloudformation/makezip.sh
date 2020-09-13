@@ -12,5 +12,5 @@ pip install --force-reinstall --target ./package requests crhelper
 cd package
 zip -r9 $ZIP .
 cd $ORIGIN
-zip -g $ZIP lambda_function.py cfn_invalidate_resource.py $HTML_ZIP
+zip -g $ZIP cfn_bucket_loader.py cfn_invalidate_resource.py $HTML_ZIP
 rm $HTML_ZIP
