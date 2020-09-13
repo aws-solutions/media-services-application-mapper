@@ -7,6 +7,8 @@ ORIGIN=`pwd`
 BUCKET_BASENAME='rodeolabz' 
 BUILD_PROFILE='msam-release'
 
+export AWS_DEFAULT_REGION=us-west-2
+
 # MSAM core template
 
 # ./build.sh mybucket myprofile
