@@ -96,6 +96,7 @@ def update_connection_ddb_items():
         content.put_ddb_items(mediastore_container_mediatailor_configuration_ddb_items())
         content.put_ddb_items(medialive_channel_multiplex_ddb_items())
         content.put_ddb_items(multiplex_mediaconnect_flow_ddb_items())
+        content.put_ddb_items(mediastore_container_cloudfront_distribution_ddb_items())
     except ClientError as error:
         print(error)
 
@@ -721,6 +722,32 @@ def s3_bucket_mediatailor_configuration_ddb_items():
                         config = {"from": s3_bucket["arn"], "to": mt_config_data["PlaybackConfigurationArn"], "scheme": scheme}
                         print(config)
                         items.append(connection_to_ddb_item(s3_bucket["arn"], mt_config_data["PlaybackConfigurationArn"], "s3-bucket-mediatailor-configuration", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+def mediastore_container_cloudfront_distribution_ddb_items():
+    """
+    Identify and format MediaStore Container to CloudFront Distribution connections for cache storage.
+    """
+    items = []
+    try:
+        # get CloudFront distros
+        cloudfront_distros_cached = cache.cached_by_service("cloudfront-distribution")
+        # get cached MediaStore containers
+        mediastore_con_cached = cache.cached_by_service("mediastore-container")
+        # iterate over all distributions
+        for distro in cloudfront_distros_cached:
+            distro_data = json.loads(distro["data"])
+            for origin in distro_data["Origins"]["Items"]:
+                origin_domain_name = origin["DomainName"]
+                if "mediastore" in origin_domain_name: 
+                    for ms_container in mediastore_con_cached:
+                        ms_container_data = json.loads(ms_container["data"])
+                        if origin_domain_name in ms_container_data["Endpoint"]:
+                            config = {"from": ms_container["arn"], "to": distro["arn"], "scheme": urlparse(ms_container_data["Endpoint"]).scheme}
+                            print(config)
+                            items.append(connection_to_ddb_item(ms_container["arn"], distro["arn"], "mediastore-container-cloudfront-distribution", config))
     except ClientError as error:
         print(error)
     return items
