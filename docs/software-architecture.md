@@ -2,8 +2,9 @@
 
 ## Views
 
-This document describes the architectural views for the authentication solution used by the demo.aws web sites.
-The views in this document are described using the The “4+1” View Model of Software Architecture. 
+This document describes the architectural views for the Media Services Application Manager (MSAM) tool.
+The views in this document are described using the [The “4+1” View Model of Software Architecture](https://en.wikipedia.org/wiki/4%2B1_architectural_view_model).
+
 The views used in this document are:
 
 1. use case view
