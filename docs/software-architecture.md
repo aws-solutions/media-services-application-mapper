@@ -3,7 +3,6 @@
 ## Views
 
 This document describes the architectural views for the Media Services Application Manager (MSAM) tool.
-The views in this document are described using the [The “4+1” View Model of Software Architecture](https://en.wikipedia.org/wiki/4%2B1_architectural_view_model).
 
 The views used in this document are:
 
@@ -241,7 +240,7 @@ When multiple regions are monitored, the Events stack is deployed to additional 
 
 ### Physical View
 
-The physical view shows the deployed software with configured cloud resources and logical connections among them.
+The physical view shows the deployed software with configured cloud resources and control and data connections among them.
 
 ![Image of Physical View](physical-view.jpg)
 
