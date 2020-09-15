@@ -227,4 +227,18 @@ The Scanned Services frame shows the main services that MSAM will inventory and 
 
 ### Behavioral Views
 
+The following sequence diagram represents the bootstrap process for the front-end diagramming tool. Three finite state machines are used to track the overall bootstrap process, loading of configuration from the cloud, and restoring model and diagram data.
 
+![Image of Webtool Bootstrap](behav-webtool-bootstrap.jpg)
+
+The following sequence diagram represents the general process to invoke an API from the MSAM stack. All requests to the cloud, either from custom tools or the diagram tool use the REST API to communicate with the back-end.
+
+![Image of General API Invoke](behav-general-api-invoke.jpg)
+
+The following sequence diagram represents the notification process from a cloud service to the MSAM back-end stack. MSAM receives notifications from CloudWatch Events, and uses that information to track state of cloud resources monitored by the tool's front end. All state management of an MSAM stack is maintained using multiple DynamoDB tables.
+
+![Image of Back-End Notification](behav-general-backend-notify.jpg)
+
+The following sequence diagram represents the process for updating the visual representation of diagram nodes after a state change occurs in the cloud. The web tool polls the back-end at a user-configured interval and requests node IDs with changed state. Those changed nodes are updated in the local model cache, and also reflected in the diagram contents and tab indicators at the top of the page.
+
+![Image of Front-End Visual Update](behav-frontend-update.jpg)
