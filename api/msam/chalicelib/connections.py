@@ -97,6 +97,8 @@ def update_connection_ddb_items():
         content.put_ddb_items(medialive_channel_multiplex_ddb_items())
         content.put_ddb_items(multiplex_mediaconnect_flow_ddb_items())
         content.put_ddb_items(mediastore_container_cloudfront_distribution_ddb_items())
+        content.put_ddb_items(medialive_channel_s3_bucket_ddb_items())
+
     except ClientError as error:
         print(error)
 
@@ -748,6 +750,37 @@ def mediastore_container_cloudfront_distribution_ddb_items():
                             config = {"from": ms_container["arn"], "to": distro["arn"], "scheme": urlparse(ms_container_data["Endpoint"]).scheme}
                             print(config)
                             items.append(connection_to_ddb_item(ms_container["arn"], distro["arn"], "mediastore-container-cloudfront-distribution", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+
+def medialive_channel_s3_bucket_ddb_items():
+    """
+    Identify and format MediaLive channel to S3 bucket connections for cache storage.
+    """
+    items = []
+    try:
+        # get medialive channels
+        medialive_ch_cached = cache.cached_by_service("medialive-channel")
+        # get s3 buckets
+        s3_buckets_cached = cache.cached_by_service("s3")
+        # compare each medialive output url to an s3 bucket location
+        # protocols allowed for writing to s3 buckets are s3 and s3ssl
+        for ml_channel in medialive_ch_cached:
+            ml_channel_data = json.loads(ml_channel["data"])
+            for destination in ml_channel_data["Destinations"]:
+                for setting in destination["Settings"]:
+                    ml_url = setting["Url"]
+                    parsed_destination = urlparse(ml_url)
+                    if parsed_destination.scheme == 's3' or parsed_destination.scheme == 's3ssl':
+                        for s3_bucket in s3_buckets_cached:
+                            s3_bucket_data = json.loads(s3_bucket["data"])
+                            if parsed_destination.netloc == s3_bucket_data['Name']:
+                                # create a 'connection' out of matches
+                                config = {"from": ml_channel["arn"], "to": s3_bucket["arn"], "scheme": parsed_destination.scheme}
+                                print(config)
+                                items.append(connection_to_ddb_item(ml_channel["arn"], s3_bucket["arn"], "medialive-channel-s3-bucket", config))
     except ClientError as error:
         print(error)
     return items

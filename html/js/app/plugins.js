@@ -34,7 +34,8 @@ define({
         "app/mappers/connections/mediapackage_endpoint_mediatailor_configuration",
         "app/mappers/connections/s3_bucket_mediatailor_configuration",
         "app/mappers/connections/mediastore_container_mediatailor_configuration",
-        "app/mappers/connections/mediastore_container_cloudfront"
+        "app/mappers/connections/mediastore_container_cloudfront",
+        "app/mappers/connections/medialive_channel_s3_bucket"
     ],
     "tools": [
         "app/tools/build_numbers",
