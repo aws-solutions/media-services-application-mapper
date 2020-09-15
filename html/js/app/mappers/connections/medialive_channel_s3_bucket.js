@@ -9,7 +9,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/mediastore-container-cloudfront-distribution/global", api_key).then((connections) => {
+                server.get(url + "/cached/medialive-channel-s3-bucket/global", api_key).then((connections) => {
                     for (let connection of connections) {
                         var data = JSON.parse(connection.data);
                         model.edges.update({
@@ -21,7 +21,8 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             "arrows": "to",
                             "color": {
                                 "color": "black"
-                            }
+                            },
+                            dashes: false,
                         });
                     }
                     resolve();
@@ -41,7 +42,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
         }
 
         return {
-            "name": "MediaStore Containers to CloudFront Distributions",
+            "name": "MediaLive Channels to S3 Buckets",
             "update": update
         };
     });
