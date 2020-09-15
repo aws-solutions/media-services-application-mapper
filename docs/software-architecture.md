@@ -158,7 +158,16 @@ Preconditions: a diagram with contents is shown
 
 *Use Case: Search for Resources*
 
+1. The actor enters criteria into the search field and initiate the search
+2. The search results compartment displays
+3. Tool inventory and diagram elements that match are displayed in the search results
+4. The actor may select one of the nodes, diagrams or tiles in the results to navigate to it
+
 *Use Case: Inspect Resources*
+
+1. The actor select with the mouse a diagram node or tile
+2. The compartment to display details is opened
+3. The compartment is populated with configuration data about the selected item
 
 *Use Case: Navigate to AWS Console*
 
