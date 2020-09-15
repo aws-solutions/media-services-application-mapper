@@ -135,9 +135,25 @@ Alternative during runtime:
 
 *Use Case: Visualize Resources*
 
+Diagrams:
+1. The actor creates a new diagram using the tool controls
+2. The actor uses the inventory browser to find and select nodes to place on the diagram
+3. The actor uses the layout tools to arrange the diagram so it is understandable for the problem domain
 
+Tiles:
+1. The actor may choose to select diagram nodes to prepopulate the new tile
+1. The actor uses the tool controls to create a new tile
+2. The actor provides a name for the tile
 
 *Use Case: Connect Alarms to Nodes*
+
+Preconditions: a diagram with contents is shown
+
+1. The actor chooses one or more nodes on the diagram
+2. The actor uses the alarm tools to show the available CloudWatch Alarms
+3. The actor may filter the list using sorts, keywords
+4. The actor chooses one or more Alarms to associate to the selected nodes
+5. The actor saves and closes the alarm tools
 
 *Use Case: Search for Resources*
 
