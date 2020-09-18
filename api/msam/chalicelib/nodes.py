@@ -80,6 +80,11 @@ def update_regional_ddb_items(region_name):
         content.put_ddb_items(ec2_instance_ddb_items(region_name))
     except ClientError as error:
         print(error)
+    try:
+        print("link-devices")
+        content.put_ddb_items(link_device_ddb_items(region_name))
+    except ClientError as error:
+        print(error)
 
 
 def update_regional_ssm_ddb_items(region_name):
@@ -276,6 +281,17 @@ def ec2_instance_ddb_items(region):
         arn = "arn:aws:ec2-instance:" + region + "::" + ec2_instance['InstanceId']
         service = "ec2-instance"
         items.append(node_to_ddb_item(arn, service, region, ec2_instance))
+    return items
+
+def link_device_ddb_items(region):
+    """
+    Retrieve and format Elemental Link devices for cache storage.
+    """
+    items = []
+    for link_device in link_devices(region):
+        arn = link_device["Arn"]
+        service = "link-device"
+        items.append(node_to_ddb_item(arn, service, region, link_device))
     return items
 
 
@@ -569,6 +585,24 @@ def ec2_instances(region):
                         final_tags[tag["Key"]] = tag["Value"]
                         instance['Tags'] = final_tags
                 items.append(instance)
+    else:
+        print("not available in this region")
+    return items
+
+def link_devices(region):
+    """
+    Return the Elemental Link devices for the given region.
+    Tags included.
+    """
+    items = []
+    service_name = "medialive"
+    if region in boto3.Session().get_available_regions(service_name):
+        service = boto3.client(service_name, region_name=region, config=MSAM_BOTO3_CONFIG)
+        response = service.list_input_devices()
+        items = items + response['InputDevices']
+        while "NextToken" in response:
+            response = service.list_input_devices(NextToken=response["NextToken"])
+            items = items + response['InputDevices']
     else:
         print("not available in this region")
     return items
