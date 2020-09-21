@@ -64,6 +64,23 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
+        var update_link_devices = function() {
+            var current = connections.get_current();
+            var url = current[0];
+            var api_key = current[1];
+            return new Promise((resolve, reject) => {
+                server.get(`${url}/cached/link-device`, api_key).then((devices) => {
+                    for (let cache_entry of devices) {
+                        map_device(cache_entry);
+                    }
+                    resolve();
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        };
+
         var map_channel = function(cache_entry) {
             var channel = JSON.parse(cache_entry.data);
 
@@ -224,9 +241,85 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-        const update = () => {
-            return Promise.all([update_channels(), update_inputs(), update_multiplexes()]);
+        var map_device = function(cache_entry) {
+            var device = JSON.parse(cache_entry.data);
+            var name = device.Id;
+            var id = cache_entry.arn;
+            var nodes = model.nodes;
+            var rgb = "#D5DBDB";
+            var node_type = "Elemental Link";
+            var node_data = {
+                "overlay": "informational",
+                "cache_update": cache_entry.updated,
+                "id": id,
+                "region": cache_entry.region,
+                "shape": "image",
+                "image": {
+                    "unselected": null,
+                    "selected": null
+                },
+                "header": "<b>" + node_type + ":</b> " + name,
+                "data": device,
+                "title": node_type,
+                "name": name,
+                "size": 55,
+                "render": {
+                    normal_unselected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_rgb = rgb;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                        };
+                    })(),
+                    normal_selected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_rgb = rgb;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                        };
+                    })(),
+                    alert_unselected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                        };
+                    })(),
+                    alert_selected: (function() {
+                        var local_node_type = node_type;
+                        var local_name = name;
+                        var local_id = id;
+                        return function() {
+                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                        };
+                    })()
+                },
+                "console_link": (function() {
+                    var region = id.split(":")[3];
+                    return function() {
+                        var html = `https://${region}.console.aws.amazon.com/medialive/home?region=${region}#!/devices/${name}`;
+                        return html;
+                    };
+                })(),
+                "cloudwatch_link": (function() {
+                    return function() {
+                        return html = "https://console.aws.amazon.com/cloudwatch/";
+                    };
+                })()
+            };
+            node_data.image.selected = node_data.render.normal_selected();
+            node_data.image.unselected = node_data.render.normal_unselected();
+            nodes.update(node_data);
         };
 
-        return { name: "MediaLive Inputs, Channels, Multiplexes", update: update };
+        const update = () => {
+            return Promise.all([update_channels(), update_inputs(), update_multiplexes(), update_link_devices()]);
+        };
+
+        return { name: "MediaLive Inputs, Channels, Multiplexes, Elemental Link", update: update };
     });

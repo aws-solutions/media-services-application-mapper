@@ -98,6 +98,7 @@ def update_connection_ddb_items():
         content.put_ddb_items(multiplex_mediaconnect_flow_ddb_items())
         content.put_ddb_items(mediastore_container_cloudfront_distribution_ddb_items())
         content.put_ddb_items(medialive_channel_s3_bucket_ddb_items())
+        content.put_ddb_items(link_device_medialive_input_ddb_items())
 
     except ClientError as error:
         print(error)
@@ -781,6 +782,30 @@ def medialive_channel_s3_bucket_ddb_items():
                                 config = {"from": ml_channel["arn"], "to": s3_bucket["arn"], "scheme": parsed_destination.scheme}
                                 print(config)
                                 items.append(connection_to_ddb_item(ml_channel["arn"], s3_bucket["arn"], "medialive-channel-s3-bucket", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+def link_device_medialive_input_ddb_items():
+    """
+    Identify and format Elemental Link device to MediaLive input for cache storage.
+    """
+    items = []
+    try:
+        # get medialive inputs
+        medialive_input_cached = cache.cached_by_service("medialive-input")
+        # get link devices
+        link_devices_cached = cache.cached_by_service("link-device")
+        # find matching ids in the attached inputs to attached channels
+        for ml_input in medialive_input_cached:
+            ml_input_data = json.loads(ml_input["data"])
+            for input_device in ml_input_data["InputDevices"]:
+                for link_device in link_devices_cached:
+                    link_device_data = json.loads(link_device["data"])
+                    if input_device["Id"] == link_device_data["Id"]:
+                        config = {"from": link_device["arn"], "to": ml_input["arn"], "scheme": "Auto"}
+                        print(config)
+                        items.append(connection_to_ddb_item(link_device["arn"], ml_input["arn"], "link-device-medialive-input", config))
     except ClientError as error:
         print(error)
     return items
