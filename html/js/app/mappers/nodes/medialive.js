@@ -13,12 +13,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return () => svg_node[method](local_node_type, local_name, local_rgb, local_id, data);
         };
 
-        var update_channels = function(regionName) {
+        var update_channels = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
-                server.get(`${url}/cached/medialive-channel/${regionName}`, api_key).then(function(channels) {
+                server.get(`${url}/cached/medialive-channel`, api_key).then(function(channels) {
                     for (let cache_entry of channels) {
                         map_channel(cache_entry);
                     }
@@ -30,12 +30,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update_inputs = function(regionName) {
+        var update_inputs = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(`${url}/cached/medialive-input/${regionName}`, api_key).then((inputs) => {
+                server.get(`${url}/cached/medialive-input`, api_key).then((inputs) => {
                     for (let cache_entry of inputs) {
                         map_input(cache_entry);
                     }
@@ -47,12 +47,12 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update_multiplexes = function(regionName) {
+        var update_multiplexes = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(`${url}/cached/medialive-multiplex/${regionName}`, api_key).then((inputs) => {
+                server.get(`${url}/cached/medialive-multiplex`, api_key).then((inputs) => {
                     for (let cache_entry of inputs) {
                         map_multiplex(cache_entry);
                     }
@@ -224,24 +224,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-        const update = () => new Promise((resolve, reject) => {
-            region_promise()
-                .then(regions => {
-                    const promises = [];
-                    for (let region_name of regions.get_selected()) {
-                        promises.push(update_channels(region_name));
-                        promises.push(update_inputs(region_name));
-                        promises.push(update_multiplexes(region_name));
-                    }
-
-                    return Promise.all(promises);
-                })
-                .then(resolve)
-                .catch(error => {
-                    console.log(error);
-                    reject(error);
-                });
-        });
+        const update = () => {
+            return Promise.all([update_channels(), update_inputs(), update_multiplexes()]);
+        };
 
         return { name: "MediaLive Inputs, Channels, Multiplexes", update: update };
     });

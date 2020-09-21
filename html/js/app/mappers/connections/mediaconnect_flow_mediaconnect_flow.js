@@ -9,7 +9,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/mediaconnect-flow-mediaconnect-flow/global", api_key).then((connections) => {
+                server.get(url + "/cached/mediaconnect-flow-mediaconnect-flow", api_key).then((connections) => {
                     for (let connection of connections) {
                         var data = JSON.parse(connection.data);
                         var human_type = data.scheme.replace("-", " ");
@@ -32,15 +32,8 @@ define(["jquery", "app/model", "app/server", "app/connections"],
         }
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                update_connections().then(function() {
-                    resolve();
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
+            return update_connections()
+        };
 
         return {
             "name": "MediaConnect Flow to MediaConnect Flow",

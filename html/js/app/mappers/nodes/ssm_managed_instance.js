@@ -4,12 +4,12 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
-        var update_configs = function(regionName) {
+        var update_configs = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
-                server.get(url + "/cached/ssm-managed-instance/" + regionName, api_key).then(function(configs) {
+                server.get(url + "/cached/ssm-managed-instance", api_key).then(function(configs) {
                     for (let cache_entry of configs) {
                         // console.log(cache_entry);
                         map_config(cache_entry);
@@ -107,22 +107,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                region_promise().then(function(regions) {
-                    var promises = [];
-                    for (let regionName of regions.get_selected()) {
-                        promises.push(update_configs(regionName));
-                    }
-                    Promise.all(promises).then(function() {
-                        resolve();
-                    }).catch(function() {
-                        reject();
-                    });
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
+            return update_configs();
         };
 
         return {

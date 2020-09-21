@@ -9,7 +9,7 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/medialive-input-medialive-channel/global", api_key).then((connections) => {
+                server.get(url + "/cached/medialive-input-medialive-channel", api_key).then((connections) => {
                     for (let connection of connections) {
                         const data = JSON.parse(connection.data);
                         const options = {
@@ -49,18 +49,11 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
                     resolve();
                 });
             });
-        }
+        };
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                update_connections().then(function() {
-                    resolve();
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
+            return update_connections();
+        };
 
         return {
             "name": "MediaLive Input to Channel Connections",

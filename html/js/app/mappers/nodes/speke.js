@@ -20,7 +20,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             var edges = model.edges;
             var rgb = "#cc00ff";
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/speke-keyserver/global", api_key).then((speke_keyservers_cached) => {
+                server.get(url + "/cached/speke-keyserver", api_key).then((speke_keyservers_cached) => {
                     for (let keyserver of speke_keyservers_cached) {
                         var keyserver_data = JSON.parse(keyserver.data);
                         var name = keyserver_data.endpoint;
@@ -97,14 +97,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             });
         }
         var update = function() {
-            return new Promise((resolve, reject) => {
-                update_speke_keyservers().then(function() {
-                    resolve();
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
+            return update_speke_keyservers();
         };
 
         return {

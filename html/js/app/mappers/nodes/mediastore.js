@@ -4,7 +4,7 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
-        var update_containers = function(regionName) {
+        var update_containers = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
@@ -12,7 +12,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             var rgb = "#D5DBDB";
             var node_type = "MediaStore Container";
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/mediastore-container/" + regionName, api_key).then((cache_entries) => {
+                server.get(url + "/cached/mediastore-container", api_key).then((cache_entries) => {
                     for (let cache_entry of cache_entries) {
                         var container = JSON.parse(cache_entry.data);
                         var name = container.Name;
@@ -96,20 +96,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                region_promise().then(function(regions) {
-                    var promises = [];
-                    for (let region_name of regions.get_selected()) {
-                        promises.push(update_containers(region_name));
-                    }
-                    Promise.all(promises).then(function() {
-                        resolve();
-                    });
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
+            return update_containers();
         };
 
         return {

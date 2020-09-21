@@ -10,7 +10,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             const api_key = current[1];
 
             return new Promise(resolve => {
-                const endpoint = `${url}/cached/medialive-channel-multiplex/global`;
+                const endpoint = `${url}/cached/medialive-channel-multiplex`;
                 server.get(endpoint, api_key)
                     .then(connections => {
                         for (let connection of connections) {
@@ -53,14 +53,9 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             });
         };
 
-        const update = () => new Promise((resolve, reject) => {
-            update_connections()
-                .then(resolve)
-                .catch(error => {
-                    console.log(error);
-                    reject(error);
-                });
-        });
+        const update = () => {
+            return update_connections();
+        };
 
         return { name: 'MediaLive Channel to Multiplex', update };
     });

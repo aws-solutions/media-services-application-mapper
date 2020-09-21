@@ -13,7 +13,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             var node_type = "S3 Bucket";
             return new Promise(function(resolve, reject) {
                 var channels;
-                server.get(url + "/cached/s3/global", api_key).then(function(cache_entries) {
+                server.get(url + "/cached/s3", api_key).then(function(cache_entries) {
                     for (let cache_entry of cache_entries) {
                         var bucket = JSON.parse(cache_entry.data);
                         bucket.Arn = "arn:aws:s3:::" + bucket.Name;

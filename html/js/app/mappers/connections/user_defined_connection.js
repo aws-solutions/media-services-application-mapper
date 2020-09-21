@@ -19,7 +19,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/user-defined-connection/global", api_key).then((connections) => {
+                server.get(url + "/cached/user-defined-connection", api_key).then((connections) => {
                     for (let connection of connections) {
                         var data;
                         if (!connection.data) {
@@ -42,18 +42,11 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                     resolve();
                 });
             });
-        }
+        };
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                update_connections().then(function() {
-                    resolve();
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
+            return update_connections();
+        };
 
         return {
             "name": "User-Defined Node Connections",

@@ -10,7 +10,7 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
             const api_key = current[1];
 
             return new Promise((resolve, reject) => {
-                server.get(`${url}/cached/medialive-channel-mediapackage-channel/global`, api_key).then((connections) => {
+                server.get(`${url}/cached/medialive-channel-mediapackage-channel`, api_key).then((connections) => {
                     for (let connection of connections) {
                         const data = JSON.parse(connection.data);
                         const options = {
@@ -53,14 +53,9 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
             });
         };
 
-        const update = () => new Promise((resolve, reject) => {
-            update_connections()
-                .then(resolve)
-                .catch(error => {
-                    console.log(error);
-                    reject(error);
-                });
-        });
+        const update = () => {
+            return update_connections();
+        };
 
         return { name: 'MediaLive Channel to MediaPackage Channel', update };
     });

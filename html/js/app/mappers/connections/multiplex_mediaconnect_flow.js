@@ -9,7 +9,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
             var url = current[0];
             var api_key = current[1];
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/multiplex-mediaconnect-flow/global", api_key).then((connections) => {
+                server.get(url + "/cached/multiplex-mediaconnect-flow", api_key).then((connections) => {
                     for (let connection of connections) {
                         var data = JSON.parse(connection.data);
                         model.edges.update({
@@ -30,14 +30,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
         }
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                update_connections().then(function() {
-                    resolve();
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
+            return update_connections();
         }
 
         return {

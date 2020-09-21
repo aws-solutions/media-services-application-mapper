@@ -19,7 +19,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             var api_key = current[1];
             var nodes = model.nodes;
             return new Promise((resolve, reject) => {
-                server.get(url + "/cached/user-defined-node/global", api_key).then((cache_entries) => {
+                server.get(url + "/cached/user-defined-node", api_key).then((cache_entries) => {
                     for (let cache_entry of cache_entries) {
                         var color = "#D5DBDB";
                         var item = JSON.parse(cache_entry.data);

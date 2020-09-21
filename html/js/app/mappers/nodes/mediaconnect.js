@@ -4,12 +4,12 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
-        var update_flows = function(regionName) {
+        var update_flows = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
             return new Promise(function(resolve, reject) {
-                server.get(url + "/cached/mediaconnect-flow/" + regionName, api_key).then(function(flows) {
+                server.get(url + "/cached/mediaconnect-flow", api_key).then(function(flows) {
                     for (let cache_entry of flows) {
                         // console.log(cache_entry);
                         map_flow(cache_entry);
@@ -106,22 +106,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
 
 
         var update = function() {
-            return new Promise((resolve, reject) => {
-                region_promise().then(function(regions) {
-                    var promises = [];
-                    for (let region_name of regions.get_selected()) {
-                        promises.push(update_flows(region_name));
-                    }
-                    Promise.all(promises).then(function() {
-                        resolve();
-                    }).catch(function() {
-                        reject();
-                    });
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
+            return update_flows();
         };
 
         return {
