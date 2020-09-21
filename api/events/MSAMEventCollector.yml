@@ -9,7 +9,7 @@ Resources:
       Handler: media_events.lambda_handler
       Description: >-
         MSAM Lambda for handling CloudWatch event notifications
-      Runtime: python3.6
+      Runtime: python3.8
       CodeUri: .
       MemorySize: 2560
       Timeout: 60
@@ -38,7 +38,7 @@ Resources:
     Properties:
       Handler: cloudwatch_alarm.lambda_handler
       Description: MSAM Lambda for handling CloudWatch alarm state change events.
-      Runtime: python3.6
+      Runtime: python3.8
       Role: !Ref EventsIAMRoleARN 
       CodeUri: .
       MemorySize: 2560
