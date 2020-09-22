@@ -13,7 +13,7 @@
 define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node"],
     function($, server, connections, model, svg_node) {
 
-        var update_distributions = function() {
+        var update_user_defined = function() {
             var current = connections.get_current();
             var url = current[0];
             var api_key = current[1];
@@ -105,7 +105,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
         };
 
         var update = function() {
-            return update_distributions();
+            return update_user_defined();
         };
 
         return {
