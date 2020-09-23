@@ -309,7 +309,7 @@ def incoming_cloudwatch_alarm(event, _):
             alarm = json.loads(record["Sns"]["Message"])
             alarm_name = [match.value for match in parse('$..AlarmName').find(alarm)]
             # look up the resources with this region alarm name
-            metric = [match.value for match in parse('$..MetricName').find(alarm)]
+            # metric = [match.value for match in parse('$..MetricName').find(alarm)]
             namespace = [match.value for match in parse('$..Namespace').find(alarm)]
             state = [match.value for match in parse('$..NewStateValue').find(alarm)]
             updated = [match.value for match in parse('$..StateChangeTime').find(alarm)]

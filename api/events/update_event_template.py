@@ -1,3 +1,8 @@
+"""
+This program is responsible for updating the generated
+event template with additional JSON structure.
+"""
+
 import json
 from jsonpath_ng import parse
 
@@ -5,7 +10,10 @@ TEMPLATE_FILE = "msam-events-release.json"
 # replace the absolute path to the bucket of the code URI with a region-dependent one
 CODE_URI = {"Key": "msam/","Bucket": {"Fn::Join": ["-",[{"Ref": "BucketBasename"},{"Ref": "AWS::Region"}]]}}
 
-def main():        
+def main():
+    """
+    This function is the entry point for the program.
+    """
     template = {}
     # read file
     with open(TEMPLATE_FILE, "r") as read_file:
@@ -22,4 +30,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

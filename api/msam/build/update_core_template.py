@@ -1,3 +1,8 @@
+"""
+This program is responsible for updating the generated
+CloudFormation template with changed and additional structure.
+"""
+
 import json
 from jsonpath_ng import parse
 
@@ -178,6 +183,9 @@ LAMBDA_FUNCTIONS_DESCRIPTIONS = {
 CORE_IAM_ROLE_ARN = {"Ref": "CoreIAMRoleARN"}
 
 def main():
+    """
+    This function is the entry point for the program
+    """
     template = {}
     ssm_doc_json = {}
 

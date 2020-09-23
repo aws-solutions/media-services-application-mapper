@@ -6,7 +6,6 @@ This Lambda must be installed into each region where alarms are subscribed to by
 """
 
 import os
-import json
 import time
 
 import boto3
@@ -33,18 +32,18 @@ def lambda_handler(event, _):
         # process the data we got from the alarm state change event
         region = event['region']
         alarm_name = event['detail']['alarmName']
-        CLOUDWATCH_RESOURCE = boto3.resource('cloudwatch', region_name=region)
-        alarm = CLOUDWATCH_RESOURCE.Alarm(alarm_name)
+        cloudwatch_resource = boto3.resource('cloudwatch', region_name=region)
+        alarm = cloudwatch_resource.Alarm(alarm_name)
 
-        region_alarm_name = "{}:{}".format(region, alarm_name)        
+        region_alarm_name = "{}:{}".format(region, alarm_name)
         state = alarm.state_value
-        namespace = alarm.namespace
+        # namespace = alarm.namespace
         state_updated = int(alarm.state_updated_timestamp.timestamp())
 
         subscribers = subscribers_to_alarm(region_alarm_name)
         for resource_arn in subscribers:
             # only update alarm if it's already in alarm DB through node subscription
-            response = ALARMS_TABLE.update_item(
+            ALARMS_TABLE.update_item(
                 UpdateExpression='SET StateValue = :state, Updated = :updated, StateUpdated = :stateupdated',
                 ConditionExpression=Attr('RegionAlarmName').eq(region_alarm_name),
                 Key={'RegionAlarmName': region_alarm_name, 'ResourceArn': resource_arn},
@@ -52,10 +51,11 @@ def lambda_handler(event, _):
             )
             print("{} updated via CloudWatch alarm change state event".format(resource_arn))
     except ClientError as error:
-        if error.response['Error']['Code']=='ConditionalCheckFailedException':  
-            print("No update made. Alarm key {} does not exist in database.".format(region_alarm_name)) 
+        if error.response['Error']['Code']=='ConditionalCheckFailedException':
+            print("No update made. Alarm key {} does not exist in database.".format(region_alarm_name))
         print(error)
     return True
+
 
 def subscribers_to_alarm(region_alarm_name):
     """
@@ -64,11 +64,18 @@ def subscribers_to_alarm(region_alarm_name):
     subscribers = set()
     try:
         ddb_index_name = 'RegionAlarmNameIndex'
-        response = ALARMS_TABLE.query(IndexName=ddb_index_name, KeyConditionExpression=Key('RegionAlarmName').eq(region_alarm_name))
+        response = ALARMS_TABLE.query(
+            IndexName=ddb_index_name,
+            KeyConditionExpression=Key('RegionAlarmName').eq(
+                region_alarm_name))
         for item in response["Items"]:
             subscribers.add(item["ResourceArn"])
         while "LastEvaluatedKey" in response:
-            response = ddb_table.query(IndexName=ddb_index_name, KeyConditionExpression=Key('RegionAlarmName').eq(region_alarm_name), ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = ALARMS_TABLE.query(
+                IndexName=ddb_index_name,
+                KeyConditionExpression=Key('RegionAlarmName').eq(
+                    region_alarm_name),
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             for item in response["Items"]:
                 subscribers.add(item["ResourceArn"])
     except ClientError as error:

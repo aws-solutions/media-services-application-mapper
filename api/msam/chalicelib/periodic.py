@@ -5,7 +5,6 @@ This file contains helper functions for updating the cache.
 """
 
 import os
-import time
 import xml.etree.ElementTree as ET
 import json
 
@@ -68,6 +67,10 @@ def update_connections():
 
 
 def update_nodes():
+    """
+    This function is responsible for updating nodes for
+    one region, or the global services.
+    """
     return update_nodes_generic(
         update_global_func=node_cache.update_global_ddb_items,
         update_regional_func=node_cache.update_regional_ddb_items,
@@ -75,6 +78,9 @@ def update_nodes():
 
 
 def update_ssm_nodes():
+    """
+    This function is responsible for updating SSM nodes
+    """
     def skip():
         print("skipping global region")
     return update_nodes_generic(
@@ -152,7 +158,6 @@ def ssm_run_command():
         db_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         db_table = db_resource.Table(table_name)
         instance_ids = {}
-        items = []
         # get all the managed instances from the DB with tag MSAM-NodeType
         response = db_table.query(
             IndexName="ServiceRegionIndex",
@@ -161,8 +166,7 @@ def ssm_run_command():
             ExpressionAttributeNames={"#data": "data"},
             ExpressionAttributeValues={":tagname": "MSAM-NodeType"}
             )
-        if "Items" in response:
-            items = response["Items"]
+        items = response.get("Items", [])
         while "LastEvaluatedKey" in response:
             response = db_table.query(
             IndexName="ServiceRegionIndex",
@@ -172,8 +176,7 @@ def ssm_run_command():
             ExpressionAttributeValues={":tagname": "MSAM-NodeType"},
             ExclusiveStartKey=response['LastEvaluatedKey']
             )
-            if "Items" in response:
-                items.append(response["Items"])
+            items.append(response.get("Items", []))
 
         for item in items:
             data = json.loads(item['data'])
@@ -227,15 +230,15 @@ def ssm_run_command():
                         document_names[document["Name"]] = tag['Value']
 
         # loop over all instances and run applicable commands based on node type
-        for id, id_type in instance_ids.items():
+        for instance_id, id_type in instance_ids.items():
             for name, doc_type in document_names.items():
                 if id_type in doc_type:
                     # maybe eventually doc type could be comma-delimited string if doc applies to more than one type?
-                    print("running command: %s on %s " % (name, id))
+                    print("running command: %s on %s " % (name, instance_id))
                     try:
                         response = ssm_client.send_command(
                             InstanceIds=[
-                                id,
+                                instance_id,
                             ],
                             DocumentName=name,
                             TimeoutSeconds=600,
@@ -274,7 +277,7 @@ def process_ssm_run_command(event):
     try:
         # test to make sure stream names are always of this format, esp if you create your own SSM document
         log_stream_name = event_dict['detail']['command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
-        
+
         response = log_client.get_log_events(
                 logGroupName=SSM_LOG_GROUP_NAME,
                 logStreamName=log_stream_name,
@@ -284,8 +287,8 @@ def process_ssm_run_command(event):
             # process document name (command)
             if "MSAMElementalLiveStatus" in command_name:
                 metric_name = "MSAMElementalLiveStatus"
-                for event in response['events']:
-                    if "running" in event['message']:
+                for log_event in response['events']:
+                    if "running" in log_event['message']:
                         status = 1
                         break
             elif "MSAMSsmSystemStatus" in command_name:
@@ -310,8 +313,8 @@ def process_ssm_run_command(event):
             # for the elemental live status, the command itself returns a failure if process is not running at all
             # which is different than when a command fails to execute altogether
             if command_status == "Failed" and "MSAMElementalLiveStatus" in command_name:
-                for event in response['events']:
-                    if "Not Running" in event['message'] or "Active: failed" in event['message']:
+                for log_event in response['events']:
+                    if "Not Running" in log_event['message'] or "Active: failed" in log_event['message']:
                         metric_name = "MSAMElementalLiveStatus"
                         break
             else:

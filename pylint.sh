@@ -12,5 +12,7 @@
 # ignore line too long problems (C0301)
 # ignore similar code problems (R0801)
 
-find . -iname '*.py' -print0 | \
-    xargs -0 pylint -d C0301,R0801,R1702
+find . -iname '*.py' | \
+    grep "/package/" --invert-match | \
+    grep "/.aws-sam/" --invert-match | \
+    xargs pylint -d C0301,R0801,R1702,R0912,R0914,R0915

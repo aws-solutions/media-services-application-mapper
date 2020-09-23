@@ -67,7 +67,7 @@ def put_bucket_contents(bucket_name):
         for name in filenames:
             local = "{}/{}".format(dirpath, name)
             remote = local.replace("{}/".format(WEB_FOLDER), "")
-            logger.info(f'put {local}')
+            logger.info('put %s', local)
             content_type = None
             if remote.endswith(".js"):
                 content_type = "application/javascript"
@@ -90,12 +90,12 @@ def delete_bucket_contents(bucket_name):
     client = boto3.client("s3")
     response = client.list_objects_v2(Bucket=bucket_name)
     for item in response.get("Contents", []):
-        logger.info(f'delete {item["Key"]}')
+        logger.info('delete %s', item["Key"])
         client.delete_object(Bucket=bucket_name, Key=item["Key"])
     while response.get("NextContinuationToken", False):
         response = client.list_objects_v2(
             Bucket=bucket_name,
             ContinuationToken=response.get("NextContinuationToken"))
         for item in response.get("Contents", []):
-            logger.info(f'delete {item["Key"]}')
+            logger.info('delete %s', item["Key"])
             client.delete_object(Bucket=bucket_name, Key=item["Key"])

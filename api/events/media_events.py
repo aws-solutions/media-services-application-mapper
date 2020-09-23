@@ -13,7 +13,7 @@ from random import randint
 from urllib.parse import unquote
 
 import boto3
-from boto3.dynamodb.conditions import Key, Attr
+from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 from botocore.config import Config
 from jsonpath_ng import parse
@@ -69,7 +69,7 @@ def lambda_handler(event, _):
             # mediaconnect alerts
             elif "MediaConnect" in event["detail-type"]:
                 event["alarm_id"] = event["detail"]["error-id"]
-                if event["detail"]["errored"] == True:
+                if event["detail"]["errored"]:
                     event["alarm_state"] = "set"
                 else:
                     event["alarm_state"] = "cleared"
@@ -80,7 +80,7 @@ def lambda_handler(event, _):
             #print(event)
             EVENTS_TABLE.put_item(Item=event)
             print(event["detail-type"] + " stored.")
-        
+
         # set the rest of the information needed for storing as regular CWE
         # give timestamp a millisecond precision since it's sort key in CWE table
         event["timestamp"] = event["timestamp"] * 1000 + randint(1, 999)
@@ -92,10 +92,10 @@ def lambda_handler(event, _):
         # handle specific cases depending on source
         if event["source"] == "aws.medialive":
             if "BatchUpdateSchedule" in event["type"]:
-                    print("Creating an ARN for BatchUpdateSchedule event.")
-                    event["resource_arn"] = "arn:aws:medialive:" + event['region'] + ":" + \
-                        event['account'] + ":channel:" + \
-                        event['detail']['requestParameters']['channelId']
+                print("Creating an ARN for BatchUpdateSchedule event.")
+                event["resource_arn"] = "arn:aws:medialive:" + event['region'] + ":" + \
+                    event['account'] + ":channel:" + \
+                    event['detail']['requestParameters']['channelId']
         elif event["source"] == "aws.mediapackage":
             if "HarvestJob" in event["type"]:
                 print("Asking MediaPackage for the ARN of endpoint in a HarvestJob event.")
@@ -111,12 +111,12 @@ def lambda_handler(event, _):
                 else:
                     print("Skipping this event. Origin ID not present in the HarvestJob event." + event["type"])
         elif event["source"] == "aws.mediastore":
-            # for object state change the resource is the object, not the container 
+            # for object state change the resource is the object, not the container
             # so the captured arn needs to be fixed
             if "MediaStore Object State Change" in event["type"]:
                 temp_arn = event["resource_arn"].split('/')
                 event["resource_arn"] = temp_arn[0] + "/" + temp_arn[1]
-        
+
         # if item has no resource arn, don't save in DB
         if "resource_arn" in event:
             #print(event)
@@ -138,8 +138,8 @@ def get_pipeline_state(event):
     try:
         if event["source"] == "aws.medialive" and event["detail"]["alarm_state"] == "SET":
             resource = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME)
-            CONTENT_TABLE = resource.Table(CONTENT_TABLE_NAME)
-            response = CONTENT_TABLE.query(KeyConditionExpression=Key('arn').eq(resource_arn))
+            content_table = resource.Table(CONTENT_TABLE_NAME)
+            response = content_table.query(KeyConditionExpression=Key('arn').eq(resource_arn))
             if "Items" in response:
                 item = response["Items"][0]
                 if "service" in item and item["service"] == "medialive-multiplex":

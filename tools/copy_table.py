@@ -1,9 +1,15 @@
-import json
-import boto3
-import os
+"""
+This program is responsible for copying DynamoDB tables,
+and is used for backups and migrations in MSAM.
+"""
+
 import argparse
+import boto3
 
 def main():
+    """
+    This is the entry point for the program
+    """
     try:
         parser = argparse.ArgumentParser(description='Copy database items from one DynamoDB table to another.')
         parser.add_argument('--source', required=True, help='source table name')
@@ -27,14 +33,14 @@ def main():
             if "Items" in response:
                 scanned_items = scanned_items + response["Items"]
         #print(scanned_items)
-                
+
         for item in scanned_items:
             destination_table.put_item(
                     Item=item
             )
     except Exception as error:
         print(error)
-    return
+
 
 if __name__ == "__main__":
     main()

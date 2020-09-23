@@ -1,7 +1,12 @@
-import boto3
+"""
+This program generates CloudWatch Alarms to use with testing scale of MSAM.
+These are not valid alarms - they will not change state.
+"""
+
 import copy
-import time
 import json
+import time
+import boto3
 
 ALARM_TEMPLATE = {
     "AlarmName": "1193839-0 Active Alerts",

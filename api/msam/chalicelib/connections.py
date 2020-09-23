@@ -59,6 +59,10 @@ def connection_to_ddb_item_pl(from_arn, to_arn, service, config):
 
 
 def fetch_running_pipelines_count(data):
+    """
+    This function is responsible for determine the number
+    of running pipelines from a MediaLive configuration
+    """
     pipelines_count = 0
     # this will take care of medialive
     if 'ChannelClass' in data:
@@ -71,7 +75,7 @@ def fetch_running_pipelines_count(data):
         if "Destinations" in data:
             pipelines_count = len(data["Destinations"])
     return pipelines_count
-    
+
 
 def update_connection_ddb_items():
     """
@@ -744,7 +748,7 @@ def mediastore_container_cloudfront_distribution_ddb_items():
             distro_data = json.loads(distro["data"])
             for origin in distro_data["Origins"]["Items"]:
                 origin_domain_name = origin["DomainName"]
-                if "mediastore" in origin_domain_name: 
+                if "mediastore" in origin_domain_name:
                     for ms_container in mediastore_con_cached:
                         ms_container_data = json.loads(ms_container["data"])
                         if origin_domain_name in ms_container_data["Endpoint"]:
