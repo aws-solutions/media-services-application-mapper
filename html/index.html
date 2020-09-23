@@ -242,7 +242,13 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div class="tab-pane  mt-3" id="nav-status" role="tabpanel" aria-labelledby="nav-status-tab">
             </div>
             <div class="tab-pane  mt-0 px-0" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
-                <div class="m-2 lead">Search results for "<span id="search-text-div"></span>"</div>
+                <form class="form-inline pl-4 my-2 py-2 my-lg-0" onsubmit="return false;">
+                    <input class="form-control mx-1" id="search_input_2" placeholder="Search Terms" onsubmit="return false;">
+                    <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button-2">
+                        <i class="material-icons">search</i>
+                    </a>
+                </form>
+                <!-- <div class="m-2 lead">Search results for "<span id="search-text-div"></span>"</div> -->
                 <div id="accordion" class="m-0 p-0">
                     <div class="card">
                         <div class="card-header py-0 my-0" id="headingOne">

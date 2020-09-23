@@ -8,8 +8,6 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
 
         var blinks = 10;
 
-        var node_visibility_timer;
-
         var show = function() {
             $("#" + tab_id).tab('show');
         };
@@ -194,44 +192,6 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             }
         }
 
-        var clear_search = function() {
-            // enable the show matches button
-            $("#only-show-matches-button").prop("disabled", false);
-            $("#only-show-matches-button").attr("aria-disabled", "false");
-            // enabked the search input and clear it
-            $("#search_input").prop("readonly", false);
-            $("#search_input").attr("aria-disabled", "false");
-            $("#search_input").val("");
-            $("#search_input").focus();
-            $("#nav-search-subtitle").html("");
-            $("#nav-search-text").html("");
-            // only_show_matches(false);
-            // display_search_results("", []);
-            // setTimeout(function() {
-            //     update_node_visibility();
-            //     update_tile_visibility()
-            // }, 500);
-            display_search_results({
-                text: "",
-                model: [],
-                tile_names: [],
-                tile_contents: [],
-                diagram_names: [],
-                diagram_contents: []
-            });
-            $("#nav-status-tab").tab("show");
-        };
-
-        var only_show_matches = function(toggle) {
-            if (toggle) {
-                $("#only-show-matches-button").addClass("active");
-                $("#only-show-matches-button").attr("aria-pressed", true);
-            } else {
-                $("#only-show-matches-button").removeClass("active");
-                $("#only-show-matches-button").attr("aria-pressed", false);
-            }
-        }
-
         function search_now() {
             show();
             var text = $("#search_input").val();
@@ -246,34 +206,30 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             }
         }
 
-        $("#search-reset-button").on("click", () => {
-            clear_search();
-            return false;
-        });
-
         // enter key handler
-        $("#search_input").keypress(function(event) {
+        $("#search_input,#search_input_2").keypress(function(event) {
+            // console.log(event);
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
+                if (event.target.id == "search_input") {
+                    $("#search_input_2").val($("#search_input").val());
+                } else {
+                    $("#search_input").val($("#search_input_2").val());
+                }
                 search_now();
             }
         });
 
-        $("#search-now-button").on("click", function(event) {
+        $("#search-now-button,#search-now-button-2").click(function(event) {
+            // console.log(event);
+            if (event.target.id == "search-now-button") {
+                $("#search_input_2").val($("#search_input").val());
+            } else {
+                $("#search_input").val($("#search_input_2").val());
+            }
             search_now();
             return false;
         });
 
-        $("#only-show-matches-button").on("click", (event) => {
-            // we get the click, and the previous value of the toggle
-            var hidden = !($("#only-show-matches-button").attr("aria-pressed") === "true");
-            only_show_matches(hidden);
-            $("#search_input").focus();
-            setTimeout(function() {
-                update_node_visibility(hidden);
-                update_tile_visibility(hidden);
-            }, 100);
-            return false;
-        });
 
     });
