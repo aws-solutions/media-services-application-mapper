@@ -807,7 +807,7 @@ def link_device_medialive_input_ddb_items():
                 for link_device in link_devices_cached:
                     link_device_data = json.loads(link_device["data"])
                     if input_device["Id"] == link_device_data["Id"]:
-                        config = {"from": link_device["arn"], "to": ml_input["arn"], "scheme": "ARQ"}
+                        config = {"from": link_device["arn"], "to": ml_input["arn"], "scheme": "ARQ", "info": "https://en.wikipedia.org/wiki/Automatic_repeat_request"}
                         print(config)
                         items.append(connection_to_ddb_item(link_device["arn"], ml_input["arn"], "link-device-medialive-input", config))
     except ClientError as error:
