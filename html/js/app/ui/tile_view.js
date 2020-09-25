@@ -7,6 +7,8 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         var tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
         var click_listeners = [];
+        
+        var tile_outer_div = "channel-tiles-outer";
 
         var content_div = "channel-tiles-diagram";
 
@@ -25,8 +27,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         var current_channel_list = [];
         var current_channel_members = {};
 
-        var show_normal_tiles = true;
-        var show_alarm_tiles = true;
+        var tile_view_key = "tile-view";
 
         var add_selection_callback = function(callback) {
             if (!click_listeners.includes(callback)) {
@@ -188,31 +189,38 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
 
         var filter_tiles = function() {
             let tiles = $("[data-channel-name]");
-            for (let tile of tiles) {
-                var total = (Number.parseInt($(tile).attr("data-alert-count")) + Number.parseInt($(tile).attr("data-alarm-count")));
-                var alarming = (total > 0);
-                if (show_alarm_tiles && show_normal_tiles) {
-                    $(tile).removeClass("d-none");
-                } else if (show_alarm_tiles) {
-                    if (alarming) {
+            load_tile_view().then(function(tile_settings){
+                update_filter_mode(tile_settings.tile_filter_text);
+                var show_alarm_tiles = tile_settings.show_alarm_tiles;
+                var show_normal_tiles = tile_settings.show_normal_tiles;
+                for (let tile of tiles) {
+                    var total = (Number.parseInt($(tile).attr("data-alert-count")) + Number.parseInt($(tile).attr("data-alarm-count")));
+                    var alarming = (total > 0);
+                    if (show_alarm_tiles && show_normal_tiles) {
                         $(tile).removeClass("d-none");
-                    } else {
-                        $(tile).addClass("d-none");
-                    }
-                } else if (show_normal_tiles) {
-                    if (alarming) {
-                        $(tile).addClass("d-none");
-                    } else {
-                        $(tile).removeClass("d-none");
+                    } else if (show_alarm_tiles) {
+                        if (alarming) {
+                            $(tile).removeClass("d-none");
+                        } else {
+                            $(tile).addClass("d-none");
+                        }
+                    } else if (show_normal_tiles) {
+                        if (alarming) {
+                            $(tile).addClass("d-none");
+                        } else {
+                            $(tile).removeClass("d-none");
+                        }
                     }
                 }
-            }
+                $("#" + tile_outer_div).removeClass("d-none");
+            });
         };
 
         var redraw_tiles = function() {
             current_channel_list = [];
             current_channel_members = {};
             // $("#" + content_div).empty();
+            $("#" + tile_outer_div).addClass("d-none");
             $("#" + content_div).html(`<div id="${tile_row_div_id}" data-tile-row="true" class="row ml-3">`);
             new Promise(function(outerResolve) {
                 channels.channel_list().then(function(channel_list) {
@@ -509,29 +517,51 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             console.log("tile view: interval scheduled " + update_interval + "ms");
         };
 
+        var load_tile_view = function(){
+            return new Promise(function(resolve) {
+                settings.get(tile_view_key).then(function(value) {
+                    resolve(value);
+                });
+            });
+        };
+
+        var update_tile_view = function(tile_view){
+            return new Promise(function(resolve) {
+                settings.put(tile_view_key, tile_view).then(function() {
+                    console.log("tile view saved");
+                    resolve();
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            }); 
+        };
+
         var update_filter_mode = function(text) {
             $("#tile-filter-dropdown").text(text);
         };
 
-        $("#tile-filter-show-all").click(function(event) {
-            update_filter_mode("Showing All Tiles");
-            show_alarm_tiles = true;
-            show_normal_tiles = true;
-            update_tile_info();
+        $("#tile-filter-show-all").click(function (event) {
+            var tile_filter_text = "Showing All Tiles";
+            update_filter_mode(tile_filter_text);
+            update_tile_view({ "show_alarm_tiles": true, "show_normal_tiles": true, "tile_filter_text": tile_filter_text }).then(function () {
+                update_tile_info();
+            });
         });
 
         $("#tile-filter-show-alarm").click(function(event) {
-            update_filter_mode("Showing Alarm/Alert Tiles");
-            show_alarm_tiles = true;
-            show_normal_tiles = false;
-            update_tile_info();
+            var tile_filter_text = "Showing Alarm/Alert Tiles";
+            update_filter_mode(tile_filter_text);
+            update_tile_view({"show_alarm_tiles": true, "show_normal_tiles": false, "tile_filter_text": tile_filter_text}).then(function(){
+                update_tile_info();
+            });
         });
 
         $("#tile-filter-show-normal").click(function(event) {
-            update_filter_mode("Showing Normal Tiles");
-            show_alarm_tiles = false;
-            show_normal_tiles = true;
-            update_tile_info();
+            var tile_filter_text = "Showing Normal Tiles";
+            update_filter_mode(tile_filter_text);
+            update_tile_view({"show_alarm_tiles": false, "show_normal_tiles": true, "tile_filter_text": tile_filter_text}).then(function(){
+                update_tile_info();
+            });
         });
 
         // check for any tiles, create a default if needed, finish initialization

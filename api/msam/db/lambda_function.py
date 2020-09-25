@@ -101,3 +101,9 @@ def make_default_settings(settings_table):
         print("added default layout-method setting")
     except ClientError:
         print("layout-method setting exists")
+    # default tile-view
+    try:
+        table.put_item(Item={"id": "tile-view", "value": {"show_normal_tiles": True, "show_alarm_tiles": True, "tile_filter_text": "Showing All Tiles"}}, ConditionExpression="attribute_not_exists(id)")
+        print("added default tile-view setting")
+    except ClientError:
+        print("tile-view setting exists")
