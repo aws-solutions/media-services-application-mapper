@@ -24,7 +24,7 @@ The MSAM browser application will load inventory once while it is starting. It w
 
 ## Searching for Resources, Diagrams, Tiles
 
-Search controls are located at the upper right of the page. Inventory in-memory, all diagrams and tiles are searched simultaneously. Search results are displayed in the **Search** tab at the lower part of the page.
+Search controls are located at the upper-right of the page and inside the Search tab at the bottom of the page. Inventory in-memory, all diagrams and tiles are searched simultaneously. Search results are displayed in the **Search** tab at the lower part of the page.
 
 Search results show several results:
 
@@ -186,7 +186,6 @@ The upper area of the Subscribed Alarms tab contains subscribed alarms and the l
 
 * Settings
     * Connection Settings -- change the current connection or use a new connection to an MSAM endpoint
-    * Regions Displayed -- update the regions that are imported into the browser tool from the cloud inventory
     * Advanced Settings
     	* CloudWatch Alarm Update Interval -- query MSAM for alarm state changes at this internal
     	* CloudWatch Event Update Interval -- query MSAM for event changes at this internal
