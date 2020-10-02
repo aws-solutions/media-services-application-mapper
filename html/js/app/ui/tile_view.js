@@ -215,8 +215,6 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         };
 
         var redraw_tiles = async function() {
-            // console.log("redraw_tiles");
-            // $("#" + content_div).empty();
             $("#" + tile_outer_div).addClass("d-none");
             $("#" + content_div).html(`<div id="${tile_row_div_id}" data-tile-row="true" class="row ml-3">`);
             var channel_list = await channels.channel_list();

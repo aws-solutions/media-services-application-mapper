@@ -136,6 +136,17 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         arn_to_channels.cache.clear();
     };
 
+    // pre-warming the function cache to speed tile drawing
+
+    async function prewarm() {
+        var channels = await channel_list();
+        for (let name of channels) {
+            retrieve_channel(name);
+        }
+    };
+
+    prewarm();
+
     return {
         "create_channel": create_channel,
         "update_channel": update_channel,
