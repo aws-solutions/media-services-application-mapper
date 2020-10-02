@@ -7,7 +7,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         var tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
         var click_listeners = [];
-        
+
         var tile_outer_div = "channel-tiles-outer";
 
         var content_div = "channel-tiles-diagram";
@@ -120,11 +120,13 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         }
 
-        var update_tile_info = function() {
+        var update_tile_info = async function() {
+            // console.log("update_tile_info");
             var cached_events = event_alerts.get_cached_events();
             var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-            for (let channel_name of current_channel_list) {
-                var channel_members = current_channel_members[channel_name];
+            var channel_list = await channels.channel_list();
+            for (let channel_name of channel_list) {
+                var channel_members = await channels.retrieve_channel(channel_name);
                 if (channel_members) {
                     var query = `[data-channel-name='${channel_name}']`;
                     var tile_id = $(query).attr("id");
@@ -137,23 +139,19 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     var alarm_count = 0;
                     var border_class = "border-success";
                     for (let member of channel_members) {
-                        for (let event_value of cached_events.current) {
-                            if (member.id === event_value.resource_arn) {
-                                border_class = "border-danger";
-                                alert_count += 1;
-                            }
-                        }
-                        for (let alarm_value of cached_alarming_subscribers.current) {
-                            if (member.id === alarm_value.ResourceArn) {
-                                border_class = "border-danger";
-                                alarm_count += 1;
-                            }
-                        }
+                        filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
+                        alert_count += filtered_events.length;
+                        filtered_alarms = _.filter(cached_alarming_subscribers.current, { ResourceArn: member.id });
+                        alarm_count += filtered_alarms.length;
                     }
-                    if (border_class === "border-success") {
-                        $("#" + tile_id).removeClass("border-danger");
-                    } else {
+                    if (alert_count + alarm_count) {
+                        border_class = "border-danger";
                         $("#" + tile_id).removeClass("border-success");
+                    } else {
+                        $("#" + tile_id).removeClass("border-danger");
+                    }
+                    if (channel_name == selected()) {
+                        border_class = `${border_class} selected-channel-tile`;
                     }
                     $("#" + tile_id).attr("data-alert-count", alert_count);
                     $("#" + tile_id).attr("data-alarm-count", alarm_count);
@@ -165,7 +163,6 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
             sort_tiles();
             filter_tiles();
-            tab_alert($("#" + content_div + " .border-danger").length > 0);
         };
 
         var sort_tiles = function() {
@@ -189,7 +186,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
 
         var filter_tiles = function() {
             let tiles = $("[data-channel-name]");
-            load_tile_view().then(function(tile_settings){
+            load_tile_view().then(function(tile_settings) {
                 update_filter_mode(tile_settings.tile_filter_text);
                 var show_alarm_tiles = tile_settings.show_alarm_tiles;
                 var show_normal_tiles = tile_settings.show_normal_tiles;
@@ -213,137 +210,113 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     }
                 }
                 $("#" + tile_outer_div).removeClass("d-none");
+                tab_alert($("#" + content_div + " .border-danger").length > 0);
             });
         };
 
-        var redraw_tiles = function() {
-            current_channel_list = [];
-            current_channel_members = {};
+        var redraw_tiles = async function() {
+            // console.log("redraw_tiles");
             // $("#" + content_div).empty();
             $("#" + tile_outer_div).addClass("d-none");
             $("#" + content_div).html(`<div id="${tile_row_div_id}" data-tile-row="true" class="row ml-3">`);
-            new Promise(function(outerResolve) {
-                channels.channel_list().then(function(channel_list) {
-                    // console.log(channel_list);
-                    current_channel_list = channel_list;
-                    var cached_events = event_alerts.get_cached_events();
-                    var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-                    for (let channel_name of channel_list) {
-                        var border_class = "border-success";
-                        channels.retrieve_channel(channel_name).then(function(channel_members) {
-                            // console.log(channel_members);
-                            current_channel_members[channel_name] = channel_members;
-                            var service_count = channel_members.length;
-                            var alert_count = 0;
-                            var alarm_count = 0;
-                            for (let member of channel_members) {
-                                for (let event_value of cached_events.current) {
-                                    if (member.id === event_value.resource_arn) {
-                                        border_class = "border-danger";
-                                        alert_count += 1;
-                                    }
+            var channel_list = await channels.channel_list();
+            var cached_events = event_alerts.get_cached_events();
+            var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
+            for (let channel_name of channel_list) {
+                var border_class = "border-success";
+                var channel_members = await channels.retrieve_channel(channel_name);
+                // console.log(channel_members);
+                var service_count = channel_members.length;
+                var alert_count = 0;
+                var alarm_count = 0;
+                for (let member of channel_members) {
+                    filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
+                    alert_count += filtered_events.length;
+                    filtered_alarms = _.filter(cached_alarming_subscribers.current, { ResourceArn: member.id });
+                    alarm_count += filtered_alarms.length;
+                }
+                if (alert_count + alarm_count) {
+                    border_class = "border-danger";
+                }
+                if (channel_name == selected()) {
+                    border_class = `${border_class} selected-channel-tile`;
+                }
+                var channel_card_id = ui_util.makeid();
+                var model_button_id = channel_card_id + "_model_button";
+                var header_id = channel_card_id + "_header";
+                var tile = `
+                        <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
+                            <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${channel_name}</div>
+                            <div class="card-body text-info my-0 py-1">
+                                <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${(alert_count === 1 ? "" : "s")}</h5>
+                                <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${(alarm_count === 1 ? "" : "s")}</h5>
+                                <p class="card-text small my-0 py-0" id="${channel_card_id}_services">${service_count} cloud services</p>
+                            </div>
+                            <div class="btn-group btn-group-sm mb-1 mx-auto" role="group" aria-label="Tile Buttons">
+                                <button type="button" id="${model_button_id}" title="Navigate to Diagram" class="btn btn-light px-2">Diagram</button>
+                            </div>
+                        </div>
+                    `;
+                $("#" + tile_row_div_id).append(tile);
+                var header_click_closure = function() {
+                    var name = channel_name;
+                    var members = channel_members;
+                    return function() {
+                        selection_listener(name, members);
+                        for (let f of click_listeners) {
+                            new Promise((resolve, reject) => {
+                                try {
+                                    f(name, members);
+                                } catch (error) {
+                                    console.log(error);
                                 }
-                                for (let alarm_value of cached_alarming_subscribers.current) {
-                                    if (member.id === alarm_value.ResourceArn) {
-                                        border_class = "border-danger";
-                                        alarm_count += 1;
-                                    }
-                                }
-                            }
-                            if (channel_name === selected()) {
-                                border_class = border_class + " selected-channel-tile";
-                            }
-                            var channel_card_id = ui_util.makeid();
-                            var model_button_id = channel_card_id + "_model_button";
-                            var delete_button_id = channel_card_id + "_delete_button";
-                            var edit_button_id = channel_card_id + "_edit_button";
-                            var header_id = channel_card_id + "_header";
-                            var tile = `
-                                <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
-                                    <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${channel_name}</div>
-                                    <div class="card-body text-info my-0 py-1">
-                                        <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${(alert_count === 1 ? "" : "s")}</h5>
-                                        <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${(alarm_count === 1 ? "" : "s")}</h5>
-                                        <p class="card-text small my-0 py-0" id="${channel_card_id}_services">${service_count} cloud services</p>
-                                    </div>
-                                    <div class="btn-group btn-group-sm mb-1 mx-auto" role="group" aria-label="Tile Buttons">
-                                        <button type="button" id="${model_button_id}" title="Navigate to Diagram" class="btn btn-light px-2">Diagram</button>
-                                    </div>
-                                </div>
-                            `;
-                            $("#" + tile_row_div_id).append(tile);
-                            var header_click_closure = function() {
-                                var name = channel_name;
-                                var members = channel_members;
-                                return function() {
-                                    selection_listener(name, members);
-                                    for (let f of click_listeners) {
-                                        new Promise((resolve, reject) => {
-                                            try {
-                                                f(name, members);
-                                            } catch (error) {
-                                                console.log(error);
-                                            }
-                                        });
-                                    }
-                                };
-                            };
-                            $("#" + header_id).on("click", header_click_closure());
-                            $("#" + header_id).dblclick((function() {
-                                var name = channel_name;
-                                var members = channel_members;
-                                return function() {
-                                    show_edit_dialog(name, members);
-                                }
-                            })());
-                            var model_click_closure = function() {
-                                var tile_name = channel_name;
-                                var node_ids = _.map(channel_members, "id");
-                                return function() {
-                                    var html;
-                                    var matches = diagrams.have_all(node_ids);
-                                    // show tile diagram dialog
-                                    $("#view_tile_diagram_selected_diagram").empty();
-                                    if (node_ids.length === 0) {
-                                        alert.show("Add resources to the tile");
-                                    } else
-                                    if (matches.length === 0) {
-                                        html = `This tile's contents were not found on any diagram. Would you like to generate a new one?`;
-                                        confirmation.show(html, function() {
-                                            var diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
-                                            // populate
-                                            var nodes = _.compact(model.nodes.get(node_ids));
-                                            diagram.nodes.update(nodes);
-                                            diagram.show();
-                                        });
-                                    } else {
-                                        for (let diagram of matches) {
-                                            html = `<option value="${diagram.name}">${diagram.name}</option>`;
-                                            $("#view_tile_diagram_selected_diagram").append(html);
-                                        }
-                                        $("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
-                                        $("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
-                                        $("#view_tile_diagram_dialog").modal("show");
-                                    }
-                                };
-                            };
-                            $("#" + model_button_id).on("click", model_click_closure());
-                            var tile_count = $("#" + tile_row_div_id + " > .card").length;
-                            if (tile_count === channel_list.length) {
-                                outerResolve();
-                            }
-                        }).catch(function(error) {
-                            console.log(error);
-                        });
+                            });
+                        }
+                    };
+                };
+                $("#" + header_id).on("click", header_click_closure());
+                $("#" + header_id).dblclick((function() {
+                    var name = channel_name;
+                    var members = channel_members;
+                    return function() {
+                        show_edit_dialog(name, members);
                     }
-                }).catch(function(error) {
-                    console.log(error);
-                });
-            }).then(function() {
-                sort_tiles();
-                filter_tiles();
-            });
-
+                })());
+                var model_click_closure = function() {
+                    var tile_name = channel_name;
+                    var node_ids = _.map(channel_members, "id");
+                    return function() {
+                        var html;
+                        var matches = diagrams.have_all(node_ids);
+                        // show tile diagram dialog
+                        $("#view_tile_diagram_selected_diagram").empty();
+                        if (node_ids.length === 0) {
+                            alert.show("Add resources to the tile");
+                        } else
+                        if (matches.length === 0) {
+                            html = `This tile's contents were not found on any diagram. Would you like to generate a new one?`;
+                            confirmation.show(html, function() {
+                                var diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+                                // populate
+                                var nodes = _.compact(model.nodes.get(node_ids));
+                                diagram.nodes.update(nodes);
+                                diagram.show();
+                            });
+                        } else {
+                            for (let diagram of matches) {
+                                html = `<option value="${diagram.name}">${diagram.name}</option>`;
+                                $("#view_tile_diagram_selected_diagram").append(html);
+                            }
+                            $("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
+                            $("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
+                            $("#view_tile_diagram_dialog").modal("show");
+                        }
+                    };
+                };
+                $("#" + model_button_id).on("click", model_click_closure());
+            }
+            sort_tiles();
+            filter_tiles();
         };
 
         function show_edit_dialog(name, members) {
@@ -517,7 +490,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             console.log("tile view: interval scheduled " + update_interval + "ms");
         };
 
-        var load_tile_view = function(){
+        var load_tile_view = function() {
             return new Promise(function(resolve) {
                 settings.get(tile_view_key).then(function(value) {
                     resolve(value);
@@ -525,7 +498,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             });
         };
 
-        var update_tile_view = function(tile_view){
+        var update_tile_view = function(tile_view) {
             return new Promise(function(resolve) {
                 settings.put(tile_view_key, tile_view).then(function() {
                     console.log("tile view saved");
@@ -533,17 +506,17 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 }).catch(function(error) {
                     console.log(error);
                 });
-            }); 
+            });
         };
 
         var update_filter_mode = function(text) {
             $("#tile-filter-dropdown").text(text);
         };
 
-        $("#tile-filter-show-all").click(function (event) {
+        $("#tile-filter-show-all").click(function(event) {
             var tile_filter_text = "Showing All Tiles";
             update_filter_mode(tile_filter_text);
-            update_tile_view({ "show_alarm_tiles": true, "show_normal_tiles": true, "tile_filter_text": tile_filter_text }).then(function () {
+            update_tile_view({ "show_alarm_tiles": true, "show_normal_tiles": true, "tile_filter_text": tile_filter_text }).then(function() {
                 update_tile_info();
             });
         });
@@ -551,7 +524,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         $("#tile-filter-show-alarm").click(function(event) {
             var tile_filter_text = "Showing Alarm/Alert Tiles";
             update_filter_mode(tile_filter_text);
-            update_tile_view({"show_alarm_tiles": true, "show_normal_tiles": false, "tile_filter_text": tile_filter_text}).then(function(){
+            update_tile_view({ "show_alarm_tiles": true, "show_normal_tiles": false, "tile_filter_text": tile_filter_text }).then(function() {
                 update_tile_info();
             });
         });
@@ -559,7 +532,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         $("#tile-filter-show-normal").click(function(event) {
             var tile_filter_text = "Showing Normal Tiles";
             update_filter_mode(tile_filter_text);
-            update_tile_view({"show_alarm_tiles": false, "show_normal_tiles": true, "tile_filter_text": tile_filter_text}).then(function(){
+            update_tile_view({ "show_alarm_tiles": false, "show_normal_tiles": true, "tile_filter_text": tile_filter_text }).then(function() {
                 update_tile_info();
             });
         });
