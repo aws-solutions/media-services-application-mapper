@@ -61,7 +61,7 @@ def update_alarm_subscriber(region_name, alarm_name, subscriber_arn):
     try:
         print(f"update subscriber {subscriber_arn} alarm {alarm_name} in region {region_name}")
         cloudwatch = boto3.client('cloudwatch', region_name=region_name, config=MSAM_BOTO3_CONFIG)
-        response = cloudwatch.describe_alarms(AlarmNames=[alarm_name])
+        response = cloudwatch.describe_alarms(AlarmNames=[alarm_name], AlarmTypes=['CompositeAlarm','MetricAlarm'])
         alarms = response['CompositeAlarms'] + response['MetricAlarms']
         for alarm in alarms:
             update_alarm_records(region_name, alarm, [subscriber_arn])
@@ -76,7 +76,7 @@ def update_alarms(region_name, alarm_names):
     try:
         print(f"update alarms {alarm_names} in region {region_name}")
         cloudwatch = boto3.client('cloudwatch', region_name=region_name, config=MSAM_BOTO3_CONFIG)
-        response = cloudwatch.describe_alarms(AlarmNames=alarm_names)
+        response = cloudwatch.describe_alarms(AlarmNames=alarm_names, AlarmTypes=['CompositeAlarm','MetricAlarm'])
         alarms = response['CompositeAlarms'] + response['MetricAlarms']
         for alarm in alarms:
             print(f"alarm {alarm['AlarmName']}")
@@ -84,7 +84,7 @@ def update_alarms(region_name, alarm_names):
             print(f"subscribers {subscribers}")
             update_alarm_records(region_name, alarm, subscribers)
         while "NextToken" in response:
-            response = cloudwatch.describe_alarms(AlarmNames=alarm_names, NextToken=response["NextToken"])
+            response = cloudwatch.describe_alarms(AlarmNames=alarm_names, AlarmTypes=['CompositeAlarm','MetricAlarm'], NextToken=response["NextToken"])
             alarms = response['CompositeAlarms'] + response['MetricAlarms']
             for alarm in alarms:
                 print(f"alarm {alarm['AlarmName']}")
@@ -180,14 +180,14 @@ def get_cloudwatch_alarms_region(region):
     try:
         region = unquote(region)
         client = boto3.client('cloudwatch', region_name=region, config=MSAM_BOTO3_CONFIG)
-        response = client.describe_alarms()
+        response = client.describe_alarms(AlarmTypes=['CompositeAlarm','MetricAlarm'])
         # return the response or an empty object
         for alarm in response.get("MetricAlarms",[]):
             alarms.append(filtered_alarm(alarm, substituteText="(anomaly detector)"))
         for alarm in response.get('CompositeAlarms',[]):
             alarms.append(filtered_alarm(alarm, substituteText="(composite)"))
         while "NextToken" in response:
-            response = client.describe_alarms(NextToken=response["NextToken"])
+            response = client.describe_alarms(AlarmTypes=['CompositeAlarm','MetricAlarm'], NextToken=response["NextToken"])
             for alarm in response.get("MetricAlarms",[]):
                 alarms.append(filtered_alarm(alarm, substituteText="(anomaly detector)"))
             for alarm in response.get('CompositeAlarms',[]):
