@@ -267,3 +267,8 @@ The following sequence diagram represents the notification process from a cloud 
 The following sequence diagram represents the process for updating the visual representation of diagram nodes after a state change occurs in the cloud. The web tool polls the back-end at a user-configured interval and requests node IDs with changed state. Those changed nodes are updated in the local model cache, and also reflected in the diagram contents and tab indicators at the top of the page.
 
 ![Image of Front-End Visual Update](behav-frontend-update.jpg)
+
+
+## Navigate
+
+Navigate to [README](../README.md)  | [Workshop](../WORKSHOP.md) | [Install](../INSTALL.md) | [Usage](../USAGE.md) | [Uninstall](../UNINSTALL.md) | [Rest API](../REST_API.md) | [Contributing](../CONTRIBUTING.md)

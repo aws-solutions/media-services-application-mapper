@@ -38,4 +38,4 @@ Remember to remove the DynamoDB stack last as other stacks are running software 
 
 ## Navigate
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md)
+Navigate to [README](README.md) | [Architecture](docs/README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Rest API](REST_API.md) | [Contributing](CONTRIBUTING.md)

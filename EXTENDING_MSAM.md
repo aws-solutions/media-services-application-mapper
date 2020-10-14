@@ -244,4 +244,4 @@ Now that the visualization portion of the code has been completed, you will need
 
     ![Diagram with EMT](images/diagram-with-EMT.png)
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md)
+Navigate to [README](README.md) | [Architecture](docs/README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](CONTRIBUTING.md)

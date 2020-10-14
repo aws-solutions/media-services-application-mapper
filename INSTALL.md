@@ -400,4 +400,4 @@ This file can be extracted into a web server or another type of hosting environm
 
 ## Navigate
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md)
+Navigate to [README](README.md) | [Architecture](docs/README.md) | [Workshop](WORKSHOP.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](CONTRIBUTING.md)

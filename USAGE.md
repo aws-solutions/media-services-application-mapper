@@ -229,4 +229,4 @@ The upper area of the Subscribed Alarms tab contains subscribed alarms and the l
 
 ## Navigate
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md)
+Navigate to [README](README.md) | [Architecture](docs/README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](CONTRIBUTING.md)

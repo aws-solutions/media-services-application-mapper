@@ -92,4 +92,4 @@ When you are finished using MSAM and will no longer need it, proceed to the [Uni
 
 ## Navigate
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md)
+Navigate to [README](README.md) | [Architecture](docs/README.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](CONTRIBUTING.md)

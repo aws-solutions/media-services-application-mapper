@@ -122,4 +122,4 @@ The best way to understand the existing API commands is to navigate to the MSAM 
 
 ## Navigate
 
-Navigate to [README](README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Contributing](CONTRIBUTING.md)
+Navigate to [README](README.md) | [Architecture](docs/README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Contributing](CONTRIBUTING.md)
