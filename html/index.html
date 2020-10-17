@@ -212,7 +212,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div id="channel-tiles-outer" class="tab-pane d-none" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit; overflow-y: auto; overflow-x: hidden;">
                 <div class="btn-group dropright m-2">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" id="tile-filter-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Showing All Tiles
+                        Showing All Tiles
                     </button>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" id="tile-filter-show-all">Show All</a>
@@ -548,8 +548,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <div class="dropdown text-right mb-1">
                             Alarms from Region:&nbsp;
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Region
-                        </button>
+                                Region
+                            </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="subscribe_to_alarms_region_dropdown">
                             </div>
                         </div>
@@ -651,6 +651,20 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </select>
                         <div class="input-group-append">
                             <span class="input-group-text">Controls how nodes are arranged during layout</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Bulk Delete</span>
+                        </div>
+                        <span class="d-flex border-top border-bottom flex-fill justify-content-around">
+                            <button type="button" id="bulk-delete-all-diagrams-button" class="btn btn-secondary my-2" title="Deletes all diagrams">Diagrams</button>
+                            <button type="button" id="bulk-delete-all-tiles-button" class="btn btn-secondary my-2" title="Deletes all tiles">Tiles</button>
+                            <button type="button" id="bulk-delete-all-alarm-subscriptions-button" class="btn btn-secondary my-2" title="Deletes all alarm subscriptions">Alarm Subscriptions</button>
+                            <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2" title="Deletes all diagrams, tiles and alarm subscriptions">All</button>    
+                        </span>
+                        <div class="input-group-append">
+                            <span class="input-group-text">Use With Caution</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -768,20 +782,16 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                                 </td>
                                 <td class="align-middle" style="text-align: center;">
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="add-selected-to-diagram" data-toggle="tooltip" data-placement="top" title="Add Selected"><i
-                                                class="fas fa-angle-right fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="add-selected-to-diagram" data-toggle="tooltip" data-placement="top" title="Add Selected"><i class="fas fa-angle-right fa-2x"></i></button>
                                     </div>
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="remove-selected-from-diagram" data-toggle="tooltip" data-placement="top" title="Remove Selected"><i
-                                                class="fas fa-angle-left fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="remove-selected-from-diagram" data-toggle="tooltip" data-placement="top" title="Remove Selected"><i class="fas fa-angle-left fa-2x"></i></button>
                                     </div>
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="add-all-to-diagram" data-toggle="tooltip" data-placement="top" title="Add All"><i
-                                                class="fas fa-angle-double-right fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="add-all-to-diagram" data-toggle="tooltip" data-placement="top" title="Add All"><i class="fas fa-angle-double-right fa-2x"></i></button>
                                     </div>
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="remove-all-from-diagram" data-toggle="tooltip" data-placement="top" title="Remove All"><i
-                                                class="fas fa-angle-double-left fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="remove-all-from-diagram" data-toggle="tooltip" data-placement="top" title="Remove All"><i class="fas fa-angle-double-left fa-2x"></i></button>
                                     </div>
                                 </td>
                                 <td style="width: 47%;">

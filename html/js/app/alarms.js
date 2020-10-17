@@ -111,6 +111,22 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             });
         };
 
+        var delete_all_subscribers = function() {
+            var current_connection = connections.get_current();
+            var url = current_connection[0];
+            var api_key = current_connection[1];
+            var current_endpoint = `${url}/cloudwatch/alarms/subscribed`;
+            return new Promise((resolve, reject) => {
+                server.delete_method(current_endpoint, api_key).then((response) => {
+                    alarms_for_subscriber.cache.clear();
+                    resolve(response);
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        };
+
         var clear_alarms_for_subscriber_cache = function(subscribers) {
             if (Array.isArray(subscribers)) {
                 for (let subscriber of subscribers) {
@@ -204,7 +220,8 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
             },
             "get_update_interval": function() {
                 return update_interval;
-            }
+            },
+            "delete_all_subscribers": delete_all_subscribers
         };
 
     });

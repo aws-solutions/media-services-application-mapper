@@ -136,6 +136,22 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         arn_to_channels.cache.clear();
     };
 
+    var delete_all_channels = function() {
+        var current_connection = connections.get_current();
+        var url = current_connection[0];
+        var api_key = current_connection[1];
+        var current_endpoint = `${url}/channels`;
+        return new Promise((resolve, reject) => {
+            server.delete_method(current_endpoint, api_key).then((response) => {
+                clear_function_cache();
+                resolve(response);
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    };
+
     // pre-warming the function cache to speed tile drawing
 
     async function prewarm() {
@@ -154,6 +170,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         "retrieve_channel": retrieve_channel,
         "channel_list": channel_list,
         "arn_to_channels": arn_to_channels,
-        "have_any": have_any
+        "have_any": have_any,
+        "delete_all": delete_all_channels
     };
 });

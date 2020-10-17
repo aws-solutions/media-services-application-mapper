@@ -19,12 +19,15 @@ CHANNELS_TABLE_NAME = os.environ["CHANNELS_TABLE_NAME"]
 
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/channels.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(
+    user_agent="aws-media-services-applications-mapper/{stamp}/channels.py".
+    format(stamp=STAMP))
 
 # DynamoDB
 DYNAMO_RESOURCE = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
 
-def delete_channel_nodes(request, name):
+
+def delete_channel_nodes(name):
     """
     API entry point to delete a channel.
     """
@@ -32,21 +35,31 @@ def delete_channel_nodes(request, name):
         name = unquote(name)
         table_name = CHANNELS_TABLE_NAME
         table = DYNAMO_RESOURCE.Table(table_name)
-        print(request.method)
+        # update the settings object with the name
+        name_list = msam_settings.get_setting("channels")
+        if not name_list:
+            name_list = []
+        if name in name_list:
+            name_list.remove(name)
+            msam_settings.put_setting("channels", name_list)
+        # remove the members
         try:
-            # get the settings object
-            response = table.query(KeyConditionExpression=Key('channel').eq(name))
-            print(response)
+            response = table.query(
+                ProjectionExpression="channel,id",
+                KeyConditionExpression=Key('channel').eq(name))
+            items = response.get("Items", [])
+            while "LastEvaluatedKey" in response:
+                response = table.query(
+                    ProjectionExpression="channel,id",
+                    KeyConditionExpression=Key('channel').eq(name),
+                    ExclusiveStartKey=response["LastEvaluatedKey"])
+                items = items + response.get("Items", [])
             # return the response or an empty object
-            if "Items" in response:
-                for item in response["Items"]:
-                    table.delete_item(Key={"channel": item["channel"], "id": item["id"]})
-            name_list = msam_settings.get_setting("channels")
-            if not name_list:
-                name_list = []
-            if name in name_list:
-                name_list.remove(name)
-                msam_settings.put_setting("channels", name_list)
+            for item in items:
+                table.delete_item(Key={
+                    "channel": item["channel"],
+                    "id": item["id"]
+                })
             print("channel items deleted, channel list updated")
         except ClientError:
             print("not found")
@@ -107,7 +120,8 @@ def get_channel_nodes(name):
         table = DYNAMO_RESOURCE.Table(table_name)
         try:
             # get the settings object
-            response = table.query(KeyConditionExpression=Key('channel').eq(name))
+            response = table.query(
+                KeyConditionExpression=Key('channel').eq(name))
             print(response)
             # return the response or an empty object
             if "Items" in response:
@@ -123,3 +137,31 @@ def get_channel_nodes(name):
         print(outer_error)
         settings = {"exception": str(outer_error)}
     return settings
+
+
+def delete_all_channels():
+    """
+    Delete all tiles (channels) from the database
+    """
+    try:
+        table = DYNAMO_RESOURCE.Table(CHANNELS_TABLE_NAME)
+        # empty the value in settings
+        msam_settings.put_setting("channels", [])
+        # empty the channels table
+        response = table.scan(ProjectionExpression="channel,id")
+        items = response.get("Items", [])
+        while "LastEvaluatedKey" in response:
+            response = table.scan(
+                ProjectionExpression="channel,id",
+                ExclusiveStartKey=response["LastEvaluatedKey"])
+            items = items + response.get("Items", [])
+        for item in items:
+            table.delete_item(Key={
+                "channel": item["channel"],
+                "id": item["id"]
+            })
+        response = {"message": "done"}
+    except ClientError as client_error:
+        print(client_error)
+        response = {"message": str(client_error)}
+    return response

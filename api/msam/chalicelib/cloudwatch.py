@@ -23,7 +23,9 @@ CLOUDWATCH_EVENTS_TABLE_NAME = os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"]
 
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/cloudwatch.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(
+    user_agent="aws-media-services-applications-mapper/{stamp}/cloudwatch.py".
+    format(stamp=STAMP))
 
 
 def update_alarm_records(region_name, alarm, subscriber_arns):
@@ -46,7 +48,8 @@ def update_alarm_records(region_name, alarm, subscriber_arns):
                 "ResourceArn": resource_arn,
                 "StateValue": alarm['StateValue'],
                 "Namespace": namespace,
-                "StateUpdated": int(alarm['StateUpdatedTimestamp'].timestamp()),
+                "StateUpdated":
+                int(alarm['StateUpdatedTimestamp'].timestamp()),
                 "Updated": updated
             }
             ddb_table.put_item(Item=item)
@@ -59,9 +62,15 @@ def update_alarm_subscriber(region_name, alarm_name, subscriber_arn):
     Update a single subscriber's alarm status in the alarms table.
     """
     try:
-        print(f"update subscriber {subscriber_arn} alarm {alarm_name} in region {region_name}")
-        cloudwatch = boto3.client('cloudwatch', region_name=region_name, config=MSAM_BOTO3_CONFIG)
-        response = cloudwatch.describe_alarms(AlarmNames=[alarm_name], AlarmTypes=['CompositeAlarm','MetricAlarm'])
+        print(
+            f"update subscriber {subscriber_arn} alarm {alarm_name} in region {region_name}"
+        )
+        cloudwatch = boto3.client('cloudwatch',
+                                  region_name=region_name,
+                                  config=MSAM_BOTO3_CONFIG)
+        response = cloudwatch.describe_alarms(
+            AlarmNames=[alarm_name],
+            AlarmTypes=['CompositeAlarm', 'MetricAlarm'])
         alarms = response['CompositeAlarms'] + response['MetricAlarms']
         for alarm in alarms:
             update_alarm_records(region_name, alarm, [subscriber_arn])
@@ -75,8 +84,12 @@ def update_alarms(region_name, alarm_names):
     """
     try:
         print(f"update alarms {alarm_names} in region {region_name}")
-        cloudwatch = boto3.client('cloudwatch', region_name=region_name, config=MSAM_BOTO3_CONFIG)
-        response = cloudwatch.describe_alarms(AlarmNames=alarm_names, AlarmTypes=['CompositeAlarm','MetricAlarm'])
+        cloudwatch = boto3.client('cloudwatch',
+                                  region_name=region_name,
+                                  config=MSAM_BOTO3_CONFIG)
+        response = cloudwatch.describe_alarms(
+            AlarmNames=alarm_names,
+            AlarmTypes=['CompositeAlarm', 'MetricAlarm'])
         alarms = response['CompositeAlarms'] + response['MetricAlarms']
         for alarm in alarms:
             print(f"alarm {alarm['AlarmName']}")
@@ -84,11 +97,15 @@ def update_alarms(region_name, alarm_names):
             print(f"subscribers {subscribers}")
             update_alarm_records(region_name, alarm, subscribers)
         while "NextToken" in response:
-            response = cloudwatch.describe_alarms(AlarmNames=alarm_names, AlarmTypes=['CompositeAlarm','MetricAlarm'], NextToken=response["NextToken"])
+            response = cloudwatch.describe_alarms(
+                AlarmNames=alarm_names,
+                AlarmTypes=['CompositeAlarm', 'MetricAlarm'],
+                NextToken=response["NextToken"])
             alarms = response['CompositeAlarms'] + response['MetricAlarms']
             for alarm in alarms:
                 print(f"alarm {alarm['AlarmName']}")
-                subscribers = subscribers_to_alarm(alarm["AlarmName"], region_name)
+                subscribers = subscribers_to_alarm(alarm["AlarmName"],
+                                                   region_name)
                 print(f"subscribers {subscribers}")
                 update_alarm_records(region_name, alarm, subscribers)
     except ClientError as error:
@@ -107,11 +124,16 @@ def alarms_for_subscriber(resource_arn):
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
         ddb_index_name = 'ResourceArnIndex'
-        response = ddb_table.query(IndexName=ddb_index_name, KeyConditionExpression=Key('ResourceArn').eq(resource_arn))
+        response = ddb_table.query(
+            IndexName=ddb_index_name,
+            KeyConditionExpression=Key('ResourceArn').eq(resource_arn))
         if "Items" in response:
             scanned_items = response["Items"]
         while "LastEvaluatedKey" in response:
-            response = ddb_table.query(IndexName=ddb_index_name, KeyConditionExpression=Key('ResourceArn').eq(resource_arn), ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = ddb_table.query(
+                IndexName=ddb_index_name,
+                KeyConditionExpression=Key('ResourceArn').eq(resource_arn),
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             if "Items" in response:
                 scanned_items = scanned_items + response["Items"]
         print(scanned_items)
@@ -143,7 +165,9 @@ def all_subscribed_alarms():
         if "Items" in response:
             scanned_items = response["Items"]
         while "LastEvaluatedKey" in response:
-            response = ddb_table.scan(ProjectionExpression="RegionAlarmName", ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = ddb_table.scan(
+                ProjectionExpression="RegionAlarmName",
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             if "Items" in response:
                 scanned_items = scanned_items + response["Items"]
         for item in scanned_items:
@@ -157,17 +181,24 @@ def all_subscribed_alarms():
     return [dict(t) for t in {tuple(d.items()) for d in split_items}]
 
 
-def filtered_alarm(alarm, substituteText=None):
+def filtered_alarm(alarm, substitute_text=None):
     """
     Restructure a CloudWatch alarm into a simpler form.
     """
     filtered = {
-        "AlarmArn": alarm.get('AlarmArn', None),
-        "AlarmName": alarm.get('AlarmName', None),
-        "MetricName": alarm.get('MetricName', substituteText),
-        "Namespace": alarm.get('Namespace', substituteText),
-        "StateValue": alarm.get('StateValue', None),
-        "StateUpdated": int(alarm['StateUpdatedTimestamp'].timestamp()) if 'StateUpdatedTimestamp' in alarm else None
+        "AlarmArn":
+        alarm.get('AlarmArn', None),
+        "AlarmName":
+        alarm.get('AlarmName', None),
+        "MetricName":
+        alarm.get('MetricName', substitute_text),
+        "Namespace":
+        alarm.get('Namespace', substitute_text),
+        "StateValue":
+        alarm.get('StateValue', None),
+        "StateUpdated":
+        int(alarm['StateUpdatedTimestamp'].timestamp())
+        if 'StateUpdatedTimestamp' in alarm else None
     }
     return filtered
 
@@ -179,19 +210,28 @@ def get_cloudwatch_alarms_region(region):
     alarms = []
     try:
         region = unquote(region)
-        client = boto3.client('cloudwatch', region_name=region, config=MSAM_BOTO3_CONFIG)
-        response = client.describe_alarms(AlarmTypes=['CompositeAlarm','MetricAlarm'])
+        client = boto3.client('cloudwatch',
+                              region_name=region,
+                              config=MSAM_BOTO3_CONFIG)
+        response = client.describe_alarms(
+            AlarmTypes=['CompositeAlarm', 'MetricAlarm'])
         # return the response or an empty object
-        for alarm in response.get("MetricAlarms",[]):
-            alarms.append(filtered_alarm(alarm, substituteText="(anomaly detector)"))
-        for alarm in response.get('CompositeAlarms',[]):
-            alarms.append(filtered_alarm(alarm, substituteText="(composite)"))
+        for alarm in response.get("MetricAlarms", []):
+            alarms.append(
+                filtered_alarm(alarm, substitute_text="(anomaly detector)"))
+        for alarm in response.get('CompositeAlarms', []):
+            alarms.append(filtered_alarm(alarm, substitute_text="(composite)"))
         while "NextToken" in response:
-            response = client.describe_alarms(AlarmTypes=['CompositeAlarm','MetricAlarm'], NextToken=response["NextToken"])
-            for alarm in response.get("MetricAlarms",[]):
-                alarms.append(filtered_alarm(alarm, substituteText="(anomaly detector)"))
-            for alarm in response.get('CompositeAlarms',[]):
-                alarms.append(filtered_alarm(alarm, substituteText="(composite)"))
+            response = client.describe_alarms(
+                AlarmTypes=['CompositeAlarm', 'MetricAlarm'],
+                NextToken=response["NextToken"])
+            for alarm in response.get("MetricAlarms", []):
+                alarms.append(
+                    filtered_alarm(alarm,
+                                   substitute_text="(anomaly detector)"))
+            for alarm in response.get('CompositeAlarms', []):
+                alarms.append(
+                    filtered_alarm(alarm, substitute_text="(composite)"))
     except ClientError as error:
         print(error)
     return alarms
@@ -204,10 +244,12 @@ def get_cloudwatch_events_state(state):
     events = []
     dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
     table = dynamodb.Table(EVENTS_TABLE_NAME)
-    response = table.query(IndexName='AlarmStateIndex', KeyConditionExpression=Key('alarm_state').eq(state))
+    response = table.query(IndexName='AlarmStateIndex',
+                           KeyConditionExpression=Key('alarm_state').eq(state))
     if "Items" in response:
         events = response["Items"]
     return events
+
 
 def get_cloudwatch_events_state_source(state, source):
     """
@@ -216,7 +258,9 @@ def get_cloudwatch_events_state_source(state, source):
     events = []
     dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
     table = dynamodb.Table(EVENTS_TABLE_NAME)
-    response = table.query(IndexName='AlarmStateSourceIndex', KeyConditionExpression=Key('alarm_state').eq(state) & Key('source').eq(source))
+    response = table.query(IndexName='AlarmStateSourceIndex',
+                           KeyConditionExpression=Key('alarm_state').eq(state)
+                           & Key('source').eq(source))
     if "Items" in response:
         events = response["Items"]
     return events
@@ -235,15 +279,23 @@ def get_cloudwatch_events_state_groups(state):
     for event in events:
         if "pipeline" in event["detail"]:
             arn = event["resource_arn"]
-            pl = event["detail"]["pipeline"]
+            pipeline = event["detail"]["pipeline"]
+
             def is_same_arn(i):
                 return bool(i["resource_arn"] == arn)
+
             def is_same_pl(i):
-                return bool("pipeline" in i["detail"] and i["detail"]["pipeline"] == pl)
+                return bool("pipeline" in i["detail"]
+                            and i["detail"]["pipeline"] == pipeline)
+
             def is_diff_pl(i):
-                return bool("pipeline" in i["detail"] and i["detail"]["pipeline"] != pl)
+                return bool("pipeline" in i["detail"]
+                            and i["detail"]["pipeline"] != pipeline)
+
             def is_pl_down(i):
-                return bool("pipeline_state" in i["detail"] and not i["detail"]["pipeline_state"])
+                return bool("pipeline_state" in i["detail"]
+                            and not i["detail"]["pipeline_state"])
+
             same_arn_events = list(filter(is_same_arn, events))
             all_down_pipelines = list(filter(is_pl_down, same_arn_events))
             same_down_pipelines = list(filter(is_same_pl, all_down_pipelines))
@@ -251,7 +303,8 @@ def get_cloudwatch_events_state_groups(state):
             if len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0:
                 event["detail"]["degraded"] = bool(True)
                 group["degraded"].append(event)
-            elif len(diff_down_pipelines) == 0 and len(same_down_pipelines) > 0:
+            elif len(
+                    diff_down_pipelines) == 0 and len(same_down_pipelines) > 0:
                 event["detail"]["degraded"] = bool(True)
                 group["degraded"].append(event)
             elif len(diff_down_pipelines) > 0 and len(same_down_pipelines) > 0:
@@ -277,16 +330,20 @@ def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0):
         table = dynamodb.Table(CLOUDWATCH_EVENTS_TABLE_NAME)
         key = None
         if (start_time > 0 and end_time > 0):
-            key = Key('resource_arn').eq(resource_arn) & Key('timestamp').between(start_time, end_time)
-        elif(start_time > 0 and end_time == 0):
-            key = Key('resource_arn').eq(resource_arn) & Key('timestamp').gte(start_time)
+            key = Key('resource_arn').eq(resource_arn) & Key(
+                'timestamp').between(start_time, end_time)
+        elif (start_time > 0 and end_time == 0):
+            key = Key('resource_arn').eq(resource_arn) & Key('timestamp').gte(
+                start_time)
         else:
             key = Key('resource_arn').eq(resource_arn)
         response = table.query(KeyConditionExpression=key)
         if "Items" in response:
             cw_events = response["Items"]
         while "LastEvaluatedKey" in response:
-            response = table.query(KeyConditionExpression=key, ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = table.query(
+                KeyConditionExpression=key,
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             if "Items" in response:
                 cw_events = cw_events + response["Items"]
     except ClientError as error:
@@ -307,22 +364,42 @@ def incoming_cloudwatch_alarm(event, _):
         for record in event["Records"]:
             region = (record["Sns"]["TopicArn"]).split(":")[3]
             alarm = json.loads(record["Sns"]["Message"])
-            alarm_name = [match.value for match in parse('$..AlarmName').find(alarm)]
+            alarm_name = [
+                match.value for match in parse('$..AlarmName').find(alarm)
+            ]
             # look up the resources with this region alarm name
             # metric = [match.value for match in parse('$..MetricName').find(alarm)]
-            namespace = [match.value for match in parse('$..Namespace').find(alarm)]
-            state = [match.value for match in parse('$..NewStateValue').find(alarm)]
-            updated = [match.value for match in parse('$..StateChangeTime').find(alarm)]
-            region_alarm_name = "{}:{}".format(region, alarm_name[0] if alarm_name else None)
-            subscribers = subscribers_to_alarm(alarm_name[0] if alarm_name else None, region)
+            namespace = [
+                match.value for match in parse('$..Namespace').find(alarm)
+            ]
+            state = [
+                match.value for match in parse('$..NewStateValue').find(alarm)
+            ]
+            updated = [
+                match.value
+                for match in parse('$..StateChangeTime').find(alarm)
+            ]
+            region_alarm_name = "{}:{}".format(
+                region, alarm_name[0] if alarm_name else None)
+            subscribers = subscribers_to_alarm(
+                alarm_name[0] if alarm_name else None, region)
             for resource_arn in subscribers:
                 item = {
-                    "RegionAlarmName": region_alarm_name,
-                    "ResourceArn": resource_arn,
-                    "Namespace": namespace[0] if namespace else None,
-                    "StateUpdated": int(datetime.datetime.strptime(updated[0], '%Y-%m-%dT%H:%M:%S.%f%z').timestamp()) if updated else None,
-                    "StateValue": state[0] if state else None,
-                    "Updated": updated_timestamp
+                    "RegionAlarmName":
+                    region_alarm_name,
+                    "ResourceArn":
+                    resource_arn,
+                    "Namespace":
+                    namespace[0] if namespace else None,
+                    "StateUpdated":
+                    int(
+                        datetime.datetime.strptime(
+                            updated[0], '%Y-%m-%dT%H:%M:%S.%f%z').timestamp())
+                    if updated else None,
+                    "StateValue":
+                    state[0] if state else None,
+                    "Updated":
+                    updated_timestamp
                 }
                 ddb_table.put_item(Item=item)
                 print("{} updated via alarm notification".format(resource_arn))
@@ -346,7 +423,10 @@ def subscribe_resource_to_alarm(request, alarm_name, region):
         for resource_arn in resources:
             print(resource_arn)
             # store it
-            item = {"RegionAlarmName": region_alarm_name, "ResourceArn": resource_arn}
+            item = {
+                "RegionAlarmName": region_alarm_name,
+                "ResourceArn": resource_arn
+            }
             ddb_table.put_item(Item=item)
             update_alarm_subscriber(region, alarm_name, resource_arn)
         return True
@@ -365,7 +445,9 @@ def subscribed_with_state(alarm_state):
         ddb_table_name = ALARMS_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
-        response = ddb_table.query(IndexName='StateValueIndex', KeyConditionExpression=Key('StateValue').eq(alarm_state))
+        response = ddb_table.query(
+            IndexName='StateValueIndex',
+            KeyConditionExpression=Key('StateValue').eq(alarm_state))
         for item in response["Items"]:
             # store it
             if item["ResourceArn"] in resources:
@@ -375,14 +457,20 @@ def subscribed_with_state(alarm_state):
                 entry = {"ResourceArn": item["ResourceArn"], "AlarmCount": 1}
             resources[item["ResourceArn"]] = entry
         while "LastEvaluatedKey" in response:
-            response = ddb_table.query(IndexName='StateValueIndex', KeyConditionExpression=Key('StateValue').eq(alarm_state), ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = ddb_table.query(
+                IndexName='StateValueIndex',
+                KeyConditionExpression=Key('StateValue').eq(alarm_state),
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             for item in response["Items"]:
                 # store it
                 if item["ResourceArn"] in resources:
                     entry = resources[item["ResourceArn"]]
                     entry["AlarmCount"] = entry["AlarmCount"] + 1
                 else:
-                    entry = {"ResourceArn": item["ResourceArn"], "AlarmCount": 1}
+                    entry = {
+                        "ResourceArn": item["ResourceArn"],
+                        "AlarmCount": 1
+                    }
                 resources[item["ResourceArn"]] = entry
     except ClientError as error:
         print(error)
@@ -402,11 +490,18 @@ def subscribers_to_alarm(alarm_name, region):
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
         ddb_index_name = 'RegionAlarmNameIndex'
-        response = ddb_table.query(IndexName=ddb_index_name, KeyConditionExpression=Key('RegionAlarmName').eq(region_alarm_name))
+        response = ddb_table.query(
+            IndexName=ddb_index_name,
+            KeyConditionExpression=Key('RegionAlarmName').eq(
+                region_alarm_name))
         for item in response["Items"]:
             subscribers.add(item["ResourceArn"])
         while "LastEvaluatedKey" in response:
-            response = ddb_table.query(IndexName=ddb_index_name, KeyConditionExpression=Key('RegionAlarmName').eq(region_alarm_name), ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = ddb_table.query(
+                IndexName=ddb_index_name,
+                KeyConditionExpression=Key('RegionAlarmName').eq(
+                    region_alarm_name),
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             for item in response["Items"]:
                 subscribers.add(item["ResourceArn"])
     except ClientError as error:
@@ -428,10 +523,42 @@ def unsubscribe_resource_from_alarm(request, alarm_name, region):
         resources = request.json_body
         for resource_arn in resources:
             # store it
-            item = {"RegionAlarmName": region_alarm_name, "ResourceArn": resource_arn}
+            item = {
+                "RegionAlarmName": region_alarm_name,
+                "ResourceArn": resource_arn
+            }
             # delete it
             ddb_table.delete_item(Key=item)
         return True
     except ClientError as error:
         print(error)
         return False
+
+
+def delete_all_subscriptions():
+    """
+    API entry point to remove all subscriptions (everything) from the table
+    """
+    try:
+        dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
+        table = dynamodb.Table(ALARMS_TABLE_NAME)
+        # empty the alarms table
+        response = table.scan(
+            ProjectionExpression="RegionAlarmName,ResourceArn")
+        items = response.get("Items", [])
+        while "LastEvaluatedKey" in response:
+            response = table.scan(
+                ProjectionExpression="RegionAlarmName,ResourceArn",
+                ExclusiveStartKey=response["LastEvaluatedKey"])
+            items = items + response.get("Items", [])
+        for item in items:
+            table.delete_item(
+                Key={
+                    "RegionAlarmName": item["RegionAlarmName"],
+                    "ResourceArn": item["ResourceArn"]
+                })
+        response = {"message": "done"}
+    except ClientError as client_error:
+        print(client_error)
+        response = {"message": str(client_error)}
+    return response

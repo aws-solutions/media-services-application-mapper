@@ -7,6 +7,8 @@ This file contains helper functions related to layout.
 import os
 from urllib.parse import unquote
 
+import chalicelib.settings as msam_settings
+
 import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.config import Config
@@ -17,7 +19,9 @@ LAYOUT_TABLE_NAME = os.environ["LAYOUT_TABLE_NAME"]
 
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/layout.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(
+    user_agent="aws-media-services-applications-mapper/{stamp}/layout.py".
+    format(stamp=STAMP))
 
 # DynamoDB
 DYNAMO_RESOURCE = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
@@ -108,3 +112,36 @@ def has_node(view, node_id):
     except ClientError as error:
         print(error)
         return False
+
+
+def remove_all_diagrams():
+    """
+    Delete all diagrams from the database
+    """
+    try:
+        table = DYNAMO_RESOURCE.Table(LAYOUT_TABLE_NAME)
+        # empty the value in settings
+        msam_settings.put_setting("diagrams", [])
+        # empty the channels table
+        response = table.scan(ExpressionAttributeNames={
+            "#v": "view",
+            "#i": "id"
+        },
+                              ProjectionExpression="#v,#i")
+        items = response.get("Items", [])
+        while "LastEvaluatedKey" in response:
+            response = table.scan(
+                ExpressionAttributeNames={
+                    "#v": "view",
+                    "#i": "id"
+                },
+                ProjectionExpression="#v,#i",
+                ExclusiveStartKey=response["LastEvaluatedKey"])
+            items = items + response.get("Items", [])
+        for item in items:
+            table.delete_item(Key={"view": item["view"], "id": item["id"]})
+        response = {"message": "done"}
+    except ClientError as client_error:
+        print(client_error)
+        response = {"message": str(client_error)}
+    return response

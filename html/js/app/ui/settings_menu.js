@@ -1,8 +1,8 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_check", "app/settings"],
-    function($, connections, regions_promise, util, api_check, settings) {
+define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_check", "app/settings", "app/ui/confirmation", "app/channels"],
+    function($, connections, regions_promise, util, api_check, settings, confirmation, channels) {
 
         var history_to_buttons = function(history) {
             let index = 0;
@@ -321,6 +321,48 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
         $("#advanced_settings_modal_cancel").on("click", function(event) {
             // hide it
             $("#advanced_settings_modal").modal('hide');
+        });
+
+        // handlers for bulk deletion buttons in advanced settings
+
+        $("#bulk-delete-all-diagrams-button").click(async function(event) {
+            $("#advanced_settings_modal").modal('hide');
+            let diagrams = await settings.get("diagrams");
+            let count = diagrams.length;
+            confirmation.show(`<p>This action will delete ${count} diagram${(count == 1 ? "":"s")}. The browser will reload after completion. Continue?</p>`, async function() {
+                await require("app/ui/layout").delete_all();
+                window.location.reload();
+            });
+        });
+
+        $("#bulk-delete-all-tiles-button").click(async function(event) {
+            $("#advanced_settings_modal").modal('hide');
+            let channels = await settings.get("channels");
+            let count = channels.length;
+            confirmation.show(`<p>This action will delete ${count} tile${(count == 1 ? "":"s")}. The browser will reload after completion. Continue?</p>`, async function() {
+                await require("app/channels").delete_all();
+                window.location.reload();
+            });
+        });
+
+        $("#bulk-delete-all-alarm-subscriptions-button").click(async function(event) {
+            $("#advanced_settings_modal").modal('hide');
+            confirmation.show("<p>This action will delete all alarm subscriptions in the tool. The browser will reload after completion. Continue?</p>", async function() {
+                await require("app/alarms").delete_all_subscribers();
+                window.location.reload();
+            });
+        });
+
+        $("#bulk-delete-all-button").click(async function(event) {
+            $("#advanced_settings_modal").modal('hide');
+            let channels = await settings.get("channels");
+            let channel_count = channels.length;
+            let diagrams = await settings.get("diagrams");
+            let diagram_count = diagrams.length;
+            confirmation.show(`<p>This action will delete ${diagram_count} diagram${(diagram_count == 1 ? "":"s")}, ${channel_count} tile${(channel_count == 1 ? "":"s")}, and all alarm subscriptions in the tool. The browser will reload after completion. Continue?</p>`, async function() {
+                await Promise.all([require("app/ui/layout").delete_all(), require("app/channels").delete_all(), require("app/alarms").delete_all_subscribers()]);
+                window.location.reload();
+            });
         });
 
         // return the module object

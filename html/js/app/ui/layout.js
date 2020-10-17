@@ -1,7 +1,7 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"], function($, server, connections, model, alert) {
+define(["jquery", "app/server", "app/connections", "app/ui/alert"], function($, server, connections, alert) {
 
 
     var retrieve_layout = function(diagram) {
@@ -51,10 +51,26 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/alert"],
         });
     };
 
+    function delete_all() {
+        var current_connection = connections.get_current();
+        var url = current_connection[0];
+        var api_key = current_connection[1];
+        var current_endpoint = `${url}/layout/views`;
+        return new Promise((resolve, reject) => {
+            server.delete_method(current_endpoint, api_key).then((response) => {
+                resolve(response);
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
+
     return {
         "retrieve_layout": retrieve_layout,
         "delete_layout": delete_layout,
-        "save_layout": save_layout
+        "save_layout": save_layout,
+        "delete_all": delete_all
     };
 
 });

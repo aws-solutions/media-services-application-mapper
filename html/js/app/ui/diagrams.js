@@ -82,13 +82,13 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 // load diagram names from the cloud on initialization
                 settings.get("diagrams").then(function(diagrams) {
                     console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
-                    if (Array.isArray(diagrams)) {
+                    if (Array.isArray(diagrams) && diagrams.length > 0) {
                         for (let diagram of diagrams) {
                             add_diagram(diagram.name, diagram.view_id, false);
                         }
                     } else {
                         // no diagrams, create default View from previous Global View
-                        console.log("no used-defined diagrams, creating default global diagram");
+                        console.log("no used-defined diagrams, creating default diagram");
                         add_diagram("Default", "global", true);
                     }
                     resolve();
