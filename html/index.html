@@ -227,16 +227,29 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
         </div>
     </div>
     <hr class="m-0 p-0">
-    <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a draggable="false" class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
-            <a draggable="false" class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
-            <a draggable="false" class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
-            <a draggable="false" class="nav-item nav-link d-none" id="nav-alarms-tab" data-toggle="tab" href="#nav-alarms" role="tab" aria-controls="nav-alarms" aria-selected="false">Subscribed Alarms</a>
-            <a draggable="false" class="nav-item nav-link d-none" id="nav-alerts-tab" data-toggle="tab" href="#nav-alerts" role="tab" aria-controls="nav-alerts" aria-selected="false">Alerts</a>
-            <a draggable="false" class="nav-item nav-link d-none" id="nav-events-tab" data-toggle="tab" href="#nav-events" role="tab" aria-controls="nav-events" aria-selected="false">Recent CloudWatch Events</a>
+    <div class="d-flex">
+        <div class="flex-fill">
+            <div id="information-compartment-flex">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a draggable="false" class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
+                        <a draggable="false" class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
+                        <a draggable="false" class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
+                        <a draggable="false" class="nav-item nav-link d-none" id="nav-alarms-tab" data-toggle="tab" href="#nav-alarms" role="tab" aria-controls="nav-alarms" aria-selected="false">Subscribed Alarms</a>
+                        <a draggable="false" class="nav-item nav-link d-none" id="nav-alerts-tab" data-toggle="tab" href="#nav-alerts" role="tab" aria-controls="nav-alerts" aria-selected="false">Alerts</a>
+                        <a draggable="false" class="nav-item nav-link d-none" id="nav-events-tab" data-toggle="tab" href="#nav-events" role="tab" aria-controls="nav-events" aria-selected="false">Recent CloudWatch Events</a>
+                    </div>
+                </nav>
+            </div>
         </div>
-    </nav>
+        <div class="float-right border-bottom">
+            <button class="btn btn-light btn-sm rounded" style="margin-top: 1px;" id="information-compartment-up-down-button" title="Raise/lower compartment">
+                <span class="material-icons">
+                    swap_vert
+                </span>
+            </button>
+        </div>
+    </div>
     <div id="information" style="height: 35%; width: 100%;">
         <div class="tab-content" id="information-tab-content">
             <div class="tab-pane  mt-3" id="nav-status" role="tabpanel" aria-labelledby="nav-status-tab">
@@ -661,7 +674,7 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             <button type="button" id="bulk-delete-all-diagrams-button" class="btn btn-secondary my-2" title="Deletes all diagrams">Diagrams</button>
                             <button type="button" id="bulk-delete-all-tiles-button" class="btn btn-secondary my-2" title="Deletes all tiles">Tiles</button>
                             <button type="button" id="bulk-delete-all-alarm-subscriptions-button" class="btn btn-secondary my-2" title="Deletes all alarm subscriptions">Alarm Subscriptions</button>
-                            <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2" title="Deletes all diagrams, tiles and alarm subscriptions">All</button>    
+                            <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2" title="Deletes all diagrams, tiles and alarm subscriptions">All</button>
                         </span>
                         <div class="input-group-append">
                             <span class="input-group-text">Use With Caution</span>
