@@ -20,6 +20,7 @@ define(["jquery", "app/settings"],
             } catch (error) {
                 console.log(error);
             }
+            $("#information-compartment-up-down-button").blur();
         });
 
         let maximize_compartment = () => {
