@@ -26,6 +26,7 @@ define(["jquery", "app/settings"],
         let maximize_compartment = () => {
             $("#information").fadeToggle("fast");
             $("#information-compartment-flex").fadeToggle("fast");
+            $("#info-nav-flex").removeClass("border-bottom");
             $("#diagram").animate({ height: "-=28%" });
             compartment_state = "max";
             settings.put(settings_key, { "state": compartment_state });
@@ -34,13 +35,15 @@ define(["jquery", "app/settings"],
         let minimize_compartment = () => {
             $("#information").fadeToggle("fast");
             $("#information-compartment-flex").fadeToggle("fast");
+            $("#info-nav-flex").addClass("border-bottom");
             $("#diagram").animate({ height: "+=28%" });
             compartment_state = "min";
             settings.put(settings_key, { "state": compartment_state });
         };
 
-        let restore_state = () => {
-            settings.get(settings_key).then(function(value) {
+        let restore_state = async() => {
+            try {
+                let value = await settings.get(settings_key);
                 console.log(`saved info compartment state = ${JSON.stringify(value)}`);
                 if (value === null) {
                     // no setting, keep the default state of maximized
@@ -52,9 +55,9 @@ define(["jquery", "app/settings"],
                 if (value.state === "min") {
                     minimize_compartment();
                 }
-            }).catch(function(error) {
+            } catch (error) {
                 console.log(JSON.stringify(error));
-            });
+            }
         };
 
         // initialization
