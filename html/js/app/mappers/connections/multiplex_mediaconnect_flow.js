@@ -17,7 +17,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                             "to": connection.to,
                             "from": connection.from,
                             "data": data,
-                            "label": "destination",
+                            "label": "MEDIACONNECT",
                             "arrows": "to",
                             "color": {
                                 "color": "black"
