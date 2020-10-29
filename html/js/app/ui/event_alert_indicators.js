@@ -208,7 +208,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                 }
             });
 
-            console.log(`unique cleared alerts: ${JSON.stringify(uniq_cleared_alerts)}`);
+            console.log(`unique cleared alerts: ${uniq_cleared_alerts.length}`);
 
             for (let cleared of uniq_cleared_alerts) {
                 let node = model.nodes.get(cleared.resource_arn);
