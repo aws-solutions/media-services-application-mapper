@@ -122,17 +122,17 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             /** Update the edges */
             edges.forEach((edge) => {
                 // console.log(JSON.stringify(edge));
-                console.log(`edge: ${edge.id}`);
+                // console.log(`edge: ${edge.id}`);
 
                 if (edge.color.color !== newEdgeOpts.color.color || edge.dashes !== newEdgeOpts.dashes) {
-                    console.log("edge needs update");
+                    // console.log("edge needs update");
                     edge.color = newEdgeOpts.color;
                     edge.dashes = newEdgeOpts.dashes;
                     edge.hoverWidth = newEdgeOpts.hoverWidth;
                     model.edges.update(edge);
                     updateUIHandler(edge, active_alert, 'edges');
                 } else {
-                    console.log("edge is correct");
+                    // console.log("edge is correct");
                 }
             });
         };
