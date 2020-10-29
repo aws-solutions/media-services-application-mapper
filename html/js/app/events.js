@@ -29,8 +29,7 @@ define(["app/server", "app/connections", "app/settings"],
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
-            var current_endpoint = `${url}/cloudwatch/events/state/${state}/groups`;
-
+            var current_endpoint = `${url}/cloudwatch/events/state/${state}`;
             return new Promise(function(resolve, reject) {
                 server.get(current_endpoint, api_key)
                     .then(resolve)
@@ -61,10 +60,10 @@ define(["app/server", "app/connections", "app/settings"],
         };
 
         var cache_update = function() {
-            retrieve_for_state("set").then(function(res) {
+            retrieve_for_state("set").then(function(response) {
                 // console.log("updated set event cache");
                 previous_set_events = current_set_events;
-                current_set_events = res.degraded.concat(res.down).concat(res.running);
+                current_set_events = response;
                 previous_medialive_events = _.filter(previous_set_events, function(i) {
                     return (i.source == "aws.medialive");
                 });

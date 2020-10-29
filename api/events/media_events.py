@@ -64,7 +64,6 @@ def lambda_handler(event, _):
             if "MediaLive" in event["detail-type"]:
                 event["alarm_id"] = event["detail"]["alarm_id"]
                 event["alarm_state"] = event["detail"]["alarm_state"].lower()
-                event["detail"]["pipeline_state"] = get_pipeline_state(event)
 
             # mediaconnect alerts
             elif "MediaConnect" in event["detail-type"]:
@@ -127,30 +126,3 @@ def lambda_handler(event, _):
     except ClientError as error:
         print(error)
     return True
-
-
-def get_pipeline_state(event):
-    """
-    Check for pipeline state only if source is aws.medialive
-    """
-    running_pipeline = bool(True)
-    resource_arn = event["resource_arn"]
-    try:
-        if event["source"] == "aws.medialive" and event["detail"]["alarm_state"] == "SET":
-            resource = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME)
-            content_table = resource.Table(CONTENT_TABLE_NAME)
-            response = content_table.query(KeyConditionExpression=Key('arn').eq(resource_arn))
-            if "Items" in response:
-                item = response["Items"][0]
-                if "service" in item and item["service"] == "medialive-multiplex":
-                    running_pipeline = bool(False)
-                else:
-                    data = json.loads(item["data"])
-                    if "ChannelClass" in data and data["ChannelClass"] == "STANDARD":
-                        running_pipeline = bool(False)
-    except ClientError as error:
-        print(error)
-    if "pipeline" in event["detail"]:
-        log_msg = 'Pipeline {} state to for {} is {}'
-        print(log_msg.format(event["detail"]["pipeline"], resource_arn, running_pipeline))
-    return running_pipeline

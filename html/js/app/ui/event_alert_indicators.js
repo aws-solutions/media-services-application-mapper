@@ -179,17 +179,21 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                     if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
                         // create the attribute if its not there
                         if (!_.isArray(node.running_pipelines)) {
-                            if (_.has(node.data, "PipelinesRunningCount")) {
+                            if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "SINGLE_PIPELINE") {
+                                node.running_pipelines = new Array(1);
+                            } else if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "STANDARD") {
+                                node.running_pipelines = new Array(2);
+                            } else if (_.has(node.data, "PipelinesRunningCount")) {
                                 let count = Number.parseInt(node.data.PipelinesRunningCount);
                                 node.running_pipelines = new Array(count);
-                                node.running_pipelines.fill(1);
                             } else {
-                                node.running_pipelines = [1];
+                                node.running_pipelines = new Array(1);
                             }
+                            node.running_pipelines.fill(1);
                         }
                         let index = Number.parseInt(item.detail.pipeline);
                         node.running_pipelines[index] = 0;
-                        node.degraded = _.sum(node.running_pipelines) == 1;
+                        node.degraded = (_.sum(node.running_pipelines) > 0) && (_.sum(node.running_pipelines) < node.running_pipelines.length);
                     } else {
                         node.degraded = false;
                     }
@@ -220,17 +224,21 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                     if (_.has(cleared, "detail") && _.has(cleared.detail, "pipeline")) {
                         // create the attribute if its not there
                         if (!_.isArray(node.running_pipelines)) {
-                            if (_.has(node.data, "PipelinesRunningCount")) {
+                            if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "SINGLE_PIPELINE") {
+                                node.running_pipelines = new Array(1);
+                            } else if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "STANDARD") {
+                                node.running_pipelines = new Array(2);
+                            } else if (_.has(node.data, "PipelinesRunningCount")) {
                                 let count = Number.parseInt(node.data.PipelinesRunningCount);
                                 node.running_pipelines = new Array(count);
-                                node.running_pipelines.fill(1);
                             } else {
-                                node.running_pipelines = [1];
+                                node.running_pipelines = new Array(1);
                             }
+                            node.running_pipelines.fill(1);
                         }
                         let index = Number.parseInt(cleared.detail.pipeline);
                         node.running_pipelines[index] = 1;
-                        node.degraded = _.sum(node.running_pipelines) == 1;
+                        node.degraded = (_.sum(node.running_pipelines) > 0) && (_.sum(node.running_pipelines) < node.running_pipelines.length);
                     } else {
                         node.degraded = false;
                     }

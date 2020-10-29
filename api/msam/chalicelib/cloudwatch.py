@@ -241,13 +241,19 @@ def get_cloudwatch_events_state(state):
     """
     API entry point to retrieve all pipeline events in a given state (set, clear).
     """
-    events = []
     dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
     table = dynamodb.Table(EVENTS_TABLE_NAME)
     response = table.query(IndexName='AlarmStateIndex',
                            KeyConditionExpression=Key('alarm_state').eq(state))
-    if "Items" in response:
-        events = response["Items"]
+    events = response.get("Items", [])
+    while "LastEvaluatedKey" in response:
+        # query again with start key
+        response = table.query(
+            IndexName='AlarmStateIndex',
+            KeyConditionExpression=Key('alarm_state').eq(state),
+            ExclusiveStartKey=response['LastEvaluatedKey'])
+        events = events + response.get("Items", [])
+    # return when done paging
     return events
 
 
