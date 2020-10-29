@@ -5,75 +5,72 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
     function($, _, model, event_alerts, diagrams) {
 
         /**
-         * Retrieve all edges beginning with the given arn.
-         * @param {String} arn The assigned ARB 
-         * @returns {DataSet[]} The found DataSet edges.
+         * Retrieve all edges originating from the given arn.
          */
-        const getEdges = (arn, reverse) => {
-            const opts = {
-                filter: ({ id, data = {} }) => (id.startsWith(arn) && data.from === arn),
-            };
-            if (reverse) {
-                opts.filter = ({ data = {} }) => (data.to === arn);
-            }
-            const edges = model.edges.get(opts);
 
+        const getEdges = (arn, reverse) => {
+            const edges = model.edges.get({
+                // filter: (item) => 
+                // {
+                //     return item.id.endsWith(`:${arn}`) || item.id.startsWith(`${arn}:`);
+                // }
+                filter: (item) => {
+                    // first arn in the edge id is the source
+                    return item.id.startsWith(`${arn}:`);
+                }
+            });
             return _.isArray(edges) ? edges : [edges];
         };
 
         /**
-         * Retrieve all edges beginning with the given arn and belonging to the given pipeline.
-         * @param {String} arn The assigned ARB 
-         * @param {Number} pipeline The assigned pipeline number
-         * @returns {DataSet[]} The found DataSet edges.
+         * Retrieve all edges with the given arn and belonging to the given pipeline.
          */
-        const getEdgesByPipeline = (arn, pipeline) => getEdges(arn)
-            .filter(({ id, data }) => (id.endsWith(`:${pipeline}`) && data.pipeline === pipeline));
+
+        const getEdgesByPipeline = (arn, pipeline, bidi = true) => {
+            // console.log(arn, pipeline);
+            let options;
+            if (bidi) {
+                options = {
+                    filter: (item) => {
+                        // the arn as the source or target and the pipeline number at the end
+                        return ((item.id.includes(`:${arn}:`) || item.id.startsWith(`${arn}:`)) &&
+                            item.id.endsWith(`:${pipeline}`))
+                    }
+                };
+            } else {
+                options = {
+                    filter: (item) => {
+                        return item.id.startsWith(`${arn}:`) && item.id.endsWith(`:${pipeline}`);
+                    }
+                };
+            }
+            const edges = model.edges.get(options);
+            return _.isArray(edges) ? edges : [edges];
+        }
 
         /**
          * Update the node on all containing diagrams
          * @param {DataSet} node The DataSet node provided by the model.
-         * @param {Boolean} alertState If true, the containing diagram will update its alert indicator.
+         * @param {Boolean} alertState If true, alert setting call, or false for alert clearing
          * @param {String} dataSet Default to 'nodes. Only other possible option is 'edges'.
          */
         const updateUIHandler = (node, alertState = true, dataSet = 'nodes') => {
-            let matches = diagrams.have_all([node.id]);
-
-            if (!matches || (_.isArray(matches) && !matches.length) && dataSet === 'edges') {
-                /**
-                 * When it comes to edges, the `diagrams.have_all([node.id])` is not reliant.
-                 * A diagram can very well contain the edge id and still return empty.
-                 * 
-                 * Therefore, only if the `dataSet === 'edges'` and no diagram matches came back,
-                 * we run thru this "double check" that essentially find diagrams that in fact do
-                 * contain the edge in question and adds the diagram to the list of matches.
-                 */
-                const plnum = parseInt(node.id.split(':').pop());
-                const all_diagrams = diagrams.get_all();
-
-                for (const key in all_diagrams) {
-                    if (all_diagrams.hasOwnProperty(key)) {
-                        const diag = all_diagrams[key];
-                        const foundEdge = diag[dataSet].get({ 
-                            filter: ({ id, data }) => {
-                                return (id === node.id && data.pipeline === plnum);
-                            },
-                        });
-
-                        if (foundEdge.length) {
-                            matches.push(diag);
-                        }
-                    }
-                }
+            let matches = [];
+            if (dataSet === 'nodes') {
+                matches = diagrams.have_all([node.id]);
+            } else if (dataSet === 'edges') {
+                // both nodes of an edge need to be on a diagram for the edge to be there
+                matches = diagrams.have_all([node.from, node.to]);
             }
 
             for (let diagram of matches) {
+                // update the diagrams state
                 diagram[dataSet].update(node);
                 diagram.alert(alertState);
             }
         };
 
-        const updateAlertHandler = (node, alertState = true, alertDetails = {}) => {
+        const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
             let selected = null;
             let unselected = null;
             let newState = 'normal';
@@ -96,110 +93,148 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                 node.image.selected = selected;
                 node.image.unselected = unselected;
                 model.nodes.update(node);
-                updateUIHandler(node, alertState);
+                updateUIHandler(node, active_alert);
             }
-            
+
             const newEdgeOpts = {
-                color: { color: newState !== 'normal' ? 'red' : 'black' },
-                dashes: newState !== 'normal',
+                color: { color: (active_alert === true && newState !== 'normal') ? 'red' : 'black' },
+                dashes: (active_alert === true && newState !== 'normal'),
                 hoverWidth: 1
             };
-            const edges = !_.has(alertDetails, 'pipeline') ? getEdges(node.id) 
-                : getEdgesByPipeline(node.id, parseInt(alertDetails.pipeline || 0));
+
+            let edges;
+            if (node.id.includes(":medialive:") && node.id.includes(":channel:")) {
+                // get edges in both directions if possible
+                edges = getEdgesByPipeline(node.id, parseInt(alert_details.pipeline));
+            }
+            // else 
+            // if (_.has(alert_details, "pipeline")) {
+            //     // get outbound edges by pipeline
+            //     edges = getEdgesByPipeline(node.id, parseInt(alert_details.pipeline), false);
+            // } 
+            else {
+                // get outbound edges
+                edges = getEdges(node.id);
+            }
+
+            // console.log("edges: " + JSON.stringify(edges));
 
             /** Update the edges */
-            edges.forEach(edge => {
+            edges.forEach((edge) => {
+                // console.log(JSON.stringify(edge));
+                console.log(`edge: ${edge.id}`);
+
                 if (edge.color.color !== newEdgeOpts.color.color || edge.dashes !== newEdgeOpts.dashes) {
+                    console.log("edge needs update");
                     edge.color = newEdgeOpts.color;
                     edge.dashes = newEdgeOpts.dashes;
                     edge.hoverWidth = newEdgeOpts.hoverWidth;
                     model.edges.update(edge);
-                    updateUIHandler(edge, alertState, 'edges');
-
-                    console.log(`
-                        Updating Pipeline ${edge.data.pipeline}
-                            From ${edge.from} To ${edge.to}
-                            Other Pipeline should be:
-                                Pipeline ${edge.data.pipeline} 
-                                    From 'Somewhere' To ${edge.from}
-                    `)
-
-                    const otherEdges = getEdges(node.id, true)
-                        .filter(e => e.data.pipeline === edge.data.pipeline);
-                    console.log('Other Edges => %o', otherEdges);
-
-                    otherEdges.forEach(oedge => {
-                        if (oedge.color.color !== newEdgeOpts.color.color || oedge.dashes !== newEdgeOpts.dashes) {
-                            oedge.color = newEdgeOpts.color;
-                            oedge.dashes = newEdgeOpts.dashes;
-                            oedge.hoverWidth = newEdgeOpts.hoverWidth;
-                            model.edges.update(oedge);
-                            updateUIHandler(oedge, alertState, 'edges');
-                        }
-                    });
+                    updateUIHandler(edge, active_alert, 'edges');
+                } else {
+                    console.log("edge is correct");
                 }
             });
         };
 
         const updateEventAlertState = (current_alerts, previous_alerts) => {
             /** iterate through current 'set' alerts */
-            const alerting_nodes = [];
-            const inactive_nodes = [];
-            const degraded_nodes = [];
+            let alerting_nodes = new Set();
+
+            console.log(`current alerts: ${current_alerts.length}`);
+            console.log(`previous alerts: ${previous_alerts.length}`);
+
+            // we only need one unique alert per arn/pipeline
+            // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
+
+            let uniq_current_alerts = _.uniqBy(current_alerts, (item) => {
+                if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
+                    return `${item.resource_arn}:${item.detail.pipeline}`;
+                } else {
+                    return `${item.resource_arn}`;
+                }
+            });
+
+            let uniq_previous_alerts = _.uniqBy(previous_alerts, (item) => {
+                if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
+                    return `${item.resource_arn}:${item.detail.pipeline}`;
+                } else {
+                    return `${item.resource_arn}`;
+                }
+            });
+
+            console.log(`unique current alerts: ${uniq_current_alerts.length}`);
+            console.log(`unique previous alerts: ${uniq_previous_alerts.length}`);
+
+            // use the filtered lists
+            current_alerts = uniq_current_alerts;
+            previous_alerts = uniq_previous_alerts;
 
             for (let item of current_alerts) {
                 const node = model.nodes.get(item.resource_arn);
-                
                 if (node) {
                     node.alerting = true;
-                    node.degraded = _.has(item, "detail") && _.has(item.detail, "degraded") 
-                        ? item.detail.degraded : false;
-                    
-
-                    if (node.degraded) {
-                        if (!degraded_nodes.includes(item.resource_arn)) {
-                            degraded_nodes.push(item.resource_arn);
-                            updateAlertHandler(node, true, item.detail);
+                    alerting_nodes.add(node.id);
+                    // track which pipelines are down on the model item
+                    if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
+                        // create the attribute if its not there
+                        if (!_.isArray(node.running_pipelines)) {
+                            if (_.has(node.data, "PipelinesRunningCount")) {
+                                let count = Number.parseInt(node.data.PipelinesRunningCount);
+                                node.running_pipelines = new Array(count);
+                                node.running_pipelines.fill(1);
+                            } else {
+                                node.running_pipelines = [1];
+                            }
                         }
+                        let index = Number.parseInt(item.detail.pipeline);
+                        node.running_pipelines[index] = 0;
+                        node.degraded = _.sum(node.running_pipelines) == 1;
                     } else {
-                        /**
-                         * if node is not degraded, we still need to check that the resource_arn
-                         * is not included in the degraded_nodes array. If it is, that means
-                         * the other pipeline is degraded, therefore we do not alert.
-                         */
-                        if (!alerting_nodes.includes(item.resource_arn) && !degraded_nodes.includes(item.resource_arn)) {
-                            alerting_nodes.push(item.resource_arn);
-                            updateAlertHandler(node, true, item.detail);
-                        }
+                        node.degraded = false;
                     }
+                    updateAlertHandler(node, true, item.detail);
                 }
             }
 
-            /** calculate the current alerts not included in the previous alerts */
-            for (let previous of previous_alerts) {
-                let found = false;
+            // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
+            // cleared alerts are present in the previous list and not in the current list
 
-                for (let arn of alerting_nodes) {
-                    found = found || arn === previous.resource_arn;
-                    if (found) {
-                        break;
-                    }
+            let uniq_cleared_alerts = _.differenceBy(previous_alerts, current_alerts, (item) => {
+                if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
+                    return `${item.resource_arn}:${item.detail.pipeline}`;
+                } else {
+                    return `${item.resource_arn}`;
                 }
+            });
 
-                if (!found) {
-                    inactive_nodes.push(previous.resource_arn);
-                }
-            }
+            console.log(`unique cleared alerts: ${JSON.stringify(uniq_cleared_alerts)}`);
 
-            /** 'unalert' the nodes that are no longer alerting */
-            for (let arn of inactive_nodes) {
-                const node = model.nodes.get(arn);
-
+            for (let cleared of uniq_cleared_alerts) {
+                let node = model.nodes.get(cleared.resource_arn);
                 if (node) {
-                    node.alerting = false;
-                    node.degraded = _.includes(degraded_nodes, arn);
-
-                    updateAlertHandler(node, false);
+                    if (!alerting_nodes.has(node.id)) {
+                        node.alerting = false;
+                    }
+                    // track which pipelines are up on the model item
+                    if (_.has(cleared, "detail") && _.has(cleared.detail, "pipeline")) {
+                        // create the attribute if its not there
+                        if (!_.isArray(node.running_pipelines)) {
+                            if (_.has(node.data, "PipelinesRunningCount")) {
+                                let count = Number.parseInt(node.data.PipelinesRunningCount);
+                                node.running_pipelines = new Array(count);
+                                node.running_pipelines.fill(1);
+                            } else {
+                                node.running_pipelines = [1];
+                            }
+                        }
+                        let index = Number.parseInt(cleared.detail.pipeline);
+                        node.running_pipelines[index] = 1;
+                        node.degraded = _.sum(node.running_pipelines) == 1;
+                    } else {
+                        node.degraded = false;
+                    }
+                    updateAlertHandler(node, false, cleared.detail);
                 }
             }
         };
