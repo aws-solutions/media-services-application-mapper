@@ -1,16 +1,16 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Transform": "AWS::Serverless-2016-10-31",
-    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1594682397)",
+    "Description": "Media Services Application Mapper (MSAM) event capture (ID: 1604080050)",
     "Resources": {
         "Collector": {
             "Type": "AWS::Serverless::Function",
             "Properties": {
                 "Handler": "media_events.lambda_handler",
                 "Description": "MSAM Lambda for handling CloudWatch event notifications",
-                "Runtime": "python3.6",
+                "Runtime": "python3.8",
                 "CodeUri": {
-                    "Key": "msam/f843bf0554eca3df4dd2b9aa688d4ee5",
+                    "Key": "msam/a77ae5aece162febe44e8ffbc38cc479",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -32,7 +32,7 @@
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1594682397",
+                        "BUILD_STAMP": "1604080050",
                         "EVENTS_TABLE_REGION": {
                             "Ref": "EventsTableRegion"
                         },
@@ -73,12 +73,12 @@
             "Properties": {
                 "Handler": "cloudwatch_alarm.lambda_handler",
                 "Description": "MSAM Lambda for handling CloudWatch alarm state change events.",
-                "Runtime": "python3.6",
+                "Runtime": "python3.8",
                 "Role": {
                     "Ref": "EventsIAMRoleARN"
                 },
                 "CodeUri": {
-                    "Key": "msam/f843bf0554eca3df4dd2b9aa688d4ee5",
+                    "Key": "msam/a77ae5aece162febe44e8ffbc38cc479",
                     "Bucket": {
                         "Fn::Join": [
                             "-",
@@ -97,7 +97,7 @@
                 "Timeout": 60,
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1594682397",
+                        "BUILD_STAMP": "1604080050",
                         "EVENTS_TABLE_REGION": {
                             "Ref": "EventsTableRegion"
                         },

@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1594682397)",
+    "Description": "Media Services Application Mapper (MSAM) browser application (ID: 1604080050)",
     "Resources": {
         "MSAMAppBucketOriginAccessIdentity": {
             "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
@@ -38,19 +38,30 @@
                             "Ref": "MSAMBrowserAppBucket"
                         },
                         "ViewerProtocolPolicy": "https-only",
-                        "DefaultTTL": 31536000,
-                        "MinTTL": 31536000,
-                        "MaxTTL": 31536000,
+                        "MinTTL": 3600,
+                        "DefaultTTL": 7200,
+                        "MaxTTL": 86400,
                         "AllowedMethods": [
                             "HEAD",
-                            "GET"
+                            "GET",
+                            "OPTIONS"
                         ],
                         "CachedMethods": [
                             "HEAD",
-                            "GET"
+                            "GET",
+                            "OPTIONS"
                         ],
+                        "Compress": true,
                         "ForwardedValues": {
-                            "QueryString": true
+                            "QueryString": false,
+                            "Cookies": {
+                                "Forward": "none"
+                            },
+                            "Headers": [
+                                "Origin",
+                                "Access-Control-Request-Method",
+                                "Access-Control-Request-Headers"
+                            ]
                         }
                     },
                     "DefaultRootObject": "index.html",
@@ -144,8 +155,7 @@
                         ],
                         "AllowedOrigins": [
                             "*"
-                        ],
-                        "MaxAge": "3000"
+                        ]
                     }]
                 }
             }
@@ -165,22 +175,22 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1594682397.zip"
+                    "S3Key": "msam/webcontent_resource_1604080050.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1594682397",
-                        "ZIP_DIGEST": "67d4a27d866e9ccd5d126d1083ea5f1f4e17ee09",
+                        "BUILD_STAMP": "1604080050",
+                        "ZIP_DIGEST": "96878867c42ca2087aa888cff136ef50c9fd0dc4",
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
-                "Handler": "lambda_function.lambda_handler",
+                "Handler": "cfn_bucket_loader.handler",
                 "Description": "MSAM Lambda for custom CloudFormation resource for loading web application",
                 "MemorySize": 2560,
                 "Role": {
                     "Ref": "WebIAMRoleARN"
                 },
-                "Runtime": "python3.6",
+                "Runtime": "python3.8",
                 "Timeout": 300
             }
         },
@@ -199,8 +209,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1594682397",
-                "ZIP_DIGEST": "67d4a27d866e9ccd5d126d1083ea5f1f4e17ee09"
+                "BUILD_STAMP": "1604080050",
+                "ZIP_DIGEST": "96878867c42ca2087aa888cff136ef50c9fd0dc4"
             }
         },
         "MSAMWebInvalidationResource": {
@@ -218,12 +228,12 @@
                             ]
                         ]
                     },
-                    "S3Key": "msam/webcontent_resource_1594682397.zip"
+                    "S3Key": "msam/webcontent_resource_1604080050.zip"
                 },
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "1594682397",
-                        "ZIP_DIGEST": "67d4a27d866e9ccd5d126d1083ea5f1f4e17ee09",
+                        "BUILD_STAMP": "1604080050",
+                        "ZIP_DIGEST": "96878867c42ca2087aa888cff136ef50c9fd0dc4",
                         "BUCKET_BASENAME": { "Ref": "BucketBasename" }
                     }
                 },
@@ -233,7 +243,7 @@
                 "Role": {
                     "Ref": "WebIAMRoleARN"
                 },
-                "Runtime": "python3.6",
+                "Runtime": "python3.8",
                 "Timeout": 300
             }
         },
@@ -253,8 +263,8 @@
                 "StackName": {
                     "Ref": "AWS::StackName"
                 },
-                "BUILD_STAMP": "1594682397",
-                "ZIP_DIGEST": "67d4a27d866e9ccd5d126d1083ea5f1f4e17ee09",
+                "BUILD_STAMP": "1604080050",
+                "ZIP_DIGEST": "96878867c42ca2087aa888cff136ef50c9fd0dc4",
                 "DistributionId": {
                     "Ref": "MSAMAppBucketCloudFrontDistribution"
                 }

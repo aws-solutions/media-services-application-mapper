@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper(MSAM) IAM Roles (ID: 1594682397)",
+    "Description": "Media Services Application Mapper(MSAM) IAM Roles (ID: 1604080050)",
     "Resources": {
         "EventsRole": {
             "Type": "AWS::IAM::Role",
