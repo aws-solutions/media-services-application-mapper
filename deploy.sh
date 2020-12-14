@@ -70,7 +70,7 @@ fi
 mkdir -p $HTMLWORK
 
 # add build stamp
-cp -R $ORIGIN/html/ $HTMLWORK
+cp -R $ORIGIN/html/* $HTMLWORK
 echo "updating browser app build stamp"
 sed -e "s/DEV_0_0_0/$STAMP/g" $ORIGIN/html/js/app/build.js >$HTMLWORK/js/app/build.js
 
