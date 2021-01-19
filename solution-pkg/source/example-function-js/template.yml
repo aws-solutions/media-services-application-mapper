@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Local test version of the registration microservice.
+
+Resources:
+
+    ExampleService:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: index.handler
+            Runtime: nodejs12.x
+            Timeout: 300
+            Environment:
+                Variables:
+                    LOGGING_LEVEL: TMP
