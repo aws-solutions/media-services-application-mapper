@@ -118,7 +118,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     var id = channel.Id;
                     var region = channel.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#/channels/${id}`;
+                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}`;
                         return html;
                     };
                 })(),
@@ -173,7 +173,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     var id = input.Id;
                     var region = input.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#/inputs/${id}`;
+                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
                         return html;
                     };
                 })(),
@@ -226,7 +226,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     var id = input.Id;
                     var region = input.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#/inputs/${id}`;
+                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
                         return html;
                     };
                 })(),
