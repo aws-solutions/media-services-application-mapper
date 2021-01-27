@@ -1,0 +1,12 @@
+.vscode/
+.DS_Store
+__pycache__/
+*~
+~*
+jslint-report.txt
+
+**/global-s3-assets
+**/regional-s3-assets
+**/assets
+**/*.zip
+**/package/

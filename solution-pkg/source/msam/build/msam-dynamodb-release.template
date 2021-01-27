@@ -1,0 +1,380 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: DEV_0_0_0)",
+    "Resources": {
+        "DefaultSettingsResource": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Fn::Join": [
+                            "-", [
+                                "%%BUCKET_NAME%%", 
+                                { "Ref": "AWS::Region" }
+                            ]
+                        ]
+                    },
+                    "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/dynamodb_resource_DEV_0_0_0.zip"
+                },
+                "Handler": "lambda_function.lambda_handler",
+                "Description": "MSAM Lambda for adding defaults to the Settings table",
+                "MemorySize": 2560,
+                "Environment": {
+                    "Variables": {
+                        "BUILD_STAMP": "DEV_0_0_0"
+                    }
+                },
+                "Role": { "Ref": "DynamoDBIAMRoleARN"},
+                "Runtime": "python3.8",
+                "Timeout": 300
+            }
+        },
+        "DefaultSettings": {
+            "Type": "AWS::CloudFormation::CustomResource",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "DefaultSettingsResource",
+                        "Arn"
+                    ]
+                },
+                "SettingsTable": {
+                    "Ref": "Settings"
+                },
+                "BUILD_STAMP": "DEV_0_0_0",
+                "StackName": {
+                    "Ref": "AWS::StackName"
+                }
+            }
+        },
+        "Channels": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                        "AttributeName": "channel",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "id",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "channel",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "id",
+                        "KeyType": "RANGE"
+                    }
+                ]
+            }
+        },
+        "Events": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                        "AttributeName": "alarm_id",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "alarm_state",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "resource_arn",
+                        "AttributeType": "S"
+                    }, 
+                    {
+                        "AttributeName": "source",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "resource_arn",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "alarm_id",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "GlobalSecondaryIndexes": [{
+                        "IndexName": "AlarmStateIndex",
+                        "KeySchema": [{
+                            "AttributeName": "alarm_state",
+                            "KeyType": "HASH"
+                        }],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        }
+                    },
+                    {
+                        "IndexName": "ResourceAlarmStateIndex",
+                        "KeySchema": [{
+                                "AttributeName": "resource_arn",
+                                "KeyType": "HASH"
+                            },
+                            {
+                                "AttributeName": "alarm_state",
+                                "KeyType": "RANGE"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        }
+                    },
+                    {
+                        "IndexName": "AlarmStateSourceIndex",
+                        "KeySchema": [{
+                                "AttributeName": "source",
+                                "KeyType": "HASH"
+                            },
+                            {
+                                "AttributeName": "alarm_state",
+                                "KeyType": "RANGE"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        }
+                    }
+                ],
+                "TimeToLiveSpecification": {
+                    "AttributeName": "expires",
+                    "Enabled": true
+                }
+            }
+        },
+        "Layout": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                        "AttributeName": "id",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "view",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "view",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "id",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "GlobalSecondaryIndexes": [{
+                    "IndexName": "IdIndex",
+                    "KeySchema": [{
+                        "AttributeName": "id",
+                        "KeyType": "HASH"
+                    }],
+                    "Projection": {
+                        "ProjectionType": "ALL"
+                    }
+                }]
+            }
+        },
+        "Settings": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                    "AttributeName": "id",
+                    "AttributeType": "S"
+                }],
+                "KeySchema": [{
+                    "AttributeName": "id",
+                    "KeyType": "HASH"
+                }]
+            }
+        },
+        "Content": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                        "AttributeName": "arn",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "service",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "region",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [{
+                    "AttributeName": "arn",
+                    "KeyType": "HASH"
+                }],
+                "GlobalSecondaryIndexes": [{
+                    "IndexName": "ServiceRegionIndex",
+                    "KeySchema": [{
+                            "AttributeName": "service",
+                            "KeyType": "HASH"
+                        },
+                        {
+                            "AttributeName": "region",
+                            "KeyType": "RANGE"
+                        }
+                    ],
+                    "Projection": {
+                        "ProjectionType": "ALL"
+                    }
+                }],
+                "TimeToLiveSpecification": {
+                    "AttributeName": "expires",
+                    "Enabled": true
+                }
+            }
+        },
+        "Alarms": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                        "AttributeName": "RegionAlarmName",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "StateValue",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "ResourceArn",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "RegionAlarmName",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "ResourceArn",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "GlobalSecondaryIndexes": [{
+                    "IndexName": "StateValueIndex",
+                    "KeySchema": [{
+                        "AttributeName": "StateValue",
+                        "KeyType": "HASH"
+                    }],
+                    "Projection": {
+                        "ProjectionType": "ALL"
+                    }
+                }, {
+                    "IndexName": "RegionAlarmNameIndex",
+                    "KeySchema": [{
+                        "AttributeName": "RegionAlarmName",
+                        "KeyType": "HASH"
+                    }],
+                    "Projection": {
+                        "ProjectionType": "ALL"
+                    }
+                }, {
+                    "IndexName": "ResourceArnIndex",
+                    "KeySchema": [{
+                        "AttributeName": "ResourceArn",
+                        "KeyType": "HASH"
+                    }],
+                    "Projection": {
+                        "ProjectionType": "ALL"
+                    }
+                }]
+            }
+        },
+        "CloudWatchEvents": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "resource_arn",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "timestamp",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "resource_arn",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "timestamp",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "TimeToLiveSpecification": {
+                    "AttributeName": "expires",
+                    "Enabled": true
+                }
+            }
+        }
+    },
+    "Parameters": {
+        "DynamoDBIAMRoleARN": {
+            "Description": "This is the IAM Role ARN for the DynamoDB Lambda functions.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        }
+    },
+    "Outputs": {
+        "AlarmsTable": {
+            "Value": {
+                "Ref": "Alarms"
+            },
+            "Description": "Alarms table resource name"
+        },
+        "ChannelsTable": {
+            "Value": {
+                "Ref": "Channels"
+            },
+            "Description": "Channels table resource name"
+        },
+        "ContentTable": {
+            "Value": {
+                "Ref": "Content"
+            },
+            "Description": "Content table resource name"
+        },
+        "EventsTable": {
+            "Value": {
+                "Ref": "Events"
+            },
+            "Description": "Events table resource name"
+        },
+        "LayoutTable": {
+            "Value": {
+                "Ref": "Layout"
+            },
+            "Description": "Layout table resource name"
+        },
+        "SettingsTable": {
+            "Value": {
+                "Ref": "Settings"
+            },
+            "Description": "Settings table resource name"
+        },
+        "CloudWatchEventsTable": {
+            "Value": {
+                "Ref": "CloudWatchEvents"
+            },
+            "Description": "CloudWatchEvents table resource name"
+        }
+    }
+}

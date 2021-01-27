@@ -1,5 +1,5 @@
-# %%SOLUTION_NAME%%
-%%SOLUTION_DESCRIPTION%%
+# Media Services Application Mapper
+MSAM is a browser-based tool that allows operators to visualize the structure and logical connections among AWS Media Services and supporting services in the cloud.
 
 ## Running unit tests for customization
 * Clone the repository, then make the desired code changes
