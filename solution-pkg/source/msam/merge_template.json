@@ -1,5 +1,5 @@
 {
-    "Description": "Media Services Application Mapper (MSAM) cloud API (SO0048) (ID: DEV_0_0_0)",
+    "Description": "Media Services Application Mapper (MSAM) cloud API (ID: DEV_0_0_0)",
     "Resources": {
         "IncomingCloudwatchAlarm": {
             "Properties": {

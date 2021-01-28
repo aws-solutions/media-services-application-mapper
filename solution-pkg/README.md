@@ -6,7 +6,6 @@ Note: If you want to use the solution without building from source, navigate to 
 
 - [Solution Overview](#solution-overview)
 - [Architecture Diagram](#architecture-diagram)
-- [AWS CDK Constructs](#aws-solutions-constructs)
 - [Customizing the Solution](#customizing-the-solution)
   - [Prerequisites for Customization](#prerequisites-for-customization)
   - [Build](#build)
@@ -36,6 +35,7 @@ You'll find the various architectural views for MSAM [here](docs/ARCHITECTURE.md
 ## Prerequisites for Customization
 [//]: # (Add any prerequisites for customization steps. e.g. Prerequisite: Node.js>10)
 
+* Install the AWS Command Line Interface (CLI)
 * Configure the bucket name of your target Amazon S3 distribution bucket
 ```
 export DIST_OUTPUT_BUCKET=my-bucket-name # bucket where customized code will reside
@@ -62,12 +62,15 @@ Lambda binaries will be written to deployment/regional-s3-assets.
 ## Unit Test
 [//]: # (Add commands to run unit tests from root of the project)
 
+TBD
+
 <a name="deploy"></a>
 ## Deploy
 [//]: # (Add commands to deploy the solution's stacks from the root of the project)
 
-* Deploy the distributable to an Amazon S3 bucket in your account. _Note:_ you must have the AWS Command Line Interface installed. 
-From the deployment directory run the _deploy.sh_ script. 
+Deploy the distributable to an Amazon S3 bucket in your account. 
+
+1. From the deployment directory run the _deploy.sh_ script. 
 
 Script usage:
 ```
@@ -92,7 +95,7 @@ If deploying with type _release_, CloudFormation templates will also be written 
 s3://my-bucket-aws-region/solution-name/latest/
 ```
 
-* Get the link of the solution template uploaded to your Amazon S3 bucket.
+2.  Get the link of the solution template uploaded to your Amazon S3 bucket.
 
 ``` 
 s3://my-bucket-aws-region/solution-name/latest/aws-media-services-application-mapper.template
@@ -102,59 +105,54 @@ OR
 s3://my-bucket-aws-region/solution-name/version/aws-media-services-application-mapper-timestamp.template
 ```
 
-* Deploy the solution to your account by launching a new AWS CloudFormation stack using the link of the solution template in Amazon S3.
+3. Deploy the solution to your account by launching a new AWS CloudFormation stack using the link of the solution template in Amazon S3.
 
 <a name="file-structure"></a>
 # File structure
 
 AWS Media Services Application Mapper consists of:
 
-- CDK constructs to generate necessary resources
-- Microservices used in the solution
-
-[//]: # (Sample File Structure)
+TODO:
 
 <pre>
-|-deployment/
-  |cwsa.yaml/                     [ CDK generated template for solution deployment]
-|-source/
-  |-resources
-    |-bin/
-      |-app.ts                    [ entry point for CDK app ]
-    |-__tests__/                  [ unit tests for CDK constructs ] 
-    |-lib/
-      |-fms.ts                    [ CDK construct for FMS stack and related resources ]
-      |-iam.ts                    [ CDK construct for iam resources]
-      |-master.ts                 [ CDK construct for FMS stack and related resources ]
-    |-config_files                [ tsconfig, jest.config.js, package.json etc. ]
-  |-services/
-    |-common/                     [ generic libraries used across solution ]
-      |-logger/                   [ logger libary ]
-      |-metrics/                  [ metrics libary ]
-    |-helper/                     [ lambda backed helper custom resource to help with solution launch/update/delete ]
-    |-policyManager/              [ microservice to manage FMS security policies ]
-      |-__tests/                  [ unit tests for all policy managers ]   
-      |-lib/
-        |-clientConfig.json       [ config for AWS service clients ]
-        |-manifest.json           [ manifest file for FMS policy configurations ]
-        |-wafManager.ts           [ class for WAF policy CRUD operations]
-        |-shieldManager.ts        [ class for Shield policy CRUD operations]
-        |-securitygroupManager.ts [ class for Security Group policy CRUD operations]
-        |-fmsHelper.ts            [ helper functions for FMS policy]
-        |-policyManager.ts        [ entry point to process FMS policies]
-      |-index.ts                  [ entry point for lambda function]     
-      |-config_files              [ tsconfig, jest.config.js, package.json etc. ]
-    |-preReqManager
-      |-__tests/                  [ unit tests for pre req manager ] 
-      |-lib/ 
-        |-clientConfig.json       [ config for AWS service clients ]
-        |-preReqManager.ts        [ class for FMS pre-requisites validaion and installation ]
-      |-index.ts                  [ entry point for lambda function]     
-      |-config_files              [ tsconfig, jest.config.js, package.json etc. ]     
-  |-config_files                  [ eslint, prettier, tsconfig, jest.config.js, package.json etc. ]  
+|- deployment
+|   |- assets                       [ Digest values for the templates and packaged code go to this folder and hosted on S3 by the project sponsors ]
+|   |- build-s3-dist.sh             [ Script for building distributables and preparing the CloudFormation templates ]
+|   |- deploy.sh                    [ Script for deploying distributables and CloudFormation templates to user's S3 bucket ]
+|   |- global-s3-assets             [ CloudFormation templates get written here during custom build ]
+|   |- regional-s3-assets           [ Packaged code for Lambda get written here during custom build ]
+|- docs
+|   |- ARCHITECTURE.md              [ ]
+|   |- EXTENDING_MSAM.md            [ ]
+|   |- FEATURES.md                  [ ]
+|   |- INSTALL.md                   [ ]
+|   |- MANAGED_INSTANCES.md         [ ]
+|   |- RESOURCE_TAGS.md             [ ]
+|   |- REST_API.md                  [ ]
+|   |- SCALING_UP_ALARMS.md         [ ]
+|   |- UNINSTALL.md                 [ ]
+|   |- USAGE.md                     [ ]
+|   |- WORKSHOP.md                  [ ]
+|   |- behavioral-views.drawio      [ ]
+|   |- deployment-view.drawio       [ ]
+|   |- images                       [ ]
+|   |- logical-view.drawio          [ ]
+|   |- physical-view.drawio         [ ]
+|   |- use-cases.drawio             [ ]
+|- source
+    |- events                       [ ]
+    |- html                         [ ]
+    |- msam                         [ ]
+    |- tools                        [ ]
+    |- web-cloudformation           [ ]
+|- buildspec.yml                    [ Specification for building using CodeBuild within CodePipeline ]
 </pre>
 
 <a name="license"></a>
 # License
 
 See license [here](https://github.com/awslabs/aws-media-services-application-mapper/blob/master/LICENSE).
+
+
+## Navigate
+Navigate to [Architecture](docs/ARCHITECTURE.md) | [Workshop](docs/WORKSHOP.md) | [Install](docs/INSTALL.md) | [Usage](docs/USAGE.md) | [Uninstall](docs/UNINSTALL.md) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)
