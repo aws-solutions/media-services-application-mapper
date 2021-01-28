@@ -71,29 +71,18 @@ else
     rm -f *.json
 fi
 
-cd $source_dir
-# sync to us-west-2
-if [ $ACL == "public-read" ]; then
-    aws s3 sync $template_dist_dir/ s3://$BUCKET-us-west-2/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-    aws s3 sync $build_dist_dir/ s3://$BUCKET-us-west-2/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
-else
-    aws s3 sync $template_dist_dir/ s3://$BUCKET-us-west-2/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-    aws s3 sync $build_dist_dir/ s3://$BUCKET-us-west-2/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-fi
-
-if [ $DEPLOY_TYPE == "release" ]; then
-    aws s3 sync $template_dist_dir/ s3://$BUCKET-us-west-2/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-else
-    aws s3 sync $template_dir/ s3://$BUCKET-us-west-2/$SOLUTION_NAME/latest --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-fi
-
-# sync the buckets
 for R in $REGIONS; do 
-    if [ "$R" != "us-west-2" ]; then
-        if [ $ACL == "public-read" ]; then
-            aws s3 sync s3://$BUCKET-us-west-2/$SOLUTION_NAME s3://$BUCKET-$R/$SOLUTION_NAME --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-        else
-            aws s3 sync s3://$BUCKET-us-west-2/$SOLUTION_NAME s3://$BUCKET-$R/$SOLUTION_NAME --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-        fi
-    fi
+  if [ $ACL == "public-read" ]; then
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
+  else
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+  fi
+
+  if [ $DEPLOY_TYPE == "release" ]; then
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+  else
+      aws s3 sync $template_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+  fi
 done
