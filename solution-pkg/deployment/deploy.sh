@@ -7,6 +7,7 @@
 template_dir="$PWD"
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
+other_dist_dir="$template_dir/assets"
 
 # AWS default settings
 BUCKET="rodeolabz"
@@ -75,9 +76,11 @@ for R in $REGIONS; do
   if [ $ACL == "public-read" ]; then
       aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
       aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
+      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
   else
       aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
       aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
   fi
 
   if [ $DEPLOY_TYPE == "release" ]; then
