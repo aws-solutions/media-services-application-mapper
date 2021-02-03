@@ -114,7 +114,8 @@ def update_connection_ddb_items():
             mediastore_container_cloudfront_distribution_ddb_items())
         content.put_ddb_items(medialive_channel_s3_bucket_ddb_items())
         content.put_ddb_items(link_device_medialive_input_ddb_items())
-
+        content.put_ddb_items(medialive_channel_medialive_input_ddb_items())
+        content.put_ddb_items(medialive_channel_mediaconnect_flow_ddb_items())
     except ClientError as error:
         print(error)
 
@@ -1083,6 +1084,96 @@ def link_device_medialive_input_ddb_items():
                             connection_to_ddb_item(
                                 link_device["arn"], ml_input["arn"],
                                 "link-device-medialive-input", config))
+    except ClientError as error:
+        print(error)
+    return items
+
+def medialive_channel_medialive_input_ddb_items():
+    """
+    Identify and format MediaLive channel outputs to MediaLive input for cache storage.
+    """
+    items = []
+    try:
+        # get medialive channels
+        medialive_ch_cached = cache.cached_by_service("medialive-channel")
+        # get medialive inputs
+        medialive_input_cached = cache.cached_by_service("medialive-input")
+
+        # only look for RTP destinations because EML does not suport UDP inputs
+        for ml_channel in medialive_ch_cached:
+            ml_channel_data = json.loads(ml_channel["data"])
+            for destination in ml_channel_data["Destinations"]:
+                for setting in destination["Settings"]:
+                    ml_url = setting["Url"]
+                    parsed_destination = urlparse(ml_url)
+                    if parsed_destination.scheme == 'rtp':
+                        dest_ip_port = parsed_destination.netloc
+                        for ml_input in medialive_input_cached:
+                            ml_input_data = json.loads(ml_input["data"])
+                            if ml_input_data["Type"] == "RTP_PUSH":
+                                for input_destination in ml_input_data["Destinations"]:
+                                    parsed_input_destination = urlparse(input_destination["Url"])
+                                    if parsed_input_destination.netloc == dest_ip_port:
+                                        #add this connection
+                                        config = {
+                                            "from":
+                                            ml_channel["arn"],
+                                            "to":
+                                            ml_input["arn"],
+                                            "scheme": parsed_input_destination.scheme.upper()
+                                        }
+                                        print(config)
+                                        items.append(
+                                            connection_to_ddb_item(
+                                                ml_channel["arn"], ml_input["arn"],
+                                                "medialive-channel-medialive-input", config))
+
+
+
+    except ClientError as error:
+        print(error)
+    return items
+
+def medialive_channel_mediaconnect_flow_ddb_items():
+    """
+    Identify and format MediaLive channel outputs to MediaConnect flow for cache storage.
+    """
+    items = []
+    try:
+        # get medialive channels
+        medialive_ch_cached = cache.cached_by_service("medialive-channel")
+        # get mediaconnect flows
+        mediaconnect_flows_cached = cache.cached_by_service("mediaconnect-flow")
+
+        # only look for RTP destinations because EMX does not support UDP source
+        for ml_channel in medialive_ch_cached:
+            ml_channel_data = json.loads(ml_channel["data"])
+            for destination in ml_channel_data["Destinations"]:
+                for setting in destination["Settings"]:
+                    ml_url = setting["Url"]
+                    parsed_destination = urlparse(ml_url)
+                    if parsed_destination.scheme == 'rtp':
+                        dest_ip_port = parsed_destination.netloc
+                        for flow in mediaconnect_flows_cached:
+                            flow_data = json.loads(flow["data"])
+                            # for each flow, process each source
+                            for flow_source in flow_data["Sources"]:
+                                if "Transport" in flow_source:
+                                    if "rtp" in flow_source["Transport"]["Protocol"]:
+                                        if dest_ip_port == flow_source["IngestIp"]+":"+str(flow_source["IngestPort"]):
+                                            #add this connection
+                                            config = {
+                                                "from":
+                                                ml_channel["arn"],
+                                                "to":
+                                                flow["arn"],
+                                                "scheme": flow_source["Transport"]["Protocol"].upper()
+                                            }
+                                            print(config)
+                                            items.append(
+                                                connection_to_ddb_item(
+                                                    ml_channel["arn"], flow["arn"],
+                                                    "medialive-channel-mediaconnect-flow", config))
     except ClientError as error:
         print(error)
     return items

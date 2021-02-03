@@ -190,6 +190,9 @@ for F in *.template; do
     cp -f ${F} ${F/\.template/\-${STAMP}\.template}
 done
 
+# copy the main template to the deployment dir
+cp aws-media-services-application-mapper-release.template $template_dir
+
 # generate digest values for the templates
 md5sum * >$other_dist_dir/md5.txt
 shasum -a 1 * >$other_dist_dir/sha1.txt
