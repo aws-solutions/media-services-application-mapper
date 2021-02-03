@@ -1127,9 +1127,6 @@ def medialive_channel_medialive_input_ddb_items():
                                             connection_to_ddb_item(
                                                 ml_channel["arn"], ml_input["arn"],
                                                 "medialive-channel-medialive-input", config))
-
-
-
     except ClientError as error:
         print(error)
     return items
