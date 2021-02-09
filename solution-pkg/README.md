@@ -11,8 +11,9 @@ Note: If you want to use the solution without building from source, navigate to 
   - [Build](#build)
   - [Unit Test](#unit-test)
   - [Deploy](#deploy)
-- [File Structure](#file-structure)
+- [File structure](#file-structure)
 - [License](#license)
+  - [Navigate](#navigate)
 
 <a name="solution-overview"></a>
 # Solution Overview
@@ -122,29 +123,29 @@ TODO:
 |   |- global-s3-assets             [ CloudFormation templates get written here during custom build ]
 |   |- regional-s3-assets           [ Packaged code for Lambda get written here during custom build ]
 |- docs
-|   |- ARCHITECTURE.md              [ ]
-|   |- EXTENDING_MSAM.md            [ ]
-|   |- FEATURES.md                  [ ]
-|   |- INSTALL.md                   [ ]
-|   |- MANAGED_INSTANCES.md         [ ]
-|   |- RESOURCE_TAGS.md             [ ]
-|   |- REST_API.md                  [ ]
-|   |- SCALING_UP_ALARMS.md         [ ]
-|   |- UNINSTALL.md                 [ ]
-|   |- USAGE.md                     [ ]
-|   |- WORKSHOP.md                  [ ]
-|   |- behavioral-views.drawio      [ ]
-|   |- deployment-view.drawio       [ ]
-|   |- images                       [ ]
-|   |- logical-view.drawio          [ ]
-|   |- physical-view.drawio         [ ]
-|   |- use-cases.drawio             [ ]
+|   |- ARCHITECTURE.md              [ 4+1 architectural view model ]
+|   |- EXTENDING_MSAM.md            [ Instructions to extend MSAM with your own types ]
+|   |- FEATURES.md                  [ Overview of solution features ]
+|   |- INSTALL.md                   [ Installation guide for MSAM ]
+|   |- MANAGED_INSTANCES.md         [ Using AWS Systems Manager and on-premise hardware ]
+|   |- RESOURCE_TAGS.md             [ Tagging resources for tile and diagram creation ]
+|   |- REST_API.md                  [ Overview of the MSAM REST API and use ]
+|   |- SCALING_UP_ALARMS.md         [ Using SNS with CloudWatch Alarms for MSAM ]
+|   |- UNINSTALL.md                 [ Steps to remove MSAM from your AWS account ]
+|   |- USAGE.md                     [ Getting started and usage tips for the browser tool ]
+|   |- WORKSHOP.md                  [ Steps for a workshop presented at re:Invent 2019 ]
+|   |- behavioral-views.drawio      [ diagrams.net source for behavioral view ]
+|   |- deployment-view.drawio       [ diagrams.net source for deployment view ]
+|   |- images                       [ Images used in documentation ]
+|   |- logical-view.drawio          [ diagrams.net source for logical view ]
+|   |- physical-view.drawio         [ diagrams.net source for physical view ]
+|   |- use-cases.drawio             [ diagrams.net source for use case view ]
 |- source
-    |- events                       [ ]
-    |- html                         [ ]
-    |- msam                         [ ]
-    |- tools                        [ ]
-    |- web-cloudformation           [ ]
+    |- events                       [ Source files for CloudWatch Event and Alarm handling ]
+    |- html                         [ Source files for browser application ]
+    |- msam                         [ Source files for the MSAM REST API and scheduled tasks ]
+    |- tools                        [ Scripts used in the development of MSAM ]
+    |- web-cloudformation           [ Source files for the web template and custom resources ]
 |- buildspec.yml                    [ Specification for building using CodeBuild within CodePipeline ]
 </pre>
 
