@@ -25,6 +25,8 @@ Note: If you want to use the solution without building from source, navigate to 
 
 Go [here](docs/FEATURES.md) for more information on MSAM's capabilities and features.
 
+Go [here](docs/INSTALL.md) for more information on installing MSAM.
+
 <a name="architecture-diagram"></a>
 # Architecture Diagram
 [//]: # (Provide Architecture Diagram. Add few bullets to describe the architecture workflow)
