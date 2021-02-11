@@ -6,9 +6,9 @@ Presumably, you've already identified an AWS service you want to add to the Medi
 
 Since MSAM is implemented using Python, it uses the boto3 library to query for the presence of a particular service in a user's AWS account. 
 
-The code that discovers and caches the services (also referred to here as nodes) is in the [nodes.py](api/msam/chalicelib/nodes.py) file. 
+The code that discovers and caches the services (also referred to here as nodes) is in the [nodes.py](../source/msam/chalicelib/nodes.py) file. 
 
-1. Edit the [nodes.py](api/msam/chalicelib/nodes.py) file.
+1. Edit the [nodes.py](../source/msam/chalicelib/nodes.py) file.
 1. Define a function that lists all instantiations of your service in a given region.
 
     In the case of AWS Elemental MediaTailor, the `list_playback_configurations` API call gives us all the configurations available in a given region. 
