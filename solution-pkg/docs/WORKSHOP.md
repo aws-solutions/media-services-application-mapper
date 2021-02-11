@@ -23,7 +23,7 @@ This workshop guides the user through basic understanding of MSAM including inst
 * Learn how MSAM represents Media resources in the cloud, and how sets of resources are presented
 * Learn how resources are monitored with MSAM using CloudWatch
 
-Review [README](README.md)
+Review [FEATURES](FEATURES.md)
 
 ## Part 2: Install MSAM
 
