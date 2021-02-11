@@ -198,21 +198,6 @@ md5sum * >$other_dist_dir/md5.txt
 shasum -a 1 * >$other_dist_dir/sha1.txt
 shasum -a 256 * >$other_dist_dir/sha256.txt
 
-# while in the template dir
-# released template web locations
-FILES=`find . -iname "*release.template" -type f -exec basename {} \;`
-for F in $FILES; do
-    echo https://$DIST_OUTPUT_BUCKET-us-west-2.s3.amazonaws.com/$SOLUTION_NAME/latest/$F >>$other_dist_dir/release.txt 
-done
-sort <$other_dist_dir/release.txt -o $other_dist_dir/release.txt
-
-# current build template web locations 
-FILES=`find . -iname "*$STAMP.template" -type f -exec basename {} \;`
-for F in $FILES; do
-    echo https://$DIST_OUTPUT_BUCKET-us-west-2.s3.amazonaws.com/$SOLUTION_NAME/$VERSION/$F >>$other_dist_dir/current.txt 
-done
-sort <$other_dist_dir/current.txt -o $other_dist_dir/current.txt
-
 cd $build_dist_dir
 # generate digest values for the lambda zips and append to txts
 md5sum * >>$other_dist_dir/md5.txt
