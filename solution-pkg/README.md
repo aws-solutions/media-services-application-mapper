@@ -50,8 +50,8 @@ _Note:_ You would have to create an S3 bucket with the prefix '_my-bucket-name-<
 [//]: # (Add commands to build lambda binaries from root of the project)
 To build the distributable and prepare the CloudFormation templates:
 ```
-chmod +x ./build-s3-dist.sh \n
-./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION \n
+chmod +x ./build-s3-dist.sh
+./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
 ```
 
 CloudFormation templates will be written to deployment/global-s3-assets.
