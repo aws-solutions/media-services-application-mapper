@@ -75,13 +75,15 @@ Before going any further, check to make sure that your nodes are making their wa
         },
         ...
     ```
-2. Review [README.md](../README.md#build) on instructions to create a custom build of MSAM.
-3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh). This will produce a zip file called `regional-s3-assets/core_NNNNNNNNNN.zip`.
-4. Update your __<stackname_>-UpdateNodes-_<randomstring_>_ Lambda to use this new code by uploading the zip file and saving the Lambda.
-5. After a few minutes, verify that you are seeing your service in the Content table:
+2. Review custom build instructions in [README.md](../README.md#build) to build with your new code.
+3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh) with parameters for your custom environment.
+4. Review the deploy instructions in [README.md](../README.md#deploy) upload your custom build to a bucket for installation. 
+5. Run [deploy.sh](../deployment/deploy.sh) with parameters for your custom environment.
+6. Update your stack using the all-resources template of your custom build.
+7. After a few minutes, verify that you are seeing your service in the Content table:
     ![Content Database Nodes](images/service-content-db.png)
 
-6. If you don't see any of your nodes in the database, check CloudWatch for potential errors in your UpdateNodes Lambda.    
+8. If you don't see any of your nodes in the database, check CloudWatch for potential errors in your UpdateNodes Lambda.    
 
 ## Defining Connections with the Service 
 Once you've successfully discovered and stored all the existing definitions of your service, you need to figure out the connection points of your service with other AWS Media Services or AWS services.
@@ -128,9 +130,11 @@ For MediaTailor, the connection to other services is through the video source (o
 ### Testing Your Code
 Before going any further, check to make sure that your defined connection items are making their way into the database.
 
-2. Review [README.md](../README.md#build) on instructions to create a custom build of MSAM.
-3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh). This will produce a zip file called `regional-s3-assets/core_NNNNNNNNNN.zip`.
-1. Update your __<stackname_>-UpdateConnections-_<randomstring_>_ Lambda to use this new code by uploading the zip file and saving the Lambda.
+2. Review custom build instructions in [README.md](../README.md#build) to build with your new code.
+3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh) with parameters for your custom environment.
+4. Review the deploy instructions in [README.md](../README.md#deploy) upload your custom build to a bucket for installation. 
+5. Run [deploy.sh](../deployment/deploy.sh) with parameters for your custom environment.
+6. Update your stack using the all-resources template of your custom build.
 1. After a few minutes, verify that you are seeing your defined connections in the Content table:
     ![Content Database Connections](images/connections-content-db.png)
 
@@ -142,7 +146,7 @@ Before going any further, check to make sure that your defined connection items 
 Once the node and connection discoveries are working and the items are being saved correctly in the database, it is time to make sure they show up on the MSAM diagram. 
 
 ### Mapping the Service
-1. In the `html/js/app/mappers/nodes` directory, clone one of the node javascript files and rename it to reflect the service it represents. For example: [mediatailor.js](html/js/app/mappers/nodes/mediatailor.js).
+1. In the `source/html/js/app/mappers/nodes` directory, clone one of the node javascript files and rename it to reflect the service it represents. For example: [mediatailor.js](../source/html/js/app/mappers/nodes/mediatailor.js).
 
 1. Edit the new file you just cloned. Rename the function that updates the node representing your service. We've called this function `update_config` for MediaTailor. In MediaTailor, there is only one function to update as the configuration is the only node that's representing the service. In other services, like AWS Elemental MediaPackage, there are two: one for updating the channel, and another for updating the endpoint.  Nevertheless, in your update function, replace the server GET call with the name of the service you are adding.
     ```
@@ -173,7 +177,7 @@ Once the node and connection discoveries are working and the items are being sav
             "update": update
         };
     ```
-1. Edit the [plugins.js](html/js/app/plugins.js) file. Add the node file you created to the nodes definition. Save the file.
+1. Edit the [plugins.js](../source/html/js/app/plugins.js) file. Add the node file you created to the nodes definition. Save the file.
     ```
     ...
         "nodes": [
@@ -184,7 +188,7 @@ Once the node and connection discoveries are working and the items are being sav
 
 
 ### Mapping the Connections
-1. In the `html/js/app/mappers/connections` directory, clone one of the connections javascript files and rename it to reflect the connection it represents. For example: [mediapackage_endpoint_mediatailor_configuration.js](html/js/app/mappers/connections/mediapackage_endpoint_mediatailor_configuration.js).
+1. In the `source/html/js/app/mappers/connections` directory, clone one of the connections javascript files and rename it to reflect the connection it represents. For example: [mediapackage_endpoint_mediatailor_configuration.js](../source/html/js/app/mappers/connections/mediapackage_endpoint_mediatailor_configuration.js).
 1. Edit the new file you just cloned. In the `update_connections` function, replace the server GET call to the connection you are mapping.
     ```
     ...
@@ -202,7 +206,7 @@ Once the node and connection discoveries are working and the items are being sav
 
     ```
 1. Repeat steps 1-3 for each of the connections you have defined for your service.
-1. Edit the [plugins.js](html/js/app/plugins.js) file. Add the connection files you created to the collections definition. Save the file.
+1. Edit the [plugins.js](../source/html/js/app/plugins.js) file. Add the connection files you created to the collections definition. Save the file.
     ```
     ...
     "connections": [
@@ -214,12 +218,12 @@ Once the node and connection discoveries are working and the items are being sav
     ```
 
 ### Defining the Overlay
-1. In the `html/js/app/ui/overlays` directory, clone one of the overlay javascript files and name it to reflect the connection it represents. For example: [mediatailor_configuration.js](html/js/app/ui/overlays/mediatailor_configuration.js).
+1. In the `source/html/js/app/ui/overlays` directory, clone one of the overlay javascript files and name it to reflect the connection it represents. For example: [mediatailor_configuration.js](../source/html/js/app/ui/overlays/mediatailor_configuration.js).
 1. Edit the new file you just cloned. Update the _match_type_ variable to reflect the service you are adding. Save the file.
     ```
         var match_type = "MediaTailor Configuration";
     ```
-1. Edit the [plugins.js](html/js/app/plugins.js) file. Add the overlay file you created to the overlays definition. Save the file.
+1. Edit the [plugins.js](../source/html/js/app/plugins.js) file. Add the overlay file you created to the overlays definition. Save the file.
     ```
     ...
     "overlays": [
@@ -232,11 +236,13 @@ Once the node and connection discoveries are working and the items are being sav
 
 Now that the visualization portion of the code has been completed, you will need to update the javascript files that are currently deployed in your MSAM S3 bucket. Once updated, launch MSAM in your browser to actually view the diagram with the service you just added.
 
-1. From the CloudFormation console, go to the Resources tab of your MSAM application stack. Click on the MSAMBrowserAppBucket.
-1. Add all the new and modified javascript files back into the `js` folder of the bucket. Make sure to put them in the same folder/directory as you have them in your repository.
-1. Make the new and modified files public, otherwise, the browser will fail to fetch and run them. 
+2. Review custom build instructions in [README.md](../README.md#build) to build with your new code.
+3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh) with parameters for your custom environment.
+4. Review the deploy instructions in [README.md](../README.md#deploy) upload your custom build to a bucket for installation. 
+5. Run [deploy.sh](../deployment/deploy.sh) with parameters for your custom environment.
+6. Update your stack using the all-resources template of your custom build.
 1. Back in the CloudFormation console, go to the Outputs tab of your MSAM application stack and click on the MSAMBrowserURL.
-1. When prompted, enter the Endpoint URL and API key. Refer to the [Usage Guide](USAGE.md) if you need a refresher on launching MSAM.
+1. If prompted, enter the Endpoint URL and API key. Refer to the [Usage Guide](USAGE.md) if you need a refresher on launching MSAM.
 1. You may have to refresh the nodes in your tiles in order to see the new nodes and connections. From your tile:
     * Click on the Diagram menu 
     * Choose Manage Diagram Contents
