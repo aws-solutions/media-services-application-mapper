@@ -249,9 +249,8 @@ There are several options for the user installing the templates to have the corr
 
 ### MSAM IAM Resources
 
-MSAM's IAM template will install a Group with an inline policy with permissions sufficient to install all the templates of the solution. The IAM Group is named `<stackname>-installationGroup-<ID>` and includes the same policy as [this file](dist/iam-install-policy.json). Add the users to this group who will be installing the solution if your organization has strict requirements about the AdministratorAccess managed policy.
+MSAM's IAM template will install a Group with an inline policy with permissions sufficient to install all the templates of the solution. The IAM Group is named `<stackname>-installationGroup-<ID>`. Add the users to this group who will be installing the solution if your organization has strict requirements about the AdministratorAccess managed policy.
 
-[This file](dist/iam-install-policy.json) is a policy that can be added inline to a user or role and defines sufficient permissions to install all the templates included with MSAM.
 
 ## DynamoDB Considerations
 
