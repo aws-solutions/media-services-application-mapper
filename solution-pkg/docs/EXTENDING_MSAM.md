@@ -77,9 +77,9 @@ Before going any further, check to make sure that your nodes are making their wa
     ```
 2. Review custom build instructions in [README.md](../README.md#build) to build with your new code.
 3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh) with parameters for your custom environment.
-4. Review the deploy instructions in [README.md](../README.md#deploy) upload your custom build to a bucket for installation. 
+4. Review the deploy instructions in [README.md](../README.md#deploy) to upload your custom build to a bucket for installation. 
 5. Run [deploy.sh](../deployment/deploy.sh) with parameters for your custom environment.
-6. Update your stack using the all-resources template of your custom build.
+6. Update your stack using the root template of your custom build.
 7. After a few minutes, verify that you are seeing your service in the Content table:
     ![Content Database Nodes](images/service-content-db.png)
 
@@ -132,9 +132,9 @@ Before going any further, check to make sure that your defined connection items 
 
 2. Review custom build instructions in [README.md](../README.md#build) to build with your new code.
 3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh) with parameters for your custom environment.
-4. Review the deploy instructions in [README.md](../README.md#deploy) upload your custom build to a bucket for installation. 
+4. Review the deploy instructions in [README.md](../README.md#deploy) to upload your custom build to a bucket for installation. 
 5. Run [deploy.sh](../deployment/deploy.sh) with parameters for your custom environment.
-6. Update your stack using the all-resources template of your custom build.
+6. Update your stack using the root template of your custom build.
 1. After a few minutes, verify that you are seeing your defined connections in the Content table:
     ![Content Database Connections](images/connections-content-db.png)
 
@@ -238,9 +238,9 @@ Now that the visualization portion of the code has been completed, you will need
 
 2. Review custom build instructions in [README.md](../README.md#build) to build with your new code.
 3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh) with parameters for your custom environment.
-4. Review the deploy instructions in [README.md](../README.md#deploy) upload your custom build to a bucket for installation. 
+4. Review the deploy instructions in [README.md](../README.md#deploy) to upload your custom build to a bucket for installation. 
 5. Run [deploy.sh](../deployment/deploy.sh) with parameters for your custom environment.
-6. Update your stack using the all-resources template of your custom build.
+6. Update your stack using the root template of your custom build.
 1. Back in the CloudFormation console, go to the Outputs tab of your MSAM application stack and click on the MSAMBrowserURL.
 1. If prompted, enter the Endpoint URL and API key. Refer to the [Usage Guide](USAGE.md) if you need a refresher on launching MSAM.
 1. You may have to refresh the nodes in your tiles in order to see the new nodes and connections. From your tile:
