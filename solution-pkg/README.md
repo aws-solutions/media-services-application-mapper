@@ -121,7 +121,7 @@ AWS Media Services Application Mapper consists of:
 |   |- global-s3-assets             [ CloudFormation templates get written here during custom build ]
 |   |- regional-s3-assets           [ Packaged code for Lambda get written here during custom build ]
 |- docs
-|   |- ARCHITECTURE.md              [ 4+1 architectural view model ]
+|   |- ARCHITECTURE.md              [ 4+1 architectural views of MSAM ]
 |   |- EXTENDING_MSAM.md            [ Instructions to extend MSAM with your own types ]
 |   |- FEATURES.md                  [ Overview of solution features ]
 |   |- INSTALL.md                   [ Installation guide for MSAM ]
