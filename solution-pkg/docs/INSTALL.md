@@ -52,22 +52,6 @@ https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapp
 https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/sha256.txt
 ```
 
-### Release info
-
-In the same folder as the version specific templates is a text file that lists the latest template URLs. Templates in this file have an epoch timestamp embedded in the template description. You will see the timestamp after the template is loaded by CloudFormation. These template URLs should never change name.
-
-```
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/release.txt
-```
-
-### Current info
-
-In the same folder as the version specific templates is a text file that lists the URLs to development or test templates. Templates in this file have an epoch timestamp embedded in the template description. 
-
-```
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/current.txt
-```
-
 ## CloudFormation Stack Creation
 
 * Login to CloudFormation using the same account used for creating and managing the Media Services
