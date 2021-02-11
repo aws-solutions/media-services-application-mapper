@@ -62,8 +62,7 @@ The code that discovers and caches the services (also referred to here as nodes)
 
 Before going any further, check to make sure that your nodes are making their way into the database.
 
-1. Edit [build.sh](api/build.sh). Replace the rodeolabz-_<region_> bucket to a bucket that you own or have write access to.
-1. Edit [policy-dev.json](api/msam/.chalice/policy-dev.json) and grant the Lambda that will use the code you've written the rights to list out or describe your service.
+1. Edit [policy-dev.json](../source/msam/.chalice/policy-dev.json) and grant the Lambda that will use the code you've written the rights to list out or describe your service.
     ```
         "Statement": [{
             "Action": [
@@ -76,17 +75,18 @@ Before going any further, check to make sure that your nodes are making their wa
         },
         ...
     ```
-1. Run [build.sh](api/build.sh). This will produce a zip file called `api/msam/build/deployment.zip`.
-1. Update your __<stackname_>-UpdateNodes-_<randomstring_>_ Lambda to use this new code by uploading the zip file and saving the Lambda.
-1. After a few minutes, verify that you are seeing your service in the Content table:
+2. Review [README.md](../README.md#build) on instructions to create a custom build of MSAM.
+3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh). This will produce a zip file called `regional-s3-assets/core_NNNNNNNNNN.zip`.
+4. Update your __<stackname_>-UpdateNodes-_<randomstring_>_ Lambda to use this new code by uploading the zip file and saving the Lambda.
+5. After a few minutes, verify that you are seeing your service in the Content table:
     ![Content Database Nodes](images/service-content-db.png)
 
-1. If you don't see any of your nodes in the database, check CloudWatch for potential errors in your UpdateNodes Lambda.    
+6. If you don't see any of your nodes in the database, check CloudWatch for potential errors in your UpdateNodes Lambda.    
 
 ## Defining Connections with the Service 
 Once you've successfully discovered and stored all the existing definitions of your service, you need to figure out the connection points of your service with other AWS Media Services or AWS services.
 
-For MediaTailor, the connection to other services is through the video source (origin) that it takes in as a configuration parameter. The video source could come from AWS Elemental MediaPackage, AWS Elemental MediaStore, or S3. These three connections will have to be defined separately, as its own function in the [connections.py](api/msam/chalicelib/connections.py) file. 
+For MediaTailor, the connection to other services is through the video source (origin) that it takes in as a configuration parameter. The video source could come from AWS Elemental MediaPackage, AWS Elemental MediaStore, or S3. These three connections will have to be defined separately, as its own function in the [connections.py](../source/msam/chalicelib/connections.py) file. 
 
 1. Define your connection function. The function follows the nomenclature: _fromservice_toservice_ddb_items()_.  The connection type name follows the nomenclature: _fromservice_toservice_. The example below shows the connection from MediaPackage to MediaTailor. 
     ```
@@ -128,7 +128,8 @@ For MediaTailor, the connection to other services is through the video source (o
 ### Testing Your Code
 Before going any further, check to make sure that your defined connection items are making their way into the database.
 
-1. Run [build.sh](api/build.sh). This will produce a zip file called `api/msam/build/deployment.zip`.
+2. Review [README.md](../README.md#build) on instructions to create a custom build of MSAM.
+3. Run [build-s3-dist.sh](../deployment/build-s3-dist.sh). This will produce a zip file called `regional-s3-assets/core_NNNNNNNNNN.zip`.
 1. Update your __<stackname_>-UpdateConnections-_<randomstring_>_ Lambda to use this new code by uploading the zip file and saving the Lambda.
 1. After a few minutes, verify that you are seeing your defined connections in the Content table:
     ![Content Database Connections](images/connections-content-db.png)
