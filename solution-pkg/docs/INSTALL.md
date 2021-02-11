@@ -63,11 +63,11 @@ During the installation of the CloudFormation stacks you may be prompted to ackn
 
 When you are installing a CloudFormation template listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URL below exactly as provided for any MSAM-supported region. Do not change the region name in the URL path or bucket name.
 
-### Master Template: All Resources
+### Root Template: Install All MSAM Resources
 
-As of release v1.5.0, the CloudFormation templates distributed for MSAM include a master template that installs the complete solution into a single region. The master template nests and deploys the existing five templates automatically.
+As of release v1.5.0, the CloudFormation templates distributed for MSAM include a root template that installs the complete solution into a single region. The root template nests and deploys the existing five templates automatically.
 
-If you need to upgrade your installation from the individual templates to the master template, see this note below about migrating your DynamoDB tables.
+If you need to upgrade your installation from the individual templates to the root template, see this note below about migrating your DynamoDB tables.
 
 `https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper.template`
 
@@ -80,7 +80,7 @@ If you need to upgrade your installation from the individual templates to the ma
 
 Go to the Outputs section of the stack, and copy and save the URL value for EndpointURL and MSAMBrowserURL. Open the link for the APIKeyID, click the Show link in the main compartment for the API key, copy the API Key and save it with the other two URL values.
 
-![Master Template Outputs](images/master-template-outputs.png)
+![Root Template Outputs](images/root-template-outputs.png)
 
 After the template installation finishes and you've recorded the outputs from the template, skip forward to [Template 4: CloudWatch Event Handler](INSTALL.md#template-4-cloudwatch-event-handler) if you need to collect events and monitor alarms across multiple regions, and then to [Multiple Users and Access Control](INSTALL.md#multiple-users-and-access-control) and complete the final steps in this guide.
 
@@ -283,7 +283,7 @@ Any updates provided will be done via updates to the CloudFormation template fil
 
 ### Upgrading Template Installation
 
-There is not a direct upgrade path from the multiple template installation process to the new master and nested template installation process. The recommended approach for moving from the old to new process is to install a new copy of MSAM using the master template and then use our DynamoDB tool to migrate all data from the old tables to the new tables.
+There is not a direct upgrade path from the multiple template installation process to the new root and nested template installation process. The recommended approach for moving from the old to new process is to install a new copy of MSAM using the root template and then use our DynamoDB tool to migrate all data from the old tables to the new tables.
 
 The advantage of this approach is that both systems can be running side-by-side after the data migration to verify everything has copied successfully. See the next section on the Migration Tool to learn more.
 
