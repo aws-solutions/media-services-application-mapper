@@ -130,7 +130,6 @@ AWS Media Services Application Mapper consists of:
 |   |- MANAGED_INSTANCES.md         [ Using AWS Systems Manager and on-premise hardware ]
 |   |- RESOURCE_TAGS.md             [ Tagging resources for tile and diagram creation ]
 |   |- REST_API.md                  [ Overview of the MSAM REST API and use ]
-|   |- SCALING_UP_ALARMS.md         [ Using SNS with CloudWatch Alarms for MSAM ]
 |   |- UNINSTALL.md                 [ Steps to remove MSAM from your AWS account ]
 |   |- USAGE.md                     [ Getting started and usage tips for the browser tool ]
 |   |- WORKSHOP.md                  [ Steps for a workshop presented at re:Invent 2019 ]
