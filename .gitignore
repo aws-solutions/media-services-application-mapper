@@ -3,5 +3,10 @@
 __pycache__/
 *~
 ~*
-deployment.zip
 jslint-report.txt
+
+**/global-s3-assets
+**/regional-s3-assets
+**/assets
+**/*.zip
+**/package/

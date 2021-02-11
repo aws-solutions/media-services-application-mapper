@@ -1,4 +1,0 @@
-.chalice/deployments/
-.chalice/venv/
-__pycache__/
-db/package/

@@ -1,99 +1,158 @@
-# Media Services Application Mapper (MSAM)
+**[🚀 Solution Landing Page](https://aws.amazon.com/solutions/implementations/media-services-application-mapper/)** | **[🚧 Feature request](https://github.com/awslabs/aws-media-services-application-mapper/issues/new?assignees=&labels=feature-request%2C+enhancement&template=feature_request.md&title=)** | **[🐛 Bug Report](https://github.com/awslabs/aws-media-services-application-mapper/issues/new?assignees=&labels=bug%2C+triage&template=bug_report.md&title=)**
 
-### Installing MSAM? Use the detailed [installation instructions](INSTALL.md).
+Note: If you want to use the solution without building from source, navigate to Solution Landing Page
 
-### Already using MSAM? Please [take our survey](https://amazonmr.au1.qualtrics.com/jfe/form/SV_cBbBD6QulbrGdyl) and tell us how it's working for you.
+## Table of contents
 
-## Overview
+- [Solution Overview](#solution-overview)
+- [Architecture Diagram](#architecture-diagram)
+- [Customizing the Solution](#customizing-the-solution)
+  - [Prerequisites for Customization](#prerequisites-for-customization)
+  - [Build](#build)
+  - [Unit Test](#unit-test)
+  - [Deploy](#deploy)
+- [File structure](#file-structure)
+- [License](#license)
+  - [Navigate](#navigate)
 
-* MSAM is a browser-based tool that allows operators to visualize the structure and logical connections among AWS Media Services and supporting services in the cloud
-* MSAM can be used as a top-down resource monitoring tool when integrated with CloudWatch
-* MSAM is installed into an AWS account with several CloudFormation templates
+<a name="solution-overview"></a>
+# Solution Overview
+[//]: # (What does the solution do? What customer problem does it solve? Mention specific use cases)
+* AWS Media Services Application Mapper (MSAM) is a browser-based tool that allows operators to visualize the structure and logical connections among AWS Media Services and supporting services in the cloud.
+* MSAM can be used as a top-down resource monitoring tool when integrated with CloudWatch.
+* MSAM offers two different visualization options: Diagrams and Tiles. 
+* MSAM can be configured to automatically display AWS Media Services alerts from AWS Elemental MediaLive channels and multiplex and AWS Elemental MediaConnect.
+
+**Go [here](docs/FEATURES.md) for more information on MSAM's capabilities and features.**
+
+**Go [here](docs/INSTALL.md) for more information on installing MSAM.**
+
+<a name="architecture-diagram"></a>
+# Architecture Diagram
+[//]: # (Provide Architecture Diagram. Add few bullets to describe the architecture workflow)
+You'll find the various architectural views for MSAM [here](docs/ARCHITECTURE.md).
+<a name="aws-solutions-constructs"></a><a name="customizing-the-solution"></a>
+# Customizing the Solution
+
+<a name="prerequisites-for-customization"></a>
+## Prerequisites for Customization
+[//]: # (Add any prerequisites for customization steps. e.g. Prerequisite: Node.js>10)
+
+* Install the AWS Command Line Interface (CLI)
+* Configure the bucket name of your target Amazon S3 distribution bucket
+```
+export DIST_OUTPUT_BUCKET=my-bucket-name # bucket where customized code will reside
+export SOLUTION_NAME=my-solution-name
+export VERSION=my-version # version number for the customized code
+```
+_Note:_ You would have to create an S3 bucket with the prefix '_my-bucket-name-<aws_region>_'.  aws_region is where you are testing the customized solution. Also, the assets in bucket should be publicly accessible.
+
+<a name="build"></a>
+## Build
+[//]: # (Add commands to build lambda binaries from root of the project)
+To build the distributable and prepare the CloudFormation templates:
+```
+chmod +x ./build-s3-dist.sh
+./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
+```
+
+CloudFormation templates will be written to deployment/global-s3-assets.
+
+Lambda binaries will be written to deployment/regional-s3-assets.
 
 
-### Diagrams
+<a name="unit-test"></a>
+## Unit Test
+[//]: # (Add commands to run unit tests from root of the project)
 
-* The user builds one or more diagrams with discovered resources from their AWS account. Diagram contents can be organized in any way that makes sense for the user's environment.
+TBD
 
-* The tool visualizes cloud resources as nodes and logical connections between resources as directed edges
+<a name="deploy"></a>
+## Deploy
+[//]: # (Add commands to deploy the solution's stacks from the root of the project)
 
-* Edges (connections) on diagrams generally represent some type of data flow
+Deploy the distributable to an Amazon S3 bucket in your account. 
 
-* Resources with redundant data paths are drawn with multiple, labeled connections
+1. From the deployment directory run the _deploy.sh_ script. 
 
-![Simple Workflow](images/diagram-nodes-edges.png)
- 
-* Simple and complex workflows of Media Services resources can be discovered and represented
-* Different types of service resources are visualized with unique color and textual indicators
-* MSAM includes graphical tools to quickly build diagrams of related resources
+Script usage:
+```
+./deploy.sh [-b BucketBasename] [-s SolutionName] [-v VersionString] [-r RegionsForDeploy] [-p AWSProfile] [-a ACLSettings(public-read|none)] [-t DeployType(dev|release)] 
+```
 
-The following image shows a diagram with several workflows including resources for AWS S3 buckets, CloudFront, MediaLive, MediaStore, MediaPackage, and a SPEKE key server.
+Example usage:
+```
+ ./deploy.sh -b mybucket -s aws-media-services-application-mapper -v v1.8.0 -r "us-west-2 us-east-1 us-east-2" -p default -a public-read -t dev
 
-![Complex Workflow](images/diagram-complex.png)
 
-* MSAM is designed to be extended with new node types, connection discovery, visualization overlays, and tools
-* Custom nodes can be added within the browser application directly, or cached into a database through a cloud-side task
+```
 
-The following image of an MSAM diagram shows on-premise equipment: Elemental Live encoder and several Firewalls with connectivity to cloud resources
+All CloudFormation templates and lambda binaries will end up in:
 
-![Customized Nodes](images/custom-nodes.jpeg)
+``` 
+s3://my-bucket-aws-region/solution-name/version/
+```
 
-* MSAM provides configuration data for each resource on the diagram
+If deploying with type _release_, CloudFormation templates will also be written to:
+``` 
+s3://my-bucket-aws-region/solution-name/latest/
+```
 
-The following image shows the JSON configuration of a diagram node when it is selected in the diagram. This is the same configuration you would see from the response to a List or Describe API call directed to the service.
+2.  Get the link of the solution template uploaded to your Amazon S3 bucket.
 
-![Selected Item JSON](images/selected-item-json.jpeg)
+``` 
+s3://my-bucket-aws-region/solution-name/latest/aws-media-services-application-mapper.template
 
-### Tiles
+OR
 
-* The tile view aggregates several related cloud resources into a single visual item
-* Tiles are often used to represent a _streaming channel_ for monitoring
-* Tiles can be created interactively, or through the REST API for bulk operations
+s3://my-bucket-aws-region/solution-name/version/aws-media-services-application-mapper-timestamp.template
+```
 
-The following image shows a tile view with several tiles. Each tile indicates the number of alerts and alarms aggregated from the underlying resources associated with the tile. Each tile also provides navigation back to the tile's resources on the diagram.
+3. Deploy the solution to your account by launching a new AWS CloudFormation stack using the link of the solution template in Amazon S3.
 
-![Customized Nodes](images/channel-tiles.png)
+<a name="file-structure"></a>
+# File structure
 
-* The tile view displays the aggregated media service configuration information for all resources included in the tile
+AWS Media Services Application Mapper consists of:
 
-The following image shows the aggregated JSON configuration of all the diagram elements assigned to the tile.
+<pre>
+|- deployment
+|   |- assets                       [ Digest values for the templates and packaged code go to this folder and hosted on S3 by the project sponsors ]
+|   |- build-s3-dist.sh             [ Script for building distributables and preparing the CloudFormation templates ]
+|   |- deploy.sh                    [ Script for deploying distributables and CloudFormation templates to user's S3 bucket ]
+|   |- global-s3-assets             [ CloudFormation templates get written here during custom build ]
+|   |- regional-s3-assets           [ Packaged code for Lambda get written here during custom build ]
+|- docs
+|   |- ARCHITECTURE.md              [ 4+1 architectural views of MSAM ]
+|   |- EXTENDING_MSAM.md            [ Instructions to extend MSAM with your own types ]
+|   |- FEATURES.md                  [ Overview of solution features ]
+|   |- INSTALL.md                   [ Installation guide for MSAM ]
+|   |- MANAGED_INSTANCES.md         [ Using AWS Systems Manager and on-premise hardware ]
+|   |- RESOURCE_TAGS.md             [ Tagging resources for tile and diagram creation ]
+|   |- REST_API.md                  [ Overview of the MSAM REST API and use ]
+|   |- UNINSTALL.md                 [ Steps to remove MSAM from your AWS account ]
+|   |- USAGE.md                     [ Getting started and usage tips for the browser tool ]
+|   |- WORKSHOP.md                  [ Steps for a workshop presented at re:Invent 2019 ]
+|   |- behavioral-views.drawio      [ diagrams.net source for behavioral view ]
+|   |- deployment-view.drawio       [ diagrams.net source for deployment view ]
+|   |- images                       [ Images used in documentation ]
+|   |- logical-view.drawio          [ diagrams.net source for logical view ]
+|   |- physical-view.drawio         [ diagrams.net source for physical view ]
+|   |- use-cases.drawio             [ diagrams.net source for use case view ]
+|- source
+    |- events                       [ Source files for CloudWatch Event and Alarm handling ]
+    |- html                         [ Source files for browser application ]
+    |- msam                         [ Source files for the MSAM REST API and scheduled tasks ]
+    |- tools                        [ Scripts used in the development of MSAM ]
+    |- web-cloudformation           [ Source files for the web template and custom resources ]
+|- buildspec.yml                    [ Specification for building using CodeBuild within CodePipeline ]
+</pre>
 
-![Customized Nodes](images/channel-tile-json.jpeg)
+<a name="license"></a>
+# License
 
-### Resource Monitoring
+See license [here](https://github.com/awslabs/aws-media-services-application-mapper/blob/master/LICENSE).
 
-* MSAM can be configured to automatically display MediaLive Channel, Multiplex and MediaConnect alerts
-* The tool integrates with CloudWatch alarms to indicate operational problems from a top-down view
-* Any CloudWatch alarm can be associated with any node on the diagram
-* CloudWatch alarm indicators are visualized as color and text on the node
-* CloudWatch high-resolution alarms can be used for frequent ten-second notification intervals
-
-The following image shows MediaConnect flows sending to a MediaLive input, a MediaLive channel with an alert status on one of two pipelines shown in yellow color, and a MediaPackage channel with a custom alarm condition.
-
-![CloudWatch Support](images/cloudwatch-diagram.png)
-
-MSAM provides three tabs in the lower compartment for Pipeline Alerts, Subscribed Alarms, and a recent CloudWatch event history. The following image shows the Pipeline Alerts tab after selecting the MediaLive channel shown above.
-
-![CloudWatch Support](images/pipeline-alerts-tab.png)
-
-This image shows the Subscribed Alarms tab after selecting the MediaPackage channel shown above.
-
-![CloudWatch Support](images/subscribed-alarms-tab.png)
-
-Use the Recent CloudWatch Events tab to see event detail for most resources that emit events. Below is a MediaPackage endpoint resource that emitted an Input Switch Event.
-
-![CloudWatch Support](images/recent-cloudwatch-events.png)
-
-A tile aggregates all structure, configuration and status from the underlying assigned resources. If any resource's CloudWatch alarm assigned to a tile goes into alarm status, the tiles associated with that resource will also show the same status. See the image below.
-
-![CloudWatch Support](images/alarm-channel-tiles.png)
-
-### REST API
-
-All browser actions are performed through an authenticated and SSL encrypted REST API hosted in the cloud. The API can be used by other tools to perform activities such as preloading tile definitions or adding custom content to the cache.
-
-Further information regarding the API can be found here: [Rest API](REST_API.md)
 
 ## Navigate
-
-Navigate to [Architecture](docs/README.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](CONTRIBUTING.md)
+Navigate to [Architecture](docs/ARCHITECTURE.md) | [Workshop](docs/WORKSHOP.md) | [Install](docs/INSTALL.md) | [Usage](docs/USAGE.md) | [Uninstall](docs/UNINSTALL.md) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)
