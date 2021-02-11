@@ -70,7 +70,7 @@ The following tag can be used to associate any CloudFront distribution to a **Me
 
 Set this tag's value to the ARN of the MediaPackage origin endpoint. For example:
 
-`arn:aws:mediapackage:us-east-1:458912307431:origin_endpoints/b471320ddb7a402ca438a5ec5e50f843`
+`arn:aws:mediapackage:us-east-1:123456789012:origin_endpoints/b471320ddb7a402ca438a5ec5e50f843`
 
 The tag below is used exclusively by MediaPackage when creating a new CloudFront distribution while also creating a new MediaPackage channel. This tag's value holds the ARN of the channel unlike the above tag's value which holds the ARN of the specific endpoint.
 
@@ -78,7 +78,7 @@ The tag below is used exclusively by MediaPackage when creating a new CloudFront
 
 Set this tag's value to the ARN of the MediaPackage channel. For example:
 
-`arn:aws:mediapackage:us-east-1:258537707537:channels/28d17c4b3fbf570db3c4495f35f56a14`
+`arn:aws:mediapackage:us-east-1:123456789012:channels/28d17c4b3fbf570db3c4495f35f56a14`
 
 The following image from CloudFront shows where it is used in the tags section.
 
