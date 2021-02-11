@@ -23,9 +23,9 @@ Note: If you want to use the solution without building from source, navigate to 
 * MSAM offers two different visualization options: Diagrams and Tiles. 
 * MSAM can be configured to automatically display AWS Media Services alerts from AWS Elemental MediaLive channels and multiplex and AWS Elemental MediaConnect.
 
-Go [here](docs/FEATURES.md) for more information on MSAM's capabilities and features.
+**Go [here](docs/FEATURES.md) for more information on MSAM's capabilities and features.**
 
-Go [here](docs/INSTALL.md) for more information on installing MSAM.
+**Go [here](docs/INSTALL.md) for more information on installing MSAM.**
 
 <a name="architecture-diagram"></a>
 # Architecture Diagram
