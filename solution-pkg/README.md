@@ -113,8 +113,6 @@ s3://my-bucket-aws-region/solution-name/version/aws-media-services-application-m
 
 AWS Media Services Application Mapper consists of:
 
-TODO:
-
 <pre>
 |- deployment
 |   |- assets                       [ Digest values for the templates and packaged code go to this folder and hosted on S3 by the project sponsors ]
