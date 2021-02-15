@@ -5,6 +5,7 @@ Note: If you want to use the solution without building from source, navigate to 
 ## Table of contents
 
 - [Solution Overview](#solution-overview)
+- [Installation Guide](#installation-guide)
 - [Architecture Diagram](#architecture-diagram)
 - [Customizing the Solution](#customizing-the-solution)
   - [Prerequisites for Customization](#prerequisites-for-customization)
@@ -25,7 +26,9 @@ Note: If you want to use the solution without building from source, navigate to 
 
 **Go [here](docs/FEATURES.md) for more information on MSAM's capabilities and features.**
 
-**Go [here](docs/INSTALL.md) for more information on installing MSAM.**
+<a name="installation"></a>
+# Installation Guide
+Go [here](docs/INSTALL.md) for more information on installing MSAM into your AWS account.
 
 <a name="architecture-diagram"></a>
 # Architecture Diagram
