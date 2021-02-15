@@ -145,7 +145,6 @@ AWS Media Services Application Mapper consists of:
     |- msam                         [ Source files for the MSAM REST API and scheduled tasks ]
     |- tools                        [ Scripts used in the development of MSAM ]
     |- web-cloudformation           [ Source files for the web template and custom resources ]
-|- buildspec.yml                    [ Specification for building using CodeBuild within CodePipeline ]
 </pre>
 
 <a name="license"></a>
