@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) DynamoDB tables (ID: DEV_0_0_0)",
+    "Description": "Media Services Application Mapper DynamoDB Tables %%VERSION%%",
     "Resources": {
         "DefaultSettingsResource": {
             "Type": "AWS::Lambda::Function",
@@ -9,7 +9,7 @@
                     "S3Bucket": {
                         "Fn::Join": [
                             "-", [
-                                "%%BUCKET_NAME%%", 
+                                "%%BUCKET_NAME%%",
                                 { "Ref": "AWS::Region" }
                             ]
                         ]
@@ -24,7 +24,7 @@
                         "BUILD_STAMP": "DEV_0_0_0"
                     }
                 },
-                "Role": { "Ref": "DynamoDBIAMRoleARN"},
+                "Role": { "Ref": "DynamoDBIAMRoleARN" },
                 "Runtime": "python3.8",
                 "Timeout": 300
             }
@@ -86,7 +86,7 @@
                     {
                         "AttributeName": "resource_arn",
                         "AttributeType": "S"
-                    }, 
+                    },
                     {
                         "AttributeName": "source",
                         "AttributeType": "S"
@@ -298,8 +298,7 @@
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "BillingMode": "PAY_PER_REQUEST",
-                "AttributeDefinitions": [
-                    {
+                "AttributeDefinitions": [{
                         "AttributeName": "resource_arn",
                         "AttributeType": "S"
                     },

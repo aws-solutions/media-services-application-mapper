@@ -3,7 +3,7 @@
 
 define(["app/server"], function(server) {
 
-    var stamp = "1613071335";
+    var stamp = "1613427093";
 
     return {
         "get_timestamp": function() {

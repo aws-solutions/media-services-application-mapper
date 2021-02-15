@@ -1,5 +1,5 @@
 {
-    "Description": "Media Services Application Mapper (MSAM) cloud API (ID: DEV_0_0_0)",
+    "Description": "Media Services Application Mapper REST API and Tasks %%VERSION%%",
     "Resources": {
         "IncomingCloudwatchAlarm": {
             "Properties": {
@@ -8,8 +8,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -59,8 +58,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -111,8 +109,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -163,8 +160,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -215,8 +211,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -267,8 +262,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -319,8 +313,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -371,8 +364,7 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-",
-                            [
+                            "-", [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -424,23 +416,19 @@
                     "description": "How many Elemental Live events have completed?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [
-                                {
-                                    "id": "0.aws:runShellScript",
-                                    "runCommand": [
-                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=complete"
-                                    ]
-                                }
-                            ]
+                            "properties": [{
+                                "id": "0.aws:runShellScript",
+                                "runCommand": [
+                                    "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=complete"
+                                ]
+                            }]
                         }
                     }
                 },
-                "Tags": [
-                    {
-                        "Key": "MSAM-NodeType",
-                        "Value": "ElementalLive"
-                    }
-                ]
+                "Tags": [{
+                    "Key": "MSAM-NodeType",
+                    "Value": "ElementalLive"
+                }]
             }
         },
         "MSAMElementalLiveErroredEvents": {
@@ -451,23 +439,19 @@
                     "description": "How many Elemental Live events have errored?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [
-                                {
-                                    "id": "0.aws:runShellScript",
-                                    "runCommand": [
-                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=error"
-                                    ]
-                                }
-                            ]
+                            "properties": [{
+                                "id": "0.aws:runShellScript",
+                                "runCommand": [
+                                    "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=error"
+                                ]
+                            }]
                         }
                     }
                 },
-                "Tags": [
-                    {
-                        "Key": "MSAM-NodeType",
-                        "Value": "ElementalLive"
-                    }
-                ]
+                "Tags": [{
+                    "Key": "MSAM-NodeType",
+                    "Value": "ElementalLive"
+                }]
             }
         },
         "MSAMElementalLiveRunningEvents": {
@@ -478,23 +462,19 @@
                     "description": "How many Elemental Live events are running?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [
-                                {
-                                    "id": "0.aws:runShellScript",
-                                    "runCommand": [
-                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=running"
-                                    ]
-                                }
-                            ]
+                            "properties": [{
+                                "id": "0.aws:runShellScript",
+                                "runCommand": [
+                                    "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=running"
+                                ]
+                            }]
                         }
                     }
                 },
-                "Tags": [
-                    {
-                        "Key": "MSAM-NodeType",
-                        "Value": "ElementalLive"
-                    }
-                ]
+                "Tags": [{
+                    "Key": "MSAM-NodeType",
+                    "Value": "ElementalLive"
+                }]
             }
         },
         "MSAMElementalLiveStatus": {
@@ -505,23 +485,19 @@
                     "description": "Is the Elemental Live process running?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [
-                                {
-                                    "id": "0.aws:runShellScript",
-                                    "runCommand": [
-                                        "sudo /etc/init.d/elemental_se status || sudo systemctl status elemental_se"
-                                    ]
-                                }
-                            ]
+                            "properties": [{
+                                "id": "0.aws:runShellScript",
+                                "runCommand": [
+                                    "sudo /etc/init.d/elemental_se status || sudo systemctl status elemental_se"
+                                ]
+                            }]
                         }
                     }
                 },
-                "Tags": [
-                    {
-                        "Key": "MSAM-NodeType",
-                        "Value": "ElementalLive"
-                    }
-                ]
+                "Tags": [{
+                    "Key": "MSAM-NodeType",
+                    "Value": "ElementalLive"
+                }]
             }
         },
         "MSAMElementalLiveActiveAlerts": {
@@ -532,23 +508,19 @@
                     "description": "How many alerts are currently active on the encoder?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [
-                                {
-                                    "id": "0.aws:runShellScript",
-                                    "runCommand": [
-                                        "curl http://localhost/api/alerts.xml?filter=Active"
-                                    ]
-                                }
-                            ]
+                            "properties": [{
+                                "id": "0.aws:runShellScript",
+                                "runCommand": [
+                                    "curl http://localhost/api/alerts.xml?filter=Active"
+                                ]
+                            }]
                         }
                     }
                 },
-                "Tags": [
-                    {
-                        "Key": "MSAM-NodeType",
-                        "Value": "ElementalLive"
-                    }
-                ]
+                "Tags": [{
+                    "Key": "MSAM-NodeType",
+                    "Value": "ElementalLive"
+                }]
             }
         },
         "MSAMSsmSystemStatus": {
@@ -559,23 +531,19 @@
                     "description": "Is this instance reachable?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [
-                                {
-                                    "id": "0.aws:runShellScript",
-                                    "runCommand": [
-                                        "date"
-                                    ]
-                                }
-                            ]
+                            "properties": [{
+                                "id": "0.aws:runShellScript",
+                                "runCommand": [
+                                    "date"
+                                ]
+                            }]
                         }
                     }
                 },
-                "Tags": [
-                    {
-                        "Key": "MSAM-NodeType",
-                        "Value": "ElementalLive"
-                    }
-                ]
+                "Tags": [{
+                    "Key": "MSAM-NodeType",
+                    "Value": "ElementalLive"
+                }]
             }
         },
         "UsagePlanKeyAssociation": {
@@ -593,14 +561,12 @@
         "UsagePlan": {
             "Type": "AWS::ApiGateway::UsagePlan",
             "Properties": {
-                "ApiStages": [
-                    {
-                        "ApiId": {
-                            "Ref": "RestAPI"
-                        },
-                        "Stage": "msam"
-                    }
-                ],
+                "ApiStages": [{
+                    "ApiId": {
+                        "Ref": "RestAPI"
+                    },
+                    "Stage": "msam"
+                }],
                 "Description": "MSAM default usage plan",
                 "UsagePlanName": "MSAM Usage Plan"
             },
@@ -694,9 +660,7 @@
         "APIKeyID": {
             "Value": {
                 "Fn::Join": [
-                    "",
-                    [
-                        {
+                    "", [{
                             "Fn::Sub": "https://${AWS::Region}.console.aws.amazon.com/apigateway/home?region=${AWS::Region}#/api-keys/"
                         },
                         {

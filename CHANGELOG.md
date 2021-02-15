@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - February 2021
+### New
+* Support UDP/RTP connections from MediaLive channel #162
+
+### Changed
+* Rework Implementation Guide at AWS Solutions Landing Page #172 #177
+* Restructure MSAM project to align with the AWS Solutions layout #168
+
+### Contributors
+* @morjoan
+* @JimTharioAmazon
+
+
 ## [1.7.5] - Oct 30, 2020
 ### ID: 1604080050
 ### Fixed

@@ -3778,7 +3778,7 @@
       }
     }
   },
-  "Description": "Media Services Application Mapper (MSAM) cloud API (ID: DEV_0_0_0)",
+  "Description": "Media Services Application Mapper REST API and Tasks %%VERSION%%",
   "Parameters": {
     "AlarmsTableName": {
       "Description": "This is the DynamoDB table name that stores alarm states for MSAM.",

@@ -5,6 +5,8 @@ __pycache__/
 ~*
 jslint-report.txt
 
+deployment/*.template
+
 **/global-s3-assets
 **/regional-s3-assets
 **/assets

@@ -1,18 +1,15 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Media Services Application Mapper (MSAM) (SO0048) (ID: DEV_0_0_0)",
+    "Description": "(SO0048) Media Services Application Mapper Root Stack %%VERSION%%",
     "Resources": {
         "IAMModuleStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "TemplateURL": {
                     "Fn::Join": [
-                        "",
-                        [
-                            {
+                        "", [{
                                 "Fn::Join": [
-                                    "",
-                                    [
+                                    "", [
                                         "https://",
                                         "%%BUCKET_NAME%%",
                                         "-",
@@ -31,12 +28,9 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Join": [
-                        "",
-                        [
-                            {
+                        "", [{
                                 "Fn::Join": [
-                                    "",
-                                    [
+                                    "", [
                                         "https://",
                                         "%%BUCKET_NAME%%",
                                         "-",
@@ -63,12 +57,9 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Join": [
-                        "",
-                        [
-                            {
+                        "", [{
                                 "Fn::Join": [
-                                    "",
-                                    [
+                                    "", [
                                         "https://",
                                         "%%BUCKET_NAME%%",
                                         "-",
@@ -137,12 +128,9 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Join": [
-                        "",
-                        [
-                            {
+                        "", [{
                                 "Fn::Join": [
-                                    "",
-                                    [
+                                    "", [
                                         "https://",
                                         "%%BUCKET_NAME%%",
                                         "-",
@@ -199,12 +187,9 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Join": [
-                        "",
-                        [
-                            {
+                        "", [{
                                 "Fn::Join": [
-                                    "",
-                                    [
+                                    "", [
                                         "https://",
                                         "%%BUCKET_NAME%%",
                                         "-",
