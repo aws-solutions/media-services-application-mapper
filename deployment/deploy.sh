@@ -64,21 +64,13 @@ echo ACL Setting = $ACL
 echo Deploy Type = $DEPLOY_TYPE
 
 
-# remove release templates before push?
-if [ $DEPLOY_TYPE == "release" ]; then
-    echo "keeping release templates"
-else
-    echo "removing release templates"
-    rm -f $template_dist_dir/*release.template
-fi
-
 for R in $REGIONS; do 
   if [ $ACL == "public-read" ]; then
-      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template" --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
       aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
       aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
   else
-      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template" --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
       aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
       aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
   fi
