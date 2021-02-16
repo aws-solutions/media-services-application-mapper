@@ -69,7 +69,7 @@ if [ $DEPLOY_TYPE == "release" ]; then
     echo "keeping release templates"
 else
     echo "removing release templates"
-    rm -f *.json
+    rm -f $template_dist_dir/*release.template
 fi
 
 for R in $REGIONS; do 
@@ -85,7 +85,5 @@ for R in $REGIONS; do
 
   if [ $DEPLOY_TYPE == "release" ]; then
       aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-  else
-      aws s3 sync $template_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
   fi
 done
