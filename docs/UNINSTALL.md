@@ -10,9 +10,9 @@ Before you begin, be sure you are signed-in to the AWS console as the same user 
 
 Delete the events stack from any other regions that were installed after you installed the main solution.
 
-### Master Template/All Resources Stacks
+### Root Template/All Resources Stacks
 
-If you used the **all-resources** template installation option, select the master stack in CloudFormation and click the Delete button. CloudFormation will uninstall the stacks in the opposite order they were installed.
+If you used the **Root/Nested** template installation option, select the root stack in CloudFormation and click the Delete button. CloudFormation will uninstall the stacks in the opposite order they were installed.
 
 ### Individual Stacks
 
@@ -22,8 +22,9 @@ The order in which to delete the stacks are as follows:
 
 1. Delete MSAM Web stack 
 1. Delete Event Handler stack
-1. Delete Core stack
+1. Delete Core/REST API stack
 1. Delete DynamoDB stack
+2. Delete IAM stack
 
 To delete a stack:
 
@@ -34,7 +35,7 @@ To delete a stack:
 
 ## Warning
 
-Remember to remove the DynamoDB stack last as other stacks are running software that access the tables. Removing the tables before removing the running software has the potential to create excessive error rates in your account which may result in service usage throttling.
+Remember to remove the DynamoDB stack after the Core and Event stacks. Other stacks are running software that access the tables. Removing the tables before removing the running software has the potential to create excessive error rates in your account which may result in service usage throttling.
 
 ## Navigate
 

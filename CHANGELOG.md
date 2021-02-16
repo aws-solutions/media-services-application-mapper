@@ -129,7 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Provide CloudWatch event history in Monitor compartment 
 * Reorganize the selected item/monitoring layout
 * Set the default root object to index.html for the CloudFront distribution
-* Update bucket name in master template
+* Update bucket name in root template
 * URL parameters aren’t documented
 
 ### Contributors
@@ -153,7 +153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 * Supply a master CloudFormation template to simplify single-region installations
-* Install guide updates for master template
+* Install guide updates for root template
 * Add CloudFront distribution to web application install process
 * Simplify build and deploy scripts for 3rd party contributors
 
