@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.0] - February 2021
 ### New
 * Support UDP/RTP connections from MediaLive channel #162
-
-### Changed
+* Documentation update request: Preserve user defined nodes when duplicating tables between two stacks #169
 * Rework Implementation Guide at AWS Solutions Landing Page #172 #177
 * Restructure MSAM project to align with the AWS Solutions layout #168
 
+### Fixed
+* MediaLive console links in Selected Item compartment are broken #167
+* Updating BrowserAppBucket content location #173
+* Remove Qualtrics survey from README.md #175 #179
+
 ### Contributors
 * @morjoan
+* @FahadHassanAmazon
+* @roottool
 * @JimTharioAmazon
 
 
