@@ -1,0 +1,12 @@
+name: joan-test-secret
+
+jobs:
+  simple:
+    runs-on: ubuntu-latest
+    environment: test_env_var
+    steps:
+      - name: test secrets
+        with:
+            env_secret: ${{ secrets.TEST_SECRET }}
+        run: |
+          echo "managed to grab secret"
