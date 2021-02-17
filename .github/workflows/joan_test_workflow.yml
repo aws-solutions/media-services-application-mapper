@@ -1,5 +1,7 @@
-name: joan-test-secret
-
+name: joan-test-secret-workflow
+on: push
+      branches:
+        -v1.9.0
 jobs:
   simple:
     runs-on: ubuntu-latest
