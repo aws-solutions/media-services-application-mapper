@@ -6,10 +6,11 @@ on:
 jobs:
   simple:
     runs-on: ubuntu-latest
+    environment: test_env_var
     steps:
       - name: Initialize AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-            aws-access-key-id: ${{ secrets.JOANS_SECRET }}
-            aws-secret-access-key: ${{ secrets.JOANS_SECRET }}
+            aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
             aws-region: us-west-2
