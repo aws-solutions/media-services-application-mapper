@@ -1,0 +1,22 @@
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: Scan pull request content for security issues
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Security scan step
+        uses: .github/actions/security-scan
+        id: security-scan-test
+        with:
+          who-to-greet: 'MSAM Contributor'
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
+  
