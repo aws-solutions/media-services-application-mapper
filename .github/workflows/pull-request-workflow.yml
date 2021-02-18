@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Security scan step
-        uses: .github/actions/security-scan
+        uses: ./.github/actions/security-scan
         id: security-scan-test
         with:
           who-to-greet: 'MSAM Contributor'
