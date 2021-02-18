@@ -66,16 +66,16 @@ echo Deploy Type = $DEPLOY_TYPE
 
 for R in $REGIONS; do 
   if [ $ACL == "public-read" ]; then
-      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template" --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-      aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
-      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING    
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template" --acl public-read --storage-class INTELLIGENT_TIERING
+      aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read  --storage-class INTELLIGENT_TIERING    
+      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read  --storage-class INTELLIGENT_TIERING    
   else
-      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template" --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-      aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
-      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template"  --storage-class INTELLIGENT_TIERING
+      aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION  --storage-class INTELLIGENT_TIERING
+      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION  --storage-class INTELLIGENT_TIERING
   fi
 
   if [ $DEPLOY_TYPE == "release" ]; then
-      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read --profile $DEPLOY_PROFILE --storage-class INTELLIGENT_TIERING
+      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read  --storage-class INTELLIGENT_TIERING
   fi
 done
