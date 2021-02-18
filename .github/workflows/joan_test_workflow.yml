@@ -1,0 +1,18 @@
+name: joan-test-secret-workflow
+on: 
+  push:
+      branches:
+        - v1.9.0
+jobs:
+  simple:
+    runs-on: ubuntu-latest
+    environment: test_env_var
+    steps:
+      - name: Initialize AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+            aws-access-key-id: ${{ secrets.TEST_SECRET }}
+            aws-secret-access-key: ${{ secrets.TEST_SECRET }}
+            aws-region: us-west-2
+        run: |
+          echo "tested secrets"
