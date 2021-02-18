@@ -27,7 +27,7 @@ jobs:
           VERSION=v1.9.0
           export PATH="$HOME/.local/bin:$PATH"
           env
-          pip install testresource
+          pip install testresources
           pip install --upgrade --force-reinstall -r source/msam/requirements.txt
           cd deployment
           ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
