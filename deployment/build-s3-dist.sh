@@ -101,6 +101,10 @@ echo
 
 cd msam
 chalice package --merge-template merge_template.json build/
+if [ "$?" -ne "0" ]; then
+  echo "ERROR: running chalice package"
+  exit 1
+fi
 cd build/
 # mv zip file to regional asset dir
 mv deployment.zip $build_dist_dir/core_$STAMP.zip
@@ -122,6 +126,10 @@ cd $source_dir/events
 
 # install all the requirements into package dir
 pip install --upgrade --force-reinstall --target ./package -r requirements.txt
+if [ "$?" -ne "0" ]; then
+  echo "ERROR: Installing packages for events."
+  exit 1
+fi
 cd package
 zip -r9 ../$EVENTS_ZIP .
 cd ../
@@ -138,6 +146,10 @@ echo
 
 cd $source_dir/msam/db
 ./makezip.sh
+if [ "$?" -ne "0" ]; then
+  echo "ERROR: Zipping up DB files."
+  exit 1
+fi
 mv dynamodb_resource.zip $build_dist_dir/dynamodb_resource_$STAMP.zip
 
 # add build stamp
@@ -156,6 +168,10 @@ echo web content archive SHA1 is $SHATEXT
 cd $source_dir/web-cloudformation
 cp $build_dist_dir/msam-web-$STAMP.zip .
 ./makezip.sh msam-web-$STAMP.zip
+if [ "$?" -ne "0" ]; then
+  echo "ERROR: Zipping up web files."
+  exit 1
+fi
 mv webcontent_resource.zip $build_dist_dir/webcontent_resource_$STAMP.zip
 cp msam-browser-app-release.template $template_dist_dir
 
