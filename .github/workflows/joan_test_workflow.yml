@@ -27,15 +27,17 @@ jobs:
             aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
             aws-region: ${{ env.REGION }}
+      - name: Update system path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install required system packages
         run: |
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
           #pip install testresources
-          pip install --quiet --upgrade --force-reinstall -r source/msam/requirements.txt
-          if [ $? -ne 0 ]; then
-            echo "ERROR: Installing system packages."
-            exit 1
-          fi
+          pip install --upgrade --force-reinstall -r source/msam/requirements.txt 2> errors.txt
+          cat errors.txt
+          # if [ $? -ne 0 ]; then
+          #   echo "ERROR: Installing system packages."
+          #   exit 1
+          # fi
       # - name: Run build script
       #   run: |
       #     cd deployment
