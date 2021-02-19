@@ -33,11 +33,11 @@ jobs:
         run: |
           #pip install testresources
           pip install --upgrade --force-reinstall -r source/msam/requirements.txt 2> errors.txt
-          cat errors.txt
-          # if [ $? -ne 0 ]; then
-          #   echo "ERROR: Installing system packages."
-          #   exit 1
-          # fi
+          if [ -f errors.txt ]; then
+            echo "ERROR: Errors during system package installation."
+            cat errors.txt
+            exit 1
+          fi      
       # - name: Run build script
       #   run: |
       #     cd deployment
