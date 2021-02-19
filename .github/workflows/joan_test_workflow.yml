@@ -36,5 +36,6 @@ jobs:
           ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
           # ls -lah /home/runner/work/aws-media-services-application-mapper/aws-media-services-application-mapper/deployment/*
       - name: Run deployment script
+        run: |
           cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
           ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r us-west-2 -p default -a none -t dev
