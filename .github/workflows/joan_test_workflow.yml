@@ -1,8 +1,15 @@
 name: joan-test-secret-workflow
+# global environment variables to all jobs
+env: 
+  TEST_BRANCH: v.1.9.0
+  VERSION: v.1.9.0
+  REGION: us-west-2
+  DIST_OUTPUT_BUCKET: msam-dev
+  SOLUTION_NAME: aws-media-services-application-mapper
 on: 
   push:
       branches:
-        - v1.9.0
+        - $TEST_BRANCH
       paths:
         - '**/joan_test_workflow.yml'
 jobs:
@@ -13,20 +20,14 @@ jobs:
       - name: Check out test branch
         uses: actions/checkout@v2.3.4
         with:
-          ref: v1.9.0
+          ref: $TEST_BRANCH
       - name: Initialize AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
             aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-            aws-region: us-west-2
-      - name: Set up environment variables
-        run: |
-          echo "DIST_OUTPUT_BUCKET=msam-dev" >> $GITHUB_ENV
-          echo "SOLUTION_NAME=aws-media-services-application-mapper" >> $GITHUB_ENV
-          echo "VERSION=v1.9.0" >> $GITHUB_ENV
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Run build script
+            aws-region: $REGION
+      - name: Install required system packages
         run: |
           pip install testresources
           pip install --quiet --upgrade --force-reinstall -r source/msam/requirements.txt
@@ -34,10 +35,13 @@ jobs:
             echo "ERROR: Installing system packages."
             exit 1
           fi
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Run build script
+        run: |
           cd deployment
-          ./build-s3-dist.sh ${{ env.DIST_OUTPUT_BUCKET }} ${{ env.SOLUTION_NAME }} ${{ env.VERSION }}
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
       - name: Deploy to S3
         run: |
           #ls -lah /home/runner/work/aws-media-services-application-mapper/aws-media-services-application-mapper/deployment/*
-          cd $RUNNER_WORKSPACE/${{ env.SOLUTION_NAME }}/deployment
-          ./deploy.sh -b ${{ env.DIST_OUTPUT_BUCKET }} -s ${{ env.SOLUTION_NAME }} -v ${{ env.VERSION }} -r us-west-2 -a none -t dev
+          cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r us-west-2 -a none -t dev
