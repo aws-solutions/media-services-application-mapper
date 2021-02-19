@@ -15,12 +15,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: test_env_var
+    # use a specific environment for this build that has secrets defined and protection rules in place, if needed
+    environment: test_env_var 
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-        with:
-          ref: ${{ env.TEST_BRANCH }}
       - name: Initialize AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
