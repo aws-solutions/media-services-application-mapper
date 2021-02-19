@@ -9,7 +9,7 @@ env:
 on: 
   push:
       branches:
-        - ${{ env.TEST_BRANCH }} #can't use a var here
+        - v1.9.0 #can't use a var here
       paths:
         - '**/joan_test_workflow.yml'
 jobs:
