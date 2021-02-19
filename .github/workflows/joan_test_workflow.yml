@@ -1,8 +1,8 @@
 name: joan-test-secret-workflow
 # global environment variables to all jobs
 env: 
-  TEST_BRANCH: v.1.9.0
-  VERSION: v.1.9.0
+  TEST_BRANCH: v1.9.0
+  VERSION: v1.9.0
   REGION: us-west-2
   DIST_OUTPUT_BUCKET: msam-dev
   SOLUTION_NAME: aws-media-services-application-mapper
