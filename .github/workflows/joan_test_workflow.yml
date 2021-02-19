@@ -33,7 +33,8 @@ jobs:
         run: |
           pip install testresources
           pip install --upgrade --force-reinstall -r source/msam/requirements.txt 2> error.txt
-          if [ -f error.txt ]; then
+          ls -lah error.txt
+          if [ -s error.txt ]; then
             echo "ERROR: System package installation failed."
             cat error.txt
             rm error.txt
