@@ -7,14 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     name: Scan pull request content for security issues
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Git AV Scan
+        with:
+          fetch-depth: 0 
+      - name: ClamAV Scan
         uses: djdefi/gitavscan@main
         with:
           full: '--full'
+      - name: Trufflehog Scan
+        uses: edplato/trufflehog-actions-scan@master
+        with:
+          scanArguments: "--regex --entropy=False"
+
       # - name: Security scan step
       #   uses: ./.github/actions/security-scan
       #   id: security-scan-test
@@ -23,4 +28,3 @@ jobs:
       # Use the output from the `hello` step
       # - name: Get the output time
       #   run: echo "The time was ${{ steps.hello.outputs.time }}"
-  
