@@ -1,0 +1,8 @@
+testresources
+boto3
+botocore
+chalice
+jsonpath_ng
+fuzzywuzzy
+stringcase
+requests
