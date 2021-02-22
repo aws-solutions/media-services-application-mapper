@@ -6,3 +6,4 @@ jsonpath_ng
 fuzzywuzzy
 stringcase
 requests
+pylint

@@ -52,4 +52,12 @@ jobs:
       - name: Deploy to S3
         run: |
           cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v PR${{ steps.extract_pr.outputs.number }} -r 'us-west-2 eu-west-1' -a none -t dev
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v PR${{ steps.extract_pr.outputs.number }} -r 'us-west-2 eu-west-1' -t dev
+      - name: Check with cfn-nag
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: deployment/global-s3-assets
+      - name: cfn-lint
+        uses: scottbrenner/cfn-lint-action@master
+        with:
+          args: 'deployment/global-s3-assets/*release.template'
