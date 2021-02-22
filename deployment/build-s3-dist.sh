@@ -160,7 +160,7 @@ echo "updating browser app build stamp"
 cp -f js/app/build-tmp.js js/app/build.js
 sed -i -e "s/DEV_0_0_0/$STAMP/g" js/app/build.js
 zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
-rm js/app/build.js-e
+rm -f js/app/build.js-e
 
 # create a digest for the web content
 SHATEXT="`sha1sum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
