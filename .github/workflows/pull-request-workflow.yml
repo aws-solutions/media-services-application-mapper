@@ -1,16 +1,28 @@
+name: Pull Request Workflow
+env: 
+  REGION: us-west-2
+  DIST_OUTPUT_BUCKET: msam-pr-build
+  SOLUTION_NAME: aws-media-services-application-mapper
+
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
+    paths-ignore:
+    - 'docs/**'
+    - '**/*.md'
+    - '**/*.txt'
 
 jobs:
   pull-request-workflow:
     runs-on: ubuntu-latest
-    name: Scan pull request content for security issues
+    name: Scan pull request content for security issues and build
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 
       - name: ClamAV Scan
         uses: djdefi/gitavscan@main
         with:
@@ -18,13 +30,28 @@ jobs:
       - name: Trufflehog Scan
         uses: edplato/trufflehog-actions-scan@master
         with:
-          scanArguments: "--regex --entropy=False"
-
-      # - name: Security scan step
-      #   uses: ./.github/actions/security-scan
-      #   id: security-scan-test
-      #   with:
-      #     who-to-greet: 'MSAM Contributor'
-      # Use the output from the `hello` step
-      # - name: Get the output time
-      #   run: echo "The time was ${{ steps.hello.outputs.time }}"
+          scanArguments: '--regex --entropy=False'
+      - name: Initialize AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+            aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+            aws-region: ${{ env.REGION }}
+      - name: Update system path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install required system packages
+        run: |
+          pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
+          if [ -s error.txt ]; then
+            echo "ERROR: System package installation failed."
+            cat error.txt
+            exit 1
+          fi
+      - name: Run build script
+        run: |
+          cd deployment
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME ${{ steps.extract_branch.outputs.branch }}
+      - name: Deploy to S3
+        run: |
+          cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v ${{ steps.extract_branch.outputs.branch }} -r 'us-west-2 eu-west-1' -a none -t dev
