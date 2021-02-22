@@ -9,32 +9,37 @@ on:
     types: [opened, edited, reopened, synchronize]
     
 jobs:
-  pull-request-workflow:
+  scan-build-upload-job:
     runs-on: ubuntu-latest
     environment: test_env_var 
-
-    name: Scan, build and review pull request content
+    name: Scan, build and upload pull request
     steps:
+      # get the PR number to use as the build version
       - name: Extract PR Number
         shell: bash
         run: echo "##[set-output name=number;]$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
         id: extract_pr
+      # check out the merged PR
       - name: Checkout
         uses: actions/checkout@v2
+      # scan for any malware in the commit
       - name: ClamAV Scan
         uses: djdefi/gitavscan@main
         with:
           full: '--full'
+      # scan for various types of keys and tokens
       - name: Trufflehog Scan
         uses: edplato/trufflehog-actions-scan@master
         with:
           scanArguments: '--regex --entropy=False'
+      # configure the credentials for S3 upload
       - name: Initialize AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
             aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
             aws-region: ${{ env.REGION }}
+      # set up for building the source
       - name: Update system path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install required system packages
@@ -45,21 +50,37 @@ jobs:
             cat error.txt
             exit 1
           fi
+      # build all the templates and zips
       - name: Run build script
         run: |
           cd deployment
           ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME PR${{ steps.extract_pr.outputs.number }}
+      # copy to the PR build location
       - name: Deploy to S3
         run: |
           cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
           ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v PR${{ steps.extract_pr.outputs.number }} -r 'us-west-2 eu-west-1' -t dev -a none
+  cfn-lint-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check build with cfn-lint
+    steps:
+      # check the templates with cfn-lint
       - name: Check with cfn-lint
         uses: scottbrenner/cfn-lint-action@master
         with:
           args: 'deployment/global-s3-assets/*release.template'
+        # this is enabled for testing purposes
         # continue-on-error: true
+  cfn-nag-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check build with cfn-nag
+    steps:
+      # check the templates with cfn-nag
       - name: Check with cfn-nag
         uses: stelligent/cfn_nag@master
         with:
           input_path: deployment/global-s3-assets
+        # this is enabled for testing purposes
         # continue-on-error: true
