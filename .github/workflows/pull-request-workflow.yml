@@ -15,10 +15,10 @@ jobs:
 
     name: Scan, build and review pull request content
     steps:
-      - name: Extract branch name
+      - name: Extract PR Number
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+        run: echo "##[set-output name=number;]$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+        id: extract_pr
       - name: Checkout
         uses: actions/checkout@v2
       - name: ClamAV Scan
@@ -48,8 +48,8 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
-          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME ${{ steps.extract_branch.outputs.branch }}
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME PR${{ steps.extract_pr.outputs.number }}
       - name: Deploy to S3
         run: |
           cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v ${{ steps.extract_branch.outputs.branch }} -r 'us-west-2 eu-west-1' -a none -t dev
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v PR${{ steps.extract_pr.outputs.number }} -r 'us-west-2 eu-west-1' -a none -t dev
