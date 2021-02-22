@@ -8,7 +8,13 @@ ZIP="$ORIGIN/webcontent_resource.zip"
 HTML_ZIP=$1
 
 rm -f $ZIP
-pip install --force-reinstall --target ./package requests crhelper
+pip install --force-reinstall --target ./package requests crhelper 2> error.txt
+if [ -s error.txt ]; then
+    echo "ERROR: System package installation failed."
+    cat error.txt
+    rm error.txt
+    exit 1
+fi
 cd package
 zip -r9 $ZIP .
 cd $ORIGIN

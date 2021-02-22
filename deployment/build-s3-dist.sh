@@ -103,7 +103,7 @@ echo
 
 cd msam
 chalice package --merge-template merge_template.json build/
-if [ "$?" -ne "0" ]; then
+if [ $? -ne 0 ]; then
   echo "ERROR: running chalice package"
   exit 1
 fi
@@ -127,11 +127,14 @@ EVENTS_ZIP="events.zip"
 cd $source_dir/events
 
 # install all the requirements into package dir
-pip install --upgrade --force-reinstall --target ./package -r requirements.txt
-if [ "$?" -ne "0" ]; then
-  echo "ERROR: Installing packages for events."
+pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
+if [ -s error.txt ]; then
+  echo "ERROR: Event collector package installation failed."
+  cat error.txt
+  rm error.txt
   exit 1
 fi
+
 cd package
 zip -r9 ../$EVENTS_ZIP .
 cd ../
@@ -148,8 +151,8 @@ echo
 
 cd $source_dir/msam/db
 ./makezip.sh
-if [ "$?" -ne "0" ]; then
-  echo "ERROR: Zipping up DB files."
+if [ $? -ne 0 ]; then
+  echo "ERROR: Packaging up DB files."
   exit 1
 fi
 mv dynamodb_resource.zip $build_dist_dir/dynamodb_resource_$STAMP.zip
@@ -170,8 +173,8 @@ echo web content archive SHA1 is $SHATEXT
 cd $source_dir/web-cloudformation
 cp $build_dist_dir/msam-web-$STAMP.zip .
 ./makezip.sh msam-web-$STAMP.zip
-if [ "$?" -ne "0" ]; then
-  echo "ERROR: Zipping up web files."
+if [ $? -ne 0 ]; then
+  echo "ERROR: Packaging up web files."
   exit 1
 fi
 mv webcontent_resource.zip $build_dist_dir/webcontent_resource_$STAMP.zip
