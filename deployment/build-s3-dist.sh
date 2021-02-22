@@ -16,6 +16,8 @@
 #
 #  - version-code: version of the package
 
+set -euo pipefail
+
 # only option h is allowed to display help message
 while getopts ':h' OPTION; do
   case "$OPTION" in

@@ -3,6 +3,8 @@
 # Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+set -euo pipefail
+
 # local folders
 template_dir="$PWD"
 template_dist_dir="$template_dir/global-s3-assets"
