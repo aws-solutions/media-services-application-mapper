@@ -11,7 +11,9 @@ on:
 jobs:
   pull-request-workflow:
     runs-on: ubuntu-latest
-    name: Scan pull request content for security issues and build
+    environment: test_env_var 
+
+    name: Scan, build and review pull request content
     steps:
       - name: Extract branch name
         shell: bash
