@@ -69,7 +69,7 @@ As of release v1.5.0, the CloudFormation templates distributed for MSAM include 
 
 If you need to upgrade your installation from the individual templates to the root template, see this note below about migrating your DynamoDB tables.
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper.template`
+`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template`
 
 #### Input Parameters
 

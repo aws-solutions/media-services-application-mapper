@@ -104,7 +104,7 @@ s3://my-bucket-aws-region/solution-name/latest/
 2.  Get the link of the solution template uploaded to your Amazon S3 bucket.
 
 ``` 
-s3://my-bucket-aws-region/solution-name/latest/aws-media-services-application-mapper.template
+s3://my-bucket-aws-region/solution-name/latest/aws-media-services-application-mapper-release.template
 
 OR
 
