@@ -1,2 +1,2 @@
 FROM hawkeyesec/scanner-cli:latest
-WORKDIR /github/workspace/source
+ENTRYPOINT ["hawkeye" "scan", "-t", "/github/workspace/source"]
