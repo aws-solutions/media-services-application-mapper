@@ -3,6 +3,4 @@ name: 'Hawkeye CLI Scanner'
 description: Runs the Hawkeye CLI scanner for MSAM
 runs:
   using: 'docker'
-  image: 'docker://hawkeyesec/scanner-cli:latest'
-  entrypoint: 'hawkeye scan -t /github/workspace/source'
-  
+  image: 'Dockerfile'
