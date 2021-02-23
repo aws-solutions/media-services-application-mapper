@@ -89,4 +89,14 @@ jobs:
           name: cloudformation-templates
       - name: Check with cfn-nag
         uses: stelligent/cfn_nag@master
-  
+  hawkeye-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check source code with Hawkeye
+    steps:
+      # check out the merged PR
+      - name: Checkout
+        uses: actions/checkout@v2
+      # check it with Hawkeye
+      - name: Hawkeye Scanner
+        uses: ./.github/actions/hawkeye-scan
