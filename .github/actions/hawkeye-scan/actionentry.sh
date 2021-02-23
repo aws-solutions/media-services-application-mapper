@@ -1,2 +1,4 @@
 #!/bin/bash
-hawkeye scan -t /github/workspace/source
+# fail on medium or greater
+# scan everything in the source folder
+hawkeye scan -f medium -t /github/workspace/source
