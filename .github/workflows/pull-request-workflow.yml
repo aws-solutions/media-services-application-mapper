@@ -74,15 +74,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cloudformation-templates
-      - name: Display structure of the CWD
-        run: ls -R
-      # check the templates with cfn-lint
-      # - name: Check with cfn-lint
-      #   uses: scottbrenner/cfn-lint-action@master
-      #   with:
-      #     args: 'deployment/global-s3-assets/*release.template'
-        # this is enabled for testing purposes
-        # continue-on-error: true
+      - name: Check with cfn-lint
+        uses: scottbrenner/cfn-lint-action@master
+        with:
+          args: '*.template'
   cfn-nag-check-job:
     needs: scan-build-upload-job
     runs-on: ubuntu-latest
@@ -92,13 +87,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cloudformation-templates
-      - name: Display structure of the CWD
-        run: ls -R
-      # check the templates with cfn-nag
-      # - name: Check with cfn-nag
-      #   uses: stelligent/cfn_nag@master
-      #   with:
-      #     input_path: deployment/global-s3-assets
-        # this is enabled for testing purposes
-        # continue-on-error: true
+      - name: Check with cfn-nag
+        uses: stelligent/cfn_nag@master
   
