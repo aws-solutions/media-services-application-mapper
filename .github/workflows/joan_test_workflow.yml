@@ -62,7 +62,6 @@ jobs:
       - name: Create CloudFormation stack based on last job's build
         run: |
           TEMPLATE='https://$DIST_OUTPUT_BUCKET.s3.$REGION.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME.template"
-          response="$( aws cloudformation create-stack --stack-name MSAM-test-latest-master --template-url $TEMPLATE --region $REGION |\
-                    tr -d '{}' |\
-                    cut '-d"' -f4 )"
-          echo "Stack ID created: ${response}.StackId"
+          echo $TEMPLATE
+          response="$( aws cloudformation create-stack --stack-name MSAM-test-latest-master --template-url $TEMPLATE --region $REGION )"
+          echo $response
