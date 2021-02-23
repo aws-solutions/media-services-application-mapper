@@ -99,7 +99,7 @@
                         }
                     },
                     "ViewerCertificate": {
-                        "CloudFrontDefaultCertificate": "true",
+                        "CloudFrontDefaultCertificate": true,
                         "MinimumProtocolVersion": "TLSv1"
                     }
                 }
@@ -242,7 +242,6 @@
             }
         },
         "MSAMWebInvalidator": {
-            "DependsOn": ["MSAMAppBucketCloudFrontDistribution", "MSAMBrowserAppBucket"],
             "Type": "AWS::CloudFormation::CustomResource",
             "Properties": {
                 "ServiceToken": {

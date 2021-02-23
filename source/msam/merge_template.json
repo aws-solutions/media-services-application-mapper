@@ -576,7 +576,7 @@
             "Type": "AWS::ApiGateway::ApiKey",
             "Properties": {
                 "Description": "MSAM default API key",
-                "Enabled": "true"
+                "Enabled": true
             }
         }
     },
