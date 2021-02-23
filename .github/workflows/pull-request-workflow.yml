@@ -12,7 +12,7 @@ jobs:
   scan-build-upload-job:
     runs-on: ubuntu-latest
     environment: test_env_var 
-    name: Scan, build and upload pull request
+    name: Security scan, build and upload pull request
     steps:
       # get the PR number to use as the build version
       - name: Extract PR Number
@@ -60,11 +60,20 @@ jobs:
         run: |
           cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
           ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v PR${{ steps.extract_pr.outputs.number }} -r 'us-west-2 eu-west-1' -t dev -a none
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: cloudformation-templates
+          path: deployment/global-s3-assets/*release.template
   cfn-lint-check-job:
     needs: scan-build-upload-job
     runs-on: ubuntu-latest
-    name: Check build with cfn-lint
+    name: Check templates with cfn-lint
     steps:
+      - name: Download build templates
+        uses: actions/download-artifact@v2
+        with:
+          name: cloudformation-templates
       # check the templates with cfn-lint
       - name: Check with cfn-lint
         uses: scottbrenner/cfn-lint-action@master
@@ -75,8 +84,12 @@ jobs:
   cfn-nag-check-job:
     needs: scan-build-upload-job
     runs-on: ubuntu-latest
-    name: Check build with cfn-nag
+    name: Check templates with cfn-nag
     steps:
+      - name: Download build templates
+        uses: actions/download-artifact@v2
+        with:
+          name: cloudformation-templates
       # check the templates with cfn-nag
       - name: Check with cfn-nag
         uses: stelligent/cfn_nag@master
@@ -84,3 +97,4 @@ jobs:
           input_path: deployment/global-s3-assets
         # this is enabled for testing purposes
         # continue-on-error: true
+  
