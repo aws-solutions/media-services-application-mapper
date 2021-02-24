@@ -6,7 +6,7 @@ on:
           description: 'Version number of release (e.g. v1.9.0)'
           required: true
         region:
-          description: 'Where to deploy'
+          description: 'Region to deploy'
           required: true
 env: 
   DIST_OUTPUT_BUCKET: msam-dev
@@ -27,26 +27,21 @@ jobs:
             aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
             aws-region: ${{ github.event.inputs.region }}
-      - name: Set version number
+      - name: Update system path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install required system packages
         run: |
-          env
-      # - name: Update system path
-      #   run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      # - name: Install required system packages
-      #   run: |
-      #     pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
-      #     if [ -s error.txt ]; then
-      #       echo "ERROR: System package installation failed."
-      #       cat error.txt
-      #       exit 1
-      #     fi
-      # - name: Run build script
-      #   run: |
-      #     cd deployment
-      #     ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
-      # - name: Deploy to S3
-      #   run: |
-      #     cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
-      #     # if we're building master, deploy this like a release
-      #     # if not, deploy as dev
-      #     ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r us-west-2 -a none -t release
+          pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
+          if [ -s error.txt ]; then
+            echo "ERROR: System package installation failed."
+            cat error.txt
+            exit 1
+          fi
+      - name: Run build script
+        run: |
+          cd deployment
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME ${{ github.event.inputs.version }}
+      - name: Deploy to S3
+        run: |
+          cd deployment
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v ${{ github.event.inputs.version }} -r us-west-2 -a none -t release
