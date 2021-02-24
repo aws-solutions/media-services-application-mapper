@@ -44,7 +44,7 @@ jobs:
           ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
       - name: Deploy to S3
         run: |
-          cd $RUNNER_WORKSPACE/$SOLUTION_NAME/deployment
+          cd deployment
           # if we're building master, do a release deploy
           if [ "$GITHUB_REF" == "refs/heads/master" ]; then
             ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r us-west-2 -a none -t release
