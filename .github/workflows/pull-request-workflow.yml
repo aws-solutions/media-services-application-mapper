@@ -6,7 +6,7 @@ env:
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [opened, edited, reopened]
     
 jobs:
   scan-build-upload-job:
