@@ -100,3 +100,16 @@ jobs:
       # check it with Hawkeye
       - name: Hawkeye Scanner
         uses: ./.github/actions/hawkeye-scan
+  pylint-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check source code with pylint
+    steps:
+      # check out the merged PR
+      - name: Checkout
+        uses: actions/checkout@v2
+      # check it with pylint
+      - name: Check with pylint
+        run: |
+          cd source
+          ./tools/pylint.sh
