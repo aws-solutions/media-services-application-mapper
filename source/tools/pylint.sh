@@ -9,10 +9,18 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# ignore line too long problems (C0301)
-# ignore similar code problems (R0801)
+# IGNORED RULES
+# C0301 Line too long
+# C0302 Too many lines in module
+# R0801 Similar lines in files
+# R1702 Too many nested blocks
+# R0912 Too many branches
+# R0914 Too many local variables
+# R0915 Too many statements
+# W0703 Catching too general exception
+# W0640 Cell variable
 
 find . -iname '*.py' | \
     grep "/package/" --invert-match | \
     grep "/.aws-sam/" --invert-match | \
-    xargs pylint -d C0301,R0801,R1702,R0912,R0914,R0915
+    xargs pylint -d C0301,C0302,R0801,R1702,R0912,R0914,R0915,W0703,W0640
