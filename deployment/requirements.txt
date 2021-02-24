@@ -8,3 +8,4 @@ stringcase
 requests
 pylint
 defusedxml
+crhelper
