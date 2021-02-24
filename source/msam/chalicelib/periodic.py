@@ -5,7 +5,7 @@ This file contains helper functions for updating the cache.
 """
 
 import os
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 import json
 
 import boto3
