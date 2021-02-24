@@ -269,14 +269,22 @@ Each table is configured for on-demand capacity by the CloudFormation template. 
 
 ## Versions and Updates
 
-Each template includes a timestamp that indicates it's revision level. The timestamp is shown in the description of each template.
+Each deployed stack includes the release version number in the description. Release version numbers follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) specification.
 
 ```
-Media Services Application Mapper (MSAM) browser application (ID: 1537396573)
-Media Services Application Mapper (MSAM) cloud API (ID: 1537396573)
+(SO0048) Media Services Application Mapper Root Stack v1.8.0
+Media Services Application Mapper REST API and Tasks v1.8.0
+Media Services Application Mapper Event Capture v1.8.0
+Media Services Application Mapper DynamoDB Tables v1.8.0
+Media Services Application Mapper Browser Application v1.8.0
+Media Services Application Mapper IAM Roles v1.8.0
 ```
 
-You can also view the build timestamp in the tool by selecting the Tools menu and MSAM Build Numbers menu item. A dialog box will show the timestamps of each component and show a warning if they are seven or more days apart.
+Releases prior to v1.8.0 used a different identification scheme using build timestamps that could be difficult to trace.
+
+You can view information about the current and previous releases on the GitHub site on the [Releases](https://github.com/awslabs/aws-media-services-application-mapper/releases) page.
+
+You can view the build timestamp in the tool by selecting the Tools menu and MSAM Build Numbers menu item. A dialog box will show the timestamps of each component and show a warning if they are seven or more days apart.
 
 Any updates provided will be done via updates to the CloudFormation template files. In the CloudFormation console, click on the specific stack to be updated. From the top-right select Update Stack and point it to the stack link, check the IAM resource check boxes (if they are applicable to this specific update), and update the stack. 
 
