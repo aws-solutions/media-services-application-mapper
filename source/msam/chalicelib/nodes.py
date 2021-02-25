@@ -4,7 +4,6 @@
 This file contains helper functions for building the node cache.
 """
 
-import hashlib
 import json
 import os
 import time
