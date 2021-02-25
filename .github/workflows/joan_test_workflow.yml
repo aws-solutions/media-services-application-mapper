@@ -1,33 +1,56 @@
-name: push-workflow
+name: Push or Pull Request Workflow
+
 # global environment variables to all jobs
 env: 
   REGION: us-west-2
-  DIST_OUTPUT_BUCKET: msam-dev
   SOLUTION_NAME: aws-media-services-application-mapper
+
 on: 
   push:
     paths-ignore:
     - 'docs/**'
     - '**/*.md'
-    - '**/*.txt'
+    - '**/*.txt
+  pull_request:
+    types: [opened, edited, reopened]
+
 jobs:
-  build-and-deploy:
+  scan-build-upload-job:
     runs-on: ubuntu-latest
     # use a specific environment for this build that has secrets defined and protection rules in place, if needed
     environment: test_env_var 
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
+      # scan for any malware in the commit
+      - name: ClamAV Scan
+        uses: djdefi/gitavscan@main
+        with:
+          full: '--full'
+      # scan for various types of keys and tokens
+      - name: Trufflehog Scan
+        uses: edplato/trufflehog-actions-scan@master
+        with:
+          scanArguments: '--regex --entropy=False'      
       - name: Initialize AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-            aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-            aws-region: ${{ env.REGION }}
-      - name: Generate version number out of commit ID
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.REGION }}
+      - name: Set up PR variables
+        if: github.event_name == 'pull_request'
+        run: |
+          PR_ID=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "VERSION=PR$PR_ID" >> $GITHUB_ENV
+          echo "DIST_OUTPUT_BUCKET=msam-pr-build" >> $GITHUB_ENV
+          echo "DEPLOY_REGIONS=us-west-2 eu-west-1" >> $GITHUB_ENV
+      - name: Set up Push variables
+        if: github.event_name == 'push'
         run: |
           echo "VERSION=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-          echo "my part sha ${GITHUB_SHA:0:7}"
+          echo "DIST_OUTPUT_BUCKET=msam-dev" >> $GITHUB_ENV
+          echo "DEPLOY_REGIONS=us-west-2" >> $GITHUB_ENV
       - name: Update system path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install required system packages
@@ -47,15 +70,20 @@ jobs:
           cd deployment
           # if we're building master, do a release deploy
           if [ "$GITHUB_REF" == "refs/heads/master" ]; then
-            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r us-west-2 -a none -t release
+            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $DEPLOY_REGIONS -a none -t release
           # if not, do a dev deploy
           else
-            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r us-west-2 -a none -t dev
+            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $DEPLOY_REGIONS -a none -t dev
           fi
+      - name: Store templates for check jobs
+        uses: actions/upload-artifact@v2
+        with:
+          name: cloudformation-templates
+          path: deployment/global-s3-assets/*release.template
 
-  master-branch-deploy-test:
+  master-branch-deploy-cfn:
     runs-on: ubuntu-latest
-    needs: build-and-deploy
+    needs: [cfn-lint-check-job, cfn-nag-check-job, hawkeye-check-job, pylint-check-job]
     # use a specific environment for this build that has secrets defined and protection rules in place, if needed
     environment: test_install_env
     if: github.ref == 'refs/heads/master'
@@ -75,3 +103,65 @@ jobs:
           echo $TEMPLATE
           response="$( aws cloudformation create-stack --stack-name MSAM-test-master-$VERSION --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
           echo $response
+
+  cfn-lint-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check templates with cfn-lint
+    steps:
+      - name: Download build templates
+        uses: actions/download-artifact@v2
+        with:
+          name: cloudformation-templates
+      - name: Check with cfn-lint
+        uses: scottbrenner/cfn-lint-action@master
+        with:
+          args: '*.template'
+
+  cfn-nag-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check templates with cfn-nag
+    steps:
+      - name: Download build templates
+        uses: actions/download-artifact@v2
+        with:
+          name: cloudformation-templates
+      - name: Check with cfn-nag
+        uses: stelligent/cfn_nag@master
+
+  hawkeye-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check source code with Hawkeye
+    steps:
+      # check out the merged PR
+      - name: Checkout
+        uses: actions/checkout@v2
+      # check it with Hawkeye
+      - name: Hawkeye Scanner
+        uses: ./.github/actions/hawkeye-scan
+
+  pylint-check-job:
+    needs: scan-build-upload-job
+    runs-on: ubuntu-latest
+    name: Check source code with pylint
+    steps:
+      # check out the merged PR
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Update system path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install required system packages
+        run: |
+          pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
+          if [ -s error.txt ]; then
+            echo "ERROR: System package installation failed."
+            cat error.txt
+            exit 1
+          fi
+      # check it with pylint
+      - name: Check with pylint
+        run: |
+          cd source
+          ./tools/pylint.sh
