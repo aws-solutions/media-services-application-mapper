@@ -10,7 +10,7 @@ on:
     paths-ignore:
     - 'docs/**'
     - '**/*.md'
-    - '**/*.txt
+    - '**/*.txt'
   pull_request:
     types: [opened, edited, reopened]
 
