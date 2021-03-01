@@ -13,6 +13,8 @@ on:
     - '**/*.txt'
   pull_request:
     types: [opened, edited, reopened]
+  pull_request_target:
+    types: [opened, edited, reopened]
 
 jobs:
   scan-build-upload-job:
