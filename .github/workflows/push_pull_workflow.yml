@@ -13,8 +13,6 @@ on:
     - '**/*.txt'
   pull_request:
     types: [opened, edited, reopened]
-  pull_request_target:
-    types: [opened, edited, reopened]
 
 jobs:
   scan-build-upload-job:
@@ -49,6 +47,7 @@ jobs:
           echo "VERSION=PR$PR_ID" >> $GITHUB_ENV
           echo "DIST_OUTPUT_BUCKET=msam-pr-build" >> $GITHUB_ENV
           echo "DEPLOY_REGIONS=us-west-2 eu-west-1" >> $GITHUB_ENV
+          echo env
       - name: Set up Push variables
         if: github.event_name == 'push'
         run: |
