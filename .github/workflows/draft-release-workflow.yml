@@ -1,17 +1,17 @@
-name: Release Workflow
+name: Draft Release Test Workflow
 on:
   release:
-    types: [created, edited, published]
+    types: [created, edited]
 env:
   REGION: us-west-2
-  DIST_OUTPUT_BUCKET: rodeolabz
+  DIST_OUTPUT_BUCKET: msam-dev
   SOLUTION_NAME: aws-media-services-application-mapper
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    # use a specific environment for this build that has secrets defined and protection rules in place, if needed
-    environment: release_env 
+    # use a specific release environment for this build that has secrets defined and protection rules in place
+    environment: test_env_var 
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
@@ -40,8 +40,8 @@ jobs:
       - name: Deploy to S3
         run: |
           cd deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $GITHUB_REF -r $REGIONS_TO_DEPLOY -a public-read -t release
-    
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $GITHUB_REF -r $REGIONS_TO_DEPLOY -a none -t release
+  
   install_msam: 
     needs: build-and-deploy
     runs-on: ubuntu-latest
