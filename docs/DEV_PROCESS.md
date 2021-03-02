@@ -1,6 +1,6 @@
 # Development Process Overview
 
-This document describes the Media Service Application Mapper team's development process, how we work with GitHub and how we manage contributions to the solution.
+This document describes the Media Service Application Mapper team's development process and environment. The first part of the document describes how we work with GitHub and how we manage contributions to the solution. The second part of the document describes the development environment needed to customize and build the solution.
 
 ## Issues
 
