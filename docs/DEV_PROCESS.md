@@ -16,7 +16,7 @@ The MSAM team uses a single [Milestone](https://github.com/awslabs/aws-media-ser
 
 The existing milestone for the upcoming release is reviewed and any needed adjustments are made before development starts. The Issues associated with the milestone are never final until the release completes. Changes will be made to the plan if information changes while the work is progressing.
 
-Before development starts for a new release, the project team will create a new branch in the repository named after the version number of the release like *vX.Y.Z*. Commits are pushed to this branch during development by the project team members. The version branch will be merged into the truck after release
+Before development starts for a new release, the project team will create a new branch in the repository named after the version number of the release like *vX.Y.Z*. Commits are pushed to this branch during development by the project team members. The version branch will be merged into the trunk after release
 
 ### Development
 
@@ -82,7 +82,9 @@ This is a tool that scans the git repository for various secrets and token patte
 
 Run truffleHog from the root folder of your repository with the following command:
 
-`trufflehog --regex --entropy=False .`
+```
+trufflehog --regex --entropy=False .
+```
 
 The tool will output any potential findings.
 
@@ -92,7 +94,7 @@ The tool will output any potential findings.
 
 Similar to truffleHog, this is a tool that prevents you from committing secrets and credentials into git repositories.
 
-After you install this tool into your system, run this command from the root folder of your forked or cloned repository:
+After you install this tool into your system, run these commands from the root folder of your forked or cloned repository:
 
 ```
 git secrets --install
@@ -107,7 +109,7 @@ You will see messages like:
 ✓ Installed prepare-commit-msg hook to [...]/.git/hooks/prepare-commit-msg
 ```
 
-This tool will be used during a commit to check your incoming changes for secrets. When configured as a git hook, the commit will be stopped if any potentially sensitive data is detected.
+This tool will be used before a commit to check your incoming changes for secrets. When configured as a git hook, the commit will be prevented if any potentially sensitive data is detected.
 
 ### Continuous Integration and Deployment
 
