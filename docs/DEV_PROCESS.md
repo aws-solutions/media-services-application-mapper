@@ -4,11 +4,11 @@ This document describes the Media Service Application Mapper team's development 
 
 ## Issues
 
-Use Issues to track new features, bugs, documentation changes and anything requiring a response. The best way to contact the development team to ask a question or suggest a change is through Issues. The project team will receive a notification when a new Issue is submitted and a member will review the Issue and update the labels as needed. Watch for comments to Issues you've submitted in case a team member or other contributors needs to ask you a question or supply an answer.
+Use [Issues](https://github.com/awslabs/aws-media-services-application-mapper/issues) to track new features, bugs, documentation changes and anything requiring a response. The best way to contact the development team to ask a question or suggest a change is through Issues. The project team will receive a notification when a new Issue is submitted and a member will review the Issue and update the labels as needed. Watch for comments to Issues you've submitted in case a team member or other contributors needs to ask you a question or supply an answer.
 
 ## Milestones and Projects
 
-The MSAM team uses a single Milestone to track the Issues included in the related release. Milestones are named *vX.Y.Z* matching the version number of the release. The team will also create a new project board for the release that tracks the Issues in the milestone.
+The MSAM team uses a single [Milestone](https://github.com/awslabs/aws-media-services-application-mapper/milestones) to track the Issues included in the related release. Milestones are named *vX.Y.Z* matching the version number of the release. The team will also create a new [Project](https://github.com/awslabs/aws-media-services-application-mapper/projects) board for the release that tracks the Issues in the milestone.
 
 ## Stages
 
