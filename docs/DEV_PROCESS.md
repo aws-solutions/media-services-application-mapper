@@ -94,7 +94,10 @@ Similar to truffleHog, this is a tool that prevents you from committing secrets 
 
 After you install this tool into your system, run this command from the root folder of your forked or cloned repository:
 
-`git secrets --install`
+```
+git secrets --install
+git secrets --register-aws
+```
 
 You will see messages like:
 
