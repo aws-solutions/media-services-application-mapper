@@ -101,11 +101,23 @@
                     "ViewerCertificate": {
                         "CloudFrontDefaultCertificate": true,
                         "MinimumProtocolVersion": "TLSv1"
+                    },
+                    "Logging": {
+                        "Bucket": {
+                            "Fn::Join": [
+                                "", [{
+                                        "Ref": "MSAMBrowserAppLoggingBucket"
+                                    },
+                                    ".s3.amazonaws.com"
+                                ]
+                            ]
+                        },
+                        "Prefix": "cf/"
                     }
                 }
             }
         },
-        "MSAMAppBucketPolicy": {
+        "MSAMBrowserAppBucketPolicy": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
                 "Bucket": {
@@ -156,6 +168,37 @@
                         "AllowedOrigins": [
                             "*"
                         ]
+                    }]
+                },
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [{
+                        "ServerSideEncryptionByDefault": {
+                            "SSEAlgorithm": "AES256"
+                        }
+                    }]
+                }
+            }
+        },
+        "MSAMBrowserAppLoggingBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "LogDeliveryWrite",
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [{
+                        "ServerSideEncryptionByDefault": {
+                            "SSEAlgorithm": "AES256"
+                        }
+                    }]
+                },
+                "LifecycleConfiguration": {
+                    "Rules": [{
+                        "AbortIncompleteMultipartUpload": {
+                            "DaysAfterInitiation": 5
+                        },
+                        "ExpirationInDays": 365,
+                        "Id": "Expire Objects After 1 Year",
+                        "NoncurrentVersionExpirationInDays": 365,
+                        "Status": "Enabled"
                     }]
                 }
             }
