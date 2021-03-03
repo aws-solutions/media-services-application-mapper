@@ -100,7 +100,7 @@
                     },
                     "ViewerCertificate": {
                         "CloudFrontDefaultCertificate": true,
-                        "MinimumProtocolVersion": "TLSv1"
+                        "MinimumProtocolVersion": "TLSv1.2_2019"
                     },
                     "Logging": {
                         "Bucket": {
@@ -112,8 +112,16 @@
                                 ]
                             ]
                         },
-                        "Prefix": "cf/"
+                        "Prefix": "cloudfront/"
                     }
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W70",
+                        "reason": "If the distribution uses the CloudFront domain name such as d111111abcdef8.cloudfront.net (you set CloudFrontDefaultCertificate to true), CloudFront automatically sets the security policy to TLSv1 regardless of the value that you set here."
+                    }]
                 }
             }
         },
@@ -176,6 +184,10 @@
                             "SSEAlgorithm": "AES256"
                         }
                     }]
+                },
+                "LoggingConfiguration": {
+                    "DestinationBucketName": { "Ref": "MSAMBrowserAppLoggingBucket" },
+                    "LogFilePrefix": "app-bucket/"
                 }
             }
         },
@@ -200,6 +212,19 @@
                         "NoncurrentVersionExpirationInDays": 365,
                         "Status": "Enabled"
                     }]
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                            "id": "W35",
+                            "reason": "This is the logging bucket. No access logging needed."
+                        },
+                        {
+                            "id": "W51",
+                            "reason": "This is the logging bucket.  No bucket policy needed."
+                        }
+                    ]
                 }
             }
         },
@@ -232,6 +257,14 @@
                 },
                 "Runtime": "python3.8",
                 "Timeout": 300
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with AWSLambdaBasicExecutionRole defined in different template."
+                    }]
+                }
             }
         },
         "MSAMWebContent": {
@@ -282,6 +315,14 @@
                 },
                 "Runtime": "python3.8",
                 "Timeout": 300
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with AWSLambdaBasicExecutionRole defined in different template."
+                    }]
+                }
             }
         },
         "MSAMWebInvalidator": {
