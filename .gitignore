@@ -12,3 +12,5 @@ deployment/*.template
 **/assets
 **/*.zip
 **/package/
+
+**/error.txt
