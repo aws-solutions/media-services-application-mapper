@@ -41,6 +41,14 @@
                         ]
                     }]
                 }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W11",
+                        "reason": "Resource ARNs are not known in advance."
+                    }]
+                }
             }
         },
         "DynamoDBRole": {
@@ -74,6 +82,14 @@
                         "Action": [
                             "sts:AssumeRole"
                         ]
+                    }]
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W11",
+                        "reason": "Resource ARNs are not known in advance."
                     }]
                 }
             }
@@ -199,6 +215,14 @@
                     },
                     "PolicyName": "CoreRolePolicy"
                 }]
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W11",
+                        "reason": "This role is used by a scanner requiring access to all resources within these services."
+                    }]
+                }
             }
         },
         "WebRole": {
@@ -237,6 +261,14 @@
                         }]
                     }
                 }]
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W11",
+                        "reason": "Resource ARNs are not known in advance."
+                    }]
+                }
             }
         },
         "InstallationPolicy": {
@@ -269,6 +301,14 @@
                     }]
                 },
                 "Groups": [{ "Ref": "InstallationGroup" }]
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W12",
+                        "reason": "Resource ARNs are not known in advance."
+                    }]
+                }
             }
         },
         "InstallationGroup": {
@@ -294,6 +334,14 @@
                         ],
                         "Effect": "Allow",
                         "Resource": "*"
+                    }]
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W13",
+                        "reason": "Resource ARNs are not known in advance."
                     }]
                 }
             }
