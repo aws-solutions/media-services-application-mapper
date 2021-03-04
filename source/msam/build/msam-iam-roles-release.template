@@ -219,9 +219,14 @@
             "Metadata": {
                 "cfn_nag": {
                     "rules_to_suppress": [{
-                        "id": "W11",
-                        "reason": "This role is used by a scanner requiring access to all resources within these services."
-                    }]
+                            "id": "W11",
+                            "reason": "This role is used by a scanner requiring access to all resources within these services."
+                        },
+                        {
+                            "id": "W76",
+                            "reason": "This role is used by a scanner requiring access to all resources within these services."
+                        }
+                    ]
                 }
             }
         },
@@ -305,9 +310,18 @@
             "Metadata": {
                 "cfn_nag": {
                     "rules_to_suppress": [{
-                        "id": "W12",
-                        "reason": "Resource ARNs are not known in advance."
-                    }]
+                            "id": "W12",
+                            "reason": "Resource ARNs are not known in advance."
+                        },
+                        {
+                            "id": "F39",
+                            "reason": "Resource ARNs are not known in advance."
+                        },
+                        {
+                            "id": "F4",
+                            "reason": "This policy is used by compartmentalized teams to install the solution."
+                        }
+                    ]
                 }
             }
         },
@@ -340,9 +354,18 @@
             "Metadata": {
                 "cfn_nag": {
                     "rules_to_suppress": [{
-                        "id": "W13",
-                        "reason": "Resource ARNs are not known in advance."
-                    }]
+                            "id": "W13",
+                            "reason": "Resource ARNs are not known in advance."
+                        },
+                        {
+                            "id": "F5",
+                            "reason": "This policy is used by compartmentalized teams to install the solution."
+                        },
+                        {
+                            "id": "F39",
+                            "reason": "This policy is used by compartmentalized teams to install the solution."
+                        }
+                    ]
                 }
             }
         }
