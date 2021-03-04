@@ -63,6 +63,14 @@
                         }
                     }
                 }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "AlarmUpdater": {
@@ -114,6 +122,14 @@
                             }
                         }
                     }
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
                 }
             }
         }

@@ -49,6 +49,14 @@
                 "Role": {
                     "Ref": "CoreIAMRoleARN"
                 }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "UpdateNodes": {
@@ -100,6 +108,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for periodically updating the node cache"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "UpdateConnections": {
@@ -151,6 +167,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for periodically updating the connection cache"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "UpdateFromTags": {
@@ -202,6 +226,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for handling diagram and tile updates from tags"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "SsmRunCommand": {
@@ -253,6 +285,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for running all applicable commands for a given managed instance"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "ProcessSsmRunCommand": {
@@ -304,6 +344,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for processing outputs from running a command on a managed instance"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "UpdateSsmNodes": {
@@ -355,6 +403,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for periodically updating the managed instances node cache"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "APIHandler": {
@@ -406,6 +462,14 @@
                     "Ref": "CoreIAMRoleARN"
                 },
                 "Description": "MSAM Lambda for handling requests from clients"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "MSAMElementalLiveCompletedEvents": {

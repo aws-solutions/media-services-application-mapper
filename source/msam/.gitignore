@@ -2,3 +2,4 @@
 .chalice/venv/
 __pycache__/
 db/package/
+build/msam-core-release.template

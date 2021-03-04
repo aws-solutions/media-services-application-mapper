@@ -27,6 +27,14 @@
                 "Role": { "Ref": "DynamoDBIAMRoleARN" },
                 "Runtime": "python3.8",
                 "Timeout": 300
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    }]
+                }
             }
         },
         "DefaultSettings": {
@@ -68,7 +76,13 @@
                         "AttributeName": "id",
                         "KeyType": "RANGE"
                     }
-                ]
+                ],
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
+                }
             }
         },
         "Events": {
@@ -145,6 +159,12 @@
                 "TimeToLiveSpecification": {
                     "AttributeName": "expires",
                     "Enabled": true
+                },
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -179,7 +199,13 @@
                     "Projection": {
                         "ProjectionType": "ALL"
                     }
-                }]
+                }],
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
+                }
             }
         },
         "Settings": {
@@ -193,7 +219,13 @@
                 "KeySchema": [{
                     "AttributeName": "id",
                     "KeyType": "HASH"
-                }]
+                }],
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
+                }
             }
         },
         "Content": {
@@ -235,6 +267,12 @@
                 "TimeToLiveSpecification": {
                     "AttributeName": "expires",
                     "Enabled": true
+                },
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -291,7 +329,13 @@
                     "Projection": {
                         "ProjectionType": "ALL"
                     }
-                }]
+                }],
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
+                }
             }
         },
         "CloudWatchEvents": {
@@ -319,6 +363,12 @@
                 "TimeToLiveSpecification": {
                     "AttributeName": "expires",
                     "Enabled": true
+                },
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         }

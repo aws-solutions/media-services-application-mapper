@@ -7,7 +7,14 @@ ORIGIN=`pwd`
 ZIP="$ORIGIN/webcontent_resource.zip"
 HTML_ZIP=$1
 
-rm -f $ZIP
+if [ -f "$ZIP" ]; then
+    rm -f $ZIP
+fi
+
+if [ -d "package" ]; then
+  rm -rf package
+fi
+
 pip install --force-reinstall --target ./package requests crhelper 2> error.txt
 if [ -s error.txt ]; then
     echo "ERROR: System package installation failed."
