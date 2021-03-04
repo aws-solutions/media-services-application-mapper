@@ -7,7 +7,7 @@ env:
   DIST_OUTPUT_BUCKET: msam-pr-build
 on: 
   pull_request:
-    types: [opened, edited, reopened]
+    types: [opened, edited, reopened, synchronize]
 
 jobs:
   scan-build-upload-job:
