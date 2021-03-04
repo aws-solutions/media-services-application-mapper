@@ -79,6 +79,9 @@
                 ],
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -159,6 +162,9 @@
                 },
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -196,6 +202,9 @@
                 }],
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -213,6 +222,9 @@
                 }],
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -258,6 +270,9 @@
                 },
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -317,6 +332,9 @@
                 }],
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         },
@@ -348,6 +366,9 @@
                 },
                 "PointInTimeRecoverySpecification": {
                     "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
                 }
             }
         }
