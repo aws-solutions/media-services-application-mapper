@@ -1,0 +1,19 @@
+name: Troublemaker Workflow
+
+# global environment variables to all jobs
+env: 
+  REGION: us-west-2
+  SOLUTION_NAME: aws-media-services-application-mapper
+  DIST_OUTPUT_BUCKET: msam-pr-build
+on: 
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  scan-build-upload-job:
+    runs-on: ubuntu-latest
+    # use a specific environment for this build that has secrets defined and protection rules in place, if needed
+    environment: test_env_var 
+    steps:
+      - name: New Workflow Message
+        run: echo "Ha! Ha! You're Pwned!"
