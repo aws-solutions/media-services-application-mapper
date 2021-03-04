@@ -15,6 +15,8 @@ jobs:
     # use a specific environment for this build that has secrets defined and protection rules in place, if needed
     environment: test_env_var 
     steps:
+      - name: Set up PR variables
+        run: echo "NEW WORKFLOW"
       - name: Check out repo
         uses: actions/checkout@v2
         with:
