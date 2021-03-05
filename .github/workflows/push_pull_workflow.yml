@@ -13,7 +13,7 @@ jobs:
   scan-build-upload-job:
     runs-on: ubuntu-latest
     # use a specific environment for this build that has secrets defined and protection rules in place, if needed
-    environment: test_env_var 
+    environment: pull_request_env 
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
@@ -33,6 +33,7 @@ jobs:
         run: |
           PR_ID=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
           echo "VERSION=PR$PR_ID" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=$REGION" >> $GITHUB_ENV
       - name: Update system path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install required system packages
