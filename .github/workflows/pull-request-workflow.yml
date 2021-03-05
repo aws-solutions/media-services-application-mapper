@@ -13,7 +13,6 @@ jobs:
   scan-build-upload-job:
     runs-on: ubuntu-latest
     # use a specific environment for this build that has secrets defined and protection rules in place, if needed
-    environment: pull_request_env
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
