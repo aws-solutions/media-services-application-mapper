@@ -16,4 +16,4 @@ jobs:
     environment: pull_request_env
     steps:
       - name: Update system path
-        run: echo "${{ secret.TEST_SECRET }}"
+        run: echo "${{ secrets.TEST_SECRET }}"
