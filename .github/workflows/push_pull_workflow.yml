@@ -6,7 +6,7 @@ env:
   SOLUTION_NAME: aws-media-services-application-mapper
   DIST_OUTPUT_BUCKET: msam-pr-build
 on: 
-  pull_request_target:
+  pull_request:
     types: [opened, edited, reopened]
 
 jobs:
