@@ -77,10 +77,10 @@ for R in $REGIONS; do
   if [ "$DEPLOY_TYPE" = "release" ]; then
      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read  --storage-class INTELLIGENT_TIERING
       echo
-      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
+      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/latest/aws-media-services-application-mapper-release.template"
   else
       cd $template_dist_dir
-      root_template="$( ls $SOLUTION_NAME-release-[0-9]*.template )"
+      root_template="$( ls aws-media-services-application-mapper-release-[0-9]*.template )"
       echo
       echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/$VERSION/$root_template"
   fi
