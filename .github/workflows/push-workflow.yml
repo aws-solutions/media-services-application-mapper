@@ -172,7 +172,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install jshint
-        run: npm install -g jshint
+        run: npm install jshint
       - name: Check with jshint
         run: |
           cd source/html
