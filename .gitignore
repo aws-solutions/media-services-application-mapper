@@ -14,3 +14,7 @@ deployment/*.template
 **/package/
 
 **/error.txt
+
+package.json
+package-lock.json
+node_modules/

@@ -166,14 +166,14 @@ jobs:
   jshint-check-job:
     needs: scan-build-upload-job
     runs-on: ubuntu-latest
-    name: Check source code with jshint
+    name: Check source code with JShint
     steps:
       # check out the merged PR
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install jshint
+      - name: Install JShint
         run: npm install jshint
-      - name: Check with jshint
+      - name: Check with JShint
         run: |
           cd source/html
           find . -name '*.js' -type f -print | \
