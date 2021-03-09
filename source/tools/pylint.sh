@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -19,6 +19,8 @@
 # R0915 Too many statements
 # W0703 Catching too general exception
 # W0640 Cell variable
+
+set -euo pipefail
 
 find . -iname '*.py' | \
     grep "/package/" --invert-match | \

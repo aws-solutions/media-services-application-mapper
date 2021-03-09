@@ -1,0 +1,9 @@
+{
+    "esversion": 8,
+    "browser": true,
+    "globals": {
+        "console": true,
+        "define": true,
+        "require": true
+    }
+}
