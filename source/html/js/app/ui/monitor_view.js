@@ -265,22 +265,24 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                             alert_data.push(event_value.detail);
                         }
                     }
-                    promises.push(new Promise(function(resolve, reject) {
-                        var local_node_id = member_value.id;
-                        var local_node_name = node.name;
-                        require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
-                            // console.log(subscriptions);
-                            for (let subscription of subscriptions) {
-                                if (Number.isInteger(subscription.StateUpdated)) {
-                                    subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
+                    (function(local_member_value, local_node, local_require, local_alarm_data, local_promises) {
+                        local_promises.push(new Promise(function(resolve, reject) {
+                            var local_node_id = local_member_value.id;
+                            var local_node_name = local_node.name;
+                            local_require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
+                                // console.log(subscriptions);
+                                for (let subscription of subscriptions) {
+                                    if (Number.isInteger(subscription.StateUpdated)) {
+                                        subscription.StateUpdated = new Date(subscription.StateUpdated * 1000).toISOString();
+                                    }
+                                    subscription.ARN = local_node_id;
+                                    subscription.name = local_node_name;
                                 }
-                                subscription.ARN = local_node_id;
-                                subscription.name = local_node_name;
-                            }
-                            alarm_data = alarm_data.concat(subscriptions);
-                            resolve();
-                        });
-                    }));
+                                local_alarm_data = local_alarm_data.concat(subscriptions);
+                                resolve();
+                            });
+                        }));
+                    })(member_value, node, require, alarm_data, promises);
                 }
             }
             Promise.all(promises).then(function() {
