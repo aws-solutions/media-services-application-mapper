@@ -34,7 +34,7 @@ define(["jquery", "lodash", "app/ui/diagrams", "app/model", "app/ui/alert"],
                 "updated": updated.unix()
             };
             return record;
-        }
+        };
 
         var show_add_connection = (visible) => {
             if (visible) {
@@ -207,7 +207,7 @@ define(["jquery", "lodash", "app/ui/diagrams", "app/model", "app/ui/alert"],
 
         diagrams.add_selection_callback(function(diagram, event) {
             if (event.nodes.length == 2) {
-                var diagram = diagrams.shown();
+                diagram = diagrams.shown();
                 var connected = diagram.network.getConnectedNodes(event.nodes[0]);
                 // console.log(connected);
                 if (!connected.includes(event.nodes[1])) {
@@ -217,7 +217,7 @@ define(["jquery", "lodash", "app/ui/diagrams", "app/model", "app/ui/alert"],
                 show_add_connection(false);
             }
             if (event.edges.length == 1 && event.nodes.length == 0) {
-                var diagram = diagrams.shown();
+                diagram = diagrams.shown();
                 var edge = diagram.edges.get(event.edges[0]);
                 show_remove_connection(edge.data["user-defined"]);
                 show_edit_connection(edge.data["user-defined"]);

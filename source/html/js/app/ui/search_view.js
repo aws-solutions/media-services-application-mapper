@@ -65,7 +65,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                                 return function() {
                                     console.log(diagram);
                                     diagram.network.fit();
-                                }
+                                };
                             })());
                             diagram.show();
                         } else {
@@ -84,7 +84,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             for (let entry of results.diagram_contents) {
                 var name = entry.diagram;
                 for (let node_id of entry.found) {
-                    var node = model.nodes.get(node_id)
+                    var node = model.nodes.get(node_id);
                     var id = ui_util.makeid();
                     var line = `<li><b>${name}: </b>${node.title}: <a href="#" data-node-id="${node.id}" draggable="true" title="Click or Drag to a Diagram or Tile" id="${id}">${node.name}</a></li>`;
                     html += line;
@@ -114,7 +114,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                                         animation: true
                                     });
                                     diagram.blink(blinks, node_id);
-                                }
+                                };
                             })());
                             diagram.show();
                         } else {
@@ -166,7 +166,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             for (let entry of results.tile_contents) {
                 var name = entry.tile;
                 for (let node_id of entry.found) {
-                    var node = model.nodes.get(node_id)
+                    var node = model.nodes.get(node_id);
                     var id = ui_util.makeid();
                     var line = `<li><b><a href="#" title="Click or Drag to a Diagram or Tile" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>: </b>${node.title}: <a href="#" draggable="true" title="Drag to a Diagram or Tile" data-node-id="${node.id}">${node.name}</a></li>`;
                     html += line;

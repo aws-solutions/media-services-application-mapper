@@ -58,7 +58,7 @@ define(["app/server", "app/connections", "app/settings", "lodash"],
                             "get_available": get_available,
                             "get_selected": get_selected,
                             "set_selected": set_selected
-                        }
+                        };
                         resolve(module);
                     });
                 }).catch(function(error) {

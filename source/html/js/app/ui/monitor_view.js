@@ -77,9 +77,9 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
         });
 
         //custom header filter
-        var dateFilterEditor = function(cell, onRendered, success, cancel, editorParams){
+        var dateFilterEditor = function(cell, onRendered, success, cancel, editorParams) {
 
-            var container = $("<span></span>")
+            var container = $("<span></span>");
             //create and style input
             var start = $("<input type='text' placeholder='Start'/>");
             var end = $("<input type='text' placeholder='End'/>");
@@ -90,40 +90,40 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
 
             inputs.css({
-                "padding":"4px",
-                "width":"50%",
-                "box-sizing":"border-box",
-            })
-            .val(cell.getValue());
+                    "padding": "4px",
+                    "width": "50%",
+                    "box-sizing": "border-box",
+                })
+                .val(cell.getValue());
 
-            function buildDateString(){
+            function buildDateString() {
                 return {
-                    start:start.val(),
-                    end:end.val(),
+                    start: start.val(),
+                    end: end.val(),
                 };
             }
 
             //submit new value on blur
-            inputs.on("change blur", function(e){
+            inputs.on("change blur", function(e) {
                 success(buildDateString());
             });
 
             //submit new value on enter
-            inputs.on("keydown", function(e){
-                if(e.keyCode == 13){
+            inputs.on("keydown", function(e) {
+                if (e.keyCode == 13) {
                     success(buildDateString());
                 }
 
-                if(e.keyCode == 27){
+                if (e.keyCode == 27) {
                     cancel();
                 }
             });
 
             return container[0];
-        }
+        };
 
         //custom filter function
-        function dateFilterFunction(headerValue, rowValue, rowData, filterParams){
+        function dateFilterFunction(headerValue, rowValue, rowData, filterParams) {
             //headerValue - the value of the header filter element
             //rowValue - the value of the column in this row
             //rowData - the data for the row being filtered
@@ -132,32 +132,32 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             var format = filterParams.format || "DD/MM/YYYY";
             var start = moment(headerValue.start);
             var end = moment(headerValue.end);
-            var value = moment(rowValue, format)
+            var value = moment(rowValue, format);
             // console.log(rowValue);
             // console.log(headerValue.start);
             // console.log(headerValue.end);
-            if(rowValue){
+            if (rowValue) {
                 var current_row_millis = new Date(rowValue);
                 console.log("current_row_millis: ");
                 console.log(current_row_millis);
                 var start_millis = 0;
                 var end_millis = 0;
-                if(start.isValid()){ 
-                    if(end.isValid()){
+                if (start.isValid()) {
+                    if (end.isValid()) {
                         start_millis = new Date(start);
                         end_millis = new Date(end);
                         console.log("start and end are given");
                         console.log(start_millis);
                         console.log(end_millis);
                         return current_row_millis >= start_millis && current_row_millis <= end_millis;
-                    }else{ //only start was given
+                    } else { //only start was given
                         start_millis = new Date(start);
                         console.log("only start was given");
                         console.log(start_millis);
                         return current_row_millis >= start_millis;
                     }
-                }else{ // no start but there is end
-                    if(end.isValid()){
+                } else { // no start but there is end
+                    if (end.isValid()) {
                         end_millis = new Date(end);
                         console.log("only end was given");
                         console.log(end_millis);
@@ -173,40 +173,39 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             selectable: true,
             height: 250,
             layout: "fitColumns",
-            resizableRows:true,
-            initialSort:[
-                {column:"timestamp", dir:"desc"}
+            resizableRows: true,
+            initialSort: [
+                { column: "timestamp", dir: "desc" }
             ],
             columns: [{
                 title: "Time",
                 field: "timestamp",
-                headerFilter:dateFilterEditor,
-                headerFilterFunc:dateFilterFunction
+                headerFilter: dateFilterEditor,
+                headerFilterFunc: dateFilterFunction
             }, {
                 title: "Event Type",
                 field: "type",
-                headerFilter:true
+                headerFilter: true
             }, {
                 title: "Data",
                 field: "data",
                 formatter: "html",
-                headerFilter:true,
+                headerFilter: true,
                 widthGrow: 2
             }, {
                 tooltip: "Formatted Data View",
                 headerSort: false,
                 formatter: "tickCross",
                 formatterParams: {
-                    tickElement:"<i class='fa fa-info-circle' style='font-size:20px'></i>",
-                    crossElement:"<i class='fa fa-info-circle' style='font-size:20px'></i>"
+                    tickElement: "<i class='fa fa-info-circle' style='font-size:20px'></i>",
+                    crossElement: "<i class='fa fa-info-circle' style='font-size:20px'></i>"
                 },
                 width: 50,
                 align: "center",
                 cellClick: function(e, cell) {
                     show_formatted_cloudwatch_event_data(cell.getRow()._row.data);
                 }
-            }
-        ]
+            }]
         });
 
 
@@ -241,7 +240,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 alarm_tabulator.replaceData(subscriptions);
             });
             // cloudwatch events
-            cw_events.get_cloudwatch_events(node.id).then(function(events){
+            cw_events.get_cloudwatch_events(node.id).then(function(events) {
                 // console.log(events);
                 for (let event of events) {
                     event.timestamp = new Date(event.timestamp).toISOString();
@@ -367,7 +366,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                     refresh();
                 });
             }
-        };
+        }
 
         function show_formatted_cloudwatch_event_data(row) {
             console.log(row);
@@ -376,7 +375,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             var formatted_json = renderjson(data);
             $("#cloudwatch_event_data_json").html(formatted_json);
             $("#cloudwatch_event_data_view_modal").modal("show");
-        };
+        }
 
         function refresh() {
             if (typeof last_displayed == 'string') {
@@ -388,6 +387,6 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
         return {
             refresh: refresh
-        }
+        };
 
     });

@@ -95,7 +95,8 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                     resolve();
                 });
             });
-        }
+        };
+
         var update = function() {
             return update_speke_keyservers();
         };

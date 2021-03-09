@@ -26,11 +26,11 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 this.tab_icon_id = this.tab_id + "_icon";
                 this.diagram_id = "diagram_" + this.base_id;
                 // drag-select
-                this.drag_canvas;
-                this.drag_ctx;
+                // this.drag_canvas;
+                // this.drag_ctx;
                 this.drag_rect = {};
                 this.drag = false;
-                this.drawingSurfaceImageData;
+                // this.drawingSurfaceImageData;
                 // other state
                 this.first_fit = false;
                 // This FSM manages the startup and state restoration
@@ -67,7 +67,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             if (save) {
                                 layout.save_layout(my_diagram);
                             }
-                        }
+                        };
                     })());
                     console.log("layout start");
                     my_diagram.network.setOptions(options);
@@ -89,7 +89,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             if (save) {
                                 layout.save_layout(my_diagram);
                             }
-                        }
+                        };
                     })());
                     console.log("layout start");
                     my_diagram.network.setOptions(options);
@@ -167,8 +167,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 return {
                     "max_width": max_width,
                     "max_height": max_height
-                }
-            };
+                };
+            }
 
             bounds() {
                 var min_x = Number.MAX_SAFE_INTEGER;
@@ -195,7 +195,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     "max_x": max_x,
                     "min_y": min_y,
                     "max_y": max_y
-                }
+                };
             }
 
             restore_nodes() {
@@ -264,7 +264,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 if (event == "add" || event == "update") {
                     for (let id of node_ids) {
                         // query all edges from the model with this node
-                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id });
+                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id; });
                         for (let edge of filtered) {
                             if (edge.to == id) {
                                 // check 'from' node is on diagram
@@ -286,7 +286,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 if (event == "remove") {
                     for (let id of node_ids) {
                         // query all edges on the diagram 
-                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id });
+                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id; });
                         for (let edge of filtered) {
                             console.log("removing unneeded edge");
                             diagram.edges.remove(edge.id);
@@ -483,7 +483,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     $("#" + this.tab_icon_id).text("image_aspect_ratio");
                 }
             }
-        };
+        }
 
         function create(name, view_id) {
             return new Diagram(name, view_id);

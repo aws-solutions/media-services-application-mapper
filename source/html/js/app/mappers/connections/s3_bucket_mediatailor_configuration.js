@@ -27,7 +27,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                     resolve();
                 });
             });
-        }
+        };
 
         var update = function() {
             return new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                     reject(error);
                 });
             });
-        }
+        };
 
         return {
             "name": "S3 Buckets to MediaTailor Configurations",

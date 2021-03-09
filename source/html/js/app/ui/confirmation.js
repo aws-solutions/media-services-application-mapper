@@ -14,10 +14,10 @@ define(["jquery"], function($) {
         });
         $("#confirmation_dialog_body").html(html);
         $("#confirmation_dialog").modal('show');
-    }
+    };
 
     return {
         "show": show
-    }
+    };
 
 });

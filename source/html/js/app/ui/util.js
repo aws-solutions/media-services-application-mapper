@@ -10,7 +10,7 @@ define([], function() {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
-    }
+    };
 
     function get_random_number(max) {
         return Math.floor(Math.random() * Math.floor(max));

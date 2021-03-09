@@ -13,10 +13,10 @@ define(["jquery"], function($) {
         setTimeout(function() {
             $("#" + div_id).fadeOut('slow');
         }, timeout);
-    }
+    };
 
     return {
         "show": show
-    }
+    };
 
 });

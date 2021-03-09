@@ -103,5 +103,5 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
     // clear the model at module definition
     reset();
 
-    return { nodes, edges, reset, map, update, put_records, delete_record }
+    return { nodes, edges, reset, map, update, put_records, delete_record };
 });

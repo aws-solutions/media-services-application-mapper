@@ -34,7 +34,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                     filter: (item) => {
                         // the arn as the source or target and the pipeline number at the end
                         return ((item.id.includes(`:${arn}:`) || item.id.startsWith(`${arn}:`)) &&
-                            item.id.endsWith(`:${pipeline}`))
+                            item.id.endsWith(`:${pipeline}`));
                     }
                 };
             } else {
@@ -46,7 +46,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             }
             const edges = model.edges.get(options);
             return _.isArray(edges) ? edges : [edges];
-        }
+        };
 
         /**
          * Update the node on all containing diagrams

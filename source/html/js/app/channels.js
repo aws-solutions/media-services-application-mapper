@@ -159,7 +159,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         for (let name of channels) {
             retrieve_channel(name);
         }
-    };
+    }
 
     prewarm();
 

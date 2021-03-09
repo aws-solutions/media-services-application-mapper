@@ -201,7 +201,7 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                 },
                 "update-visual-model": {
                     _onEnter: function() {
-                        this.handle("visualModelReady")
+                        this.handle("visualModelReady");
                     },
                     "visualModelReady": "visual-model-fresh"
                         // update tile view, select first tile
@@ -297,5 +297,5 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
             "getToolStateMachine": function() {
                 return toolStateMachine;
             }
-        }
+        };
     });

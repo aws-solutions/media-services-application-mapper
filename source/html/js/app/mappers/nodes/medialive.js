@@ -308,7 +308,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 })(),
                 "cloudwatch_link": (function() {
                     return function() {
-                        return html = "https://console.aws.amazon.com/cloudwatch/";
+                        return "https://console.aws.amazon.com/cloudwatch/";
                     };
                 })()
             };

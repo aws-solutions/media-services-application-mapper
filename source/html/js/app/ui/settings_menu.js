@@ -24,7 +24,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                     return function(event) {
                         $("#input_endpoint_url").val(u);
                         $("#input_endpoint_key").val(k);
-                    }
+                    };
                 })());
                 index++;
             }
@@ -122,7 +122,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                     require("app/statemachine").getToolStateMachine().noSavedConnection();
                 });
             } else {
-                setConnectionAlert("You must define at least one endpoint connection to continue")
+                setConnectionAlert("You must define at least one endpoint connection to continue");
             }
             return true;
         });
@@ -142,7 +142,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                     setRegionSelectionAlert("You must select at least one region to continue");
                 } else {
                     regions.set_selected(selected).then(function() {
-                        console.log("we have at least one region selection")
+                        console.log("we have at least one region selection");
                         clearRegionSelectionAlert();
                         hideRegionSelectionDialog();
                         console.log("region selections saved");
@@ -161,7 +161,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 if (regions.get_selected().length == 0) {
                     setRegionSelectionAlert("You must select at least one region to continue");
                 } else {
-                    console.log("we have at least one region selection")
+                    console.log("we have at least one region selection");
                     clearRegionSelectionAlert();
                     hideRegionSelectionDialog();
                 }

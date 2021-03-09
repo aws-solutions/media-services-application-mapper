@@ -278,7 +278,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     var members = channel_members;
                     return function() {
                         show_edit_dialog(name, members);
-                    }
+                    };
                 })());
                 var model_click_closure = function() {
                     var tile_name = channel_name;

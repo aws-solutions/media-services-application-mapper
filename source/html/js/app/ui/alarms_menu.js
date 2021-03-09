@@ -143,7 +143,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
                 $("#subscribe_to_alarms_save").attr("aria-disabled", true);
                 $("#subscribe_to_alarms_save").attr("disabled", true);
             }
-        }
+        };
 
         $("#alarms_subscribe_button").on("click", function(event) {
             show_alarm_subscribe_dialog();
@@ -222,6 +222,6 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
 
         return {
             show_alarm_subscribe_dialog: show_alarm_subscribe_dialog
-        }
+        };
 
     });

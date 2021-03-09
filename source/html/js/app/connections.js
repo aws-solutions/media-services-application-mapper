@@ -1,9 +1,10 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-'use strict';
-
 define(["jquery", "cookie", "app/window", "object_hash", "lodash"], function($, cookie, window, hash, _) {
+
+    'use strict';
+
     // Cookie: MSAM_CURRENT = "Cookie Name" or missing (not saved)
     // Cookie: MSAM_ENDPOINT_<ID> = "{ URL, Key, Last }"
 

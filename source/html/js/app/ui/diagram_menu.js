@@ -69,7 +69,7 @@ define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui
                 if (Array.isArray(selected) && selected.length > 0) {
                     var html = `Remove ${selected.length} node${(selected.length==1?"":"s")} from the diagram?`;
                     confirmation.show(html, function() {
-                        shown.nodes.remove(selected)
+                        shown.nodes.remove(selected);
                         var message = `${selected.length} node${(selected.length==1?"":"s")} removed`;
                         alert.show(message);
                     });
@@ -105,7 +105,7 @@ define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui
                 layout.save_layout(shown, node_ids);
                 shown.network.fit();
             }
-        };
+        }
 
         $("#diagram_add_upstream").on("click", function(event) {
             add_upstream_nodes();
@@ -135,7 +135,7 @@ define(["lodash", "jquery", "app/model", "app/ui/util", "app/ui/layout", "app/ui
                 layout.save_layout(shown, node_ids);
                 shown.network.fit();
             }
-        };
+        }
 
         $("#diagram_add_all_nodes").on("click", function(event) {
             add_downstream_nodes();

@@ -155,7 +155,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
             $("#" + data_div_id + "-data").append(renderjson(edge.data));
             $("#" + data_div_id + "-from").append(renderjson(fromNode.data));
             $("#" + data_div_id + "-to").append(renderjson(toNode.data));
-            show_elements([data_div_id, data_tab_id])
+            show_elements([data_div_id, data_tab_id]);
             hide_elements([alarms_div_id, alerts_div_id, events_div_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
         };
 

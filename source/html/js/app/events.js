@@ -44,10 +44,11 @@ define(["app/server", "app/connections", "app/settings"],
             var current_connection = connections.get_current();
             var url = current_connection[0];
             var api_key = current_connection[1];
+            var current_endpoint;
             if (source == "aws.medialive") {
-                var current_endpoint = `${url}/cloudwatch/events/state/${state}/groups`;
+                current_endpoint = `${url}/cloudwatch/events/state/${state}/groups`;
             } else {
-                var current_endpoint = `${url}/cloudwatch/events/state/${state}/${source}`;
+                current_endpoint = `${url}/cloudwatch/events/state/${state}/${source}`;
             }
             return new Promise(function(resolve, reject) {
                 server.get(current_endpoint, api_key)
