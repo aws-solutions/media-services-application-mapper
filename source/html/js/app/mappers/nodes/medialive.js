@@ -13,10 +13,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             return () => svg_node[method](local_node_type, local_name, local_rgb, local_id, data);
         };
 
-        var update_channels = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
+        const update_channels = function() {
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
             return new Promise(function(resolve, reject) {
                 server.get(`${url}/cached/medialive-channel`, api_key).then(function(channels) {
                     for (let cache_entry of channels) {
@@ -30,10 +30,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update_inputs = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
+        const update_inputs = function() {
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
             return new Promise((resolve, reject) => {
                 server.get(`${url}/cached/medialive-input`, api_key).then((inputs) => {
                     for (let cache_entry of inputs) {
@@ -47,10 +47,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update_multiplexes = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
+        const update_multiplexes = function() {
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
             return new Promise((resolve, reject) => {
                 server.get(`${url}/cached/medialive-multiplex`, api_key).then((inputs) => {
                     for (let cache_entry of inputs) {
@@ -64,10 +64,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update_link_devices = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
+        const update_link_devices = function() {
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
             return new Promise((resolve, reject) => {
                 server.get(`${url}/cached/link-device`, api_key).then((devices) => {
                     for (let cache_entry of devices) {
@@ -81,18 +81,18 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var map_channel = function(cache_entry) {
-            var channel = JSON.parse(cache_entry.data);
+        const map_channel = function(cache_entry) {
+            const channel = JSON.parse(cache_entry.data);
 
             // console.log('Channel: %o', channel);
 
-            var name = channel.Name;
-            var id = channel.Arn;
-            var nodes = model.nodes;
-            var rgb = "#1E8900";
-            var degraded_rgb = svg_node.getDegradedRgb();
-            var node_type = "MediaLive Channel";
-            var node_data = {
+            const name = channel.Name;
+            const id = channel.Arn;
+            const nodes = model.nodes;
+            const rgb = "#1E8900";
+            const degraded_rgb = svg_node.getDegradedRgb();
+            const node_type = "MediaLive Channel";
+            let node_data = {
                 cache_update: cache_entry.updated,
                 id: id,
                 region: cache_entry.region,
@@ -115,18 +115,18 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, channel))(),
                 },
                 console_link: (function() {
-                    var id = channel.Id;
-                    var region = channel.Arn.split(":")[3];
+                    const id = channel.Id;
+                    const region = channel.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}`;
+                        const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}`;
                         return html;
                     };
                 })(),
                 cloudwatch_link: (function() {
-                    var id = channel.Id;
-                    var region = channel.Arn.split(":")[3];
+                    const id = channel.Id;
+                    const region = channel.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=MediaLive;dimensions=ChannelId,Pipeline`;
+                        const html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=MediaLive;dimensions=ChannelId,Pipeline`;
                         return html;
                     };
                 })()
@@ -136,18 +136,18 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-        var map_input = function(cache_entry) {
-            var input = JSON.parse(cache_entry.data);
+        const map_input = function(cache_entry) {
+            const input = JSON.parse(cache_entry.data);
 
             // console.log('Input: %o', input);
 
-            var name = input.Name;
-            var id = input.Arn;
-            var nodes = model.nodes;
-            var node_type = "MediaLive Input";
-            var rgb = "#6AAF35";
-            var degraded_rgb = svg_node.getDegradedRgb();
-            var node_data = {
+            const name = input.Name;
+            const id = input.Arn;
+            const nodes = model.nodes;
+            const node_type = "MediaLive Input";
+            const rgb = "#6AAF35";
+            const degraded_rgb = svg_node.getDegradedRgb();
+            let node_data = {
                 cache_update: cache_entry.updated,
                 id: input.Arn,
                 region: cache_entry.region,
@@ -170,16 +170,16 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, input))(),
                 },
                 console_link: (function() {
-                    var id = input.Id;
-                    var region = input.Arn.split(":")[3];
+                    const id = input.Id;
+                    const region = input.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
+                        const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
                         return html;
                     };
                 })(),
                 cloudwatch_link: (function() {
                     return function() {
-                        var html = `https://console.aws.amazon.com/cloudwatch/home`;
+                        const html = `https://console.aws.amazon.com/cloudwatch/home`;
                         return html;
                     };
                 })()
@@ -189,18 +189,18 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-        var map_multiplex = function(cache_entry) {
-            var input = JSON.parse(cache_entry.data);
+        const map_multiplex = function(cache_entry) {
+            const input = JSON.parse(cache_entry.data);
 
             // console.log('Input: %o', input);
 
-            var name = input.Name;
-            var id = input.Arn;
-            var nodes = model.nodes;
-            var node_type = "MediaLive Multiplex";
-            var rgb = "#6a8258";
-            var degraded_rgb = svg_node.getDegradedRgb();
-            var node_data = {
+            const name = input.Name;
+            const id = input.Arn;
+            const nodes = model.nodes;
+            const node_type = "MediaLive Multiplex";
+            const rgb = "#6a8258";
+            const degraded_rgb = svg_node.getDegradedRgb();
+            let node_data = {
                 cache_update: cache_entry.updated,
                 id: input.Arn,
                 region: cache_entry.region,
@@ -223,10 +223,10 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     degraded_selected: (() => node_map_handler(node_type, name, degraded_rgb, id, true, input))(),
                 },
                 console_link: (function() {
-                    var id = input.Id;
-                    var region = input.Arn.split(":")[3];
+                    const id = input.Id;
+                    const region = input.Arn.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
+                        const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
                         return html;
                     };
                 })(),
@@ -241,14 +241,14 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             nodes.update(node_data);
         };
 
-        var map_device = function(cache_entry) {
-            var device = JSON.parse(cache_entry.data);
-            var name = device.Id;
-            var id = cache_entry.arn;
-            var nodes = model.nodes;
-            var rgb = "#D5DBDB";
-            var node_type = "Elemental Link";
-            var node_data = {
+        const map_device = function(cache_entry) {
+            const device = JSON.parse(cache_entry.data);
+            const name = device.Id;
+            const id = cache_entry.arn;
+            const nodes = model.nodes;
+            const rgb = "#D5DBDB";
+            const node_type = "Elemental Link";
+            let node_data = {
                 "overlay": "informational",
                 "cache_update": cache_entry.updated,
                 "id": id,
@@ -265,44 +265,44 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 "size": 55,
                 "render": {
                     normal_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
+                        const local_node_type = node_type;
+                        const local_name = name;
+                        const local_rgb = rgb;
+                        const local_id = id;
                         return function() {
                             return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                         };
                     })(),
                     normal_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
+                        const local_node_type = node_type;
+                        const local_name = name;
+                        const local_rgb = rgb;
+                        const local_id = id;
                         return function() {
                             return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                         };
                     })(),
                     alert_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
+                        const local_node_type = node_type;
+                        const local_name = name;
+                        const local_id = id;
                         return function() {
                             return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                         };
                     })(),
                     alert_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
+                        const local_node_type = node_type;
+                        const local_name = name;
+                        const local_id = id;
                         return function() {
                             return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                         };
                     })()
                 },
                 "console_link": (function() {
-                    var region = id.split(":")[3];
+                    const region = id.split(":")[3];
                     return function() {
-                        var html = `https://${region}.console.aws.amazon.com/medialive/home?region=${region}#!/devices/${name}`;
+                        const html = `https://${region}.console.aws.amazon.com/medialive/home?region=${region}#!/devices/${name}`;
                         return html;
                     };
                 })(),

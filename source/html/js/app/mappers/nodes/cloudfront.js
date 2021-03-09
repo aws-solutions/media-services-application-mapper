@@ -4,21 +4,22 @@
 define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node"],
     function($, server, connections, model, svg_node) {
 
-        var color = "#D5DBDB";
-        var update_distributions = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            var nodes = model.nodes;
-            var rgb = "#D5DBDB";
-            var node_type = "CloudFront Distribution";
+        const color = "#D5DBDB";
+        const update_distributions = function() {
+            const local_svg_node = svg_node;
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
+            const nodes = model.nodes;
+            const rgb = "#D5DBDB";
+            const node_type = "CloudFront Distribution";
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/cloudfront-distribution", api_key).then((cache_entries) => {
                     for (let cache_entry of cache_entries) {
-                        var item = JSON.parse(cache_entry.data);
-                        var name = item.Id;
-                        var id = item.ARN;
-                        var node_data = {
+                        const item = JSON.parse(cache_entry.data);
+                        const name = item.Id;
+                        const id = item.ARN;
+                        let node_data = {
                             "cache_update": cache_entry.updated,
                             "id": id,
                             "region": cache_entry.region,
@@ -34,59 +35,59 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                             "size": 55,
                             "render": {
                                 normal_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 normal_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 alert_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })(),
                                 alert_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })()
                             },
                             "console_link": (function() {
-                                var id = item.Id;
-                                var region = item.ARN.split(":")[3];
+                                let id = item.Id;
+                                let region = item.ARN.split(":")[3];
                                 if (region.trim().length == 0) {
                                     region = 'us-east-1';
                                 }
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/cloudfront/home?region=${region}#distribution-settings:${id}`;
+                                    let html = `https://console.aws.amazon.com/cloudfront/home?region=${region}#distribution-settings:${id}`;
                                     return html;
                                 };
                             })(),
                             "cloudwatch_link": (function() {
-                                var id = item.Id;
-                                var region = item.ARN.split(":")[3];
+                                let id = item.Id;
+                                let region = item.ARN.split(":")[3];
                                 if (region.trim().length == 0) {
                                     region = 'us-east-1';
                                 }
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/CloudFront;dimensions=DistributionId,Region`;
+                                    let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/CloudFront;dimensions=DistributionId,Region`;
                                     return html;
                                 };
                             })()
@@ -103,16 +104,12 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             });
         };
 
-        var update = function() {
+        let update = function() {
             return update_distributions();
         };
 
         return {
             "name": "CloudFront Distributions",
-            "get_color": color,
-            "set_color": function(new_color) {
-                color = new_color;
-            },
             "update": update
         };
     });

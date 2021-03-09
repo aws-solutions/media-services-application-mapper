@@ -4,10 +4,10 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
-        var update_configs = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
+        const update_configs = function() {
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
             return new Promise(function(resolve, reject) {
                 server.get(url + "/cached/ec2-instance", api_key).then(function(configs) {
                     for (let cache_entry of configs) {
@@ -22,19 +22,19 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var map_config = function(cache_entry) {
-            var config = JSON.parse(cache_entry.data);
-            var name = config.InstanceId;
-            var id = cache_entry.arn;
-            var nodes = model.nodes;
-            var rgb = "#D5DBDB";
-            var node_type = "EC2 Instance";
+        const map_config = function(cache_entry) {
+            const config = JSON.parse(cache_entry.data);
+            const name = config.InstanceId;
+            const id = cache_entry.arn;
+            const nodes = model.nodes;
+            const rgb = "#D5DBDB";
+            let node_type = "EC2 Instance";
             if ('Tags' in config) {
                 if ('MSAM-NodeType' in config.Tags) {
                     node_type = config.Tags['MSAM-NodeType'];
                 }
             }
-            var node_data = {
+            let node_data = {
                 "overlay": "informational",
                 "cache_update": cache_entry.updated,
                 "id": id,
@@ -51,51 +51,51 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                 "size": 55,
                 "render": {
                     normal_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
+                        let local_node_type = node_type;
+                        let local_name = name;
+                        let local_rgb = rgb;
+                        let local_id = id;
                         return function() {
                             return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                         };
                     })(),
                     normal_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_rgb = rgb;
-                        var local_id = id;
+                        let local_node_type = node_type;
+                        let local_name = name;
+                        let local_rgb = rgb;
+                        let local_id = id;
                         return function() {
                             return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                         };
                     })(),
                     alert_unselected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
+                        let local_node_type = node_type;
+                        let local_name = name;
+                        let local_id = id;
                         return function() {
                             return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                         };
                     })(),
                     alert_selected: (function() {
-                        var local_node_type = node_type;
-                        var local_name = name;
-                        var local_id = id;
+                        let local_node_type = node_type;
+                        let local_name = name;
+                        let local_id = id;
                         return function() {
                             return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                         };
                     })()
                 },
                 "console_link": (function() {
-                    var region = id.split(":")[3];
+                    const region = id.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/ec2/v2/home?region=${region}#Instances:instanceId=${name}`;
+                        let html = `https://console.aws.amazon.com/ec2/v2/home?region=${region}#Instances:instanceId=${name}`;
                         return html;
                     };
                 })(),
                 "cloudwatch_link": (function() {
-                    var region = id.split(":")[3];
+                    const region = id.split(":")[3];
                     return function() {
-                        var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fEC2*2cInstanceId*7d*20InstanceId*3d*22${name}*22`;
+                        let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fEC2*2cInstanceId*7d*20InstanceId*3d*22${name}*22`;
                         return html;
                     };
                 })()
@@ -106,7 +106,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
         };
 
 
-        var update = function() {
+        const update = function() {
             return update_configs();
         };
 

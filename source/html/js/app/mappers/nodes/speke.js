@@ -10,22 +10,22 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
         to be sure all MediaPackage inventory is loaded first.
         */
 
-        var node_type = "SPEKE Keyserver";
+        const node_type = "SPEKE Keyserver";
 
-        var update_speke_keyservers = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            var nodes = model.nodes;
-            var edges = model.edges;
-            var rgb = "#cc00ff";
+        const update_speke_keyservers = function() {
+            const local_svg_node = svg_node;
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
+            const nodes = model.nodes;
+            const rgb = "#cc00ff";
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/speke-keyserver", api_key).then((speke_keyservers_cached) => {
                     for (let keyserver of speke_keyservers_cached) {
-                        var keyserver_data = JSON.parse(keyserver.data);
-                        var name = keyserver_data.endpoint;
-                        var id = keyserver.arn;
-                        var node_data = {
+                        const keyserver_data = JSON.parse(keyserver.data);
+                        const name = keyserver_data.endpoint;
+                        const id = keyserver.arn;
+                        let node_data = {
                             "cache_update": keyserver.updated,
                             "id": id,
                             "region": keyserver.region,
@@ -41,49 +41,49 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                             "size": 55,
                             "render": {
                                 normal_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 normal_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 alert_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })(),
                                 alert_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })()
                             },
                             "console_link": (function() {
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/`;
+                                    let html = `https://console.aws.amazon.com/`;
                                     return html;
                                 };
                             })(),
                             "cloudwatch_link": (function() {
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/`;
+                                    let html = `https://console.aws.amazon.com/`;
                                     return html;
                                 };
                             })()
@@ -97,7 +97,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             });
         };
 
-        var update = function() {
+        const update = function() {
             return update_speke_keyservers();
         };
 

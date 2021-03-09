@@ -3,25 +3,42 @@
 
 define(["lodash", "app/server", "app/connections"], function(_, server, connections) {
 
+    const retrieve_channel = _.memoize(function(name) {
+        const current_connection = connections.get_current();
+        const url = current_connection[0];
+        const api_key = current_connection[1];
+        const current_endpoint = `${url}/channel/${name}`;
+        return new Promise(function(resolve, reject) {
+            server.get(current_endpoint, api_key).then(function(response) {
+                resolve(response);
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    });
 
-    var have_any = _.memoize(function(node_ids) {
+    const have_any = _.memoize(function(node_ids) {
+        const local_lodash = _;
+        const local_node_ids = node_ids;
         // console.log(node_ids);
-        var matches = [];
+        const matches = [];
         // return a list of channel names that have any of these nodes
         return new Promise(function(outer_resolve, outer_reject) {
-            var promises = [];
+            const promises = [];
             channel_list().then(function(channel_names) {
                 for (let name of channel_names) {
+                    const local_name = name;
                     promises.push(
                         new Promise(function(resolve, reject) {
                             // console.log(name);
                             // look for model matches
-                            retrieve_channel(name).then(function(contents) {
-                                var channel_keys = Object.keys(contents).sort();
-                                var intersect = _.intersection(node_ids, channel_keys);
+                            retrieve_channel(local_name).then(function(contents) {
+                                const channel_keys = Object.keys(contents).sort();
+                                const intersect = local_lodash.intersection(local_node_ids, channel_keys);
                                 // console.log(intersect);
                                 if (intersect.length > 0) {
-                                    matches.push(name);
+                                    matches.push(local_name);
                                 }
                                 resolve();
                             });
@@ -36,13 +53,13 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         });
     });
 
-    var create_channel = function(name, nodes) {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/channel/${name}`;
+    const create_channel = function(name, nodes) {
+        const current_connection = connections.get_current();
+        const url = current_connection[0];
+        const api_key = current_connection[1];
+        const current_endpoint = `${url}/channel/${name}`;
         return new Promise(function(resolve, reject) {
-            var data = nodes;
+            const data = nodes;
             server.post(current_endpoint, api_key, data).then(function(response) {
                 clear_function_cache();
                 resolve(response);
@@ -53,13 +70,13 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         });
     };
 
-    var update_channel = create_channel;
+    const update_channel = create_channel;
 
-    var delete_channel = function(name) {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/channel/${name}`;
+    const delete_channel = function(name) {
+        const current_connection = connections.get_current();
+        const url = current_connection[0];
+        const api_key = current_connection[1];
+        const current_endpoint = `${url}/channel/${name}`;
         return new Promise((resolve, reject) => {
             server.delete_method(current_endpoint, api_key).then((response) => {
                 clear_function_cache();
@@ -71,11 +88,11 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         });
     };
 
-    var retrieve_channel = _.memoize(function(name) {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/channel/${name}`;
+    const channel_list = _.memoize(function() {
+        const current_connection = connections.get_current();
+        const url = current_connection[0];
+        const api_key = current_connection[1];
+        const current_endpoint = `${url}/channels`;
         return new Promise(function(resolve, reject) {
             server.get(current_endpoint, api_key).then(function(response) {
                 resolve(response);
@@ -86,32 +103,19 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         });
     });
 
-    var channel_list = _.memoize(function() {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/channels`;
-        return new Promise(function(resolve, reject) {
-            server.get(current_endpoint, api_key).then(function(response) {
-                resolve(response);
-            }).catch(function(error) {
-                console.log(error);
-                reject(error);
-            });
-        });
-    });
-
-    var arn_to_channels = _.memoize(function(arn) {
+    const arn_to_channels = _.memoize(function(arn) {
+        const local_arn = arn;
         return new Promise(function(outerResolve, outerReject) {
             channel_list().then(function(channels) {
-                var matches = [];
-                var promises = [];
+                const matches = [];
+                const promises = [];
                 for (let channel_name of channels) {
+                    const local_channel_name = channel_name;
                     promises.push(new Promise(function(resolve, reject) {
-                        retrieve_channel(channel_name).then(function(members) {
+                        retrieve_channel(local_channel_name).then(function(members) {
                             for (let member_value of members) {
-                                if (member_value.id === arn) {
-                                    matches.push(channel_name);
+                                if (member_value.id === local_arn) {
+                                    matches.push(local_channel_name);
                                     break;
                                 }
                             }
@@ -129,18 +133,18 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
         });
     });
 
-    var clear_function_cache = function() {
+    const clear_function_cache = function() {
         have_any.cache.clear();
         retrieve_channel.cache.clear();
         channel_list.cache.clear();
         arn_to_channels.cache.clear();
     };
 
-    var delete_all_channels = function() {
-        var current_connection = connections.get_current();
-        var url = current_connection[0];
-        var api_key = current_connection[1];
-        var current_endpoint = `${url}/channels`;
+    const delete_all_channels = function() {
+        const current_connection = connections.get_current();
+        const url = current_connection[0];
+        const api_key = current_connection[1];
+        const current_endpoint = `${url}/channels`;
         return new Promise((resolve, reject) => {
             server.delete_method(current_endpoint, api_key).then((response) => {
                 clear_function_cache();
@@ -155,7 +159,7 @@ define(["lodash", "app/server", "app/connections"], function(_, server, connecti
     // pre-warming the function cache to speed tile drawing
 
     async function prewarm() {
-        var channels = await channel_list();
+        const channels = await channel_list();
         for (let name of channels) {
             retrieve_channel(name);
         }

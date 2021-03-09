@@ -4,56 +4,53 @@
 define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app/alarms", "app/settings", "app/ui/diagrams", "lodash", "app/ui/confirmation", "app/ui/alert", "app/ui/channels_menu"],
     function($, channels, model, ui_util, event_alerts, alarms, settings, diagrams, _, confirmation, alert, channels_menu) {
 
-        var tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
+        const tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
-        var click_listeners = [];
+        let click_listeners = [];
 
-        var tile_outer_div = "channel-tiles-outer";
+        const tile_outer_div = "channel-tiles-outer";
 
-        var content_div = "channel-tiles-diagram";
+        const content_div = "channel-tiles-diagram";
 
-        var tab_id = "channel-tiles-tab";
+        const tab_id = "channel-tiles-tab";
 
         // interval in millis to check the cloud for tile changes
-        var update_interval;
+        let update_interval;
 
-        var intervalID;
+        let intervalID;
 
-        var settings_key = "app-tile-update-interval";
+        const settings_key = "app-tile-update-interval";
 
-        var tile_width_px = 240;
-        var tile_height_px = 175;
+        const tile_width_px = 240;
+        const tile_height_px = 175;
 
-        var current_channel_list = [];
-        var current_channel_members = {};
+        const tile_view_key = "tile-view";
 
-        var tile_view_key = "tile-view";
-
-        var add_selection_callback = function(callback) {
+        const add_selection_callback = function(callback) {
             if (!click_listeners.includes(callback)) {
                 click_listeners.push(callback);
             }
         };
 
-        var event_alert_callback = function() {
+        const event_alert_callback = function() {
             update_tile_info();
         };
 
-        var alarm_callback = function() {
+        const alarm_callback = function() {
             update_tile_info();
         };
 
-        var selection_listener = function(name) {
+        const selection_listener = function(name) {
             toggle_tile(name);
             // select(name);
         };
 
-        var selected = function() {
-            var tile = $(".selected-channel-tile");
+        const selected = function() {
+            const tile = $(".selected-channel-tile");
             return tile.attr("data-channel-name");
         };
 
-        var toggle_tile = function(name) {
+        const toggle_tile = function(name) {
             if (name === selected()) {
                 unselect_all();
             } else {
@@ -61,8 +58,8 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         };
 
-        var blink = function(blinks, tile) {
-            var interval_ms = 500;
+        const blink = function(blinks, tile) {
+            const interval_ms = 500;
             if (blinks > 0) {
                 setTimeout(
                     function() {
@@ -78,37 +75,37 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         };
 
-        var scroll_to_tile = function(name) {
+        const scroll_to_tile = function(name) {
             // scroll to the selected item
-            var query = `[data-channel-name='${name}']`;
-            var selected = $(query);
+            const query = `[data-channel-name='${name}']`;
+            const selected = $(query);
             $("#" + tile_row_div_id).animate({
                 scrollTop: selected.offset().top
             }, "slow");
         };
 
-        var select = function(name) {
+        const select = function(name) {
             // query = `[data-channel-name][data-channel-name!='${name}']`;
-            var unselected_tiles = $(".selected-channel-tile");
+            const unselected_tiles = $(".selected-channel-tile");
             unselected_tiles.removeClass("selected-channel-tile");
-            var query = `[data-channel-name='${name}']`;
-            var selected_tile = $(query);
+            const query = `[data-channel-name='${name}']`;
+            const selected_tile = $(query);
             selected_tile.addClass("selected-channel-tile");
         };
 
-        var unselect = function(name) {
-            var query = `[data-channel-name='${name}']`;
-            var selected_tile = $(query);
+        const unselect = function(name) {
+            const query = `[data-channel-name='${name}']`;
+            const selected_tile = $(query);
             selected_tile.removeClass("selected-channel-tile");
         };
 
-        var unselect_all = function() {
-            var query = `[data-channel-name]`;
-            var unselected_tiles = $(query);
+        const unselect_all = function() {
+            const query = `[data-channel-name]`;
+            const unselected_tiles = $(query);
             unselected_tiles.removeClass("selected-channel-tile");
         };
 
-        var shown = function() {
+        const shown = function() {
             return $("#" + tab_id).attr("aria-selected") === "true";
         };
 
@@ -120,24 +117,24 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         }
 
-        var update_tile_info = async function() {
+        const update_tile_info = async function() {
             // console.log("update_tile_info");
-            var cached_events = event_alerts.get_cached_events();
-            var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-            var channel_list = await channels.channel_list();
+            const cached_events = event_alerts.get_cached_events();
+            const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
+            const channel_list = await channels.channel_list();
             for (let channel_name of channel_list) {
-                var channel_members = await channels.retrieve_channel(channel_name);
+                const channel_members = await channels.retrieve_channel(channel_name);
                 if (channel_members) {
-                    var query = `[data-channel-name='${channel_name}']`;
-                    var tile_id = $(query).attr("id");
-                    var service_count_id = tile_id + "_services";
-                    var event_count_id = tile_id + "_events";
-                    var alarm_count_id = tile_id + "_alarms";
+                    const query = `[data-channel-name='${channel_name}']`;
+                    const tile_id = $(query).attr("id");
+                    const service_count_id = tile_id + "_services";
+                    const event_count_id = tile_id + "_events";
+                    const alarm_count_id = tile_id + "_alarms";
                     // console.log(channel_members);
-                    var service_count = channel_members.length;
-                    var alert_count = 0;
-                    var alarm_count = 0;
-                    var border_class = "border-success";
+                    const service_count = channel_members.length;
+                    let alert_count = 0;
+                    let alarm_count = 0;
+                    let border_class = "border-success";
                     for (let member of channel_members) {
                         filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
                         alert_count += filtered_events.length;
@@ -165,12 +162,12 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             filter_tiles();
         };
 
-        var sort_tiles = function() {
-            var tiles = $("[data-channel-name]");
+        const sort_tiles = function() {
+            const tiles = $("[data-channel-name]");
             tiles.sort(function(a, b) {
-                var compare = 0;
-                var compA = Number.parseInt($(a).attr("data-alert-count")) + Number.parseInt($(a).attr("data-alarm-count"));
-                var compB = Number.parseInt($(b).attr("data-alert-count")) + Number.parseInt($(b).attr("data-alarm-count"));
+                let compare = 0;
+                let compA = Number.parseInt($(a).attr("data-alert-count")) + Number.parseInt($(a).attr("data-alarm-count"));
+                let compB = Number.parseInt($(b).attr("data-alert-count")) + Number.parseInt($(b).attr("data-alarm-count"));
                 compare = (compA < compB ? 1 : (compA > compB ? -1 : 0));
                 if (compare === 0) {
                     compA = $(a).attr("data-channel-name");
@@ -184,15 +181,15 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         };
 
-        var filter_tiles = function() {
+        const filter_tiles = function() {
             let tiles = $("[data-channel-name]");
             load_tile_view().then(function(tile_settings) {
                 update_filter_mode(tile_settings.tile_filter_text);
-                var show_alarm_tiles = tile_settings.show_alarm_tiles;
-                var show_normal_tiles = tile_settings.show_normal_tiles;
+                const show_alarm_tiles = tile_settings.show_alarm_tiles;
+                const show_normal_tiles = tile_settings.show_normal_tiles;
                 for (let tile of tiles) {
-                    var total = (Number.parseInt($(tile).attr("data-alert-count")) + Number.parseInt($(tile).attr("data-alarm-count")));
-                    var alarming = (total > 0);
+                    const total = (Number.parseInt($(tile).attr("data-alert-count")) + Number.parseInt($(tile).attr("data-alarm-count")));
+                    const alarming = (total > 0);
                     if (show_alarm_tiles && show_normal_tiles) {
                         $(tile).removeClass("d-none");
                     } else if (show_alarm_tiles) {
@@ -214,19 +211,22 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             });
         };
 
-        var redraw_tiles = async function() {
+        const redraw_tiles = async function() {
+            const local_lodash = _;
+            const local_jquery = $;
             $("#" + tile_outer_div).addClass("d-none");
             $("#" + content_div).html(`<div id="${tile_row_div_id}" data-tile-row="true" class="row ml-3">`);
-            var channel_list = await channels.channel_list();
-            var cached_events = event_alerts.get_cached_events();
-            var cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
+            const channel_list = await channels.channel_list();
+            const cached_events = event_alerts.get_cached_events();
+            const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
             for (let channel_name of channel_list) {
-                var border_class = "border-success";
-                var channel_members = await channels.retrieve_channel(channel_name);
+                const local_channel_name = channel_name;
+                let border_class = "border-success";
+                const channel_members = await channels.retrieve_channel(local_channel_name);
                 // console.log(channel_members);
-                var service_count = channel_members.length;
-                var alert_count = 0;
-                var alarm_count = 0;
+                const service_count = channel_members.length;
+                let alert_count = 0;
+                let alarm_count = 0;
                 for (let member of channel_members) {
                     filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
                     alert_count += filtered_events.length;
@@ -236,15 +236,15 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 if (alert_count + alarm_count) {
                     border_class = "border-danger";
                 }
-                if (channel_name == selected()) {
+                if (local_channel_name == selected()) {
                     border_class = `${border_class} selected-channel-tile`;
                 }
-                var channel_card_id = ui_util.makeid();
-                var model_button_id = channel_card_id + "_model_button";
-                var header_id = channel_card_id + "_header";
-                var tile = `
+                const channel_card_id = ui_util.makeid();
+                const model_button_id = channel_card_id + "_model_button";
+                const header_id = channel_card_id + "_header";
+                const tile = `
                         <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
-                            <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${channel_name}</div>
+                            <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${local_channel_name}</div>
                             <div class="card-body text-info my-0 py-1">
                                 <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${(alert_count === 1 ? "" : "s")}</h5>
                                 <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${(alarm_count === 1 ? "" : "s")}</h5>
@@ -256,17 +256,19 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                         </div>
                     `;
                 $("#" + tile_row_div_id).append(tile);
-                var header_click_closure = function() {
-                    var name = channel_name;
-                    var members = channel_members;
+                const header_click_closure = function() {
+                    const local_console = console;
+                    const name = local_channel_name;
+                    const members = channel_members;
                     return function() {
                         selection_listener(name, members);
-                        for (let f of click_listeners) {
+                        for (let listener of click_listeners) {
+                            const local_listener = listener;
                             new Promise((resolve, reject) => {
                                 try {
-                                    f(name, members);
+                                    local_listener(name, members);
                                 } catch (error) {
-                                    console.log(error);
+                                    local_console.log(error);
                                 }
                             });
                         }
@@ -274,40 +276,40 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 };
                 $("#" + header_id).on("click", header_click_closure());
                 $("#" + header_id).dblclick((function() {
-                    var name = channel_name;
-                    var members = channel_members;
+                    const name = channel_name;
+                    const members = channel_members;
                     return function() {
                         show_edit_dialog(name, members);
                     };
                 })());
-                var model_click_closure = function() {
-                    var tile_name = channel_name;
-                    var node_ids = _.map(channel_members, "id");
+                const model_click_closure = function() {
+                    const tile_name = channel_name;
+                    const node_ids = local_lodash.map(channel_members, "id");
                     return function() {
-                        var html;
-                        var matches = diagrams.have_all(node_ids);
+                        let html;
+                        const matches = diagrams.have_all(node_ids);
                         // show tile diagram dialog
-                        $("#view_tile_diagram_selected_diagram").empty();
+                        local_jquery("#view_tile_diagram_selected_diagram").empty();
                         if (node_ids.length === 0) {
                             alert.show("Add resources to the tile");
                         } else
                         if (matches.length === 0) {
                             html = `This tile's contents were not found on any diagram. Would you like to generate a new one?`;
                             confirmation.show(html, function() {
-                                var diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+                                const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
                                 // populate
-                                var nodes = _.compact(model.nodes.get(node_ids));
+                                const nodes = local_lodash.compact(model.nodes.get(node_ids));
                                 diagram.nodes.update(nodes);
                                 diagram.show();
                             });
                         } else {
                             for (let diagram of matches) {
                                 html = `<option value="${diagram.name}">${diagram.name}</option>`;
-                                $("#view_tile_diagram_selected_diagram").append(html);
+                                local_jquery("#view_tile_diagram_selected_diagram").append(html);
                             }
-                            $("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
-                            $("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
-                            $("#view_tile_diagram_dialog").modal("show");
+                            local_jquery("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
+                            local_jquery("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
+                            local_jquery("#view_tile_diagram_dialog").modal("show");
                         }
                     };
                 };
@@ -322,12 +324,11 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             $("#channel_edit_name").val(name);
             $("#channel_edit_name").attr("data-original-name", name);
             $("#channel_edit_modal_items").empty();
-            var channel_content = "";
+            let channel_content = "";
             let index = 0;
             for (let member of members) {
-                var node = model.nodes.get(member.id);
-                // var data = JSON.stringify(node.data);
-                var checkbox_id = ui_util.makeid();
+                const node = model.nodes.get(member.id);
+                const checkbox_id = ui_util.makeid();
                 if (node) {
                     channel_content += `
                                         <tr><th scope="row">${index+1}</th>
@@ -351,7 +352,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 }
                 index++;
             }
-            var html = `
+            const html = `
                         <table id="channel_edit_members_table" class="table table-sm table-hover">
                             <thead>
                                 <tr>
@@ -370,9 +371,9 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         }
 
         $("#view_tile_diagram_show").on("click", function() {
-            var diagram_name = $("#view_tile_diagram_selected_diagram").val();
-            var node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
-            var diagram = diagrams.get_by_name(diagram_name);
+            const diagram_name = $("#view_tile_diagram_selected_diagram").val();
+            const node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
+            const diagram = diagrams.get_by_name(diagram_name);
             diagram.network.once("afterDrawing", function() {
                 diagram.network.fit({
                     nodes: node_ids,
@@ -385,11 +386,11 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#view_tile_diagram_generate_diagram_button").on("click", function() {
-            var tile_name = $("#view_tile_diagram_dialog").attr("data-tile-name");
-            var node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
-            var diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+            const tile_name = $("#view_tile_diagram_dialog").attr("data-tile-name");
+            const node_ids = JSON.parse($("#view_tile_diagram_dialog").attr("data-node-ids"));
+            const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
             // populate
-            var nodes = _.compact(model.nodes.get(node_ids));
+            const nodes = _.compact(model.nodes.get(node_ids));
             diagram.nodes.update(nodes);
             // diagram.network.once("afterDrawing", function() {
             //     // layout
@@ -401,15 +402,15 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#save_channel_edit").on("click", function() {
-            var edited_name = $("#channel_edit_name").val();
+            const edited_name = $("#channel_edit_name").val();
             // console.log(edited_name);
-            var original_name = $("#channel_edit_name").attr("data-original-name");
+            const original_name = $("#channel_edit_name").attr("data-original-name");
             // console.log(original_name);
-            var member_checkboxes = $("#channel_edit_members_table input[type='checkbox']");
+            const member_checkboxes = $("#channel_edit_members_table input[type='checkbox']");
             // console.log(member_checkboxes);
             channels.delete_channel(original_name).then(function() {
                 console.log("removed channel members");
-                var members = [];
+                const members = [];
                 for (let item of member_checkboxes) {
                     if (item.checked === false) {
                         members.push(item.value);
@@ -426,7 +427,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#tiles_duplicate_selected_tile_button").on("click", function() {
-            var tile_name = selected();
+            const tile_name = selected();
             if (shown() && tile_name && tile_name !== "") {
                 channels.retrieve_channel(tile_name).then(function(source_contents) {
                     source_node_ids = _.map(source_contents, "id").sort();
@@ -436,7 +437,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#tiles_edit_selected_tile_button").on("click", function() {
-            var tile_name = selected();
+            const tile_name = selected();
             if (shown() && tile_name && tile_name !== "") {
                 channels.retrieve_channel(tile_name).then(function(contents) {
                     show_edit_dialog(tile_name, contents);
@@ -445,7 +446,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#tiles_delete_selected_tile_button").on("click", function() {
-            var tile_name = selected();
+            const tile_name = selected();
             if (shown() && tile_name && tile_name !== "") {
                 $("#confirmation_dialog_proceed").on("click", function(event) {
                     channels.delete_channel(tile_name).then(function(response) {
@@ -462,25 +463,25 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         });
 
-        var cache_update = redraw_tiles;
+        const cache_update = redraw_tiles;
 
-        var load_update_interval = function() {
+        const load_update_interval = function() {
             return new Promise(function(resolve) {
                 settings.get(settings_key).then(function(value) {
-                    var seconds = Number.parseInt(value);
+                    const seconds = Number.parseInt(value);
                     update_interval = seconds * 1000;
                     resolve();
                 });
             });
         };
 
-        var set_update_interval = function(seconds) {
+        const set_update_interval = function(seconds) {
             // create a default
             update_interval = seconds * 1000;
             return settings.put(settings_key, seconds);
         };
 
-        var schedule_interval = function() {
+        const schedule_interval = function() {
             if (intervalID) {
                 clearInterval(intervalID);
             }
@@ -488,7 +489,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             console.log("tile view: interval scheduled " + update_interval + "ms");
         };
 
-        var load_tile_view = function() {
+        const load_tile_view = function() {
             return new Promise(function(resolve) {
                 settings.get(tile_view_key).then(function(value) {
                     resolve(value);
@@ -496,7 +497,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             });
         };
 
-        var update_tile_view = function(tile_view) {
+        const update_tile_view = function(tile_view) {
             return new Promise(function(resolve) {
                 settings.put(tile_view_key, tile_view).then(function() {
                     console.log("tile view saved");
@@ -507,12 +508,12 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             });
         };
 
-        var update_filter_mode = function(text) {
+        const update_filter_mode = function(text) {
             $("#tile-filter-dropdown").text(text);
         };
 
         $("#tile-filter-show-all").click(function(event) {
-            var tile_filter_text = "Showing All Tiles";
+            const tile_filter_text = "Showing All Tiles";
             update_filter_mode(tile_filter_text);
             update_tile_view({ "show_alarm_tiles": true, "show_normal_tiles": true, "tile_filter_text": tile_filter_text }).then(function() {
                 update_tile_info();
@@ -520,7 +521,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#tile-filter-show-alarm").click(function(event) {
-            var tile_filter_text = "Showing Alarm/Alert Tiles";
+            const tile_filter_text = "Showing Alarm/Alert Tiles";
             update_filter_mode(tile_filter_text);
             update_tile_view({ "show_alarm_tiles": true, "show_normal_tiles": false, "tile_filter_text": tile_filter_text }).then(function() {
                 update_tile_info();
@@ -528,7 +529,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
         });
 
         $("#tile-filter-show-normal").click(function(event) {
-            var tile_filter_text = "Showing Normal Tiles";
+            const tile_filter_text = "Showing Normal Tiles";
             update_filter_mode(tile_filter_text);
             update_tile_view({ "show_alarm_tiles": false, "show_normal_tiles": true, "tile_filter_text": tile_filter_text }).then(function() {
                 update_tile_info();

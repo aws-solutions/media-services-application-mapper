@@ -4,22 +4,22 @@
 define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node"],
     function($, server, connections, model, svg_node) {
 
-        var update_buckets = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            var nodes = model.nodes;
-            var rgb = "#D5DBDB";
-            var node_type = "S3 Bucket";
+        const update_buckets = function() {
+            const local_svg_node = svg_node;
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
+            const nodes = model.nodes;
+            const rgb = "#D5DBDB";
+            const node_type = "S3 Bucket";
             return new Promise(function(resolve, reject) {
-                var channels;
                 server.get(url + "/cached/s3", api_key).then(function(cache_entries) {
                     for (let cache_entry of cache_entries) {
-                        var bucket = JSON.parse(cache_entry.data);
+                        const bucket = JSON.parse(cache_entry.data);
                         bucket.Arn = "arn:aws:s3:::" + bucket.Name;
-                        var name = bucket.Name;
-                        var id = bucket.Arn;
-                        var node_data = {
+                        const name = bucket.Name;
+                        const id = bucket.Arn;
+                        let node_data = {
                             "cache_update": cache_entry.updated,
                             "id": bucket.Arn,
                             "region": cache_entry.region,
@@ -35,51 +35,51 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                             "size": 55,
                             "render": {
                                 normal_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 normal_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 alert_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })(),
                                 alert_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })()
                             },
                             "console_link": (function() {
-                                var id = bucket.Name;
+                                const id = bucket.Name;
                                 return function() {
-                                    var html = `https://s3.console.aws.amazon.com/s3/buckets/${id}/?tab=overview`;
+                                    let html = `https://s3.console.aws.amazon.com/s3/buckets/${id}/?tab=overview`;
                                     return html;
                                 };
                             })(),
                             "cloudwatch_link": (function() {
-                                var id = bucket.Name;
+                                const id = bucket.Name;
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/cloudwatch/home#metricsV2:graph=~();search=${id};namespace=AWS/S3;dimensions=BucketName,StorageType`;
+                                    let html = `https://console.aws.amazon.com/cloudwatch/home#metricsV2:graph=~();search=${id};namespace=AWS/S3;dimensions=BucketName,StorageType`;
                                     return html;
                                 };
                             })()
@@ -96,7 +96,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             });
         };
 
-        var update = function() {
+        const update = function() {
             return update_buckets();
         };
 

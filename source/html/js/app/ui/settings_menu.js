@@ -4,34 +4,35 @@
 define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_check", "app/settings", "app/ui/confirmation", "app/channels"],
     function($, connections, regions_promise, util, api_check, settings, confirmation, channels) {
 
-        var history_to_buttons = function(history) {
+        const history_to_buttons = function(history) {
+            const local_jq = $;
             let index = 0;
             for (let item of history) {
                 // console.log(item);
-                var id = util.makeid();
-                var url = item[0];
-                var apiKey = item[1];
+                const id = util.makeid();
+                const url = item[0];
+                const apiKey = item[1];
                 if (index == 0) {
                     $("#input_endpoint_url").val(url);
                     $("#input_endpoint_key").val(apiKey);
                 }
-                var html = `<a class="dropdown-item" id="${id}" href="#">${url}</a>`;
+                const html = `<a class="dropdown-item" id="${id}" href="#">${url}</a>`;
                 $("#connectionHistoryDropdownMenu").append(html);
                 // add event handlers to each item to populate dialog fields
                 $("#" + id).click((function() {
                     let u = url;
                     let k = apiKey;
                     return function(event) {
-                        $("#input_endpoint_url").val(u);
-                        $("#input_endpoint_key").val(k);
+                        local_jq("#input_endpoint_url").val(u);
+                        local_jq("#input_endpoint_key").val(k);
                     };
                 })());
                 index++;
             }
         };
 
-        var updateConnectionDialog = function() {
-            var history = Array.from(connections.get_remembered());
+        const updateConnectionDialog = function() {
+            const history = Array.from(connections.get_remembered());
             // clear the existing dropdown items
             $("#connectionHistoryDropdownMenu").empty();
             // replace with current history items
@@ -41,7 +42,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             } else {
                 $("#connectionHistoryMenuButton").addClass("disabled");
             }
-            var current = connections.get_current();
+            const current = connections.get_current();
             if (current) {
                 $("#input_endpoint_url").val(current[0]);
                 $("#input_endpoint_key").val(current[1]);
@@ -51,14 +52,14 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             $("#connectionRememberText").text("Do Not Remember");
         };
 
-        var updateRegionDialog = function() {
+        const updateRegionDialog = function() {
             regions_promise().then(function(regions) {
-                var selected = Array.from(regions.get_selected());
-                var button_group = $("#region_toggles");
+                const selected = Array.from(regions.get_selected());
+                const button_group = $("#region_toggles");
                 button_group.empty();
                 for (let region of regions.get_available()) {
-                    var toggled = (selected.indexOf(region.RegionName) >= 0);
-                    var button_html = '<button type="button" id="button_toggle_' + region.RegionName + '" class="region-button mx-3 my-1 btn btn-sm btn-outline-primary ' + (toggled ? " active" : "") + '" data-toggle="button" aria-pressed="' + toggled + '" autocomplete="off">' + region.RegionName + '</button><br>';
+                    const toggled = (selected.indexOf(region.RegionName) >= 0);
+                    const button_html = '<button type="button" id="button_toggle_' + region.RegionName + '" class="region-button mx-3 my-1 btn btn-sm btn-outline-primary ' + (toggled ? " active" : "") + '" data-toggle="button" aria-pressed="' + toggled + '" autocomplete="off">' + region.RegionName + '</button><br>';
                     button_group.append(button_html);
                 }
             }).catch(function(error) {
@@ -105,12 +106,12 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
         });
         $("#cancel_endpoint_connection").on("click", () => {
             console.log("cancel connection");
-            var current_connection = connections.get_current();
+            const current_connection = connections.get_current();
             if (current_connection) {
                 console.log("testing last connection used");
                 // test current connection with api-ping
-                var endpoint = current_connection[0];
-                var api_key = current_connection[1];
+                const endpoint = current_connection[0];
+                const api_key = current_connection[1];
                 api_check.ping(endpoint, api_key).then(function(response) {
                     // test worked
                     console.log("still working");
@@ -130,8 +131,8 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
         // add a save handler for the region selection dialog
         $("#save_region_selections").on("click", () => {
             regions_promise().then(function(regions) {
-                var toggles = $('.region-button');
-                var selected = [];
+                const toggles = $('.region-button');
+                const selected = [];
                 for (let button of toggles) {
                     if (button.attributes['aria-pressed'].value == "true") {
                         selected.push(button.textContent);
@@ -169,57 +170,57 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             return true;
         });
 
-        var setConnectionAlert = function(message) {
-            var html = `<div id="endpoint_connection_alert" class="m-3 alert alert-danger" role="alert">${message}</div>`;
+        const setConnectionAlert = function(message) {
+            const html = `<div id="endpoint_connection_alert" class="m-3 alert alert-danger" role="alert">${message}</div>`;
             $("#endpoint_connection_alert").replaceWith(html);
         };
 
-        var clearConnectionAlert = function() {
-            var html = `<div id="endpoint_connection_alert"></div>`;
+        const clearConnectionAlert = function() {
+            const html = `<div id="endpoint_connection_alert"></div>`;
             $("#endpoint_connection_alert").replaceWith(html);
         };
 
-        var setRegionSelectionAlert = function(message) {
-            var html = `<div id="region_selection_alert" class="mx-3 mt-3 mb-1 alert alert-danger" role="alert">${message}</div>`;
+        const setRegionSelectionAlert = function(message) {
+            const html = `<div id="region_selection_alert" class="mx-3 mt-3 mb-1 alert alert-danger" role="alert">${message}</div>`;
             $("#region_selection_alert").replaceWith(html);
         };
 
-        var clearRegionSelectionAlert = function() {
-            var html = `<div id="region_selection_alert"></div>`;
+        const clearRegionSelectionAlert = function() {
+            const html = `<div id="region_selection_alert"></div>`;
             $("#region_selection_alert").replaceWith(html);
         };
 
-        var showConnectionDialog = function() {
+        const showConnectionDialog = function() {
             updateConnectionDialog();
             $("#endpoint_connection_modal").modal('show');
         };
 
-        var hideConnectionDialog = function() {
+        const hideConnectionDialog = function() {
             updateConnectionDialog();
             $("#endpoint_connection_modal").modal('hide');
         };
 
-        var showRegionSelectionDialog = function() {
+        const showRegionSelectionDialog = function() {
             updateRegionDialog();
             $("#region_selection_modal").modal('show');
         };
 
-        var hideRegionSelectionDialog = function() {
+        const hideRegionSelectionDialog = function() {
             updateRegionDialog();
             $("#region_selection_modal").modal('hide');
         };
 
-        var setAdvancedSettingsAlert = function(message) {
-            var html = `<div id="advanced_settings_modal_alert" class="m-3 alert alert-danger" role="alert">${message}</div>`;
+        const setAdvancedSettingsAlert = function(message) {
+            const html = `<div id="advanced_settings_modal_alert" class="m-3 alert alert-danger" role="alert">${message}</div>`;
             $("#advanced_settings_modal_alert").replaceWith(html);
         };
 
-        var clearAdvancedSettingsAlert = function() {
-            var html = `<div id="advanced_settings_modal_alert"></div>`;
+        const clearAdvancedSettingsAlert = function() {
+            const html = `<div id="advanced_settings_modal_alert"></div>`;
             $("#advanced_settings_modal_alert").replaceWith(html);
         };
 
-        var get_never_cache_regions = function() {
+        const get_never_cache_regions = function() {
             return new Promise(function(resolve, reject) {
                 settings.get("never-cache-regions").then(function(data) {
                     if (data == null) {
@@ -230,7 +231,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             });
         };
 
-        var set_never_cache_regions = function(regions) {
+        const set_never_cache_regions = function(regions) {
             console.log("updating never-cache-regions: " + JSON.stringify(regions));
             return new Promise(function(resolve, reject) {
                 if (!Array.isArray(regions)) {
@@ -308,7 +309,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 require("app/ui/tile_view").set_update_interval(tiles_interval);
                 set_never_cache_regions(regions_array);
                 // save layout method
-                var method = $("#layout-method-select").val();
+                const method = $("#layout-method-select").val();
                 console.log("layout-method is " + method);
                 settings.put("layout-method", {
                     "method": method
