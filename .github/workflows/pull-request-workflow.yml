@@ -7,17 +7,15 @@ env:
   DIST_OUTPUT_BUCKET: msam-pr-build
 on: 
   pull_request:
-    types: [opened, edited, reopened]
+    types: [opened, edited, reopened, synchronize]
 
 jobs:
-  scan-build-upload-job:
+  scan-build-job:
     runs-on: ubuntu-latest
     # use a specific environment for this build that has secrets defined and protection rules in place, if needed
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       # scan for any malware in the commit
       - name: ClamAV Scan
         uses: djdefi/gitavscan@main
@@ -54,7 +52,7 @@ jobs:
           path: deployment/global-s3-assets/*release.template
 
   cfn-lint-check-job:
-    needs: scan-build-upload-job
+    needs: scan-build-job
     runs-on: ubuntu-latest
     name: Check templates with cfn-lint
     steps:
@@ -68,7 +66,7 @@ jobs:
           args: '*.template'
 
   cfn-nag-check-job:
-    needs: scan-build-upload-job
+    needs: scan-build-job
     runs-on: ubuntu-latest
     name: Check templates with cfn-nag
     steps:
@@ -80,7 +78,7 @@ jobs:
         uses: stelligent/cfn_nag@master
 
   hawkeye-check-job:
-    needs: scan-build-upload-job
+    needs: scan-build-job
     runs-on: ubuntu-latest
     name: Check source code with Hawkeye
     steps:
@@ -92,7 +90,7 @@ jobs:
         uses: ./.github/actions/hawkeye-scan
 
   pylint-check-job:
-    needs: scan-build-upload-job
+    needs: scan-build-job
     runs-on: ubuntu-latest
     name: Check source code with pylint
     steps:
@@ -114,3 +112,20 @@ jobs:
         run: |
           cd source
           ./tools/pylint.sh
+
+  jshint-check-job:
+    needs: scan-build-job
+    runs-on: ubuntu-latest
+    name: Check source code with JShint
+    steps:
+      # check out the merged PR
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install JShint
+        run: npm install jshint
+      - name: Check with JShint
+        run: |
+          cd source/html
+          find . -name '*.js' -type f -print | \
+            grep --invert-match "/external/" | \
+            xargs ../../node_modules/jshint/bin/jshint
