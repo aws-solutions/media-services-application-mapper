@@ -6,7 +6,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
 
         var tab_id = "nav-search-tab";
 
-        var blinks = 10;
+        const blinks = 10;
 
         var show = function() {
             $("#" + tab_id).tab('show');
@@ -57,13 +57,13 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             $("#diagram-names-match").html(html);
             for (let item of anchor_handler_data) {
                 var anchor_id = item.anchor_id;
-                var eventClosure = function() {
-                    var diagram = item.diagram;
+                var eventClosure = function(local_item, local_console) {
+                    var diagram = local_item.diagram;
                     return function(event) {
                         if (!diagram.shown()) {
                             diagram.network.once("afterDrawing", (function() {
                                 return function() {
-                                    console.log(diagram);
+                                    local_console.log(diagram);
                                     diagram.network.fit();
                                 };
                             })());
@@ -72,7 +72,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                             diagram.network.fit();
                         }
                     };
-                }();
+                }(item, console);
                 $("#" + anchor_id).on("click", eventClosure);
             }
         }
@@ -99,16 +99,16 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             html += close;
             $("#diagram-contents-match").html(html);
             for (let item of anchor_handler_data) {
-                var anchor_id = item.anchor_id;
-                var eventClosure = function() {
-                    var diagram = item.diagram;
-                    var node_id = item.node_id;
+                let anchor_id = item.anchor_id;
+                let eventClosure = function(local_item, local_console) {
+                    let diagram = local_item.diagram;
+                    let node_id = local_item.node_id;
                     return function(event) {
                         if (!diagram.shown()) {
                             diagram.network.once("afterDrawing", (function() {
                                 return function() {
-                                    console.log(diagram);
-                                    console.log(node_id);
+                                    local_console.log(diagram);
+                                    local_console.log(node_id);
                                     diagram.network.fit({
                                         nodes: [node_id],
                                         animation: true
@@ -125,7 +125,7 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
                             diagram.blink(blinks, node_id);
                         }
                     };
-                }();
+                }(item, console);
                 $("#" + anchor_id).on("click", eventClosure);
             }
         }
@@ -147,14 +147,14 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             html += close;
             $("#tile-names-match").html(html);
             for (let item of anchor_handler_data) {
-                var anchor_id = item.anchor_id;
-                var eventClosure = function() {
-                    var name = item.tile;
+                let anchor_id = item.anchor_id;
+                let eventClosure = function(local_item, local_jq, local_tile_view) {
+                    var name = local_item.tile;
                     return function(event) {
-                        $("#channel-tiles-tab").tab('show');
-                        tile_view.blink(name);
+                        local_jq("#channel-tiles-tab").tab('show');
+                        local_tile_view.blink(name);
                     };
-                }();
+                }(item, $, tile_view);
                 $("#" + anchor_id).on("click", eventClosure);
             }
         }
@@ -180,14 +180,14 @@ define(["jquery", "app/model", "app/search", "app/ui/util", "app/ui/tile_view", 
             html += close;
             $("#tile-contents-match").html(html);
             for (let item of anchor_handler_data) {
-                var anchor_id = item.anchor_id;
-                var eventClosure = function() {
-                    var name = item.tile;
+                let anchor_id = item.anchor_id;
+                let eventClosure = function(local_item, local_jq, local_tile_view) {
+                    let name = local_item.tile;
                     return function(event) {
-                        $("#channel-tiles-tab").tab('show');
-                        tile_view.blink(name);
+                        local_jq("#channel-tiles-tab").tab('show');
+                        local_tile_view.blink(name);
                     };
-                }();
+                }(item, $, tile_view);
                 $("#" + anchor_id).on("click", eventClosure);
             }
         }
