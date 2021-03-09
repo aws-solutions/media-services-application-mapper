@@ -14,7 +14,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
         var alarms_tab_id = "nav-alarms-tab";
         var events_tab_id = "nav-events-tab";
 
-        var blinks = 10;
+        const blinks = 10;
 
         var show = function() {
             $("#" + data_tab_id).tab("show");
@@ -86,25 +86,25 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 // attach click handlers to tile links
                 for (let link of channel_tile_link_ids) {
                     let id = link.id;
-                    let eventClosure = function() {
-                        var local_view = tile_view;
-                        var local_name = link.name;
+                    let eventClosure = (function(local_tile_view, local_link, local_jq) {
+                        var local_view = local_tile_view;
+                        var local_name = local_link.name;
                         return function(event) {
-                            var tab = $("#channel-tiles-tab");
+                            var tab = local_jq("#channel-tiles-tab");
                             if (tab.attr("aria-selected") == "false") {
-                                $("#channel-tiles-tab").tab("show");
+                                local_jq("#channel-tiles-tab").tab("show");
                             }
                             local_view.blink(local_name);
                         };
-                    }();
+                    })(tile_view, link, $);
                     $("#" + id).on("click", eventClosure);
                 }
                 // attach click handlers to diagram links
                 for (let item of diagram_link_ids) {
                     let id = item.id;
-                    let eventClosure = function() {
-                        var local_diagram = item.diagram;
-                        var local_node_id = item.node_id;
+                    let eventClosure = function(local_item) {
+                        var local_diagram = local_item.diagram;
+                        var local_node_id = local_item.node_id;
                         var local_blinks = blinks;
                         return function(event) {
                             local_diagram.network.once("afterDrawing", (function() {
@@ -118,7 +118,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                             })());
                             local_diagram.show();
                         };
-                    }();
+                    }(item);
                     $("#" + id).on("click", eventClosure);
                 }
             });

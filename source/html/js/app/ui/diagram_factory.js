@@ -241,9 +241,11 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 for (let node_id of this.nodes.getIds()) {
                     // find all edges connected to this node
                     var matches = model.edges.get({
-                        filter: function(edge) {
-                            return (edge.to == node_id || edge.from == node_id);
-                        }
+                        filter: (function(local_node_id) {
+                            return function(edge) {
+                                return (edge.to == local_node_id || edge.from == local_node_id);
+                            };
+                        })(node_id)
                     });
                     // add each edge if both nodes are present
                     for (let edge of matches) {
@@ -264,7 +266,11 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 if (event == "add" || event == "update") {
                     for (let id of node_ids) {
                         // query all edges from the model with this node
-                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id; });
+                        let filtered = _.filter(model.edges.get(),
+                            (function(local_id) {
+                                return function(edge) { return edge.to == local_id || edge.from == local_id; };
+                            })(id)
+                        );
                         for (let edge of filtered) {
                             if (edge.to == id) {
                                 // check 'from' node is on diagram
@@ -286,7 +292,11 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 if (event == "remove") {
                     for (let id of node_ids) {
                         // query all edges on the diagram 
-                        let filtered = _.filter(model.edges.get(), function(edge) { return edge.to == id || edge.from == id; });
+                        let filtered = _.filter(model.edges.get(),
+                            (function(local_id) {
+                                return function(edge) { return edge.to == local_id || edge.from == local_id; };
+                            })(id)
+                        );
                         for (let edge of filtered) {
                             console.log("removing unneeded edge");
                             diagram.edges.remove(edge.id);
