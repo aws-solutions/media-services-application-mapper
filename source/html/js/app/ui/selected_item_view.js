@@ -46,12 +46,12 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 if (tile_names.length > 0) {
                     var tile_links = "";
                     for (let name of tile_names) {
-                        var id = ui_util.makeid();
+                        let id = ui_util.makeid();
                         channel_tile_link_ids.push({
                             id: id,
                             name: name
                         });
-                        var html = `<a href="#" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
+                        let html = `<a href="#" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                         tile_links = tile_links + html;
                     }
                     tile_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Tiles:</b>&nbsp;&nbsp;${tile_links}</p>`;
@@ -68,7 +68,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 // $("#nav-data-subtitle").html(node.title);
                 renderjson.set_icons("+", "-");
                 renderjson.set_show_to_level(1);
-                var html = `
+                let html = `
                     <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">${node.header}&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
                     ${tile_html}
                     ${diagram_html}
@@ -85,8 +85,8 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 );
                 // attach click handlers to tile links
                 for (let link of channel_tile_link_ids) {
-                    var id = link.id;
-                    var eventClosure = function() {
+                    let id = link.id;
+                    let eventClosure = function() {
                         var local_view = tile_view;
                         var local_name = link.name;
                         return function(event) {
@@ -101,8 +101,8 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
                 }
                 // attach click handlers to diagram links
                 for (let item of diagram_link_ids) {
-                    var id = item.id;
-                    var eventClosure = function() {
+                    let id = item.id;
+                    let eventClosure = function() {
                         var local_diagram = item.diagram;
                         var local_node_id = item.node_id;
                         var local_blinks = blinks;
@@ -193,7 +193,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
 
         // accepts a list of element IDs to hide
         var hide_elements = function(element_list) {
-            for (id in element_list) {
+            for (let id in element_list) {
                 $("#" + element_list[id]).addClass("d-none");
             }
         };
@@ -201,7 +201,7 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
         // accepts a list of element IDs to show
         var show_elements = function(element_list) {
             // iterate through tabs to show
-            for (id in element_list) {
+            for (let id in element_list) {
                 $("#" + element_list[id]).removeClass("d-none");
             }
         };
