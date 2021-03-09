@@ -4,7 +4,7 @@
 
 Each time the MSAM web application is launched, the browser's locally stored cookies are checked for any previous API connection information. If a previous connection is found, it is used by the browser automatically on the next launch.
 
-**Did you retrieve the default API key in the installation instructions?** If not, go back to [Install](INSTALL.md) and review *Retrieve the API Key for the REST API.*
+**Did you retrieve the default API key in the installation instructions?** If not, go back to the [outputs section](INSTALL.md#outputs) of the root template to retrieve the key. If you didn't use the root template and installed templates individually, review the [Retrieve the API Key for the REST API](INSTALL.MD#retrieve-the-api-key-for-the-rest-api) section of the Install guide. 
 
 When MSAM starts and a previous connection is not found, the user is prompted for an endpoint URL and API key. The tool will confirm the connection information is valid before continuing. You can save several endpoints in browser storage for easy reuse later.
 
