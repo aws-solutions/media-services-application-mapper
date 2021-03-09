@@ -142,7 +142,7 @@ jobs:
   pylint-check-job:
     needs: scan-build-upload-job
     runs-on: ubuntu-latest
-    name: Check source code with pylint
+    name: Check source code with Pylint
     steps:
       # check out the merged PR
       - name: Checkout
@@ -157,8 +157,8 @@ jobs:
             cat error.txt
             exit 1
           fi
-      # check it with pylint
-      - name: Check with pylint
+      # check it with Pylint
+      - name: Check with Pylint
         run: |
           cd source
           ./tools/pylint.sh
@@ -176,4 +176,6 @@ jobs:
       - name: Check with jshint
         run: |
           cd source/html
-          ../tools/jshint.sh
+          find . -name '*.js' -type f -print | \
+            grep --invert-match "/external/" | \
+            xargs ../../node_modules/jshint/bin/jshint
