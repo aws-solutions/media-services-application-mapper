@@ -117,6 +117,57 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             }
         }
 
+        const show_edit_dialog = function(name, members) {
+            // console.log(members);
+            $("#channel_edit_name").val(name);
+            $("#channel_edit_name").attr("data-original-name", name);
+            $("#channel_edit_modal_items").empty();
+            let channel_content = "";
+            let index = 0;
+            for (let member of members) {
+                const node = model.nodes.get(member.id);
+                const checkbox_id = ui_util.makeid();
+                if (node) {
+                    channel_content += `
+                                        <tr><th scope="row">${index+1}</th>
+                                        <td>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
+                                        </div>
+                                        </td>
+                                        <td>${node.title}</td><td>${node.id}</td></tr>
+                                    `;
+                } else {
+                    channel_content += `
+                                        <tr><th scope="row">${index+1}</th>
+                                        <td>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
+                                        </div>
+                                        </td>
+                                        <td>Expired</td><td>Expired</td></tr>
+                                    `;
+                }
+                index++;
+            }
+            const html = `
+                        <table id="channel_edit_members_table" class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Remove</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">ARN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${channel_content}
+                            </tbody>
+                        </table>`;
+            $("#channel_edit_modal_items").html(html);
+            $("#channel_edit_modal").modal("show");
+        };
+
         const update_tile_info = async function() {
             // console.log("update_tile_info");
             const cached_events = event_alerts.get_cached_events();
@@ -256,47 +307,44 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                         </div>
                     `;
                 $("#" + tile_row_div_id).append(tile);
-                const header_click_closure = function() {
-                    const local_console = console;
-                    const name = local_channel_name;
-                    const members = channel_members;
+                const header_click_closure = function(hc_console, hc_name, hc_channel_members, hc_click_listeners) {
                     return function() {
-                        selection_listener(name, members);
-                        for (let listener of click_listeners) {
+                        selection_listener(hc_name, hc_channel_members);
+                        for (let listener of hc_click_listeners) {
                             const local_listener = listener;
-                            new Promise((resolve, reject) => {
-                                try {
-                                    local_listener(name, members);
-                                } catch (error) {
-                                    local_console.log(error);
-                                }
-                            });
+                            try {
+                                local_listener(hc_name, hc_channel_members);
+                            } catch (error) {
+                                hc_console.log(error);
+                            }
                         }
                     };
                 };
-                $("#" + header_id).on("click", header_click_closure());
+                $("#" + header_id).on("click", header_click_closure(console, local_channel_name, channel_members, click_listeners));
                 $("#" + header_id).dblclick((function() {
-                    const name = channel_name;
+                    const name = local_channel_name;
                     const members = channel_members;
                     return function() {
                         show_edit_dialog(name, members);
                     };
                 })());
-                const model_click_closure = function() {
-                    const tile_name = channel_name;
+                const local_alert = alert;
+                const model_click_closure = function(diagrams, confirmation, _, model) {
+                    const mc_diagrams = diagrams;
+                    const mc_tile_name = local_channel_name;
                     const node_ids = local_lodash.map(channel_members, "id");
                     return function() {
                         let html;
-                        const matches = diagrams.have_all(node_ids);
+                        const matches = mc_diagrams.have_all(node_ids);
                         // show tile diagram dialog
                         local_jquery("#view_tile_diagram_selected_diagram").empty();
                         if (node_ids.length === 0) {
-                            alert.show("Add resources to the tile");
+                            local_alert.show("Add resources to the tile");
                         } else
                         if (matches.length === 0) {
                             html = `This tile's contents were not found on any diagram. Would you like to generate a new one?`;
                             confirmation.show(html, function() {
-                                const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+                                const diagram = mc_diagrams.add(mc_tile_name, _.snakeCase(mc_tile_name), true);
                                 // populate
                                 const nodes = local_lodash.compact(model.nodes.get(node_ids));
                                 diagram.nodes.update(nodes);
@@ -308,67 +356,16 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                                 local_jquery("#view_tile_diagram_selected_diagram").append(html);
                             }
                             local_jquery("#view_tile_diagram_dialog").attr("data-node-ids", JSON.stringify(node_ids));
-                            local_jquery("#view_tile_diagram_dialog").attr("data-tile-name", tile_name);
+                            local_jquery("#view_tile_diagram_dialog").attr("data-tile-name", mc_tile_name);
                             local_jquery("#view_tile_diagram_dialog").modal("show");
                         }
                     };
                 };
-                $("#" + model_button_id).on("click", model_click_closure());
+                $("#" + model_button_id).on("click", model_click_closure(diagrams, confirmation, _, model));
             }
             sort_tiles();
             filter_tiles();
         };
-
-        function show_edit_dialog(name, members) {
-            // console.log(members);
-            $("#channel_edit_name").val(name);
-            $("#channel_edit_name").attr("data-original-name", name);
-            $("#channel_edit_modal_items").empty();
-            let channel_content = "";
-            let index = 0;
-            for (let member of members) {
-                const node = model.nodes.get(member.id);
-                const checkbox_id = ui_util.makeid();
-                if (node) {
-                    channel_content += `
-                                        <tr><th scope="row">${index+1}</th>
-                                        <td>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
-                                        </div>
-                                        </td>
-                                        <td>${node.title}</td><td>${node.id}</td></tr>
-                                    `;
-                } else {
-                    channel_content += `
-                                        <tr><th scope="row">${index+1}</th>
-                                        <td>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
-                                        </div>
-                                        </td>
-                                        <td>Expired</td><td>Expired</td></tr>
-                                    `;
-                }
-                index++;
-            }
-            const html = `
-                        <table id="channel_edit_members_table" class="table table-sm table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Remove</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">ARN</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${channel_content}
-                            </tbody>
-                        </table>`;
-            $("#channel_edit_modal_items").html(html);
-            $("#channel_edit_modal").modal("show");
-        }
 
         $("#view_tile_diagram_show").on("click", function() {
             const diagram_name = $("#view_tile_diagram_selected_diagram").val();

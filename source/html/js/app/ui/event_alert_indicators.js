@@ -141,8 +141,8 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
             /** iterate through current 'set' alerts */
             let alerting_nodes = new Set();
 
-            console.log(`current alerts: ${current_alerts.length}`);
-            console.log(`previous alerts: ${previous_alerts.length}`);
+            // console.log(`current alerts: ${current_alerts.length}`);
+            // console.log(`previous alerts: ${previous_alerts.length}`);
 
             // we only need one unique alert per arn/pipeline
             // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
@@ -163,8 +163,8 @@ define(["jquery", "lodash", "app/model", "app/events", "app/ui/diagrams"],
                 }
             });
 
-            console.log(`unique current alerts: ${uniq_current_alerts.length}`);
-            console.log(`unique previous alerts: ${uniq_previous_alerts.length}`);
+            // console.log(`unique current alerts: ${uniq_current_alerts.length}`);
+            // console.log(`unique previous alerts: ${uniq_previous_alerts.length}`);
 
             // use the filtered lists
             current_alerts = uniq_current_alerts;
