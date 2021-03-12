@@ -1,8 +1,8 @@
 # Monitoring a live streaming workflow created by the MediaLive wizard
 
-MediaLive now has a [Workflow Wizard](https://docs.aws.amazon.com/medialive/latest/ug/wizard.html) that guides the user in creating a live streaming workflow. The resources created by the wizard get tagged with the `MSAM-diagram` and `MSAM-tile` keys with the workflow name as values (see MSAM's [resource tagging doc](RESOURCE_TAGS.md)). MSAM uses these tags to automatically create a diagram and tile that can then be used to monitor the workflow. 
+MediaLive now has a [Workflow Wizard](https://docs.aws.amazon.com/medialive/latest/ug/wizard.html) that guides the user in creating a live streaming workflow. The resources created by the wizard get tagged with the `MSAM-Diagram` and `MSAM-Tile` keys with the workflow name as values (see MSAM's [resource tagging doc](RESOURCE_TAGS.md)). MSAM uses these tags to automatically create a diagram and tile that contain all the resources of the workflow. The generated diagram and tile can then be used to monitor the workflow for problems. 
 
-Here, we'll show you the end-to-end process of creating a live streaming workflow using the MediaLive Workflow Wizard, and monitoring it with MSAM. 
+This document will show you the end-to-end process of creating a live streaming workflow using the MediaLive Workflow Wizard and monitoring it with MSAM. 
 
 ## Create a live streaming workflow
 Navigate to the MediaLive console's [Workflow Wizard](https://us-west-2.console.aws.amazon.com/medialive/home?region=us-west-2#!/workflows).
@@ -41,7 +41,7 @@ NOTE: Depending on the region you've created the worfkflow, it could take anywhe
 
 ## Install MSAM to monitor the workflow
 
-If you already have an existing MSAM installation, then move on to the next section. Otherwise, follow the instructions [here](INSTALL.md) on how to install MSAM.
+If you already have an existing MSAM installation, then move on to the next section. Otherwise, follow the instructions [here](INSTALL.md) on how to install MSAM. Be sure to install MSAM in the same region as your new workflow and use the single root template for easy installation of the entire solution.
 
 ## Monitor the workflow
 Give MSAM a few minutes to scan your account for new inventory created by the Workflow Wizard. 
@@ -56,4 +56,4 @@ Give MSAM a few minutes to scan your account for new inventory created by the Wo
   
     ![Workflow Diagram Layout](images/workflow-diagram-layout.png)
 
-    Without any further configuration, MSAM receives pipeline events from MediaLive and will display those by changing the visual representation of the MediaLive node on the diagram. To further customize your tile and diagram, refer to the [Usage guide](USAGE.md). 
+    Without any further configuration, MSAM automatically receives alerts from MediaLive and will display those by changing the visual representation of the MediaLive node on the diagram. To further customize your tile and diagram, refer to the [Usage guide](USAGE.md). 
