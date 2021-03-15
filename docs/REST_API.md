@@ -2,9 +2,13 @@
 
 ## Amazon API Gateway
 Some information regarding the API can be found in the API Gateway. 
-* Using the Services menu in the AWS Console navigate to the 'API Gateway' 
-* Choose 'msam'
-* Locate *API:msam* menu on the left and choose 'Documentation'
+* Using the Services menu in the AWS Console navigate to CloudFormation
+* In the stacks listing, choose the MSAM nested stack containing the name CoreModuleStack
+* Select the Resources tab on the page
+* Find the resource with the logical ID RestAPI and the type AWS::ApiGateway::RestApi
+* Click the physical ID link
+* Choose 'Documentation' at the left side
+
 ![API Key ID](images/api-gateway-documentation.png)
 
 Each API call is represented by a block and each block has a _summary_ which can give you some idea as to what options are available from this API.
