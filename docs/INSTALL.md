@@ -264,11 +264,19 @@ There are seven DynamoDB tables used by MSAM. They are:
 * [StackName]-Layout-[ID]
 * [StackName]-Settings-[ID]
 
-Each table is configured for on-demand capacity by the CloudFormation template. This allows MSAM to automatically scale it's data handling capacity from small to very large Media Services installations.
+<br/>
+The following configuration is applied by the DynamoDB CloudFormation template.
 
+### Capacity 
+Each table is configured for on-demand read and write capacity. This allows MSAM to scale it's data handling capacity from small to very large Media Services installations.
+
+### Encryption
+Each table and all indexes are configured for encryption at rest using Key Management Service (KMS) and the AWS-managed Customer Master Key (CMK) for DynamoDB in your account.
+
+### Point-in-time Recovery
+Each table is configured for point-in-time recovery. The recovery window is up to five calendar weeks. This window size is set by Amazon Web Services.
 
 ## Versions and Updates
-
 Each deployed stack includes the release version number in the description. Release version numbers follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) specification.
 
 ```
