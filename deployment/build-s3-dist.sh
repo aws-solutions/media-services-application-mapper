@@ -216,14 +216,14 @@ cp aws-media-services-application-mapper-release.template $template_dir
 
 # generate digest values for the templates
 md5sum * >$other_dist_dir/md5.txt
-shasum -a 1 * >$other_dist_dir/sha1.txt
-shasum -a 256 * >$other_dist_dir/sha256.txt
+sha1sum * >$other_dist_dir/sha1.txt
+sha256sum * >$other_dist_dir/sha256.txt
 
 cd $build_dist_dir
 # generate digest values for the lambda zips and append to txts
 md5sum * >>$other_dist_dir/md5.txt
-shasum -a 1 * >>$other_dist_dir/sha1.txt
-shasum -a 256 * >>$other_dist_dir/sha256.txt
+sha1sum * >>$other_dist_dir/sha1.txt
+sha256sum * >>$other_dist_dir/sha256.txt
 
 echo
 echo ------------------------------------
