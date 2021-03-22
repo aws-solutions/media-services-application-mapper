@@ -72,12 +72,21 @@ The [CHANGELOG.md](../CHANGELOG.md) file is updated and the [Releases](https://g
 
 This section describes the dependencies and tools required to build and test custom versions of MSAM.
 
+### Build Host
+
+The build and deploy scripts have been tested on:
+
+1. MacOS
+3. Amazon Linux
+4. AWS CloudShell (AWS Console)
+2. Ubuntu Linux
+
 ### Building
 
-* Install/update to Python 3.x
-* Install the AWS Command Line Interface (CLI)
-* Create a Python [virtual environment](https://docs.python.org/3.8/library/venv.html) using [requirements.txt](deployment/requirements.txt) and activate it
-* Configure the bucket name of your target Amazon S3 distribution bucket
+1. Install/update to Python 3.x
+1. Install the AWS Command Line Interface (CLI)
+1. Create a Python [virtual environment](https://docs.python.org/3.8/library/venv.html) using [requirements.txt](deployment/requirements.txt) and activate it
+1. Configure the bucket name of your target Amazon S3 distribution bucket
 
 ### Recommended Security Tools
 
