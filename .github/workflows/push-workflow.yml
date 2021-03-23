@@ -5,6 +5,7 @@ env:
   REGION: us-east-1
   SOLUTION_NAME: aws-media-services-application-mapper
   DIST_OUTPUT_BUCKET: msam-dev
+  REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
 
 on:
   push:
@@ -60,10 +61,10 @@ jobs:
           cd deployment
           # if we're building master, do a release deploy
           if [ "$GITHUB_REF" == "refs/heads/master" ]; then
-            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $REGION -a public-read -t release
+            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $REGIONS_TO_DEPLOY -a public-read -t release
           # if not, do a dev deploy
           else
-            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $REGION -a none -t dev
+            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $REGIONS_TO_DEPLOY -a none -t dev
           fi
       - name: Store templates for check jobs
         uses: actions/upload-artifact@v2
@@ -101,7 +102,7 @@ jobs:
           echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Create CloudFormation stack based on last job's build
         run: |
-          TEMPLATE="https://$DIST_OUTPUT_BUCKET-$REGION.s3-$REGION.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
+          TEMPLATE="https://$DIST_OUTPUT_BUCKET-us-west-2.s3-us-west-2.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
           echo $TEMPLATE
           response="$( aws cloudformation create-stack --stack-name MSAM-test-master-$VERSION --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
           echo $response

@@ -57,7 +57,7 @@ jobs:
             aws-region: ${{ env.REGION }}
       - name: Create CloudFormation stack based on release build
         run: |
-          TEMPLATE="https://$DIST_OUTPUT_BUCKET-$REGION.s3-$REGION.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
+          TEMPLATE="https://$DIST_OUTPUT_BUCKET-us-west-2.s3-us-west-2.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
           echo $TEMPLATE
           response="$( aws cloudformation create-stack --stack-name msam-release-$GITHUB_REF --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
           echo $response
