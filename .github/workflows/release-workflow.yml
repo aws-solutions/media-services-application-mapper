@@ -41,7 +41,7 @@ jobs:
       - name: Deploy to S3
         run: |
           cd deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $GITHUB_REF -r $REGIONS_TO_DEPLOY -a public-read -t release
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $GITHUB_REF -a public-read -t release
     
   install_msam: 
     needs: build-and-deploy

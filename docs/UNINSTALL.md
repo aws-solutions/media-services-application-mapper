@@ -37,6 +37,10 @@ To delete a stack:
 
 Remember to remove the DynamoDB stack after the Core and Event stacks. Other stacks are running software that access the tables. Removing the tables before removing the running software has the potential to create excessive error rates in your account which may result in service usage throttling.
 
+## Retained Resources After Delete
+
+The access logging bucket for the MSAM web browser application is retained after deletion to maintain history. If you no longer need this bucket or its contents, you can delete it using the AWS Console. From the S3 console, select the radio button next to the bucket name and click the `Empty` button at the top of the page. After confirming and completing, return to the S3 console page and follow the same process by selecting the bucket and clicking the `Delete` button.
+
 ## Navigate
 
 Navigate to [README](../README.md) | [Architecture](ARCHITECTURE.md) | [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Rest API](REST_API.md) | [Contributing](../CONTRIBUTING.md)
