@@ -60,10 +60,18 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cloudformation-templates
+      - name: Update system path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install cfn-lint
+        run: |
+          pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
+          if [ -s error.txt ]; then
+            echo "ERROR: System package installation failed."
+            cat error.txt
+            exit 1
+          fi
       - name: Check with cfn-lint
-        uses: scottbrenner/cfn-lint-action@master
-        with:
-          args: '*.template'
+        run: cfn-lint *.template
 
   cfn-nag-check-job:
     needs: scan-build-job
