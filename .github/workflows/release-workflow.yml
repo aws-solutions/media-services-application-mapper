@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-        with:
-          ref: master 
       - name: Initialize AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
