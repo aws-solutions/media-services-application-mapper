@@ -98,7 +98,7 @@ jobs:
           aws-region: ${{ env.REGION }}
       - name: Generate version out of commit ID
         run: |
-          echo "VERSION=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+          echo "VERSION=${GITHUB_SHA:7}" >> $GITHUB_ENV
       - name: Create CloudFormation stack based on last job's build
         run: |
           TEMPLATE="https://$DIST_OUTPUT_BUCKET-$REGION.s3-$REGION.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
