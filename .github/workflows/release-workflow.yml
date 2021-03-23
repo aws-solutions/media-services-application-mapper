@@ -37,10 +37,12 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
+          echo $GITHUB_REF
           ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $GITHUB_REF
       - name: Deploy to S3
         run: |
           cd deployment
+          echo $GITHUB_REF
           ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $GITHUB_REF -a public-read -t release
     
   install_msam: 
