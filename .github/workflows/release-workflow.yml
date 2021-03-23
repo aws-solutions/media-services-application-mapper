@@ -59,5 +59,6 @@ jobs:
         run: |
           TEMPLATE="https://$DIST_OUTPUT_BUCKET-us-west-2.s3-us-west-2.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
           echo $TEMPLATE
-          response="$( aws cloudformation create-stack --stack-name msam-release-${GITHUB_REF##*/} --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
+          STACK_NAME=msam-release-${GITHUB_REF##*/}
+          response="$( aws cloudformation create-stack --stack-name ${STACK_NAME//./-} --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
           echo $response
