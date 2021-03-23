@@ -4,7 +4,6 @@
 This file contains helper functions for building the node cache.
 """
 
-import hashlib
 import json
 import os
 import time
@@ -224,10 +223,7 @@ def speke_server_ddb_items(region):
         endpoint_data = json.loads(endpoint["data"])
         for server_url in [match.value for match in jsonpath_expr.find(endpoint_data)]:
             parsed = urlparse(server_url)
-            sha = hashlib.sha1()
-            sha.update(server_url.encode('utf-8'))
-            url_digest = sha.hexdigest()
-            arn = "arn:oss:speke:::{}".format(url_digest)
+            arn = "arn:oss:speke:::{}".format(hash(server_url))
             config = {"arn": arn, "endpoint": server_url, "scheme": parsed.scheme}
             service = "speke-keyserver"
             # print(config)

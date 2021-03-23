@@ -26,7 +26,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
             if (!selection_callbacks.includes(callback)) {
                 selection_callbacks.push(callback);
             }
-        }
+        };
 
         var add_diagram = function(name, view_id, save) {
             var diagram = diagram_factory.create(name, view_id);
@@ -67,7 +67,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 return {
                     "name": item.name,
                     "view_id": item.view_id
-                }
+                };
             });
             // console.log(settings);
             settings.put("diagrams", diagram_map).then(function() {
@@ -94,7 +94,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                     resolve();
                 });
             });
-        }
+        };
 
         function have_all(node_ids) {
             var results = [];
@@ -127,7 +127,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                     });
                 }
             }
-            return _.orderBy(results, ["diagram"]);;
+            return _.orderBy(results, ["diagram"]);
         }
 
         load_diagrams().then(() => {
@@ -137,7 +137,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/model
                 console.log("Show diagram " + override_diagram + " on start");
                 var diagram = get_by_name(override_diagram);
                 diagram.show();
-            };
+            }
         });
 
         return {

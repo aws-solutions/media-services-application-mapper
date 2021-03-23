@@ -104,7 +104,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
             }
         };
 
-        var populate_alarms_from_region = function(region) {
+        const populate_alarms_from_region = function(region) {
             selected_alarm_region = region;
             start_progress_message();
             $("#subscribe_to_alarms_modal_alarm_selection_count").text("0");
@@ -143,7 +143,7 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
                 $("#subscribe_to_alarms_save").attr("aria-disabled", true);
                 $("#subscribe_to_alarms_save").attr("disabled", true);
             }
-        }
+        };
 
         $("#alarms_subscribe_button").on("click", function(event) {
             show_alarm_subscribe_dialog();
@@ -204,13 +204,13 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
                 var id = `alarm_subscribe_region_${region.RegionName}`;
                 var button_html = `<a class="dropdown-item" href="#" id="${id}">${region.RegionName}</button><br>`;
                 $("#subscribe_to_alarms_region_dropdown").append(button_html);
-                $("#" + id).on("click", (function() {
-                    var local_name = region.RegionName;
+                $("#" + id).on("click", (function(local_region, local_jq) {
+                    var local_name = local_region.RegionName;
                     return function(event) {
-                        $("#dropdownMenuButton").text(local_name);
+                        local_jq("#dropdownMenuButton").text(local_name);
                         populate_alarms_from_region(local_name);
                     };
-                })());
+                })(region, $));
             }
             var first_region = "us-east-1";
             $("#dropdownMenuButton").text(first_region);
@@ -222,6 +222,6 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/regions", "app/ui/al
 
         return {
             show_alarm_subscribe_dialog: show_alarm_subscribe_dialog
-        }
+        };
 
     });

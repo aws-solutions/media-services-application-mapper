@@ -16,6 +16,8 @@
 #
 #  - version-code: version of the package
 
+set -euo pipefail
+
 # only option h is allowed to display help message
 while getopts ':h' OPTION; do
   case "$OPTION" in
@@ -101,6 +103,10 @@ echo
 
 cd msam
 chalice package --merge-template merge_template.json build/
+if [ $? -ne 0 ]; then
+  echo "ERROR: running chalice package"
+  exit 1
+fi
 cd build/
 # mv zip file to regional asset dir
 mv deployment.zip $build_dist_dir/core_$STAMP.zip
@@ -121,7 +127,14 @@ EVENTS_ZIP="events.zip"
 cd $source_dir/events
 
 # install all the requirements into package dir
-pip install --upgrade --force-reinstall --target ./package -r requirements.txt
+pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
+if [ -s error.txt ]; then
+  echo "ERROR: Event collector package installation failed."
+  cat error.txt
+  rm error.txt
+  exit 1
+fi
+
 cd package
 zip -r9 ../$EVENTS_ZIP .
 cd ../
@@ -138,6 +151,10 @@ echo
 
 cd $source_dir/msam/db
 ./makezip.sh
+if [ $? -ne 0 ]; then
+  echo "ERROR: Packaging up DB files."
+  exit 1
+fi
 mv dynamodb_resource.zip $build_dist_dir/dynamodb_resource_$STAMP.zip
 
 # add build stamp
@@ -146,7 +163,7 @@ echo "updating browser app build stamp"
 cp -f js/app/build-tmp.js js/app/build.js
 sed -i -e "s/DEV_0_0_0/$STAMP/g" js/app/build.js
 zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
-rm js/app/build.js-e
+rm -f js/app/build.js-e
 
 # create a digest for the web content
 SHATEXT="`sha1sum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
@@ -156,6 +173,10 @@ echo web content archive SHA1 is $SHATEXT
 cd $source_dir/web-cloudformation
 cp $build_dist_dir/msam-web-$STAMP.zip .
 ./makezip.sh msam-web-$STAMP.zip
+if [ $? -ne 0 ]; then
+  echo "ERROR: Packaging up web files."
+  exit 1
+fi
 mv webcontent_resource.zip $build_dist_dir/webcontent_resource_$STAMP.zip
 cp msam-browser-app-release.template $template_dist_dir
 
@@ -195,14 +216,14 @@ cp aws-media-services-application-mapper-release.template $template_dir
 
 # generate digest values for the templates
 md5sum * >$other_dist_dir/md5.txt
-shasum -a 1 * >$other_dist_dir/sha1.txt
-shasum -a 256 * >$other_dist_dir/sha256.txt
+sha1sum * >$other_dist_dir/sha1.txt
+sha256sum * >$other_dist_dir/sha256.txt
 
 cd $build_dist_dir
 # generate digest values for the lambda zips and append to txts
 md5sum * >>$other_dist_dir/md5.txt
-shasum -a 1 * >>$other_dist_dir/sha1.txt
-shasum -a 256 * >>$other_dist_dir/sha256.txt
+sha1sum * >>$other_dist_dir/sha1.txt
+sha256sum * >>$other_dist_dir/sha256.txt
 
 echo
 echo ------------------------------------

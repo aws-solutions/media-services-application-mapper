@@ -204,7 +204,7 @@ define(["jquery", "app/model", "app/ui/util", "app/channels", "app/ui/alert", "a
             var encoded = JSON.stringify(node_ids);
             $("#quick_new_tile_dialog").attr("node_ids", encoded);
             $("#quick_new_tile_dialog").modal('show');
-        };
+        }
 
         return {
             show_quick_new_tile: show_quick_new_tile

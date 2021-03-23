@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - March 2021
+
+### New
+```
+#187  Please enable point-in-time recovery by default for MSAM...  (back-end, enhancement, installation)
+#189  Versions and Updates section in INSTALL.md needs an update   (documentation, installation)
+#196  Update INSTALL.md showing stack descriptions with build ...  (bug, documentation, installation)
+#205  Build script updates for error handling and rebuilds         (build-and-deploy, installation)
+#216  Update REST API doc to include alarm subscription            (documentation)
+#217  Create a document on how to use MSAM to monitor channels...  (documentation, front-end, monitoring feature)
+#221  Multiple custom edges between nodes should be curved         (enhancement, front-end, visualization feature)
+```
+
+### Fixed
+```
+#193  Incorrect URL provided for root template install instruc...  (documentation, installation)
+#219  Missing connection label from EMP CMAF endpoint to Cloud...  (bug, front-end)
+```
+
+### CI/CD Automation
+```
+#183  Configure GitHub Actions as an alternative MSAM build pi...  (build-and-deploy)
+#194  Fix cfn-lint issues                                          (CI/CD finding, installation)
+#195  Fix bandit issues found with hawkeye scanner                 (CI/CD finding, back-end)
+#198  Fix remaining pylint issues                                  (CI/CD finding, back-end)
+#203  Updates to development and process documentation             (documentation)
+#204  Fix cfn-nag violations                                       (CI/CD finding, build-and-deploy, installation)
+#218  Fix up jshint messages from workflows                        (CI/CD finding, front-end)
+```
+
+### Contributors
+* @morjoan
+* @JimTharioAmazon
+
+
 ## [1.8.0] - February 2021
 ### New
 * Support UDP/RTP connections from MediaLive channel #162

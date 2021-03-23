@@ -4,20 +4,21 @@
 define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "app/ui/svg_node"],
     function($, server, connections, region_promise, model, svg_node) {
 
-        var update_channels = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            var nodes = model.nodes;
-            var node_type = "MediaPackage Channel";
-            var rgb = "#007DBC";
+        const update_channels = function() {
+            const local_svg_node = svg_node;
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
+            const nodes = model.nodes;
+            const node_type = "MediaPackage Channel";
+            const rgb = "#007DBC";
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/mediapackage-channel", api_key).then((channels) => {
                     for (let cache_entry of channels) {
-                        var channel = JSON.parse(cache_entry.data);
-                        var name = channel.Id;
-                        var id = channel.Arn;
-                        var node_data = {
+                        const channel = JSON.parse(cache_entry.data);
+                        const name = channel.Id;
+                        const id = channel.Arn;
+                        let node_data = {
                             "cache_update": cache_entry.updated,
                             "id": channel.Arn,
                             "region": cache_entry.region,
@@ -33,53 +34,53 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                             "size": 55,
                             "render": {
                                 normal_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 normal_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 alert_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })(),
                                 alert_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })()
                             },
                             "console_link": (function() {
-                                var id = channel.Id;
-                                var region = channel.Arn.split(":")[3];
+                                let id = channel.Id;
+                                let region = channel.Arn.split(":")[3];
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${id}`;
+                                    let html = `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${id}`;
                                     return html;
                                 };
                             })(),
                             "cloudwatch_link": (function() {
-                                var id = channel.Id;
-                                var region = channel.Arn.split(":")[3];
+                                let id = channel.Id;
+                                let region = channel.Arn.split(":")[3];
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel`;
+                                    let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel`;
                                     return html;
                                 };
                             })()
@@ -96,20 +97,21 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update_endpoints = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            var nodes = model.nodes;
-            var node_type = "MediaPackage Endpoint";
-            var rgb = "#00A1C9";
+        const update_endpoints = function() {
+            const local_svg_node = svg_node;
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
+            const nodes = model.nodes;
+            const node_type = "MediaPackage Endpoint";
+            const rgb = "#00A1C9";
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/mediapackage-origin-endpoint", api_key).then((origin_endpoints) => {
                     for (let cache_entry of origin_endpoints) {
-                        var endpoint = JSON.parse(cache_entry.data);
-                        var name = endpoint.Id;
-                        var id = endpoint.Arn;
-                        var node_data = {
+                        const endpoint = JSON.parse(cache_entry.data);
+                        const name = endpoint.Id;
+                        const id = endpoint.Arn;
+                        let node_data = {
                             "cache_update": cache_entry.updated,
                             "id": id,
                             "region": cache_entry.region,
@@ -125,54 +127,54 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                             "size": 55,
                             "render": {
                                 normal_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 normal_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_rgb = rgb;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_rgb = rgb;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, local_rgb, local_id);
                                     };
                                 })(),
                                 alert_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })(),
                                 alert_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    let local_node_type = node_type;
+                                    let local_name = name;
+                                    let local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })()
                             },
                             "console_link": (function() {
-                                var id = endpoint.Id;
-                                var parent_id = endpoint.ChannelId;
-                                var region = endpoint.Arn.split(":")[3];
+                                let id = endpoint.Id;
+                                let parent_id = endpoint.ChannelId;
+                                let region = endpoint.Arn.split(":")[3];
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${parent_id}/endpoints/${id}`;
+                                    let html = `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${parent_id}/endpoints/${id}`;
                                     return html;
                                 };
                             })(),
                             "cloudwatch_link": (function() {
-                                var id = endpoint.Id;
-                                var region = endpoint.Arn.split(":")[3];
+                                let id = endpoint.Id;
+                                let region = endpoint.Arn.split(":")[3];
                                 return function() {
-                                    var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel,OriginEndpoint`;
+                                    let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel,OriginEndpoint`;
                                     return html;
                                 };
                             })()
@@ -189,7 +191,7 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             });
         };
 
-        var update = function() {
+        const update = function() {
             return Promise.all([update_channels(), update_endpoints()]);
         };
 

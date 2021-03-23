@@ -4,7 +4,7 @@
 define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
     function($, _, model, channels, diagrams) {
         // options for Fuse
-        var model_options = {
+        const model_options = {
             shouldSort: true,
             tokenize: true,
             matchAllTokens: true,
@@ -40,23 +40,23 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
             ]
         };
 
-        var fuse_model;
+        let fuse_model;
 
-        var cached_tile_names;
+        let cached_tile_names;
 
-        var update = function() {
+        const update = function() {
             fuse_model = new Fuse(model.nodes.get(), model_options);
             channels.channel_list().then(function(channels) {
                 cached_tile_names = channels;
             });
         };
 
-        var search_nodes = function(text) {
+        const search_nodes = function(text) {
             return fuse_model.search(text);
         };
 
-        var search_tiles = function(text) {
-            var matches = [];
+        const search_tiles = function(text) {
+            const matches = [];
             for (let name of cached_tile_names) {
                 if (name.toLowerCase().includes(text.toLowerCase())) {
                     matches.push(name);
@@ -66,9 +66,11 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
         };
 
         function search(text) {
+            const local_lodash = _;
             return new Promise(function(outer_resolve, outer_reject) {
+                const local_outer_resolve = outer_resolve;
                 fuse_model = new Fuse(model.nodes.get(), model_options);
-                var results = {
+                const results = {
                     text: text,
                     model: [],
                     tile_names: [],
@@ -77,15 +79,15 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                     diagram_contents: []
                 };
                 // search the model, find matching nodes
-                var model_matches = fuse_model.search(text);
-                var node_ids = _.map(model_matches, "id");
+                const model_matches = fuse_model.search(text);
+                const node_ids = _.map(model_matches, "id");
                 results.model = model_matches;
                 // find diagrams with one or more of the nodes
-                var contained_by = diagrams.have_any(node_ids);
+                const contained_by = diagrams.have_any(node_ids);
                 results.diagram_contents = contained_by;
                 // find diagram name matches
                 for (let name of Object.keys(diagrams.get_all())) {
-                    var includes = name.toLowerCase().includes(text.toLowerCase());
+                    const includes = name.toLowerCase().includes(text.toLowerCase());
                     if (includes) {
                         results.diagram_names.push(name);
                     }
@@ -95,27 +97,29 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                     results.tile_contents = matches;
                 });
                 // find tiles with the text or containing the model nodes
-                var processed = 0;
+                const status = { "processed": 0 };
                 channels.channel_list().then(function(channel_names) {
-                    for (let channel_name of channel_names) {
+                    const local_channel_names = channel_names;
+                    for (let channel_name of local_channel_names) {
+                        const local_channel_name = channel_name;
                         // check for a name partial match
-                        var includes = channel_name.toLowerCase().includes(text.toLowerCase());
+                        const includes = local_channel_name.toLowerCase().includes(text.toLowerCase());
                         if (includes) {
-                            results.tile_names.push(channel_name);
+                            results.tile_names.push(local_channel_name);
                         }
                         // check the contents of the channel
-                        channels.retrieve_channel(channel_name).then(function(contents) {
-                            var channel_node_ids = _.map(contents, "id").sort();
-                            var intersect = _.intersection(node_ids, channel_node_ids);
+                        channels.retrieve_channel(local_channel_name).then(function(contents) {
+                            const channel_node_ids = local_lodash.map(contents, "id").sort();
+                            const intersect = local_lodash.intersection(node_ids, channel_node_ids);
                             if (intersect.length > 0) {
                                 results.tile_contents.push({
-                                    tile: channel_name,
+                                    tile: local_channel_name,
                                     found: intersect
                                 });
                             }
-                            processed++;
-                            if (processed == channel_names.length) {
-                                outer_resolve(results);
+                            status.processed++;
+                            if (status.processed == local_channel_names.length) {
+                                local_outer_resolve(results);
                             }
                         });
                     }

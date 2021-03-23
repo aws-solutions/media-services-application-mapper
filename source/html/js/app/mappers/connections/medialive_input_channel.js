@@ -21,16 +21,18 @@ define(["jquery", "lodash", "app/model", "app/server", "app/connections"],
                             arrows: "to",
                             color: { color: "black" },
                         };
-                        const hasMoreConnections = _.filter(connections, function(o) {
-                            if (o.from === connection.from && o.to === connection.to) {
-                                let shouldEndWith = '0';
-                                if (connection.arn.endsWith('0'))
-                                    shouldEndWith = '1';
-                                if (o.arn.endsWith(shouldEndWith))
-                                    return true;
-                            }
-                            return false;
-                        });
+                        const hasMoreConnections = _.filter(connections, (function(local_connection) {
+                            return function(o) {
+                                if (o.from === local_connection.from && o.to === local_connection.to) {
+                                    let shouldEndWith = '0';
+                                    if (local_connection.arn.endsWith('0'))
+                                        shouldEndWith = '1';
+                                    if (o.arn.endsWith(shouldEndWith))
+                                        return true;
+                                }
+                                return false;
+                            };
+                        })(connection));
 
                         if (hasMoreConnections.length) {
                             /** curve it */

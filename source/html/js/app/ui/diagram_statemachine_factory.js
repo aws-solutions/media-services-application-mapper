@@ -91,7 +91,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         for (let callback of my_diagram.click_callbacks) {
                                             callback(my_diagram, event);
                                         }
-                                    }
+                                    };
                                 })());
                                 my_diagram.network.on("doubleClick", (function() {
                                     return function(event) {
@@ -113,7 +113,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                             var click_y = event.pointer.canvas.y;
                                             my_diagram.fit_to_nearest(click_x, click_y);
                                         }
-                                    }
+                                    };
                                 })());
                                 my_diagram.network.on("dragEnd", function(event) {
                                     if (event.nodes.length) {
@@ -124,7 +124,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                 $("#" + my_diagram.tab_id).on("show.bs.tab", (function() {
                                     return function(event) {
                                         console.log(my_diagram.name + " diagram show.bs.tab");
-                                    }
+                                    };
                                 })());
                                 my_diagram.drag_container.on("mousemove", function(e) {
                                     // console.log("mousemove");
@@ -207,9 +207,9 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                         if (my_diagram.first_fit == false) {
                                             my_diagram.first_fit = true;
                                             my_diagram.network.fit();
-                                            my_diagram.statemachine.transition("ready-to-view")
+                                            my_diagram.statemachine.transition("ready-to-view");
                                         }
-                                    }
+                                    };
                                 })());
                             }
                         },

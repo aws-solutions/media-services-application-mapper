@@ -26,8 +26,9 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                                 dashes: false,
                             };
                             const shouldEndWith = connection.arn.endsWith('0') ? '1' : '0';
+                            const local_connection = connection;
                             const hasMoreConnections = _.filter(connections, function(o) {
-                                if (o.from === connection.from && o.to === connection.to) {
+                                if (o.from === local_connection.from && o.to === local_connection.to) {
                                     if (o.arn.endsWith(shouldEndWith))
                                         return true;
                                 }

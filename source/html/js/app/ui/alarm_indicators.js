@@ -9,21 +9,21 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
             var alarming_nodes = [];
             var inactive_nodes = [];
             for (let subscriber of current_alarming_subscribers) {
-                var node = model.nodes.get(subscriber.ResourceArn);
+                let node = model.nodes.get(subscriber.ResourceArn);
                 if (node) {
                     node.alarming = true;
                     // track which nodes are signaling an alert
                     if (!alarming_nodes.includes(subscriber.ResourceArn)) {
                         alarming_nodes.push(subscriber.ResourceArn);
                         // console.log("setting alert color for " + node.id);
-                        var selected = node.render.alert_selected();
-                        var unselected = node.render.alert_unselected();
+                        let selected = node.render.alert_selected();
+                        let unselected = node.render.alert_unselected();
                         // only update the node if the SVG changes
                         if (selected != node.image.selected || unselected != node.image.unselected) {
                             node.image.selected = selected;
                             node.image.unselected = unselected;
                             model.nodes.update(node);
-                            var matches = diagrams.have_all([node.id]);
+                            let matches = diagrams.have_all([node.id]);
                             // console.log(matches);
                             for (let diagram of matches) {
                                 diagram.nodes.update(node);
@@ -47,17 +47,17 @@ define(["jquery", "lodash", "app/model", "app/alarms", "app/ui/diagrams"],
 
             // 'unalert' the nodes that are no longer alerting
             for (let node_id of inactive_nodes) {
-                var node = model.nodes.get(node_id);
+                let node = model.nodes.get(node_id);
                 if (node) {
                     node.alarming = false;
                     // only switch the node render if the node is neither alarming nor alerting
-                    var selected = node.render.normal_selected();
-                    var unselected = node.render.normal_unselected();
+                    let selected = node.render.normal_selected();
+                    let unselected = node.render.normal_unselected();
                     if (selected != node.image.selected || unselected != node.image.unselected) {
                         node.image.selected = selected;
                         node.image.unselected = unselected;
                         model.nodes.update(node);
-                        var matches = diagrams.have_all([node.id]);
+                        let matches = diagrams.have_all([node.id]);
                         // console.log(matches);
                         for (let diagram of matches) {
                             diagram.nodes.update(node);

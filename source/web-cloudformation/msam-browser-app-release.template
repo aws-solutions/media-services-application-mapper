@@ -99,13 +99,33 @@
                         }
                     },
                     "ViewerCertificate": {
-                        "CloudFrontDefaultCertificate": "true",
-                        "MinimumProtocolVersion": "TLSv1"
+                        "CloudFrontDefaultCertificate": true,
+                        "MinimumProtocolVersion": "TLSv1.2_2019"
+                    },
+                    "Logging": {
+                        "Bucket": {
+                            "Fn::Join": [
+                                "", [{
+                                        "Ref": "MSAMBrowserAppLoggingBucket"
+                                    },
+                                    ".s3.amazonaws.com"
+                                ]
+                            ]
+                        },
+                        "Prefix": "cloudfront/"
                     }
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W70",
+                        "reason": "If the distribution uses the CloudFront domain name such as d111111abcdef8.cloudfront.net (you set CloudFrontDefaultCertificate to true), CloudFront automatically sets the security policy to TLSv1 regardless of the value that you set here."
+                    }]
                 }
             }
         },
-        "MSAMAppBucketPolicy": {
+        "MSAMBrowserAppBucketPolicy": {
             "Type": "AWS::S3::BucketPolicy",
             "Properties": {
                 "Bucket": {
@@ -157,6 +177,54 @@
                             "*"
                         ]
                     }]
+                },
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [{
+                        "ServerSideEncryptionByDefault": {
+                            "SSEAlgorithm": "AES256"
+                        }
+                    }]
+                },
+                "LoggingConfiguration": {
+                    "DestinationBucketName": { "Ref": "MSAMBrowserAppLoggingBucket" },
+                    "LogFilePrefix": "app-bucket/"
+                }
+            }
+        },
+        "MSAMBrowserAppLoggingBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "LogDeliveryWrite",
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [{
+                        "ServerSideEncryptionByDefault": {
+                            "SSEAlgorithm": "AES256"
+                        }
+                    }]
+                },
+                "LifecycleConfiguration": {
+                    "Rules": [{
+                        "AbortIncompleteMultipartUpload": {
+                            "DaysAfterInitiation": 5
+                        },
+                        "ExpirationInDays": 365,
+                        "Id": "Expire Objects After 1 Year",
+                        "NoncurrentVersionExpirationInDays": 365,
+                        "Status": "Enabled"
+                    }]
+                }
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                            "id": "W35",
+                            "reason": "This is the logging bucket. No access logging needed."
+                        },
+                        {
+                            "id": "W51",
+                            "reason": "This is the logging bucket.  No bucket policy needed."
+                        }
+                    ]
                 }
             }
         },
@@ -189,6 +257,14 @@
                 },
                 "Runtime": "python3.8",
                 "Timeout": 300
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with AWSLambdaBasicExecutionRole defined in different template."
+                    }]
+                }
             }
         },
         "MSAMWebContent": {
@@ -239,10 +315,17 @@
                 },
                 "Runtime": "python3.8",
                 "Timeout": 300
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [{
+                        "id": "W58",
+                        "reason": "Role with AWSLambdaBasicExecutionRole defined in different template."
+                    }]
+                }
             }
         },
         "MSAMWebInvalidator": {
-            "DependsOn": ["MSAMAppBucketCloudFrontDistribution", "MSAMBrowserAppBucket"],
             "Type": "AWS::CloudFormation::CustomResource",
             "Properties": {
                 "ServiceToken": {

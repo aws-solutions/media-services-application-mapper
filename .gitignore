@@ -12,3 +12,9 @@ deployment/*.template
 **/assets
 **/*.zip
 **/package/
+
+**/error.txt
+
+package.json
+package-lock.json
+node_modules/

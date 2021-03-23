@@ -27,11 +27,11 @@ define(["jquery", "app/model", "app/server", "app/connections"],
                     resolve();
                 });
             });
-        }
+        };
 
         var update = function() {
             return update_connections();
-        }
+        };
 
         return {
             "name": "MediaStore Container to MediaTailor Configurations",

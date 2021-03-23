@@ -13,30 +13,32 @@
 define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node"],
     function($, server, connections, model, svg_node) {
 
-        var update_user_defined = function() {
-            var current = connections.get_current();
-            var url = current[0];
-            var api_key = current[1];
-            var nodes = model.nodes;
+        const update_user_defined = function() {
+            const local_svg_node = svg_node;
+            const current = connections.get_current();
+            const url = current[0];
+            const api_key = current[1];
+            const nodes = model.nodes;
             return new Promise((resolve, reject) => {
                 server.get(url + "/cached/user-defined-node", api_key).then((cache_entries) => {
                     for (let cache_entry of cache_entries) {
-                        var color = "#D5DBDB";
-                        var item = JSON.parse(cache_entry.data);
-                        var name = item.Id;
+                        let color = "#D5DBDB";
+                        const item = JSON.parse(cache_entry.data);
+                        const name = item.Id;
                         if (cache_entry.color) {
                             color = cache_entry.color;
                         }
-                        var node_type = item.NodeType;
-                        var id = cache_entry.arn;
-                        var node_data = {
+                        const local_color = color;
+                        const node_type = item.NodeType;
+                        const id = cache_entry.arn;
+                        const node_data = {
                             "cache_update": cache_entry.updated,
                             "id": id,
                             "region": cache_entry.region,
                             "shape": "image",
                             "image": {
-                                "unselected": svg_node.unselected(node_type, name, color, id),
-                                "selected": svg_node.selected(node_type, name, color, id)
+                                "unselected": local_svg_node.unselected(node_type, name, local_color, id),
+                                "selected": local_svg_node.selected(node_type, name, local_color, id)
                             },
                             "header": "<b>" + node_type + ":</b> " + name,
                             "data": item,
@@ -45,49 +47,47 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
                             "size": 55,
                             "render": {
                                 normal_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_color = color;
-                                    var local_id = id;
+                                    const local_node_type = node_type;
+                                    const local_name = name;
+                                    const local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, local_color, local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, local_color, local_id);
                                     };
                                 })(),
                                 normal_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_color = color;
-                                    var local_id = id;
+                                    const local_node_type = node_type;
+                                    const local_name = name;
+                                    const local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, local_color, local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, local_color, local_id);
                                     };
                                 })(),
                                 alert_unselected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    const local_node_type = node_type;
+                                    const local_name = name;
+                                    const local_id = id;
                                     return function() {
-                                        return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })(),
                                 alert_selected: (function() {
-                                    var local_node_type = node_type;
-                                    var local_name = name;
-                                    var local_id = id;
+                                    const local_node_type = node_type;
+                                    const local_name = name;
+                                    const local_id = id;
                                     return function() {
-                                        return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                                        return local_svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
                                     };
                                 })()
                             },
                             "console_link": (function() {
                                 return function() {
-                                    var html = `#`;
+                                    const html = `#`;
                                     return html;
                                 };
                             })(),
                             "cloudwatch_link": (function() {
                                 return function() {
-                                    var html = `#`;
+                                    const html = `#`;
                                     return html;
                                 };
                             })()
@@ -104,7 +104,7 @@ define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node
             });
         };
 
-        var update = function() {
+        const update = function() {
             return update_user_defined();
         };
 

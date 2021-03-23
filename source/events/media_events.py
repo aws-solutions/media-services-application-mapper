@@ -13,7 +13,6 @@ from random import randint
 from urllib.parse import unquote
 
 import boto3
-from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 from botocore.config import Config
 from jsonpath_ng import parse

@@ -1,26 +1,34 @@
 # REST API
 
 ## Amazon API Gateway
-Some information regarding the API can be found in the API Gateway. 
-* Using the Services menu in the AWS Console navigate to the 'API Gateway' 
-* Choose 'msam'
-* Locate *API:msam* menu on the left and choose 'Documentation'
+Some information regarding the API can be found in the API Gateway resource for MSAM. Following are the instructions to view the API for a specific installation of MSAM. 
+
+1. Using the Services menu in the AWS Console navigate to _CloudFormation_
+1. In the stacks listing, choose the MSAM nested stack containing the name _CoreModuleStack_
+1. Select the _Resources_ tab on the page
+1. Find the resource with the logical ID _RestAPI_ and the type _AWS::ApiGateway::RestApi_
+1. Click the physical ID link
+1. Choose _Documentation_ at the left side
+
 ![API Key ID](images/api-gateway-documentation.png)
 
-each API call is represented by a block and each block has a _summary_ which can give you some idea as to what options are available from this API.
+Each API call is represented by a block and each block has a _summary_ which can give you some idea as to what options are available from this API.
+
+**To make any MSAM API call, you will need both the REST API endpoint and API key for your installation.** Anywhere you see MSAM_EndpointUrl and MSAM_APIKey in the examples below, replace them with your REST API endpoint and API key, respectively. See the [Install](INSTALL.md) document on how to retrieve this information.
 
 ## Tile View Example
 
 ### Adding a Channel to the Tile View
-Channles, or blocks, on the Tile View can represent multiple things, but a common use of grouping items together is because the items represent a single entity, a _streaming channel_. This Channel might include: a MediaLive Input, a MediaLive Channel, and a MediaStore Container.
+Channels, or blocks, on the Tile View can represent multiple things, but a common use of grouping items together because the items represent a single entity, a _streaming channel_. This Channel might include: a MediaLive Input, a MediaLive Channel, and a MediaStore Container.
 
-Given that example: (MediaLive Input -> MediaLive Channel -> MediaStore Container) here to how to place those items into a Channel in the Tile View.
+Given that example: (MediaLive Input -> MediaLive Channel -> MediaStore Container) here's how to place those items into a Channel in the Tile View.
+
 
 To add a _streaming channel_ to the Tile View you must first decide on a name for the "channel" - in the example below, it's 'Tile-1' (seen at the end of request URL)
-the following command should work on linux/Mac terminals, windows users replace '\' at the end of the line with '^'
+the following command should work on Linux/Mac terminals. Windows users replace '\' at the end of the line with '^'.
 ```
-curl --location --request POST 'https://<API-Gateway-Endpoint>/msam/channel/Tile-1' \
---header 'x-api-key: <API Gateway Key>' \
+curl --location --request POST 'https://<MSAM_EndpointUrl>/msam/channel/Tile-1' \
+--header 'x-api-key: <MSAM_APIKey>' \
 --header 'Content-Type: application/json' \
 --data-raw '[
 	"arn:aws:medialive:us-west-2:<AWS-Account-Number>:channel:<MediaLive-ID-number>",
@@ -28,7 +36,7 @@ curl --location --request POST 'https://<API-Gateway-Endpoint>/msam/channel/Tile
 	"arn:aws:mediastore:us-west-2:<AWS-Account-Number>:container/<MediaStore-Container-Name>"
 ]'
 ```
-The response from the command line should be
+The response from the command line should be:
 `{"message":"saved"}`
 
 From here you can refresh your browser and you will see the new Channel appear on the Tile View.
@@ -39,8 +47,8 @@ From the example above you might notice that the "--raw-data", parameter is what
 ### Deleting a Channel from the Tile View
 This operation requests the same URL, however the key difference is what Type of request it is, in this case as opposed to `Post` this is a `Delete`
 ```
-curl --location --request DELETE 'https://<API-Gateway-Endpoint>/msam/channel/Tile-1' \
---header 'x-api-key: <API Gateway Key>'
+curl --location --request DELETE 'https://<MSAM_EndpointUrl>/msam/channel/Tile-1' \
+--header 'x-api-key: <MSAM_APIKey>'
 ```
 The response from the command line should be
 `{"message":"done"}`
@@ -52,8 +60,7 @@ From here you can refresh your browser and you should see that 'Tile-1' has been
 
 ### Setup
 
-1. Obtain the REST API endpoint and API Key for your installation
-2. Decide on the nodes, type of data they contain, and how they will connect to other nodes in the inventory
+Decide on the nodes, type of data they contain, and how they will connect to other nodes in the inventory.
 
 ### Construct the node data in a .json file
 
@@ -111,9 +118,27 @@ The above JSON fragment shows two user-defined nodes representing on-premise vid
 The HTTPie or Curl tools can be used here. The following example uses HTTPie.
 
 
-http POST **MSAM_ENDPOINT**/cached "x-api-key:**MSAM_APIKEY** < **JSON_FILE**
+http POST <MSAM_EndpointUrl>/cached "x-api-key: <MSAM_APIKey> < **JSON_FILE**
 
 You will receive an acknowledgment from the API.
+
+## Node alarm subscription
+
+### Setup
+1. Identify the node ARN(s) that should be subscribed to an alarm
+1. Identify the alarm name and its region that should be subscribed to the node
+
+### Send the alarm subscription to the API
+
+Execute the following curl POST command where Alarm_Name is the URL encoded name of the alarm and Region is the AWS region where the alarm was created. 
+The data parameter is a JSON array of node ARNs to be subscribed to the alarm. Subscribing multiple nodes to the same alarm would look like: ["NODE_ARN","NODE_ARN","NODE_ARN"]
+
+```
+curl -X POST -H "content-type:application/json" \
+	-H "x-api-key: <MSAM_APIKey>" \
+	-d '["NODE_ARN"]' \
+    <MSAM_EndpointUrl>/cloudwatch/alarm/<Alarm_Name>/region/<Region>/subscribe
+```
 
 
 ## Other API Commands

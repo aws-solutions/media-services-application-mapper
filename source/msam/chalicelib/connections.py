@@ -619,11 +619,16 @@ def mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items():
                         for endpoint in mediapackage_ep_cached:
                             endpoint_data = json.loads(endpoint["data"])
                             if endpoint_data["ChannelId"] == channel_id:
+                                scheme = "https"
+                                # URL is in diff loc for CMAF
+                                if "CmafPackage" in endpoint_data:
+                                    scheme = urlparse(endpoint_data["CmafPackage"]["HlsManifests"][0]["Url"]).scheme
+                                else:
+                                    scheme = urlparse(endpoint_data["Url"]).scheme
                                 config = {
                                     "from": endpoint["arn"],
                                     "to": distro["arn"],
-                                    "scheme":
-                                    urlparse(endpoint_data["Url"]).scheme,
+                                    "scheme": scheme,
                                     "connected_by": "tag",
                                     "tag": key
                                 }
