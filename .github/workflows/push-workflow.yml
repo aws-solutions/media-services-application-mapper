@@ -102,7 +102,7 @@ jobs:
           echo $response
 
   cfn-lint-check-job:
-    needs: scan-build-job
+    needs: scan-build-upload-job
     runs-on: ubuntu-latest
     name: Check templates with cfn-lint
     steps:
