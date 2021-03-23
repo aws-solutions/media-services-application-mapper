@@ -3,7 +3,7 @@ on:
   release:
     types: [created, edited, published]
 env:
-  REGION: us-west-2
+  REGION: us-east-1
   DIST_OUTPUT_BUCKET: rodeolabz
   SOLUTION_NAME: aws-media-services-application-mapper
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"

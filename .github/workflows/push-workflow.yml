@@ -2,7 +2,7 @@ name: Push Workflow
 
 # global environment variables to all jobs
 env:
-  REGION: us-west-2
+  REGION: us-east-1
   SOLUTION_NAME: aws-media-services-application-mapper
   DIST_OUTPUT_BUCKET: msam-dev
 
