@@ -70,6 +70,11 @@ jobs:
         with:
           name: cloudformation-templates
           path: deployment/global-s3-assets/*release.template
+      - name: Store virtual environment requirements
+        uses: actions/upload-artifact@v2
+        with:
+          name: virtual-environment-requirements
+          path: deployment/requirements.txt
 
   master-branch-deploy-cfn:
     runs-on: ubuntu-latest
@@ -110,11 +115,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cloudformation-templates
+      - name: Download virtual environment requirements
+        uses: actions/download-artifact@v2
+        with:
+          name: virtual-environment-requirements
       - name: Update system path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Install cfn-lint
+      - name: Install required system packages
         run: |
-          pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
+          pip install --upgrade --force-reinstall -r requirements.txt 2> error.txt
           if [ -s error.txt ]; then
             echo "ERROR: System package installation failed."
             cat error.txt
