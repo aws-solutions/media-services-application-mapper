@@ -61,10 +61,10 @@ jobs:
           cd deployment
           # if we're building master, do a release deploy
           if [ "$GITHUB_REF" == "refs/heads/master" ]; then
-            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $REGIONS_TO_DEPLOY -a public-read -t release
+            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r "$REGIONS_TO_DEPLOY" -a public-read -t release
           # if not, do a dev deploy
           else
-            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r $REGIONS_TO_DEPLOY -a none -t dev
+            ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
           fi
       - name: Store templates for check jobs
         uses: actions/upload-artifact@v2
