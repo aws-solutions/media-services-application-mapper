@@ -7,6 +7,7 @@ env:
   DIST_OUTPUT_BUCKET: rodeolabz
   SOLUTION_NAME: aws-media-services-application-mapper
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
