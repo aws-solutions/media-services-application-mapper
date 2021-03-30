@@ -20,7 +20,7 @@ The image below is a process chart that shows the human and CI/CD paths through 
 
 The existing milestone for the upcoming release is reviewed and any needed adjustments are made before development starts. The Issues associated with the milestone are never final until the release completes. Changes will be made to the plan if information changes while the work is progressing.
 
-Before development starts for a new release, the project team will create a new branch in the repository named after the version number of the release like *vX.Y.Z*. Commits are pushed to this branch during development by the project team members. The version branch will be merged into the trunk after release. Changes pushed to this branch are reviewed by team members and checked by automated workflows until it is merged back into the trunk.
+Before development starts for a new release, the project team will create a new development branch in the repository named after the version number of the release like *dev-vX.Y.Z*. Commits are pushed to this branch during development by the project team members. The version branch will be merged into the trunk after release. Changes pushed to this branch are reviewed by team members and checked by automated workflows until it is merged back into the trunk.
 
 ### Development
 
@@ -34,7 +34,7 @@ Project team members have permissions to push directly to the version branch dur
 
 Contributions via pull-requests are much appreciated. Before sending us a pull-request, please ensure that:
 
-1. You are working against the latest source on the *vX.Y.Z* branch under development.
+1. You are working against the latest source on the *dev-vX.Y.Z* branch under development.
 2. You check existing open and recently updated issues to make sure someone else hasn't addressed the need already.
 3. Contact a team member to discuss your proposed changes, or comment on an existing issue that you would like to help on. Let us know you're trying to help.
 
@@ -44,7 +44,7 @@ To send us a pull-request, please:
 2. Modify the source; please focus on the specific change you are contributing. Please avoid reformatting all the code, it will be hard for us to focus on your change.
 3. Ensure you can build and test in your account.
 4. Commit to your fork using an informative commit messages.
-5. Create a pull-request from your fork to the version branch currently in development (vX.Y.Z). Please avoid sending pull-requests to the truck of the repository.
+5. Create a pull-request from your fork to the version branch currently in development (dev-vX.Y.Z). Please avoid sending pull-requests to the truck of the repository.
 6. Pay attention to any automated CI failures reported on the pull-request in the upstream MSAM repository.
 7. You may be asked to make adjustments to your pull-request so we can merge your contribution into the branch. Stay involved in the conversation.
 
