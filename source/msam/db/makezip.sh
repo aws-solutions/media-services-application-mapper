@@ -6,13 +6,13 @@
 ORIGIN=`pwd`
 ZIP="$ORIGIN/dynamodb_resource.zip"
 
-rm -f $ZIP
+rm -f $ZIP error.txt
 pip install --upgrade --force-reinstall --target ./package requests 2> error.txt
-if [ -s error.txt ]; then
+RETVAL=$?
+if [ "$RETVAL" -ne "0" ]; then
     echo "ERROR: Database package installation failed."
     cat error.txt
-    rm error.txt
-    exit 1
+    exit $RETVAL
 fi
 cd package
 zip -r9 $ZIP .
