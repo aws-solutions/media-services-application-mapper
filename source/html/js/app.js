@@ -11,7 +11,7 @@ requirejs.config({
         "fuse": "/external/ajax/libs/fuse.js/3.4.5/fuse.min",
         "object_hash": "/external/gh/puleos/object-hash/dist/object_hash",
         "levenshtein": "/external/npm/fast-levenshtein@2.0.6/levenshtein.min",
-        "lodash": "/external/ajax/libs/lodash.js/4.17.15/lodash.min",
+        "lodash": "/external/ajax/libs/lodash.js/4.17.21/lodash.min",
         "machina": "/external/npm/machina@2.0.2/lib/machina.min",
         "vis": "/external/ajax/libs/vis/4.21.0/vis.min"
     },
