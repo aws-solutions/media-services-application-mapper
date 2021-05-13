@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - May 2021
+
+
+### Fixed
+```
+#233  Fix checking of pip exit code after loading dependencies  (build-and-deploy, enhancement)
+#232  Update dependencies: lodash and handlebars                (front-end)
+```
+
+### Contributors
+* @morjoan
+* @JimTharioAmazon
+
+
+
 ## [1.9.0] - March 2021
 
 ### New
