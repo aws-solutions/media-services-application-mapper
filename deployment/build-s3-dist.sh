@@ -127,12 +127,13 @@ EVENTS_ZIP="events.zip"
 cd $source_dir/events
 
 # install all the requirements into package dir
+rm -f error.txt
 pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
-if [ $? -ne 0 ]; then
+RETVAL=$?
+if [ "$RETVAL" -ne "0" ]; then
   echo "ERROR: Event collector package installation failed."
   cat error.txt
-  rm error.txt
-  exit 1
+  exit $RETVAL
 fi
 
 cd package
