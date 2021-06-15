@@ -128,7 +128,7 @@ cd $source_dir/events
 
 # install all the requirements into package dir
 pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
-if [ -s error.txt ]; then
+if [ $? -ne 0 ]; then
   echo "ERROR: Event collector package installation failed."
   cat error.txt
   rm error.txt

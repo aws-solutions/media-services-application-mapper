@@ -8,7 +8,7 @@ ZIP="$ORIGIN/dynamodb_resource.zip"
 
 rm -f $ZIP
 pip install --upgrade --force-reinstall --target ./package requests 2> error.txt
-if [ -s error.txt ]; then
+if [ $? -ne 0 ]; then
     echo "ERROR: Database package installation failed."
     cat error.txt
     rm error.txt
