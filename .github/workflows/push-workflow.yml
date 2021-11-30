@@ -246,6 +246,7 @@ jobs:
   
   # install msam for test if pushing changes to main branch
   main-branch-deploy-cfn:
+    name: Install MSAM for test
     runs-on: ubuntu-latest
     environment: push_env
     permissions:
