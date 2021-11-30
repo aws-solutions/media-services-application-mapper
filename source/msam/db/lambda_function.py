@@ -16,21 +16,21 @@ def lambda_handler(event, context):
     """
     Lambda entry point. Print the event first.
     """
-    print("Event Input: %s" % json.dumps(event))
+    print(f"Event Input: {json.dumps(event)}")
     settings_table = event["ResourceProperties"]["SettingsTable"]
     result = {'Status': 'SUCCESS', "StackId": event["StackId"], "RequestId": event["RequestId"], "LogicalResourceId": event["LogicalResourceId"], 'Data': {}, 'ResourceId': settings_table}
 
     if event.get("PhysicalResourceId", False):
         result["PhysicalResourceId"] = event["PhysicalResourceId"]
     else:
-        result["PhysicalResourceId"] = "{}-{}".format(resource_tools.stack_name(event), event["LogicalResourceId"])
+        result["PhysicalResourceId"] = f'{resource_tools.stack_name(event)}-{event["LogicalResourceId"]}'
 
     try:
         if event["RequestType"] == "Create" or event["RequestType"] == "Update":
             print(event["RequestType"])
             make_default_settings(settings_table)
     except ClientError as client_error:
-        print("Exception: %s" % client_error)
+        print(f"Exception: {client_error}")
         result = {
             'Status': 'FAILED',
             "StackId": event["StackId"],
@@ -53,7 +53,7 @@ def make_default_settings(settings_table):
     # determine the current region
     session = boto3.session.Session()
     current_region = session.region_name
-    print("current region is {}".format(current_region))
+    print(f"current region is {current_region}")
     # get all regions
     all_regions = ec2_client.describe_regions()
     # create a list of all regions except the current
@@ -62,7 +62,7 @@ def make_default_settings(settings_table):
         region_name = region['RegionName']
         if region_name != current_region:
             never_cache_regions.append(region_name)
-    print("never-cache-regions are {}".format(json.dumps(never_cache_regions)))
+    print(f"never-cache-regions are {json.dumps(never_cache_regions)}")
     # update the DynamoDB table
     table = dynamodb_resource.Table(settings_table)
     # default app-alarm-update-interval

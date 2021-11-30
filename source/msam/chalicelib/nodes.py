@@ -23,7 +23,7 @@ CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
 
 STAMP = os.environ["BUILD_STAMP"]
 # used to handle throttling, be very patient and back off a lot if needed
-MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, user_agent="aws-media-services-applications-mapper/{stamp}/nodes.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, user_agent=f"aws-media-services-applications-mapper/{STAMP}/nodes.py")
 
 def update_regional_ddb_items(region_name):
     """
@@ -119,7 +119,7 @@ def s3_bucket_ddb_items():
     """
     items = []
     for bucket in s3_buckets():
-        arn = "arn:aws:s3:::{}".format(bucket["Name"])
+        arn = f'arn:aws:s3:::{bucket["Name"]}'
         service = "s3"
         items.append(node_to_ddb_item(arn, service, "global", bucket))
     return items
@@ -223,7 +223,7 @@ def speke_server_ddb_items(region):
         endpoint_data = json.loads(endpoint["data"])
         for server_url in [match.value for match in jsonpath_expr.find(endpoint_data)]:
             parsed = urlparse(server_url)
-            arn = "arn:oss:speke:::{}".format(hash(server_url))
+            arn = f"arn:oss:speke:::{hash(server_url)}"
             config = {"arn": arn, "endpoint": server_url, "scheme": parsed.scheme}
             service = "speke-keyserver"
             # print(config)

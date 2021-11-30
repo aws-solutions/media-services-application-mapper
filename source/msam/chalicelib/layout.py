@@ -20,8 +20,7 @@ LAYOUT_TABLE_NAME = os.environ["LAYOUT_TABLE_NAME"]
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
 MSAM_BOTO3_CONFIG = Config(
-    user_agent="aws-media-services-applications-mapper/{stamp}/layout.py".
-    format(stamp=STAMP))
+    user_agent=f"aws-media-services-applications-mapper/{STAMP}/layout.py")
 
 # DynamoDB
 DYNAMO_RESOURCE = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)

@@ -17,7 +17,7 @@ import chalicelib.cloudwatch as cloudwatch_data
 import chalicelib.connections as connection_cache
 import chalicelib.nodes as node_cache
 from chalicelib.cache import regions
-import chalicelib.tags as tags
+from chalicelib import tags
 
 import defusedxml.ElementTree as ET
 
@@ -27,7 +27,7 @@ CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/periodic.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(user_agent=f"aws-media-services-applications-mapper/{STAMP}/periodic.py")
 
 SSM_LOG_GROUP_NAME = "MSAM/SSMRunCommand"
 
@@ -48,8 +48,8 @@ def update_alarms():
             alarm_groups[region_name].append(alarm_name)
         print(alarm_groups)
         # update each grouped list for a region
-        for region_name in alarm_groups:
-            alarm_names = alarm_groups[region_name]
+        for region_name,alarm_names in alarm_groups:
+            # alarm_names = alarm_groups[region_name]
             cloudwatch_data.update_alarms(region_name, alarm_names)
     except ClientError as error:
         print(error)
@@ -108,7 +108,7 @@ def update_nodes_generic(update_global_func, update_regional_func, settings_key)
             if region_name not in never_regions:
                 region_name_list.append(region_name)
             else:
-                print("{} in {} setting".format(region_name, never_regions_key))
+                print(f"{region_name} in {never_regions_key} setting")
         # sort it
         region_name_list.sort()
         # get the next region to process
@@ -131,7 +131,7 @@ def update_nodes_generic(update_global_func, update_regional_func, settings_key)
         # store it
         msam_settings.put_setting(settings_key, next_region)
         # update the region
-        print("updating nodes for region {}".format(region_name))
+        print(f"updating nodes for region {region_name}")
         if region_name == "global":
             update_global_func()
         else:
@@ -235,7 +235,7 @@ def ssm_run_command():
             for name, doc_type in document_names.items():
                 if id_type in doc_type:
                     # maybe eventually doc type could be comma-delimited string if doc applies to more than one type?
-                    print("running command: %s on %s " % (name, instance_id))
+                    print(f"running command: {name} on {instance_id}")
                     try:
                         response = ssm_client.send_command(
                             InstanceIds=[
@@ -320,7 +320,7 @@ def process_ssm_run_command(event):
                         break
             else:
                 # log if command has timed out or failed
-                print("SSM Command Status: Command %s sent to instance %s has %s" % (command_name, instance_id, command_status))
+                print(f"SSM Command Status: Command {command_name} sent to instance {instance_id} has {command_status}")
                 # create a metric for it
                 status = 1
                 metric_name = "MSAMSsmCommand"+command_status
@@ -343,5 +343,5 @@ def process_ssm_run_command(event):
         )
     except ClientError as error:
         print(error)
-        print("SSM Command Status: Command %s sent to instance %s has status %s" % (command_name, instance_id, command_status))
-        print("Log stream name is %s" % (log_stream_name))
+        print(f"SSM Command Status: Command {command_name} sent to instance {instance_id} has status {command_status}")
+        print(f"Log stream name is {log_stream_name}")
