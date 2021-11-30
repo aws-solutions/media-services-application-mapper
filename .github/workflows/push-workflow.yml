@@ -257,7 +257,7 @@ jobs:
         cfn-lint-job,
         cfn-nag-job        
       ]
-    if: github.ref == ${{ env.RELEASE_BRANCH }}
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@master
