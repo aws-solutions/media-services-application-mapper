@@ -13,7 +13,8 @@ import zipfile
 from crhelper import CfnResource
 import boto3
 
-WEB_FOLDER = "/tmp/msam"
+# Bandit B108: /tmp directory is ephemeral as this is ran on Lambda
+WEB_FOLDER = "/tmp/msam" # nosec
 
 logger = logging.getLogger(__name__)
 helper = CfnResource()
