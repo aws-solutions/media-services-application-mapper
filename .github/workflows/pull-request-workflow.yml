@@ -73,7 +73,7 @@ jobs:
         run: npm install jshint
       - name: Check with JShint
         run: |
-          cd source
+          cd source/html
           find . -name '*.js' -type f -print | \
             grep --invert-match "/external/" | \
             xargs ../../node_modules/jshint/bin/jshint
