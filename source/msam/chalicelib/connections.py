@@ -814,7 +814,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                             outer_flow_data["Source"]["EntitlementArn"],
                             outer_flow_data["FlowArn"], connection_type,
                             config))
-            except Exception:
+            # More Info: https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+            except: #nosec
                 # print(error)
                 pass
             # also, process each flow against each of the same set of flows for regular IP push (standard)
@@ -839,7 +840,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                                     inner_flow_data["FlowArn"],
                                     outer_flow_data["FlowArn"],
                                     connection_type, config))
-                    except Exception:
+                    # More Info: https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+                    except: #nosec
                         # print(error)
                         pass
     except ClientError as error:
