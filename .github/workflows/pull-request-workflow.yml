@@ -143,8 +143,9 @@ jobs:
         run: npm install pa11y
       - name: Check with Pa11y
         run: |
-          cd source
-          find . -iname '*.html' -exec ../node_modules/pa11y/bin/pa11y.js {} \;
+          cd source/html
+          find . -iname '*.html' | xargs -I '{}' ../node_modules/pa11y/bin/pa11y.js {}
+  
   cfn-lint-job:
     name: Run cfn-lint on templates
     runs-on: ubuntu-latest
