@@ -19,7 +19,7 @@ from jsonpath_ng import parse
 
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/media_events.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(user_agent=f"aws-media-services-applications-mapper/{STAMP}/media_events.py")
 
 DYNAMO_REGION_NAME=os.environ["EVENTS_TABLE_REGION"]
 DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME, config=MSAM_BOTO3_CONFIG)

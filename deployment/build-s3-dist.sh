@@ -125,15 +125,15 @@ echo
 
 EVENTS_ZIP="events.zip"
 cd $source_dir/events
-
+# clear the package directory
+rm -rf ./package
 # install all the requirements into package dir
-rm -f error.txt
 pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
-RETVAL=$?
-if [ "$RETVAL" -ne "0" ]; then
+if [ $? -ne 0 ]; then
   echo "ERROR: Event collector package installation failed."
   cat error.txt
-  exit $RETVAL
+  rm error.txt
+  exit 1
 fi
 
 cd package
@@ -167,7 +167,7 @@ zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
 rm -f js/app/build.js-e
 
 # create a digest for the web content
-SHATEXT="`sha1sum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
+SHATEXT="`shasum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
 echo web content archive SHA1 is $SHATEXT
 
 # update webcontent_resource.zip 
@@ -216,15 +216,15 @@ done
 cp aws-media-services-application-mapper-release.template $template_dir
 
 # generate digest values for the templates
-md5sum * >$other_dist_dir/md5.txt
-sha1sum * >$other_dist_dir/sha1.txt
-sha256sum * >$other_dist_dir/sha256.txt
+md5 * >$other_dist_dir/md5.txt
+shasum * >$other_dist_dir/sha1.txt
+shasum -a 256 * >$other_dist_dir/sha256.txt
 
 cd $build_dist_dir
 # generate digest values for the lambda zips and append to txts
-md5sum * >>$other_dist_dir/md5.txt
-sha1sum * >>$other_dist_dir/sha1.txt
-sha256sum * >>$other_dist_dir/sha256.txt
+md5 * >>$other_dist_dir/md5.txt
+shasum * >>$other_dist_dir/sha1.txt
+shasum -a 256 * >>$other_dist_dir/sha256.txt
 
 echo
 echo ------------------------------------
