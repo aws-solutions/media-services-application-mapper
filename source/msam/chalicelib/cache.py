@@ -17,7 +17,7 @@ CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/cache.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(user_agent=f"aws-media-services-applications-mapper/{STAMP}/cache.py")
 
 
 def cached_by_service(service):

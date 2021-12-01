@@ -1,4 +1,2 @@
 networkx
-boto3
-botocore
 jsonpath_ng

@@ -69,7 +69,6 @@ fi
 template_dir="$PWD" # /deployment
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
-other_dist_dir="$template_dir/assets"
 source_dir="$template_dir/../source"
 
 echo "------------------------------------------------------------------------------"
@@ -83,10 +82,6 @@ echo "rm -rf $build_dist_dir"
 rm -rf $build_dist_dir
 echo "mkdir -p $build_dist_dir"
 mkdir -p $build_dist_dir
-echo "rm -rf $other_dist_dir"
-rm -rf $other_dist_dir
-echo "mkdir -p $other_dist_dir"
-mkdir -p $other_dist_dir
 
 # date stamp for this build
 STAMP=`date +%s`
@@ -125,15 +120,15 @@ echo
 
 EVENTS_ZIP="events.zip"
 cd $source_dir/events
-
+# clear the package directory
+rm -rf ./package
 # install all the requirements into package dir
-rm -f error.txt
 pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
-RETVAL=$?
-if [ "$RETVAL" -ne "0" ]; then
+if [ $? -ne 0 ]; then
   echo "ERROR: Event collector package installation failed."
   cat error.txt
-  exit $RETVAL
+  rm error.txt
+  exit 1
 fi
 
 cd package
@@ -167,7 +162,7 @@ zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
 rm -f js/app/build.js-e
 
 # create a digest for the web content
-SHATEXT="`sha1sum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
+SHATEXT="`shasum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
 echo web content archive SHA1 is $SHATEXT
 
 # update webcontent_resource.zip 
@@ -214,17 +209,6 @@ done
 
 # copy the main template to the deployment dir
 cp aws-media-services-application-mapper-release.template $template_dir
-
-# generate digest values for the templates
-md5sum * >$other_dist_dir/md5.txt
-sha1sum * >$other_dist_dir/sha1.txt
-sha256sum * >$other_dist_dir/sha256.txt
-
-cd $build_dist_dir
-# generate digest values for the lambda zips and append to txts
-md5sum * >>$other_dist_dir/md5.txt
-sha1sum * >>$other_dist_dir/sha1.txt
-sha256sum * >>$other_dist_dir/sha256.txt
 
 echo
 echo ------------------------------------

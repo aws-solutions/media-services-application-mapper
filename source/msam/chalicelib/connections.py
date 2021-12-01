@@ -43,7 +43,7 @@ def connection_to_ddb_item(from_arn, to_arn, service, config):
     """
     Structure a discovered connection into a cache item.
     """
-    arn = "{}:{}".format(from_arn, to_arn)
+    arn = f"{from_arn}:{to_arn}"
     return connection_item(arn, from_arn, to_arn, service, config)
 
 
@@ -54,7 +54,7 @@ def connection_to_ddb_item_pl(from_arn, to_arn, service, config):
     pipeline = "0"
     if config["pipeline"]:
         pipeline = config["pipeline"]
-    arn = "{}:{}:{}".format(from_arn, to_arn, pipeline)
+    arn = f"{from_arn}:{to_arn}:{pipeline}"
     return connection_item(arn, from_arn, to_arn, service, config)
 
 
@@ -208,10 +208,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
                         if parsed.path.startswith("/in/v1/"):
                             pieces = parsed.path.split("/")
                             if len(pieces) == 5:
-                                ml_url_v2 = "{scheme}://{netloc}/in/v2/{uid}/{uid}/channel".format(
-                                    scheme=parsed.scheme,
-                                    netloc=parsed.netloc,
-                                    uid=pieces[3])
+                                ml_url_v2 = f"{parsed.scheme}://{parsed.netloc}/in/v2/{pieces[3]}/{pieces[3]}/channel"
                         for mp_channel in mediapackage_ch_cached:
                             mp_channel_data = json.loads(mp_channel["data"])
                             for ingest_endpoint in mp_channel_data[
@@ -660,20 +657,18 @@ def mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items():
         for distro in cloudfront_distros_cached:
             distro_data = json.loads(distro["data"])
             for item in distro_data["Origins"]["Items"]:
-                origin_partial_url = "{}/{}".format(item["DomainName"],
-                                                    item["OriginPath"])
+                origin_partial_url = f'{item["DomainName"]}/{item["OriginPath"]}'
                 for mp_endpoint in mediapackage_ep_cached:
                     mp_endpoint_data = json.loads(mp_endpoint["data"])
                     ratio = fuzz.ratio(origin_partial_url,
                                        mp_endpoint_data["Url"])
-                    # print("{} {} :: {}".format(ratio, origin_partial_url, mp_endpoint_data["Url"]))
                     if ratio >= min_ratio:
                         config = {
                             "from": mp_endpoint["arn"],
                             "to": distro["arn"],
                             "scheme": urlparse(mp_endpoint_data["Url"]).scheme,
                             "connected_by": "url",
-                            "match": "{}%".format(ratio)
+                            "match": f"{ratio}%"
                         }
                         print(config)
                         items.append(
@@ -819,8 +814,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                             outer_flow_data["Source"]["EntitlementArn"],
                             outer_flow_data["FlowArn"], connection_type,
                             config))
-            # Bandit B110: ok to pass
-            except Exception as error: # nosec
+            # More Info: https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+            except Exception: #nosec
                 # print(error)
                 pass
             # also, process each flow against each of the same set of flows for regular IP push (standard)
@@ -845,8 +840,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                                     inner_flow_data["FlowArn"],
                                     outer_flow_data["FlowArn"],
                                     connection_type, config))
-                    # Bandit B110: ok to pass
-                    except Exception as error: # nosec
+                    # More Info: https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+                    except Exception: #nosec
                         # print(error)
                         pass
     except ClientError as error:
@@ -1038,7 +1033,7 @@ def medialive_channel_s3_bucket_ddb_items():
                 for setting in destination["Settings"]:
                     ml_url = setting["Url"]
                     parsed_destination = urlparse(ml_url)
-                    if parsed_destination.scheme == 's3' or parsed_destination.scheme == 's3ssl':
+                    if parsed_destination.scheme in ('s3', 's3ssl'):
                         for s3_bucket in s3_buckets_cached:
                             s3_bucket_data = json.loads(s3_bucket["data"])
                             if parsed_destination.netloc == s3_bucket_data[

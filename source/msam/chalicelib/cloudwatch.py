@@ -24,8 +24,7 @@ CLOUDWATCH_EVENTS_TABLE_NAME = os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"]
 # user-agent config
 STAMP = os.environ["BUILD_STAMP"]
 MSAM_BOTO3_CONFIG = Config(
-    user_agent="aws-media-services-applications-mapper/{stamp}/cloudwatch.py".
-    format(stamp=STAMP))
+    user_agent=f"aws-media-services-applications-mapper/{STAMP}/cloudwatch.py")
 
 
 def update_alarm_records(region_name, alarm, subscriber_arns):
@@ -36,7 +35,7 @@ def update_alarm_records(region_name, alarm, subscriber_arns):
         ddb_table_name = ALARMS_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
-        region_alarm_name = "{}:{}".format(region_name, alarm["AlarmName"])
+        region_alarm_name = f"{region_name}:{alarm['AlarmName']}"
         if 'Namespace' in alarm:
             namespace = alarm['Namespace']
         else:
@@ -385,8 +384,7 @@ def incoming_cloudwatch_alarm(event, _):
                 match.value
                 for match in parse('$..StateChangeTime').find(alarm)
             ]
-            region_alarm_name = "{}:{}".format(
-                region, alarm_name[0] if alarm_name else None)
+            region_alarm_name = f"{region}:{alarm_name[0] if alarm_name else None}"
             subscribers = subscribers_to_alarm(
                 alarm_name[0] if alarm_name else None, region)
             for resource_arn in subscribers:
@@ -408,7 +406,7 @@ def incoming_cloudwatch_alarm(event, _):
                     updated_timestamp
                 }
                 ddb_table.put_item(Item=item)
-                print("{} updated via alarm notification".format(resource_arn))
+                print(f"{resource_arn} updated via alarm notification")
     except ClientError as error:
         print(error)
     return True
@@ -421,7 +419,7 @@ def subscribe_resource_to_alarm(request, alarm_name, region):
     try:
         alarm_name = unquote(alarm_name)
         region = unquote(region)
-        region_alarm_name = "{}:{}".format(region, alarm_name)
+        region_alarm_name = f"{region}:{alarm_name}"
         ddb_table_name = ALARMS_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
@@ -491,7 +489,7 @@ def subscribers_to_alarm(alarm_name, region):
     try:
         alarm_name = unquote(alarm_name)
         region = unquote(region)
-        region_alarm_name = "{}:{}".format(region, alarm_name)
+        region_alarm_name = f"{region}:{alarm_name}"
         ddb_table_name = ALARMS_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
@@ -522,7 +520,7 @@ def unsubscribe_resource_from_alarm(request, alarm_name, region):
     try:
         alarm_name = unquote(alarm_name)
         region = unquote(region)
-        region_alarm_name = "{}:{}".format(region, alarm_name)
+        region_alarm_name = f"{region}:{alarm_name}"
         ddb_table_name = ALARMS_TABLE_NAME
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
