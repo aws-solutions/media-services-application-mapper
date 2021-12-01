@@ -270,7 +270,7 @@ jobs:
           echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Create CloudFormation stack based on last job's build
         run: |
-          TEMPLATE="https://$DIST_OUTPUT_BUCKET-us-west-2.s3-us-west-2.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
+          TEMPLATE="https://$DIST_OUTPUT_BUCKET-$REGION.s3.amazonaws.com/$SOLUTION_NAME/latest/$SOLUTION_NAME-release.template"
           echo $TEMPLATE
-          response="$( aws cloudformation create-stack --stack-name MSAM-test-master-$VERSION --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
+          response="$( aws cloudformation create-stack --stack-name MSAM-test-main-$VERSION --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
           echo $response
