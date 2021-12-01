@@ -81,7 +81,8 @@ def lambda_handler(event, _):
 
         # set the rest of the information needed for storing as regular CWE
         # give timestamp a millisecond precision since it's sort key in CWE table
-        event["timestamp"] = event["timestamp"] * 1000 + randint(1, 999)
+        # Bandit B311: randint not used for cryptographic purposes
+        event["timestamp"] = event["timestamp"] * 1000 + randint(1, 999) # nosec
         event["data"] = json.dumps(event["detail"])
         event["type"] = event["detail-type"]
         if "eventName" in event["detail"]:
