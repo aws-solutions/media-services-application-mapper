@@ -79,7 +79,7 @@ jobs:
       - name: Check with Pa11y
         run: |
           cd source/html
-          find . -iname '*.html' | xargs -I '{}' ../node_modules/pa11y/bin/pa11y.js {}
+          find . -iname '*.html' | xargs -I '{}' ../../node_modules/pa11y/bin/pa11y.js {}
 
   jshint-check-job:
     runs-on: ubuntu-latest
