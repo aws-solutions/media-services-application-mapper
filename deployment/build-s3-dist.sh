@@ -69,7 +69,6 @@ fi
 template_dir="$PWD" # /deployment
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
-other_dist_dir="$template_dir/assets"
 source_dir="$template_dir/../source"
 
 echo "------------------------------------------------------------------------------"
@@ -83,10 +82,6 @@ echo "rm -rf $build_dist_dir"
 rm -rf $build_dist_dir
 echo "mkdir -p $build_dist_dir"
 mkdir -p $build_dist_dir
-echo "rm -rf $other_dist_dir"
-rm -rf $other_dist_dir
-echo "mkdir -p $other_dist_dir"
-mkdir -p $other_dist_dir
 
 # date stamp for this build
 STAMP=`date +%s`
@@ -214,17 +209,6 @@ done
 
 # copy the main template to the deployment dir
 cp aws-media-services-application-mapper-release.template $template_dir
-
-# generate digest values for the templates
-md5 * >$other_dist_dir/md5.txt
-shasum * >$other_dist_dir/sha1.txt
-shasum -a 256 * >$other_dist_dir/sha256.txt
-
-cd $build_dist_dir
-# generate digest values for the lambda zips and append to txts
-md5 * >>$other_dist_dir/md5.txt
-shasum * >>$other_dist_dir/sha1.txt
-shasum -a 256 * >>$other_dist_dir/sha256.txt
 
 echo
 echo ------------------------------------
