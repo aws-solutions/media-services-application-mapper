@@ -128,7 +128,24 @@ jobs:
       #   run: |
       #     cd deployment
       #     ./run-unit-tests.sh
-
+  
+  pa11y-check-job:
+    runs-on: ubuntu-latest
+    needs:
+      [
+        build-job
+      ]
+    name: Check HTML code with Pa11y for accessibility
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Pa11y
+        run: npm install pa11y
+      - name: Check with Pa11y
+        run: |
+          cd source/html
+          find . -iname '*.html' | xargs -I '{}' ../../node_modules/pa11y/bin/pa11y.js {}
+  
   cfn-lint-job:
     name: Run cfn-lint on templates
     runs-on: ubuntu-latest
