@@ -155,7 +155,7 @@ AWS Media Services Application Mapper consists of:
 <a name="license"></a>
 # License
 
-See license [here](https://github.com/awslabs/aws-media-services-application-mapper/blob/master/LICENSE).
+See license [here](https://github.com/awslabs/aws-media-services-application-mapper/blob/main/LICENSE.txt).
 
 
 ## Navigate
