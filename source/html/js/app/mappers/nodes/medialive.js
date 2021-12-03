@@ -122,6 +122,14 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         return html;
                     };
                 })(),
+                alerts_link: (function() {
+                    const id = channel.Id;
+                    const region = channel.Arn.split(":")[3];
+                    return function() {
+                        const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}/alerts`;
+                        return html;
+                    };
+                })(),
                 cloudwatch_link: (function() {
                     const id = channel.Id;
                     const region = channel.Arn.split(":")[3];
@@ -226,7 +234,15 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                     const id = input.Id;
                     const region = input.Arn.split(":")[3];
                     return function() {
-                        const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
+                        const html = `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}`;
+                        return html;
+                    };
+                })(),
+                alerts_link: (function() {
+                    const id = input.Id;
+                    const region = input.Arn.split(":")[3];
+                    return function() {
+                        const html = `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}/alerts`;
                         return html;
                     };
                 })(),

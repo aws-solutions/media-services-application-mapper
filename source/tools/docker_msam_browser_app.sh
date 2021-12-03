@@ -5,5 +5,5 @@ if [ ! -f index.html ]; then
 else
     docker stop msam-browser-app
     docker container rm msam-browser-app
-    docker run --name msam-browser-app -v `pwd`:/usr/share/nginx/html:ro -d -p 38080:80 nginx:stable-alpine
+    docker run --name msam-browser-app -v `pwd`:/var/www/html:ro -d -p 38080:80 public.ecr.aws/ubuntu/nginx:latest
 fi
