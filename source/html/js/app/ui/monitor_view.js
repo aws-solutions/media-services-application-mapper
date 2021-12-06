@@ -6,6 +6,11 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
         var last_displayed;
 
+        var consoleIcon = function(cell, formatterParams){
+            return "<i class='fa fa-desktop'></i>";
+        };
+        
+
         var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
             placeholder: "No Recent Alerts",
             tooltips: true,
@@ -64,6 +69,15 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             }, {
                 title: "Alarm State Updated",
                 field: "StateUpdated"
+            }, {
+                tooltip: "Navigate to CloudWatch",
+                headerSort: false,
+                formatter: consoleIcon,
+                width: 40,
+                align: "center",
+                cellClick: function(e, cell) {
+                    navigate_to_alarm(cell.getRow()._row.data);
+                }
             }, {
                 tooltip: "Unsubscribe from Alarm",
                 headerSort: false,
@@ -211,10 +225,13 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
         var display_selected_node = function(node_id) {
             var node = model.nodes.get(node_id);
+            // console.log(JSON.stringify(node));
             last_displayed = node_id;
             var data = [];
             $("#nav-alarms-selected-item").html(node.header);
-            $("#nav-alerts-selected-item").html(node.header);
+            const link = (node.alerts_link || node.console_link)();
+            const consoleAnchor = `<a href="${link}" target="_blank" title="Navigate to Resource">${consoleIcon()}</a>`;
+            $("#nav-alerts-selected-item").html(node.header + "&nbsp;&nbsp;" + consoleAnchor);
             $("#nav-events-selected-item").html(node.header);
 
             // event alerts
@@ -368,6 +385,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                     refresh();
                 });
             }
+        }
+
+        function navigate_to_alarm(row) {
+            console.log(row);
+            const url = `https://console.aws.amazon.com/cloudwatch/home?region=${row.Region}#alarmsV2:alarm/${row.AlarmName}?`;
+            window.open(url, '_blank').focus();
         }
 
         function show_formatted_cloudwatch_event_data(row) {
