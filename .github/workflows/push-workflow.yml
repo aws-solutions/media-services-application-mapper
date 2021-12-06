@@ -144,7 +144,8 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
-          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repo.name }} $VERSION
+          echo ${{ toJson(github.event) }}
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
       # - name: Run unit tests
       #   run: |
       #     cd deployment
@@ -231,7 +232,7 @@ jobs:
       - name: Upload to S3
         run: |
           cd deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repo.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
       - name: Zip up regional and global assets
         run: |
           cd deployment
