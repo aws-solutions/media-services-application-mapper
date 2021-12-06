@@ -144,8 +144,7 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
-          echo ${{ toJson(github.event) }}
-          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
       # - name: Run unit tests
       #   run: |
       #     cd deployment
