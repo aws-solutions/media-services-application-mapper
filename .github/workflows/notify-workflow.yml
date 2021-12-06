@@ -1,8 +1,6 @@
 name: Send Artifacts Workflow
 env:
   REGION: us-east-1
-  SOLUTION_ORG: aws-solutions
-  SOLUTION_NAME: aws-media-services-application-mapper
 on: 
   workflow_run:
     workflows: ["Push Workflow"]
