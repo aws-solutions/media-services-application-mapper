@@ -7,9 +7,7 @@ and its associated artifacts.
 """
 
 import os
-import json
 import requests
-import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
 from urllib.parse import urlparse
 
