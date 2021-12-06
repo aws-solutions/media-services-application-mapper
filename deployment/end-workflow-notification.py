@@ -7,18 +7,15 @@ and its associated artifacts.
 """
 
 import os
-import json
 import requests
-import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
 from urllib.parse import urlparse
 
 API_REGION = os.environ.get('AWS_DEFAULT_REGION')
 NOTIFICATION_ENDPOINT = os.environ.get('NOTIFICATION_ENDPOINT')
 
-SOLUTION_NAME = 'aws-media-services-application-mapper'
 PAYLOAD = {}
-PAYLOAD['solution_name'] = SOLUTION_NAME
+PAYLOAD['solution_name'] = os.environ.get('GITHUB_REPOSITORY').split('/')[1]
 PAYLOAD['branch'] = os.environ.get('BRANCH')
 PAYLOAD['workflow_name'] = os.environ.get('WORKFLOW_NAME')
 PAYLOAD['commit_id'] = os.environ.get('COMMIT_ID')
