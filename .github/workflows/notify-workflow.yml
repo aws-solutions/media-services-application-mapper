@@ -45,14 +45,14 @@ jobs:
           echo VERSION=$VERSION >> $GITHUB_ENV
       - name: Determine pipeline type
         run: |
-          if [ $BRANCH == "main"]; then
+          if [ $BRANCH == "main" ]; then
             export PIPELINE_TYPE="release"
           else
             export PIPELINE_TYPE="feature"
           fi
           echo PIPELINE_TYPE=$PIPELINE_TYPE >> $GITHUB_ENV
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.NOTIFY_ROLE }}
           aws-region: ${{ env.REGION }}
