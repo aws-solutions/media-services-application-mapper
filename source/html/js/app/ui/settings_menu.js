@@ -25,7 +25,8 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                     return function(event) {
                         local_jq("#input_endpoint_url").val(u);
                         local_jq("#input_endpoint_key").val(k);
-                    };
+                        local_jq("#connectionRemember").prop("checked", true);
+        };
                 })());
                 index++;
             }
@@ -47,9 +48,9 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 $("#input_endpoint_url").val(current[0]);
                 $("#input_endpoint_key").val(current[1]);
             }
-            $("#connectionRememberLabel").removeClass("active");
-            $("#connectionRemember").prop("checked", false);
-            $("#connectionRememberText").text("Do Not Remember");
+            // $("#connectionRememberLabel").removeClass("active");
+            // $("#connectionRemember").prop("checked", false);
+            // $("#connectionRememberText").text("Do Not Remember");
         };
 
         const updateRegionDialog = function() {
@@ -98,11 +99,6 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
         $("#connectionRemember").on("change", function() {
             store_locally = $("#connectionRemember").prop("checked");
             console.log("store locally = " + store_locally);
-            if (store_locally) {
-                $("#connectionRememberText").text("Remember");
-            } else {
-                $("#connectionRememberText").text("Do Not Remember");
-            }
         });
         $("#cancel_endpoint_connection").on("click", () => {
             console.log("cancel connection");
