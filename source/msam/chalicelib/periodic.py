@@ -26,8 +26,9 @@ ALARMS_TABLE_NAME = os.environ["ALARMS_TABLE_NAME"]
 CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 
 # user-agent config
-STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent=f"aws-media-services-applications-mapper/{STAMP}/periodic.py")
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
+MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
 SSM_LOG_GROUP_NAME = "MSAM/SSMRunCommand"
 

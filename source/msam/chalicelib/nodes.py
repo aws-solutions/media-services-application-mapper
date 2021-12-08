@@ -21,9 +21,10 @@ from chalicelib import cache
 # TTL provided via CloudFormation
 CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
 
-STAMP = os.environ["BUILD_STAMP"]
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 # used to handle throttling, be very patient and back off a lot if needed
-MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, user_agent=f"aws-media-services-applications-mapper/{STAMP}/nodes.py")
+MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, **USER_AGENT_EXTRA)
 
 def update_regional_ddb_items(region_name):
     """

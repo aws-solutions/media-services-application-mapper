@@ -18,8 +18,9 @@ from botocore.config import Config
 from jsonpath_ng import parse
 
 # user-agent config
-STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent=f"aws-media-services-applications-mapper/{STAMP}/media_events.py")
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
+MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
 DYNAMO_REGION_NAME=os.environ["EVENTS_TABLE_REGION"]
 DYNAMO_RESOURCE = boto3.resource('dynamodb', region_name=DYNAMO_REGION_NAME, config=MSAM_BOTO3_CONFIG)

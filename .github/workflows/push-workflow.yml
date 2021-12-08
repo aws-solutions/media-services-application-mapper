@@ -3,7 +3,6 @@ name: Push Workflow
 # global environment variables to all jobs
 env:
   REGION: us-east-1
-  SOLUTION_NAME: aws-media-services-application-mapper
   DIST_OUTPUT_BUCKET: msam-dev
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
 
@@ -231,7 +230,7 @@ jobs:
       - name: Upload to S3
         run: |
           cd deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s $SOLUTION_NAME -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
+          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repository.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
       - name: Zip up regional and global assets
         run: |
           cd deployment
