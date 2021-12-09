@@ -3,11 +3,11 @@
 
 define(["app/server"], function(server) {
 
-    var stamp = "DEV_0_0_0";
+    var version = "VERSION";
 
     return {
-        "get_timestamp": function() {
-            return stamp;
+        "get_version": function() {
+            return version;
         }
     };
 

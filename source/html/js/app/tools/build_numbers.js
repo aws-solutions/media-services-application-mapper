@@ -14,7 +14,7 @@ define(["jquery", "app/api_check", "app/build", "app/connections"],
                 var current_connection = connections.get_current();
                 var endpoint = current_connection[0];
                 var api_key = current_connection[1];
-                var app_stamp = build.get_timestamp();
+                var app_stamp = build.get_version();
                 check.ping(endpoint, api_key).then(function(response) {
                     var api_stamp = Number.parseInt(response.buildstamp);
                     var browser_stamp = Number.parseInt(app_stamp);

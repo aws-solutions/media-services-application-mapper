@@ -3,7 +3,6 @@ name: Pull Request Workflow
 # global environment variables to all jobs
 env:
   REGION: us-east-1
-  SOLUTION_NAME: aws-media-services-application-mapper
   DIST_OUTPUT_BUCKET: msam-pr-build
 
 on: 
@@ -123,7 +122,7 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
-          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
+          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
       # - name: Run unit tests
       #   run: |
       #     cd deployment

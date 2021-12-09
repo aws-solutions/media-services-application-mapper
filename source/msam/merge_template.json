@@ -22,7 +22,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -80,7 +79,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -139,7 +137,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -198,7 +195,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -257,7 +253,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -316,7 +311,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -375,7 +369,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -434,7 +427,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },

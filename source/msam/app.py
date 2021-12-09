@@ -404,7 +404,7 @@ def ping():
     """
     API entry point to test the API key authentication and retrieve the build timestamp.
     """
-    return {"message": "pong", "buildstamp": os.environ["BUILD_STAMP"]}
+    return {"message": "pong", "buildstamp": os.environ["BUILD_STAMP"], "version": os.environ["VERSION"]}
 
 
 @app.schedule(Rate(NODE_UPDATE_RATE_MINUTES, unit=Rate.MINUTES))
