@@ -11,3 +11,4 @@ pylint
 requests
 stringcase
 testresources
+aws-requests-auth

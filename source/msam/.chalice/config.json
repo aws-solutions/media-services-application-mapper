@@ -16,6 +16,8 @@
         "EVENTS_TABLE_NAME": "media-services-application-mapper-events",
         "LAYOUT_TABLE_NAME": "media-services-application-mapper-layout",
         "SETTINGS_TABLE_NAME": "media-services-application-mapper-settings",
-        "CLOUDWATCH_EVENTS_TABLE_NAME": "media-services-application-mapper-cloudwatchevents"
+        "CLOUDWATCH_EVENTS_TABLE_NAME": "media-services-application-mapper-cloudwatchevents",
+        "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+        "VERSION": "%%VERSION%%"
     }
 }

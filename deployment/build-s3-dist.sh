@@ -157,7 +157,7 @@ mv dynamodb_resource.zip $build_dist_dir/dynamodb_resource_$STAMP.zip
 cd $source_dir/html
 echo "updating browser app build stamp"
 cp -f js/app/build-tmp.js js/app/build.js
-sed -i -e "s/DEV_0_0_0/$STAMP/g" js/app/build.js
+sed -i -e "s/VERSION/$VERSION/g" js/app/build.js
 zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
 rm -f js/app/build.js-e
 
