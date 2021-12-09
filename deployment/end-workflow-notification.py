@@ -15,6 +15,7 @@ API_REGION = os.environ.get('AWS_DEFAULT_REGION')
 NOTIFICATION_ENDPOINT = os.environ.get('NOTIFICATION_ENDPOINT')
 
 PAYLOAD = {}
+PAYLOAD['solution_org'] = os.environ.get('GITHUB_REPOSITORY').split('/')[0]
 PAYLOAD['solution_name'] = os.environ.get('GITHUB_REPOSITORY').split('/')[1]
 PAYLOAD['branch'] = os.environ.get('BRANCH')
 PAYLOAD['workflow_name'] = os.environ.get('WORKFLOW_NAME')
