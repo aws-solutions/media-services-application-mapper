@@ -501,7 +501,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 const key = `diagram-lock-${window.btoa(this.name)}`;
                 console.log(key);
                 this.locked = Boolean(state).valueOf();
-                console.log(this.locked)
+                // console.log(this.locked);
                 const promise = settings.put(key, { "name": this.name, "locked": this.locked });
                 return promise;
             }
