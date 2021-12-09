@@ -154,6 +154,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/ui/al
             if (diagram) {
                 // get the lock state from settings
                 diagram.isLocked().then((locked) => {
+                    console.log(`diagram ${diagram.name} is ${locked ? "locked" : "unlocked"}`);
                     // update the lock icon
                     const html = locked ? 'lock' : 'lock_open';
                     $("#diagram-lock-icon").html(html);
