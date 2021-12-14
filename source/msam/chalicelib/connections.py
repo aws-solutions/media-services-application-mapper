@@ -496,7 +496,8 @@ def s3_bucket_medialive_input_ddb_items():
         re.compile(r"http.?\:\/\/s3\-\S+\.amazonaws\.com\/([^\/]+)\/.+"),
         re.compile(r"http.?\:\/\/(\S+)\.s3\.amazonaws\.com\/.+"),
         re.compile(r"http.?\:\/\/(\S+)\.s3\-(\S+)\.amazonaws\.com"),
-        re.compile(r"s3\:\/\/([^\/]+)")
+        re.compile(r"s3\:\/\/([^\/]+)"),
+        re.compile(r"s3ssl\:\/\/([^\/]+)")
     ]
     try:
         # get S3 buckets

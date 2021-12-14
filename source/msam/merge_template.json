@@ -54,6 +54,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
                     }]
                 }
             }
@@ -112,6 +120,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
@@ -170,6 +186,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
@@ -228,6 +252,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
@@ -286,6 +318,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
                     }]
                 }
             }
@@ -344,6 +384,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
@@ -402,6 +450,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
@@ -460,6 +516,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
