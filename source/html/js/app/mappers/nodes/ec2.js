@@ -28,7 +28,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
             const id = cache_entry.arn;
             const nodes = model.nodes;
             const rgb = "#D5DBDB";
-            let node_type = "EC2 Instance";
+            const generic_node_type = "EC2 Instance";
+            let node_type = generic_node_type;
             if ('Tags' in config) {
                 if ('MSAM-NodeType' in config.Tags) {
                     node_type = config.Tags['MSAM-NodeType'];
@@ -55,8 +56,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         let local_name = name;
                         let local_rgb = rgb;
                         let local_id = id;
+                        let local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id, config, local_generic_node_type);
                         };
                     })(),
                     normal_selected: (function() {
@@ -64,24 +66,27 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         let local_name = name;
                         let local_rgb = rgb;
                         let local_id = id;
+                        let local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id, config, local_generic_node_type);
                         };
                     })(),
                     alert_unselected: (function() {
                         let local_node_type = node_type;
                         let local_name = name;
                         let local_id = id;
+                        var local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id, config, local_generic_node_type);
                         };
                     })(),
                     alert_selected: (function() {
                         let local_node_type = node_type;
                         let local_name = name;
                         let local_id = id;
+                        var local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id, config, local_generic_node_type);
                         };
                     })()
                 },
@@ -98,7 +103,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fEC2*2cInstanceId*7d*20InstanceId*3d*22${name}*22`;
                         return html;
                     };
-                })()
+                })(),
+                "generic_node_type": generic_node_type
             };
             node_data.image.selected = node_data.render.normal_selected();
             node_data.image.unselected = node_data.render.normal_unselected();

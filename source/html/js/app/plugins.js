@@ -50,6 +50,8 @@ define({
         "app/ui/overlays/mediaconnect_flow",
         "app/ui/overlays/medialive_channel",
         "app/ui/overlays/medialive_multiplex",
+        "app/ui/overlays/ssm_managed_instance",
+        "app/ui/overlays/ec2_instance"
     ],
     "default-overlay": "app/ui/overlays/alarms_only"
 });

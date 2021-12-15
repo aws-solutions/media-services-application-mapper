@@ -17,7 +17,7 @@
                    if (ov.informational == true) {
                        const nodes = model.nodes.get({
                            filter: function(item) {
-                               return ov.match_type == item.title;
+                               return ov.match_type == (item.generic_node_type || item.title);
                            }
                        });
    
