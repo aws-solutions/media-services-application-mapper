@@ -57,8 +57,8 @@ define(['jquery', 'lodash', 'app/events', 'app/alarms'], function($, _, alert_ev
         draw_font_set_position(typeLabel, font_size, width);
     };
 
-    const set_info_text = function(data, drawing, font_size, width) {
-        const typeLabel = drawing.text(generateText('Type', data)).y(info_y);
+    const set_info_text = function(data, drawing, font_size, width, label = "Type") {
+        const typeLabel = drawing.text(generateText(label, data)).y(info_y);
         draw_font_set_position(typeLabel, font_size, width);
     };
 

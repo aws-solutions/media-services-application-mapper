@@ -23,12 +23,13 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
         };
 
         var map_config = function(cache_entry) {
-            var config = JSON.parse(cache_entry.data);
-            var name = config.Id;
-            var id = cache_entry.arn;
-            var nodes = model.nodes;
-            var rgb = "#D5DBDB";
-            var node_type = "SSM Managed Instance";
+            const config = JSON.parse(cache_entry.data);
+            const name = config.Id;
+            const id = cache_entry.arn;
+            const nodes = model.nodes;
+            const rgb = "#D5DBDB";
+            const generic_node_type = "SSM Managed Instance";
+            var node_type = generic_node_type;
             if ('Tags' in config) {
                 if ('MSAM-NodeType' in config.Tags) {
                     node_type = config.Tags['MSAM-NodeType'];
@@ -55,8 +56,9 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         var local_name = name;
                         var local_rgb = rgb;
                         var local_id = id;
+                        var local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id);
+                            return svg_node.unselected(local_node_type, local_name, local_rgb, local_id, config, local_generic_node_type);
                         };
                     })(),
                     normal_selected: (function() {
@@ -64,24 +66,27 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         var local_name = name;
                         var local_rgb = rgb;
                         var local_id = id;
+                        var local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id);
+                            return svg_node.selected(local_node_type, local_name, local_rgb, local_id, config, local_generic_node_type);
                         };
                     })(),
                     alert_unselected: (function() {
                         var local_node_type = node_type;
                         var local_name = name;
                         var local_id = id;
+                        var local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id);
+                            return svg_node.unselected(local_node_type, local_name, "#ff0000", local_id, config, local_generic_node_type);
                         };
                     })(),
                     alert_selected: (function() {
                         var local_node_type = node_type;
                         var local_name = name;
                         var local_id = id;
+                        var local_generic_node_type = generic_node_type;
                         return function() {
-                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id);
+                            return svg_node.selected(local_node_type, local_name, "#ff0000", local_id, config, local_generic_node_type);
                         };
                     })()
                 },
@@ -98,7 +103,8 @@ define(["jquery", "app/server", "app/connections", "app/regions", "app/model", "
                         var html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bMSAM*2fSSMRunCommand*2c*22Instance*20ID*22*7d*20${name}`;
                         return html;
                     };
-                })()
+                })(),
+                "generic_node_type": generic_node_type 
             };
             node_data.image.selected = node_data.render.normal_selected();
             node_data.image.unselected = node_data.render.normal_unselected();
