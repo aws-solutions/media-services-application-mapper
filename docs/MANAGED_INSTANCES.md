@@ -42,7 +42,7 @@ To override the default:
 ## Tagging SSM Managed EC2 and Hybrid Resources
 
 
-Refer to [this guide]( https://github.com/awslabs/aws-media-services-application-mapper/blob/master/RESOURCE_TAGS.md#ssm-managed-ec2-and-hybrid-resources) on tagging your managed instance resources.
+Refer to [this guide]( https://github.com/awslabs/aws-media-services-application-mapper/blob/main/docs/RESOURCE_TAGS.md#ssm-managed-ec2-and-hybrid-resources) on tagging your managed instance resources.
 
 
 ## [Support for Elemental Live Encoders](#support-for-elemental-live-encoders)
