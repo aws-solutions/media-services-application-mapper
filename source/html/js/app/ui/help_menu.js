@@ -17,6 +17,6 @@ define(["jquery", "app/tools/build_numbers"], function($, build_numbers) {
             $("#tool_output_modal_title").html(html);
             $("#tool_output_modal_message").html(error);
             $("#tool_output_modal").modal('show');
-        })
+        });
     });
 });
