@@ -200,9 +200,9 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                             "app/ui/search_view",
                             "app/ui/selected_item_view",
                             "app/ui/tile_view",
-                            "app/ui/tools_menu",
                             "app/ui/information_compartment",
-                            "app/ui/user_defined"
+                            "app/ui/user_defined",
+                            "app/ui/help_menu"
                         ]);
                         // show the tiles tab
                         $("#channel-tiles-tab").tab('show');

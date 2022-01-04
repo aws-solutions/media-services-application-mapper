@@ -4,3 +4,4 @@ fuzzywuzzy
 stringcase
 requests
 defusedxml
+crhelper

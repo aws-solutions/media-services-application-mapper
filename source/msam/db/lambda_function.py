@@ -6,59 +6,43 @@ templates to populate the database with reasonable defaults.
 # Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import os
 import json
 import boto3
 from botocore.exceptions import ClientError
-import resource_tools
+from botocore.config import Config
+from crhelper import CfnResource
+
+helper = CfnResource()
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
+MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
 
-def lambda_handler(event, context):
+@helper.create
+@helper.update
+def create_update(event, _):
     """
     Lambda entry point. Print the event first.
     """
     print(f"Event Input: {json.dumps(event)}")
     settings_table = event["ResourceProperties"]["SettingsTable"]
-    result = {
-        'Status': 'SUCCESS',
-        "StackId": event["StackId"],
-        "RequestId": event["RequestId"],
-        "LogicalResourceId": event["LogicalResourceId"],
-        'Data': {},
-        'ResourceId': settings_table
-    }
+    make_default_settings(settings_table)
 
-    if event.get("PhysicalResourceId", False):
-        result["PhysicalResourceId"] = event["PhysicalResourceId"]
-    else:
-        result[
-            "PhysicalResourceId"] = f'{resource_tools.stack_name(event)}-{event["LogicalResourceId"]}'
 
-    try:
-        if event["RequestType"] == "Create" or event["RequestType"] == "Update":
-            print(event["RequestType"])
-            make_default_settings(settings_table)
-    except ClientError as client_error:
-        print(f"Exception: {client_error}")
-        result = {
-            'Status': 'FAILED',
-            "StackId": event["StackId"],
-            "RequestId": event["RequestId"],
-            "LogicalResourceId": event["LogicalResourceId"],
-            'Data': {
-                "Exception": str(client_error)
-            },
-            'ResourceId': None
-        }
-    resource_tools.send(event, context, result['Status'], result['Data'],
-                        result["PhysicalResourceId"])
+def lambda_handler(event, context):
+    """
+    This function is the entry point for the Lambda-backed custom resource.
+    """
+    helper(event, context)
 
 
 def make_default_settings(settings_table):
     """
     This function is responsible for adding/replacing default settings in the specified DynamoDB table.
     """
-    ec2_client = boto3.client("ec2")
-    dynamodb_resource = boto3.resource("dynamodb")
+    ec2_client = boto3.client("ec2", config=MSAM_BOTO3_CONFIG)
+    dynamodb_resource = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
     # determine the current region
     session = boto3.session.Session()
     current_region = session.region_name
