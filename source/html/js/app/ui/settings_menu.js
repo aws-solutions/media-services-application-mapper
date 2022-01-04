@@ -216,9 +216,9 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             $("#advanced_settings_modal_alert").replaceWith(html);
         };
 
-        const get_never_cache_regions = function() {
+        const get_inventory_regions = function() {
             return new Promise(function(resolve, reject) {
-                settings.get("never-cache-regions").then(function(data) {
+                settings.get("inventory-regions").then(function(data) {
                     if (data == null) {
                         data = [];
                     }
@@ -227,25 +227,25 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             });
         };
 
-        const set_never_cache_regions = function(regions) {
-            console.log("updating never-cache-regions: " + JSON.stringify(regions));
+        const set_inventory_regions = function(regions) {
+            console.log("updating inventory-regions: " + JSON.stringify(regions));
             return new Promise(function(resolve, reject) {
                 if (!Array.isArray(regions)) {
                     reject("regions must by an array");
                 } else {
                     if (regions.length == 1 && regions[0].length == 0) {
                         console.log("empty array, removing setting");
-                        settings.remove("never-cache-regions").then(function() {
+                        settings.remove("inventory-regions").then(function() {
                             resolve();
                         });
                     } else
                     if (regions.length > 0) {
-                        settings.put("never-cache-regions", regions.sort()).then(function() {
+                        settings.put("inventory-regions", regions.sort()).then(function() {
                             resolve();
                         });
                     } else {
                         console.log("empty array, removing setting");
-                        settings.remove("never-cache-regions").then(function() {
+                        settings.remove("inventory-regions").then(function() {
                             resolve();
                         });
                     }
@@ -265,12 +265,12 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             alarm_interval = require("app/alarms").get_update_interval();
             event_interval = require("app/events").get_update_interval();
             tiles_interval = require("app/ui/tile_view").get_update_interval();
-            get_never_cache_regions().then(function(regions) {
+            get_inventory_regions().then(function(regions) {
                 // populate the dialog
                 $("#advanced-alarm-update-interval").val(Math.round(alarm_interval / 1000));
                 $("#advanced-event-update-interval").val(Math.round(event_interval / 1000));
                 $("#advanced-tiles-refresh-interval").val(Math.round(tiles_interval / 1000));
-                $("#advanced-never-cache-regions").text(regions.sort().join(" "));
+                // $("#advanced-inventory-regions").text(regions.sort().join(" "));
                 // get the layout method
                 return settings.get("layout-method");
             }).then(function(value) {
@@ -285,7 +285,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             alarm_interval = Number.parseInt($("#advanced-alarm-update-interval").val());
             event_interval = Number.parseInt($("#advanced-event-update-interval").val());
             tiles_interval = Number.parseInt($("#advanced-tiles-refresh-interval").val());
-            regions = $("#advanced-never-cache-regions").val();
+            regions = $("#advanced-inventory-regions").val();
             regions_array = regions.trim().split(/\s+/);
             // validate it
             if (Number.isNaN(alarm_interval)) {
@@ -303,7 +303,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                 require("app/alarms").set_update_interval(alarm_interval);
                 require("app/events").set_update_interval(event_interval);
                 require("app/ui/tile_view").set_update_interval(tiles_interval);
-                set_never_cache_regions(regions_array);
+                set_inventory_regions(regions_array);
                 // save layout method
                 const method = $("#layout-method-select").val();
                 console.log("layout-method is " + method);
@@ -368,7 +368,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             "showRegionSelectionDialog": showRegionSelectionDialog,
             "setConnectionAlert": setConnectionAlert,
             "clearConnectionAlert": clearConnectionAlert,
-            "setNeverCacheRegions": set_never_cache_regions,
-            "getNeverCacheRegions": get_never_cache_regions
+            "set_inventory_regions": set_inventory_regions,
+            "get_inventory_regions": get_inventory_regions
         };
     });

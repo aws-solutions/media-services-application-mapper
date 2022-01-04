@@ -39,7 +39,7 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                         }
                     },
                     "noSavedConnection": "get-connection-from-ui",
-                    "connectionExists": "get-saved-regions"
+                    "connectionExists": "configuration-ready"
                 },
                 "get-connection-from-ui": {
                     _onEnter: function() {
@@ -50,35 +50,11 @@ define(["app/connections", "app/regions", "app/model", "app/ui/settings_menu", "
                     _onExit: function() {
                         settings_menu.clearConnectionAlert();
                     },
-                    "connectionChanged": "get-saved-regions",
-                },
-                "get-saved-regions": {
-                    _onEnter: function() {
-                        var instance = this;
-                        regions_promise().then(function(regions) {
-                            if (regions.get_selected().length > 0) {
-                                console.log("using saved region selectons");
-                                instance.regionsExist();
-                            } else {
-                                console.log("no previously selected regions");
-                                instance.noSavedRegions();
-                            }
-                        }).catch(function(error) {
-                            console.log(error);
-                        });
-                    },
-                    "noSavedRegions": "get-regions-from-ui",
-                    "regionsExist": "configuration-ready",
-                },
-                "get-regions-from-ui": {
-                    _onEnter: function() {
-                        // update and show the region selection dialog
-                        settings_menu.showRegionSelectionDialog();
-                    },
-                    "regionsChanged": "configuration-ready",
+                    "connectionChanged": "configuration-ready",
                 },
                 "configuration-ready": {
                     _onEnter: function() {
+                        // this will notify the parent state machine
                         this.handle("configurationReady");
                     }
                 }

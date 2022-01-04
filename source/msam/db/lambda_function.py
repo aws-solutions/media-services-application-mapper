@@ -18,12 +18,20 @@ def lambda_handler(event, context):
     """
     print(f"Event Input: {json.dumps(event)}")
     settings_table = event["ResourceProperties"]["SettingsTable"]
-    result = {'Status': 'SUCCESS', "StackId": event["StackId"], "RequestId": event["RequestId"], "LogicalResourceId": event["LogicalResourceId"], 'Data': {}, 'ResourceId': settings_table}
+    result = {
+        'Status': 'SUCCESS',
+        "StackId": event["StackId"],
+        "RequestId": event["RequestId"],
+        "LogicalResourceId": event["LogicalResourceId"],
+        'Data': {},
+        'ResourceId': settings_table
+    }
 
     if event.get("PhysicalResourceId", False):
         result["PhysicalResourceId"] = event["PhysicalResourceId"]
     else:
-        result["PhysicalResourceId"] = f'{resource_tools.stack_name(event)}-{event["LogicalResourceId"]}'
+        result[
+            "PhysicalResourceId"] = f'{resource_tools.stack_name(event)}-{event["LogicalResourceId"]}'
 
     try:
         if event["RequestType"] == "Create" or event["RequestType"] == "Update":
@@ -41,7 +49,8 @@ def lambda_handler(event, context):
             },
             'ResourceId': None
         }
-    resource_tools.send(event, context, result['Status'], result['Data'], result["PhysicalResourceId"])
+    resource_tools.send(event, context, result['Status'], result['Data'],
+                        result["PhysicalResourceId"])
 
 
 def make_default_settings(settings_table):
@@ -54,56 +63,84 @@ def make_default_settings(settings_table):
     session = boto3.session.Session()
     current_region = session.region_name
     print(f"current region is {current_region}")
-    # get all regions
-    all_regions = ec2_client.describe_regions()
-    # create a list of all regions except the current
-    never_cache_regions = []
-    for region in all_regions['Regions']:
-        region_name = region['RegionName']
-        if region_name != current_region:
-            never_cache_regions.append(region_name)
-    print(f"never-cache-regions are {json.dumps(never_cache_regions)}")
+    inventory_regions = [current_region]
+    print(f"default inventory-regions are {json.dumps(inventory_regions)}")
+
     # update the DynamoDB table
     table = dynamodb_resource.Table(settings_table)
     # default app-alarm-update-interval
     try:
-        table.put_item(Item={"id": "app-alarm-update-interval", "value": 10}, ConditionExpression="attribute_not_exists(id)")
+        table.put_item(Item={
+            "id": "app-alarm-update-interval",
+            "value": 10
+        },
+                       ConditionExpression="attribute_not_exists(id)")
         print("added default app-alarm-update-interval setting")
     except ClientError:
         print("app-alarm-update-interval setting exists")
     # default app-event-update-interval
     try:
-        table.put_item(Item={"id": "app-event-update-interval", "value": 10}, ConditionExpression="attribute_not_exists(id)")
+        table.put_item(Item={
+            "id": "app-event-update-interval",
+            "value": 10
+        },
+                       ConditionExpression="attribute_not_exists(id)")
         print("added default app-event-update-interval setting")
     except ClientError:
         print("app-event-update-interval setting exists")
     # default app-tile-update-interval
     try:
-        table.put_item(Item={"id": "app-tile-update-interval", "value": 300}, ConditionExpression="attribute_not_exists(id)")
+        table.put_item(Item={
+            "id": "app-tile-update-interval",
+            "value": 300
+        },
+                       ConditionExpression="attribute_not_exists(id)")
         print("added default app-tile-update-interval setting")
     except ClientError:
         print("app-tile-update-interval setting exists")
     # default displayed regions
     try:
-        table.put_item(Item={"id": "regions", "value": [current_region]}, ConditionExpression="attribute_not_exists(id)")
+        table.put_item(Item={
+            "id": "regions",
+            "value": [current_region]
+        },
+                       ConditionExpression="attribute_not_exists(id)")
         print("added default regions setting")
     except ClientError:
         print("regions setting exists")
-    # never-cache-regions
+    # inventory-regions
     try:
-        table.put_item(Item={"id": "never-cache-regions", "value": never_cache_regions}, ConditionExpression="attribute_not_exists(id)")
-        print("added default never-cache-regions setting")
+        table.put_item(Item={
+            "id": "inventory-regions",
+            "value": inventory_regions
+        },
+                       ConditionExpression="attribute_not_exists(id)")
+        print("added default inventory-regions setting")
     except ClientError:
-        print("never-cache-regions setting exists")
+        print("inventory-regions setting exists")
     # layout-method
     try:
-        table.put_item(Item={"id": "layout-method", "value": {"method": "directed"}}, ConditionExpression="attribute_not_exists(id)")
+        table.put_item(Item={
+            "id": "layout-method",
+            "value": {
+                "method": "directed"
+            }
+        },
+                       ConditionExpression="attribute_not_exists(id)")
         print("added default layout-method setting")
     except ClientError:
         print("layout-method setting exists")
     # default tile-view
     try:
-        table.put_item(Item={"id": "tile-view", "value": {"show_normal_tiles": True, "show_alarm_tiles": True, "tile_filter_text": "Showing All Tiles"}}, ConditionExpression="attribute_not_exists(id)")
+        table.put_item(Item={
+            "id": "tile-view",
+            "value": {
+                "show_normal_tiles": True,
+                "show_alarm_tiles": True,
+                "tile_filter_text": "Showing All Tiles"
+            }
+        },
+                       ConditionExpression="attribute_not_exists(id)")
         print("added default tile-view setting")
     except ClientError:
         print("tile-view setting exists")

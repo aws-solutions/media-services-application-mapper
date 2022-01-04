@@ -96,33 +96,28 @@ def update_nodes_generic(update_global_func, update_regional_func, settings_key)
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
     try:
-        never_regions_key = "never-cache-regions"
-        never_regions = msam_settings.get_setting(never_regions_key)
-        if never_regions is None:
-            never_regions = []
-        # settings_key = "cache-next-region"
-        # make a region name list
-        region_name_list = []
-        for region in regions():
-            region_name = region["RegionName"]
-            # exclude regions listed in never-cache setting
-            if region_name not in never_regions:
-                region_name_list.append(region_name)
-            else:
-                print(f"{region_name} in {never_regions_key} setting")
-        # sort it
-        region_name_list.sort()
+        inventory_regions_key = "inventory-regions"
+        inventory_regions = msam_settings.get_setting(inventory_regions_key)
+        if inventory_regions is None:
+            inventory_regions = []
+        # add global to the list
+        inventory_regions.append('global')
+        inventory_regions.sort()
+        valid_regions = regions()
+        valid_regions.append('global')
         # get the next region to process
         next_region = msam_settings.get_setting(settings_key)
         # start at the beginning if no previous setting
         if next_region is None:
-            next_region = region_name_list[0]
+            next_region = inventory_regions[0]
         # otherwise it's saved for us
         region_name = next_region
         # store the region for the next schedule
         try:
+            start = inventory_regions.index(next_region)
+            
             # process global after the end of the region list
-            if region_name_list.index(next_region) + 1 >= len(region_name_list):
+            if inventory_regions.index(next_region) + 1 >= len(inventory_regions):
                 next_region = "global"
             else:
                 next_region = region_name_list[region_name_list.index(next_region) + 1]
