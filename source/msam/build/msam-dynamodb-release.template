@@ -21,7 +21,8 @@
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "DEV_0_0_0"
+                        "BUILD_STAMP": "DEV_0_0_0",
+                        "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%"
                     }
                 },
                 "Role": { "Ref": "DynamoDBIAMRoleARN" },

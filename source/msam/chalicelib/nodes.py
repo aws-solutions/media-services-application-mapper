@@ -451,8 +451,8 @@ def medialive_multiplexes(region):
 
 def mediastore_containers(region):
     """
-    Return the MediaLive inputs for the given region.
-    NO TAGS
+    Return the MediaStore containers for the given region.
+    Supports tags.
     """
     items = []
     service_name = "mediastore"
@@ -464,6 +464,8 @@ def mediastore_containers(region):
             response = service.list_containers(NextToken=response["NextToken"])
             items = items + response['Containers']
         for item in items:
+            response = service.list_tags_for_resource(Resource=item['ARN'])
+            item['Tags'] = response['Tags']
             item['CreationTime'] = str(item['CreationTime'])
     else:
         print("not available in this region")
@@ -473,7 +475,7 @@ def mediastore_containers(region):
 def mediaconnect_flows(region):
     """
     Return the MediaConnect flows for the given region.
-    NO TAGS
+    Supports tags.
     """
     items = []
     service_name = 'mediaconnect'
@@ -488,7 +490,7 @@ def mediaconnect_flows(region):
             try:
                 flow_details = service.describe_flow(FlowArn=flow['FlowArn'])
                 response = service.list_tags_for_resource(ResourceArn=flow["FlowArn"])
-                flow_details["Tags"] = response["Tags"]
+                flow_details["Flow"]["Tags"] = response["Tags"]
             except ClientError as error:
                 print(error)
             items.append(flow_details['Flow'])
