@@ -224,7 +224,12 @@ The upper area of the Subscribed Alarms tab contains subscribed alarms and the l
 
 ![Subscribe Alarm](images/subscribe-alarms.jpeg)
 
-* Tools -- tools are extensions that provide user-contributed functionality. Custom tools can be built and added to MSAM, and invoked from this menu.
+* Help
+	* Bug report -- for filing an issue with MSAM on GitHub
+	* Feature request -- for filing a feature request on MSAM on GitHub
+	* Implementation Guide -- to view MSAM's Implementation Guide on the AWS site
+	* Solution Landing Page -- to view MSAM's solution landing page on the AWS site
+	* MSAM Build Version -- to view MSAM's components' versions
 
 
 ## Navigate
