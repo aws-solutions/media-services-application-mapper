@@ -2,76 +2,44 @@
        SPDX-License-Identifier: Apache-2.0 */
 
 define(["app/server", "app/connections", "app/settings", "lodash"],
-    function(server, connections, settings, _) {
-        var selected = [];
-        var available = [];
+    function (server, connections, settings, _) {
+        let available = [];
 
-        var get_available = function() {
+        const get_available = function () {
             return available;
         };
 
-        var get_selected = function() {
-            return selected;
-        };
-
-        var set_selected = function(regions) {
-            return new Promise((resolve, reject) => {
-                if (!Array.isArray(regions)) {
-                    reject("regions must be an array");
-                } else {
-                    settings.put("regions", regions).then(function(response) {
-                        selected = regions;
-                        clear_function_cache();
-                        resolve();
-                    });
-                }
-            });
-        };
-
-        var refresh = _.memoize(function() {
-            var current_connection = connections.get_current();
-            var url = current_connection[0];
-            var api_key = current_connection[1];
-            var all_endpoint = `${url}/regions`;
-            return new Promise(function(resolve, reject) {
-                server.get(all_endpoint, api_key).then(function(data) {
+        const refresh = _.memoize(function () {
+            const current_connection = connections.get_current();
+            const url = current_connection[0];
+            const api_key = current_connection[1];
+            const all_endpoint = `${url}/regions`;
+            return new Promise(function (resolve, reject) {
+                server.get(all_endpoint, api_key).then(function (data) {
                     available = data;
-                    available.sort(function(a, b) {
-                        var nameA = a.RegionName;
-                        var nameB = b.RegionName;
+                    available.sort(function (a, b) {
+                        const nameA = a.RegionName;
+                        const nameB = b.RegionName;
                         if (nameA < nameB) {
                             return -1;
                         } else
-                        if (nameA > nameB) {
-                            return 1;
-                        } else {
-                            // names must be equal
-                            return 0;
-                        }
+                            if (nameA > nameB) {
+                                return 1;
+                            } else {
+                                // names must be equal
+                                return 0;
+                            }
                     });
-                    settings.get("regions").then(function(data) {
-                        if (data == null) {
-                            data = [];
-                        }
-                        selected = data;
-                        var module = {
-                            "get_available": get_available,
-                            "get_selected": get_selected,
-                            "set_selected": set_selected
-                        };
-                        resolve(module);
-                    });
-                }).catch(function(error) {
+                    const module = {
+                        "get_available": get_available
+                    };
+                    resolve(module);
+                }).catch(function (error) {
                     console.log(error);
                     reject(error);
                 });
             });
         });
-
-        var clear_function_cache = function() {
-            refresh.cache.clear();
-        };
-
 
         // regions returns an unexecuted promise; use refresh().then(function(module){})
         return refresh;

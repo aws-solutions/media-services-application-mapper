@@ -47,6 +47,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/ui/al
         };
 
         var remove_diagram = function (name) {
+            const view_id = diagrams[name].view_id;
             // remove page elements
             diagrams[name].remove();
             // remove object
@@ -54,7 +55,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/ui/al
             // update settings
             save_diagrams();
             // remove the lock settings
-            const key = `diagram-lock-${window.btoa(name)}`;
+            const key = `diagram_lock_${view_id}`;
             settings.remove_setting(key);
             // select the tile tab
             $("#channel-tiles-tab").tab('show');

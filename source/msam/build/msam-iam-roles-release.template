@@ -64,6 +64,7 @@
                             "Effect": "Allow",
                             "Action": [
                                 "dynamodb:PutItem",
+                                "dynamodb:GetItem",
                                 "ec2:DescribeRegions"
                             ],
                             "Resource": "*"
