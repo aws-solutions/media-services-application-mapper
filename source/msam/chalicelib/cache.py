@@ -135,4 +135,5 @@ def regions():
     """
     service = boto3.client("ec2", config=MSAM_BOTO3_CONFIG)
     response = service.describe_regions()
-    return response["Regions"]
+    # return all the regions and 'global' for non-regional services
+    return response["Regions"] + [{'RegionName': 'global'}]
