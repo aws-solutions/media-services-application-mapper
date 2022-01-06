@@ -91,7 +91,8 @@ def update_ssm_nodes():
         settings_key="ssm-cache-next-region")
 
 
-def update_nodes_generic(update_global_func, update_regional_func, settings_key):
+def update_nodes_generic(update_global_func, update_regional_func,
+                         settings_key):
     """
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
@@ -100,38 +101,38 @@ def update_nodes_generic(update_global_func, update_regional_func, settings_key)
         inventory_regions = msam_settings.get_setting(inventory_regions_key)
         if inventory_regions is None:
             inventory_regions = []
-        # add global to the list
-        inventory_regions.append('global')
         inventory_regions.sort()
-        valid_regions = regions()
-        valid_regions.append('global')
         # get the next region to process
         next_region = msam_settings.get_setting(settings_key)
         # start at the beginning if no previous setting
-        if next_region is None:
+        if next_region is None and len(inventory_regions):
             next_region = inventory_regions[0]
-        # otherwise it's saved for us
-        region_name = next_region
-        # store the region for the next schedule
-        try:
-            start = inventory_regions.index(next_region)
-            
-            # process global after the end of the region list
-            if inventory_regions.index(next_region) + 1 >= len(inventory_regions):
-                next_region = "global"
-            else:
-                next_region = region_name_list[region_name_list.index(next_region) + 1]
-        except (IndexError, ValueError):
-            # start over if we don't recognize the region, ex. global
-            next_region = region_name_list[0]
-        # store it
-        msam_settings.put_setting(settings_key, next_region)
-        # update the region
-        print(f"updating nodes for region {region_name}")
-        if region_name == "global":
-            update_global_func()
         else:
-            update_regional_func(region_name)
+            # otherwise it's saved for us
+            region_name = next_region
+        # proceed only if we have a region
+        if not next_region is None:
+            # store the region for the next invocation
+            try:
+                # use two copies in case we roll off the end
+                expanded = inventory_regions + inventory_regions
+                position = expanded.index(next_region)
+                # process global after the end of the region list
+                if position >= 0:
+                    next_region = expanded[position + 1]
+                else:
+                    next_region = expanded[0]
+            except (IndexError, ValueError):
+                # start over if we don't recognize the region, ex. global
+                next_region = expanded[0]
+            # store it
+            msam_settings.put_setting(settings_key, next_region)
+            # update the region
+            print(f"updating nodes for region {region_name}")
+            if region_name == "global":
+                update_global_func()
+            else:
+                update_regional_func(region_name)
     except ClientError as error:
         print(error)
     return region_name
