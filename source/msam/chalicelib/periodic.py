@@ -16,7 +16,6 @@ import chalicelib.settings as msam_settings
 import chalicelib.cloudwatch as cloudwatch_data
 import chalicelib.connections as connection_cache
 import chalicelib.nodes as node_cache
-from chalicelib.cache import regions
 from chalicelib import tags
 
 import defusedxml.ElementTree as ET

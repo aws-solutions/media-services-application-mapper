@@ -42,16 +42,30 @@ def make_default_settings(settings_table):
     This function is responsible for adding/replacing default settings in the specified DynamoDB table.
     """
     ec2_client = boto3.client("ec2", config=MSAM_BOTO3_CONFIG)
+    response = ec2_client.describe_regions()
+    all_regions = list(r['RegionName'] for r in response['Regions'])
     dynamodb_resource = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
     # determine the current region
     session = boto3.session.Session()
     current_region = session.region_name
     print(f"current region is {current_region}")
-    inventory_regions = [current_region]
+    inventory_regions = [current_region, "global"]
     print(f"default inventory-regions are {json.dumps(inventory_regions)}")
 
-    # update the DynamoDB table
+    # update the DynamoDB settings table
     table = dynamodb_resource.Table(settings_table)
+
+    # upgrade never-cache-regions setting if needed
+    try:
+        response = table.get_item(Key={
+            "id": "never-cache-regions"
+        })
+        never_cache_regions = response["Item"]["value"]
+        inventory_regions = list(set(never_cache_regions).symmetric_difference(set(all_regions))) + ['global']
+        print(f"updated inventory-regions are {json.dumps(inventory_regions)}")
+    except ClientError:
+        print("never-cache-regions setting does not exist")
+
     # default app-alarm-update-interval
     try:
         table.put_item(Item={
