@@ -260,7 +260,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
                         ${(item.RegionName == 'global') ? 'Global services (S3, CloudFront)' : item.RegionName}
                         </label > `;
                     $(id).append(checkbox);
-                };
+                }
                 $("#advanced-alarm-update-interval").val(Math.round(alarm_interval / 1000));
                 $("#advanced-event-update-interval").val(Math.round(event_interval / 1000));
                 $("#advanced-tiles-refresh-interval").val(Math.round(tiles_interval / 1000));
