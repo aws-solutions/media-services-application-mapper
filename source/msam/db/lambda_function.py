@@ -57,12 +57,17 @@ def make_default_settings(settings_table):
 
     # upgrade never-cache-regions setting if needed
     try:
-        response = table.get_item(Key={
-            "id": "never-cache-regions"
-        })
-        never_cache_regions = response["Item"]["value"]
-        inventory_regions = list(set(never_cache_regions).symmetric_difference(set(all_regions))) + ['global']
-        print(f"updated inventory-regions are {json.dumps(inventory_regions)}")
+        response = table.get_item(Key={"id": "never-cache-regions"})
+        if "Item" in response:
+            never_cache_regions = response["Item"]["value"]
+            inventory_regions = list(
+                set(never_cache_regions).symmetric_difference(
+                    set(all_regions))) + ['global']
+            print(
+                f"updated inventory-regions are {json.dumps(inventory_regions)}"
+            )
+        else:
+            print("problem reading never-cache-regions setting")
     except ClientError:
         print("never-cache-regions setting does not exist")
 
