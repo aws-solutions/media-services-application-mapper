@@ -78,7 +78,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 headerSort: false,
                 formatter: consoleIcon,
                 width: 40,
-                align: "center",
+                hozAlign: "center",
                 cellClick: function (e, cell) {
                     navigate_to_alarm(cell.getRow()._row.data);
                 }
@@ -88,7 +88,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 headerSort: false,
                 formatter: trashIcon,
                 width: 40,
-                align: "center",
+                hozAlign: "center",
                 cellClick: function (e, cell) {
                     unsubscribe_alarm(cell.getRow()._row.data);
                 }
@@ -221,7 +221,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                     crossElement: "<i class='fa fa-info-circle' style='font-size:20px'></i>"
                 },
                 width: 50,
-                align: "center",
+                hozAlign: "center",
                 cellClick: function (e, cell) {
                     show_formatted_cloudwatch_event_data(cell.getRow()._row.data);
                 }

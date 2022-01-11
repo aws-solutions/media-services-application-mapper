@@ -2,57 +2,35 @@
 <html lang="en">
 
 <!-- 
-Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0
 -->
 
 <head>
     <title>Media Services Application Mapper</title>
-    <!-- material design -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/external/ajax/libs/tabulator/4.1.2/css/tabulator.min.css"
-        integrity="sha256-NewTV8E6IyXxLZQ2qQcS8XCB2TOII73LVvH57rp9kiE=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/external/ajax/libs/tabulator/4.1.2/css/bootstrap/tabulator_bootstrap4.min.css"
-        integrity="sha256-DDJiZD+ORXOovR4Qln+so9eW8YGdlqyaDRkxxPo0dRs=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/external/ajax/libs/vis/4.21.0/vis.min.css"
-        integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/external/releases/v5.5.0/css/all.css"
-        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" href="/external/iconfont/material-icons.css">
-    <link rel="stylesheet" href="/external/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/external/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
-        integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
-    <script src="/external/ajax/libs/jquery/3.3.1/jquery.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-        integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/vis/4.21.0/vis.min.js"
-        integrity="sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/popper.js/1.14.4/umd/popper.min.js"
-        integrity="sha256-EGs9T1xMHdvM1geM8jPpoo8EZ1V1VRsmcJz8OByENLA=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/tabulator/4.1.2/js/tabulator.min.js"
-        integrity="sha256-C2vQLVoRZEK5WCH+4cp6B5CdxeAXev735CdK+2aPs7o=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/tabulator/4.1.2/js/jquery_wrapper.min.js"
-        integrity="sha256-3hV8hYuqj/Es6MGB4/mfB+VXmhJvohcbdxvVhXtl1B4=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/handlebars.js/4.7.7/handlebars.min.js" crossorigin="anonymous"></script>
-    <script src="/external/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
-        integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script>
-    <script src="/external/ajax/libs/svg.js/2.6.6/svg.min.js"
-        integrity="sha256-M8IkAPnXdVChgPQwts/KeepRP4ogs+hzBtPmVhUj5YA=" crossorigin="anonymous"></script>
-    <script src="/external/npm/renderjson@1.4.0/renderjson.min.js"></script>
-    <script src="/external/ajax/libs/URI.js/1.19.1/URI.min.js"
-        integrity="sha256-D3tK9Rf/fVqBf6YDM8Q9NCNf/6+F2NOKnYSXHcl0keU=" crossorigin="anonymous"></script>
-    <script src="/external/npm/jssha@2.3.1/src/sha.min.js"></script>
-    <script src="/external/ajax/libs/moment.js/2.24.0/moment.min.js"
-        integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
-    <script data-main="js/app" src="/external/ajax/libs/require.js/2.3.6/require.min.js"
-        integrity="sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/node_modules/tabulator-tables/dist/css/tabulator.min.css" />
+    <link rel="stylesheet" href="/node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap4.min.css" />
+    <link rel="stylesheet" href="/node_modules/vis/dist/vis.min.css" />
+    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="/node_modules/material-icons/iconfont/material-icons.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/jqueryui/jquery-ui.min.js"></script>
+    <script src="/node_modules/vis/dist/vis.min.js"></script>
+    <script src="/node_modules/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <script src="/node_modules/tabulator-tables/dist/js/jquery_wrapper.min.js"></script>
+    <script src="/node_modules/handlebars/dist/handlebars.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="/node_modules/fuse.js/dist/fuse.js"></script>
+    <script src="/node_modules/svg.js/dist/svg.min.js"></script>
+    <script src="/node_modules/renderjson/renderjson.js"></script>
+    <script src="/node_modules/urijs/src/URI.min.js"></script>
+    <script src="/node_modules/moment/min/moment.min.js"></script>
+    <script data-main="js/app" src="/node_modules/requirejs/require.js"></script>
     <style>
         .borderless td,
         .borderless th {
@@ -134,8 +112,6 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <a class="dropdown-item" href="#" data-toggle="modal"
                             data-target="#endpoint_connection_modal">Connection
                             Settings</a>
-                        <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#region_selection_modal">Regions
-                            Displayed</a> -->
                         <a class="dropdown-item" href="#" data-toggle="modal" id="advanced_settings_button">Advanced
                             Settings</a>
                     </div>
@@ -167,7 +143,6 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <a class="dropdown-item" href="#" id="diagram_add_diagram">Add New Diagram</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" id="diagram_manage_contents">Manage Diagram Contents</a>
-                        <!-- <div class="dropdown-divider"></div> -->
                         <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Downstream Connected Nodes</a>
                         <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Upstream Connected Nodes</a>
                         <a class="dropdown-item" href="#" id="diagram_add_all_nodes">Add All Connected Nodes</a>
@@ -201,20 +176,25 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="help_dropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       Help 
+                    <a class="nav-link dropdown-toggle" href="#" id="help_dropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Help
                     </a>
                     <div class="dropdown-menu" aria-labelledby="help_dropdown" id="help-dropdown-menu">
-                        <a class="dropdown-item" href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=bug&template=bug_report.md&title=" 
-                        target="_blank" id="bug-report-button">Bug Report</a>
-                        <a class="dropdown-item" href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=" 
-                        target="_blank" id="request-feature-button">Feature Request</a>
-                        <a class="dropdown-item" href="https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html" 
-                        target="_blank" id="implementation-guide-button">Implementation Guide</a>
-                        <a class="dropdown-item" href="https://aws.amazon.com/solutions/implementations/media-services-application-mapper/" 
-                        target="_blank" id="landing-page-button">Solution Landing Page</a>
-                        <a class="dropdown-item" data_toggle="" href="#" id="build-version-button">MSAM Build Version</a>
+                        <a class="dropdown-item"
+                            href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=bug&template=bug_report.md&title="
+                            target="_blank" id="bug-report-button">Bug Report</a>
+                        <a class="dropdown-item"
+                            href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=enhancement&template=feature_request.md&title="
+                            target="_blank" id="request-feature-button">Feature Request</a>
+                        <a class="dropdown-item"
+                            href="https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html"
+                            target="_blank" id="implementation-guide-button">Implementation Guide</a>
+                        <a class="dropdown-item"
+                            href="https://aws.amazon.com/solutions/implementations/media-services-application-mapper/"
+                            target="_blank" id="landing-page-button">Solution Landing Page</a>
+                        <a class="dropdown-item" data_toggle="" href="#" id="build-version-button">MSAM Build
+                            Version</a>
                     </div>
                 </li>
             </ul>
@@ -487,7 +467,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     <div class="modal-footer">
                         <!-- <div class="btn-group-toggle" data-toggle="buttons"> -->
                         <label id="connectionRememberLabel" class="active">
-                            <div class="d-inline-flex flex-row align-items-center p-2 mt-2 mb-0 border rounded bg-light">
+                            <div
+                                class="d-inline-flex flex-row align-items-center p-2 mt-2 mb-0 border rounded bg-light">
                                 <input id="connectionRemember" type="checkbox" class="mx-2" checked autocomplete="off">
                                 <div id="connectionRememberText">Remember</div>
                             </div>
