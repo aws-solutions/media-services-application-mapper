@@ -56,7 +56,7 @@ define(["jquery", "lodash", "app/settings", "app/ui/diagram_factory", "app/ui/al
             save_diagrams();
             // remove the lock settings
             const key = `diagram_lock_${view_id}`;
-            settings.remove_setting(key);
+            settings.remove(key);
             // select the tile tab
             $("#channel-tiles-tab").tab('show');
         };
