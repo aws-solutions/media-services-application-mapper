@@ -72,7 +72,11 @@
                                 "", [{
                                         "Ref": "MSAMBrowserAppBucket"
                                     },
-                                    ".s3.amazonaws.com"
+                                    ".s3.",
+                                    {
+                                        "Ref": "AWS::Region"
+                                    },
+                                    ".amazonaws.com"
                                 ]
                             ]
                         },
@@ -108,7 +112,11 @@
                                 "", [{
                                         "Ref": "MSAMBrowserAppLoggingBucket"
                                     },
-                                    ".s3.amazonaws.com"
+                                    ".s3.",
+                                    {
+                                        "Ref": "AWS::Region"
+                                    },
+                                    ".amazonaws.com"
                                 ]
                             ]
                         },
