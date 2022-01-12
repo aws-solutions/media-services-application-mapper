@@ -6,14 +6,11 @@ requirejs.config({
     "baseUrl": "js/lib",
     "paths": {
         "app": "../app",
-        "automerge": "/external/npm/automerge@0.7.8/dist/automerge.min",
-        "cookie": "/external/npm/js-cookie@2.2.0/src/js.cookie.min",
-        "fuse": "/external/ajax/libs/fuse.js/3.4.5/fuse.min",
-        "object_hash": "/external/gh/puleos/object-hash/dist/object_hash",
-        "levenshtein": "/external/npm/fast-levenshtein@2.0.6/levenshtein.min",
-        "lodash": "/external/ajax/libs/lodash.js/4.17.21/lodash.min",
-        "machina": "/external/npm/machina@2.0.2/lib/machina.min",
-        "vis": "/external/ajax/libs/vis/4.21.0/vis.min"
+        "cookie": "/node_modules/js-cookie/src/js.cookie",
+        "object_hash": "/node_modules/object-hash/dist/object_hash",
+        "lodash": "/node_modules/lodash/lodash.min",
+        "machina": "/node_modules/machina/lib/machina.min",
+        "vis": "/node_modules/vis/dist/vis.min"
     },
     "waitSeconds": 15
 });
