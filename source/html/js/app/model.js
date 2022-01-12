@@ -30,6 +30,11 @@ define(["jquery", "vis", "app/plugins", "app/server", "app/connections"], functi
                     promises.push(mapper.update());
                 }
                 Promise.all(promises).then(function() {
+                    for (let node of nodes.get()) {
+                        // add stringified tags to the node, will be used during search
+                        node.stringtags = JSON.stringify(node.data.Tags);
+                        nodes.update(node);
+                    }
                     if (typeof callback !== 'undefined') {
                         callback();
                     }
