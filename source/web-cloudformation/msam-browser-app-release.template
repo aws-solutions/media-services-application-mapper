@@ -266,7 +266,7 @@
                     "Ref": "WebIAMRoleARN"
                 },
                 "Runtime": "python3.8",
-                "Timeout": 300
+                "Timeout": 900
             },
             "Metadata": {
                 "cfn_nag": {

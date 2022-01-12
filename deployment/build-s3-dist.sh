@@ -134,7 +134,7 @@ fi
 cd package
 zip -r9 ../$EVENTS_ZIP .
 cd ../
-zip -g $EVENTS_ZIP cloudwatch_alarm.py media_events.py
+zip -g9 $EVENTS_ZIP cloudwatch_alarm.py media_events.py
 mv $EVENTS_ZIP $build_dist_dir/events_$STAMP.zip
 cp msam-events-release.template $template_dist_dir
 
@@ -153,12 +153,23 @@ if [ $? -ne 0 ]; then
 fi
 mv dynamodb_resource.zip $build_dist_dir/dynamodb_resource_$STAMP.zip
 
+echo
+echo ------------------------------------
+echo Web application
+echo ------------------------------------
+echo
+
+# update web module dependencies
+cd $source_dir/html
+rm -rf node_modules
+npm install
+
 # add build stamp
 cd $source_dir/html
 echo "updating browser app build stamp"
 cp -f js/app/build-tmp.js js/app/build.js
 sed -i -e "s/VERSION/$VERSION/g" js/app/build.js
-zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
+zip -q -r -9 $build_dist_dir/msam-web-$STAMP.zip *
 rm -f js/app/build.js-e
 
 # create a digest for the web content
