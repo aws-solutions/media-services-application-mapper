@@ -225,11 +225,11 @@ The upper area of the Subscribed Alarms tab contains subscribed alarms and the l
 ![Subscribe Alarm](images/subscribe-alarms.jpeg)
 
 * Help
-	* Bug report -- to file an issue with MSAM on GitHub
-	* Feature request -- to file a feature request on MSAM on GitHub
-	* Implementation Guide -- to view MSAM's Implementation Guide on the AWS site
-	* Solution Landing Page -- to view MSAM's solution landing page on the AWS site
-	* MSAM Build Version -- to view MSAM's components' versions
+	* Bug report -- file an issue with MSAM on GitHub
+	* Feature request -- file a feature request on MSAM on GitHub
+	* Implementation Guide -- view MSAM's Implementation Guide on the AWS site
+	* Solution Landing Page -- view MSAM's solution landing page on the AWS site
+	* MSAM Build Version -- view MSAM's components' versions
 
 
 ## Navigate
