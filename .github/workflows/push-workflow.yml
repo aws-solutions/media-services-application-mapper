@@ -255,4 +255,5 @@ jobs:
     uses: aws-solutions/aws-media-services-application-mapper/.github/workflows/release-branch-test-deploy.yml@morjoan-dev
     with:
       cache_key: ${{ github.sha }}
+    secrets:
       MSAM_ROLE_ARN: ${{ secrets.MSAM_ROLE_ARN }}
