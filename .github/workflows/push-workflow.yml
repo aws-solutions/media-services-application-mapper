@@ -8,7 +8,6 @@ env:
   RELEASE_OUTPUT_BUCKET: solutions
   VERSION: ${{ secrets.VERSION }}
   RELEASE_BRANCH: morjoan-dev # change this to main later
-  RELEASE_BRANCH_TEST_DEPLOY: true
 
 on:
   push:
@@ -114,8 +113,6 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-      - name: Set up Push variables
-        run: echo "VERSION=`git rev-parse --short HEAD`" >> $GITHUB_ENV
       - name: Update system path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Set up AWS environment 
@@ -147,7 +144,10 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
-          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
+          if [ $GITHUB_REF_NAME == $RELEASE_BRANCH ]; then
+            ./build-s3-dist.sh $RELEASE_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
+          else
+            ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
       # - name: Run unit tests
       #   run: |
       #     cd deployment
@@ -209,8 +209,6 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-      - name: Set up Push variables
-        run: echo "VERSION=`git rev-parse --short HEAD`" >> $GITHUB_ENV
       - name: Install required system packages
         run: |
           pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
@@ -245,15 +243,3 @@ jobs:
         with:
           name: zipped-regional-global-assets
           path: deployment/*.zip
-  
-  #test reusable workflow
-  release-branch-test-deploy-cfn:
-    name: Install MSAM for test
-    needs: upload-and-store-job
-    # can't use env in an a conditional?
-    # can't use env in the uses keyword either
-    uses: aws-solutions/aws-media-services-application-mapper/.github/workflows/release-branch-test-deploy.yml@morjoan-dev
-    with:
-      cache_key: ${{ github.sha }}
-    secrets:
-      MSAM_ROLE_ARN: ${{ secrets.MSAM_ROLE_ARN }}
