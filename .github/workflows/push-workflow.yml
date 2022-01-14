@@ -250,7 +250,7 @@ jobs:
   release-branch-test-deploy-cfn:
     name: Install MSAM for test
     needs: upload-and-store-job
-    if: ${{ github.event.repo.name == env.RELEASE_BRANCH }} && ${{ env.RELEASE_BRANCH_TEST_DEPLOY }}
+    if: ${{ github.ref_name == "morjoan-dev" }} && ${{ env.RELEASE_BRANCH_TEST_DEPLOY }}
     uses: aws-solutions/aws-media-services-application-mapper/.github/workflows/release-branch-test-deploy.yml@morjoan-dev
     with:
       cache_key: ${{ github.sha }}
