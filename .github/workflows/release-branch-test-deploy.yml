@@ -9,7 +9,7 @@ on:
         required: true
         type: string
     secrets:
-      role_to_assume:
+      MSAM_ROLE_ARN:
         required: true
 jobs:
   release-branch-test-deploy-cfn:
@@ -24,7 +24,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
-          role-to-assume: ${{ secrets.role_to_assume }}
+          role-to-assume: ${{ secrets.MSAM_ROLE_ARN }}
           aws-region: ${{ env.REGION }}
       - name: Restore deployment directory from cache
         uses: actions/cache@v2
