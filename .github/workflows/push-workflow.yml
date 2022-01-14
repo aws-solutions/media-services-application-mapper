@@ -148,6 +148,7 @@ jobs:
             ./build-s3-dist.sh $RELEASE_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
           else
             ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
+          fi
       # - name: Run unit tests
       #   run: |
       #     cd deployment
