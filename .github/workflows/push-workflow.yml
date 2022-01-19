@@ -5,6 +5,9 @@ env:
   REGION: us-east-1
   DIST_OUTPUT_BUCKET: msam-dev
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
+  RELEASE_OUTPUT_BUCKET: solutions
+  VERSION: ${{ secrets.VERSION }}
+  RELEASE_BRANCH: main # change this to main later
 
 on:
   push:
@@ -110,8 +113,6 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-      - name: Set up Push variables
-        run: echo "VERSION=`git rev-parse --short HEAD`" >> $GITHUB_ENV
       - name: Update system path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Set up AWS environment 
@@ -143,7 +144,11 @@ jobs:
       - name: Run build script
         run: |
           cd deployment
-          ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
+          if [ $GITHUB_REF_NAME == $RELEASE_BRANCH ]; then
+            ./build-s3-dist.sh $RELEASE_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
+          else
+            ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
+          fi
       # - name: Run unit tests
       #   run: |
       #     cd deployment
@@ -205,8 +210,6 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-      - name: Set up Push variables
-        run: echo "VERSION=`git rev-parse --short HEAD`" >> $GITHUB_ENV
       - name: Install required system packages
         run: |
           pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
@@ -228,6 +231,8 @@ jobs:
           path: deployment/
           key: ${{ github.sha }}
       - name: Upload to S3
+        # deploy to our test bucket if not doing a release
+        if: ${{github.ref_name != env.RELEASE_BRANCH}}
         run: |
           cd deployment
           ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repository.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
@@ -240,4 +245,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: zipped-regional-global-assets
-          path: deployment/*.zip  
+          path: deployment/*.zip

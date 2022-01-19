@@ -31,7 +31,7 @@ while getopts ':h' OPTION; do
       echo "SOLUTION_NAME=aws-media-services-application-mapper"
       echo "VERSION=v1.0.0"
       echo
-      echo "You may export export these variables in your environment and call the script using those variables:"
+      echo "You may export these variables in your environment and call the script using those variables:"
       echo "./$(basename $0) \$DIST_OUTPUT_BUCKET \$SOLUTION_NAME \$VERSION"
       echo 
       exit 1
@@ -217,6 +217,9 @@ rm -f $template_dist_dir/*.template-e
 for F in *.template; do
     cp -f ${F} ${F/\.template/\-${STAMP}\.template}
 done
+
+# copy all processed templates to the regional assets directory
+cp *.template $build_dist_dir
 
 # copy the main template to the deployment dir
 cp aws-media-services-application-mapper-release.template $template_dir
