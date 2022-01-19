@@ -1,6 +1,8 @@
 name: Send Artifacts Workflow
 env:
   REGION: us-east-1
+  VERSION: ${{ secrets.VERSION }}
+  RELEASE_BRANCH: main
 on: 
   workflow_run:
     workflows: ["Push Workflow"]
@@ -33,17 +35,15 @@ jobs:
           export BRANCH=${{ github.event.workflow_run.head_branch }}
           export WORKFLOW_NAME="${{ github.event.workflow_run.name }}"
           export NOTIFICATION_ENDPOINT=${{ secrets.ENDPOINT }}
-          export VERSION=${{ secrets.VERSION }}
 
           echo WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID >> $GITHUB_ENV
           echo COMMIT_ID=$COMMIT_ID >> $GITHUB_ENV
           echo NOTIFICATION_ENDPOINT=$NOTIFICATION_ENDPOINT >> $GITHUB_ENV
           echo BRANCH=$BRANCH >> $GITHUB_ENV
           echo WORKFLOW_NAME=$WORKFLOW_NAME >> $GITHUB_ENV
-          echo VERSION=$VERSION >> $GITHUB_ENV
       - name: Determine pipeline type
         run: |
-          if [ $BRANCH == "main" ]; then
+          if [ $GITHUB_REF_NAME == $RELEASE_BRANCH ]; then
             export PIPELINE_TYPE="release"
           else
             export PIPELINE_TYPE="feature"

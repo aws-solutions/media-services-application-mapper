@@ -7,7 +7,7 @@ env:
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
   RELEASE_OUTPUT_BUCKET: solutions
   VERSION: ${{ secrets.VERSION }}
-  RELEASE_BRANCH: morjoan-dev # change this to main later
+  RELEASE_BRANCH: main # change this to main later
 
 on:
   push:
@@ -231,6 +231,8 @@ jobs:
           path: deployment/
           key: ${{ github.sha }}
       - name: Upload to S3
+        # deploy to our test bucket if not doing a release
+        if: ${{github.ref_name != env.RELEASE_BRANCH}}
         run: |
           cd deployment
           ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repository.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
