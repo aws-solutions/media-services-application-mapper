@@ -1,0 +1,92 @@
+name: Post Pipeline Workflow
+on: 
+  workflow_dispatch
+env:
+  VERSION: ${{ secrets.VERSION }}
+  REGION: us-west-2
+  TEMPLATE: "https://solutions-reference.s3.amazonaws.com/${{ github.event.repository.name }}/latest/${{ github.event.repository.name }}-release.template"
+  SHORT_NAME: msam
+jobs:
+  create-update-tag-release:
+    name: Create or update tag and release draft
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Tags
+        uses: actions/github-script@v5
+        continue-on-error: true
+        id: check_tags
+        with:
+          script: |
+            const { VERSION } = process.env
+            var found = true
+            try {
+              var output = await (github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${VERSION}`
+              }))
+            }
+            catch {
+              found = false
+            }  
+            return found
+      - name: Update Release Draft
+        id: update_draft
+        if: ${{steps.check_tags.outputs.result == 'true'}}
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { VERSION } = process.env
+            var updated = false
+            const releases = await(github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            }))
+            console.log(releases)
+            for (const rel of releases.data) {
+              console.log(rel.id)
+              if (rel.tag_name == `${VERSION}`) {
+                console.log("matched tag")
+                github.rest.repos.updateRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag_name: `${VERSION}`,
+                  release_id: rel.id,
+                  name: `${SHORT_NAME} ${VERSION}`,
+                  draft: true,
+                  body: "Update this description with release notes, etc."
+                })
+                updated = true
+              }
+            }
+            return updated
+      - name: Check Out Repo
+        if: ${{steps.check_tags.outputs.result == 'false'}}
+        uses: actions/checkout@v2
+      - name: Create Version Tag
+        id: create_tag
+        # create a new tag since version tag wasn't found
+        if: ${{steps.check_tags.outputs.result == 'false'}}
+        run: |
+          git config --global user.email "me@example.com"
+          git config --global user.name "tagairosin"
+          git tag -a ${VERSION} -m "tagging for release"
+          git push origin ${VERSION}
+          echo "tag created"
+      - name: Create Release Draft
+        id: create_draft
+        # tag doesn't exist or unable to update a release draft with matching tag
+        if: ${{steps.check_tags.outputs.result == 'false' || steps.update_draft.outputs.result == 'false'}}
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { VERSION, SHORT_NAME } = process.env
+            console.log("creating release draft")
+              github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: `${VERSION}`,
+                name: `${SHORT_NAME} ${VERSION}`,
+                draft: true,
+                body: "Update this description with release notes, etc."
+              })
