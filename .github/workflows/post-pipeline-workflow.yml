@@ -36,7 +36,7 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const { VERSION } = process.env
+            const { VERSION, SHORT_NAME } = process.env
             var updated = false
             const releases = await(github.rest.repos.listReleases({
               owner: context.repo.owner,
