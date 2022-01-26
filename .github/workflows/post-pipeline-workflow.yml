@@ -57,21 +57,20 @@ jobs:
                   body: "Update this description with release notes, etc."
                 })
                 updated = true
+                break
               }
             }
             return updated
       - name: Check Out Repo
-        if: ${{steps.check_tags.outputs.result == 'false'}}
         uses: actions/checkout@v2
-      - name: Create Version Tag
+      - name: Create or Update Version Tag
         id: create_tag
         # create a new tag since version tag wasn't found
-        if: ${{steps.check_tags.outputs.result == 'false'}}
         run: |
           git config --global user.email "me@example.com"
           git config --global user.name "tagairosin"
-          git tag -a ${VERSION} -m "tagging for release"
-          git push origin ${VERSION}
+          git tag -f -a ${VERSION} -m "tagging for release"
+          git push -f origin ${VERSION}
           echo "tag created"
       - name: Create Release Draft
         id: create_draft
