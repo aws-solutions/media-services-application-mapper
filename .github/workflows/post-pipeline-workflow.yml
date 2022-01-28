@@ -93,7 +93,7 @@ jobs:
   test-deploy-cfn:
     name: Deploy solution CFN for test
     runs-on: ubuntu-latest
-    environment: push_env
+    environment: test_release_env
     permissions:
       actions: read
       id-token: write
@@ -102,10 +102,14 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
-          role-to-assume: ${{ secrets.MSAM_ROLE_ARN }}
+          role-to-assume: ${{ secrets.TEST_RELEASE_ROLE }}
           aws-region: ${{ env.REGION }}
       - name: Deploy CFN template
         run: |
-          echo $TEMPLATE
-          response="$( aws cloudformation create-stack --stack-name $SHORT_NAME-$GITHUB_RUN_ID --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
-          echo $response
+          export TEST_ENDPOINT=${{ secrets.TEST_ENDPOINT }}
+          echo TEST_ENDPOINT=$TEST_ENDPOINT >> $GITHUB_ENV
+          # echo $TEMPLATE
+          # response="$( aws cloudformation create-stack --stack-name $SHORT_NAME-$GITHUB_RUN_ID --template-url $TEMPLATE --region $REGION --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --disable-rollback )"
+          # echo $response
+          cd deployment
+          python test-release.py
