@@ -3,7 +3,7 @@ on:
   workflow_dispatch
 env:
   VERSION: ${{ secrets.VERSION }}
-  REGION: us-west-2
+  REGION: us-east-1
   TEMPLATE: "https://solutions-reference.s3.amazonaws.com/${{ github.event.repository.name }}/latest/${{ github.event.repository.name }}-release.template"
   SHORT_NAME: MSAM
 jobs:
