@@ -9,49 +9,6 @@ MSAM is installed into an AWS account using CloudFormation templates.
 * Google Chrome, Mozilla Firefox, Safari or another current browser with JavaScript enabled
 
 
-## Important Notes
-
-**CloudFront:** MSAM v1.5.0 and up installs a CloudFront distribution with the web application while the S3 bucket that hosts the content remains private. The first time installing the web application may take as long as **15-25 minutes** for the CloudFront distribution to complete the deployment process.
-
-**DNS Temporary Redirect:** You may receive DNS redirects from CloudFront **if you install into a region other an us-east-1.** This is normal and may take from several minutes to an hour for DNS changes to propagate throughout the network. You may see the following message in your browser, which is normal while DNS changes settle. You will not need to take any other action aside from waiting. Read [this](https://docs.aws.amazon.com/AmazonS3/latest/dev/Redirects.html#TemporaryRedirection) at AWS for more information about this case.
-
-![Image of IAM Ackowlegement](images/cloudfront-dns-error.png)
-
-## Finding Installation Content
-
-Templates and other build generated files are hosted on an S3 bucket by project owner.
-
-### Release templates 
-These templates are ready to use to install the latest release of MSAM.
-
-```
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-browser-app-release.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-core-release.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-dynamodb-release.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-events-release.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-iam-roles-release.template
-```
-### Version-specific templates
-From version v1.8.0 onward, templates built for specific versions with timestamps are available in a version specific folder.
-```
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/aws-media-services-application-mapper-release-XXXXXXXXXX.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-browser-app-release-XXXXXXXXXX.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-core-release-XXXXXXXXXX.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-dynamodb-release-XXXXXXXXXX.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-events-release-XXXXXXXXXX.template
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-iam-roles-release-XXXXXXXXXX.template
-```
-
-### Digest values
-
-In the same folder as the version specific templates are files which contain digest values for the templates and packaged code.
-```
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/md5.txt
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/sha1.txt
-https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/sha256.txt
-```
-
 ## CloudFormation Stack Creation
 
 * Login to CloudFormation using the same account used for creating and managing the Media Services
@@ -65,11 +22,11 @@ When you are installing a CloudFormation template listed below, from Choose a Te
 
 ### Root Template: Install All MSAM Resources
 
-As of release v1.5.0, the CloudFormation templates distributed for MSAM include a root template that installs the complete solution into a single region. The root template nests and deploys the existing five templates automatically.
+The CloudFormation templates distributed for MSAM include a root template that installs the complete solution into a single region. The root template nests and deploys the existing five templates automatically.
 
 If you need to upgrade your installation from the individual templates to the root template, see this note below about migrating your DynamoDB tables.
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template`
+`https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template`
 
 #### Input Parameters
 
@@ -102,7 +59,7 @@ Install the IAM, DynamoDB, Core and Web stacks in your main, or most accessed re
 
 This template will create a stack for the IAM roles needed by MSAM and a group needed by operators for installing the stacks. 
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-iam-roles-release.template`
+`https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-iam-roles-release.template`
 
 #### Input Parameters
 
@@ -121,7 +78,7 @@ This template will create a stack for the tables, indices, and on demand capacit
 
 **After installing the DynamoDB stack (Template 1), you can install the remaining stacks (Templates 2, 3, and 4) concurrently. There is no need to wait for each to finish before starting the next.**
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-dynamodb-release.template`
+`https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-dynamodb-release.template`
 
 #### Input Parameters
 
@@ -138,7 +95,7 @@ Go to the Outputs section of the stack and copy the seven table names to a notep
 
 This template will create a stack for the MSAM REST API, and periodic tasks used to refresh the content cache and discover logical resource connections.
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-core-release.template`
+`https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-core-release.template`
 
 #### Input Parameters
 
@@ -157,7 +114,7 @@ Go to the Outputs section after the stack if created and copy the EndpointURL to
 
 This template creates a stack responsible for receiving events from Media Services and CloudWatch Alarm state changes. This includes MediaLive pipeline alerts or other service state changes. Create a stack for this template in every region you will be creating and monitoring Media Services resources using Events, Aleets, and Alarms.
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-events-release.template`
+`https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-events-release.template`
 
 #### Input Parameters
 
@@ -175,7 +132,7 @@ None
 
 This template will install a copy of the MSAM browser application into an S3 bucket. Files added by the CloudFormation template will have their ACL set to `public-read` to allow access over HTTPS.
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-browser-app-release.template`
+`https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-browser-app-release.template`
 
 ### Input Parameters
 
@@ -276,6 +233,31 @@ Each table and all indexes are configured for encryption at rest using Key Manag
 ### Point-in-time Recovery
 Each table is configured for point-in-time recovery. The recovery window is up to five calendar weeks. This window size is set by Amazon Web Services.
 
+## Finding Installation Content
+
+Official released templates and other build generated files are hosted by AWS Solutions Builder.
+
+### Release templates 
+These templates are ready to use to install the latest release of MSAM.
+
+```
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-browser-app-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-core-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-dynamodb-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-events-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-iam-roles-release.template
+```
+### Version-specific templates
+Templates are available for specific releases of the solution in a named version folder.
+```
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/aws-media-services-application-mapper-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-browser-app-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-core-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-dynamodb-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-events-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-iam-roles-release.template
+```
 ## Versions and Updates
 Each deployed stack includes the release version number in the description. Release version numbers follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) specification.
 
@@ -398,9 +380,59 @@ python copy_table.py --source oldinstall-DynamoDBModuleStack-1BL5SHLW7QL8P-Conte
 
 The MSAM browser application in zipped form is available from the following URL. The numeric value at the end of this file is the same as other files from the same build.
 
-`https://rodeolabz-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-web-NNNNNNNNNN.zip`
+`https://solutions-us-west-2.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-web-NNNNNNNNNN.zip`
 
 This file can be extracted into a web server or another type of hosting environment. Take this approach if you prefer not to use the CloudFormation template to host the application in an S3 bucket.
+
+<a name="metrics"></a>
+## Anonymous Metrics
+
+This solution collects anonymous operational metrics to help the MSAM development team improve the quality and features of the solution. The operational metrics for this solution are the maximum count of each resource type in the MSAM inventory over the past 24 hours. The following JSON structure is an example of the metrics sent. We use this data to derive the scale, load, and storage needs placed on the application.
+
+```
+{
+    "medialive-input": 6,
+    "medialive-channel": 6,
+    "medialive-multiplex": 0,
+    "mediapackage-channel": 7,
+    "mediapackage-origin-endpoint": 11,
+    "mediastore-container": 0,
+    "speke-keyserver": 3,
+    "mediaconnect-flow": 1,
+    "mediatailor-configuration": 0,
+    "ec2-instances": 0,
+    "link-devices": 0,
+    "ssm-managed-instances": 0,
+    "s3": 66,
+    "cloudfront-distribution": 7
+}
+```
+
+### Enable and Disable Anonymous Operational Metrics
+
+Anonymous operational metrics are enabled by default when installing with the supplied templates.
+
+There are two recommended ways to disable anonymous operational metrics.
+
+#### Update the Mappings in the Core Template
+
+Change the Mapping shown below so the value of the `Data` key is `No` and install the template or update an existing stack. This will remove the associated Lambda and EventBridge Rule that periodically sends the metrics.
+
+```
+"Mappings": {
+  "Send": {
+    "AnonymousUsage": {
+      "Data": "No"
+    }
+  }
+}
+```
+
+#### Disable the EventBridge Rule
+
+Navigate to the EventBridge console.
+Find the EventBridge rule starting with the stack name and `ReportMetrics` in the name. By default the rule will be set to run every 24 hours. You can select the rule and click the disable button at the top right of the page.
+
 
 ## Navigate
 
