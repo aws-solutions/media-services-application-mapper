@@ -9,6 +9,7 @@ templates to populate the database with reasonable defaults.
 import os
 import json
 import boto3
+import uuid
 from botocore.exceptions import ClientError
 from botocore.config import Config
 from crhelper import CfnResource
@@ -147,3 +148,13 @@ def make_default_settings(settings_table):
         print("added default tile-view setting")
     except ClientError:
         print("tile-view setting exists")
+    # stack uuid for anonymous metrics
+    try:
+        table.put_item(Item={
+            "id": "uuid",
+            "value": str(uuid.uuid4())
+        },
+                       ConditionExpression="attribute_not_exists(id)")
+        print("added random uuid setting")
+    except ClientError:
+        print("uuid setting exists")

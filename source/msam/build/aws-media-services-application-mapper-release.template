@@ -119,6 +119,9 @@
                             "IAMModuleStack",
                             "Outputs.CoreRoleARN"
                         ]
+                    },
+                    "RootStackName": {
+                        "Ref": "AWS::StackName"
                     }
                 }
             }

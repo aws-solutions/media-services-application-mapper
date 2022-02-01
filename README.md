@@ -15,6 +15,7 @@ Note: If you want to use the solution without building from source, navigate to 
 - [File structure](#file-structure)
 - [License](#license)
   - [Navigate](#navigate)
+- [Anonymous Metrics](#metrics)
 
 <a name="solution-overview"></a>
 # Solution Overview
@@ -155,8 +156,13 @@ AWS Media Services Application Mapper consists of:
 <a name="license"></a>
 # License
 
-See license [here](https://github.com/awslabs/aws-media-services-application-mapper/blob/main/LICENSE.txt).
+See license [here](LICENSE.txt).
 
+
+<a name="metrics"></a>
+# Anonymous Metrics 
+
+This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution. For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html).
 
 ## Navigate
 Navigate to [Architecture](docs/ARCHITECTURE.md) | [Workshop](docs/WORKSHOP.md) | [Install](docs/INSTALL.md) | [Usage](docs/USAGE.md) | [Uninstall](docs/UNINSTALL.md) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)
