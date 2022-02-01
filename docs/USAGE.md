@@ -8,9 +8,9 @@ Each time the MSAM web application is launched, the browser's locally stored coo
 
 When MSAM starts and a previous connection is not found, the user is prompted for an endpoint URL and API key. The tool will confirm the connection information is valid before continuing. You can save several endpoints in browser storage for easy reuse later.
 
-Toggle the **Do Not Remember**/**Remember** button on the Connection dialog to store the endpoint and API key for recall after the browser is closed. Remembered endpoints and API keys will remain for up to seven days without use before they are removed. Using an endpoint and API key will reset its expiration timer. Remembered endpoints are listed in the **History** dropdown and can be selected for use. Select **Do Not Remember** to use this endpoint and API key only during the current browser session. 
+Toggle the **Remember** checkbox on the Connection dialog to store the endpoint and API key for recall after the browser is closed. Remembered endpoints and API keys will remain for up to seven days without use before they are removed. Using an endpoint and API key will reset its expiration timer. Remembered endpoints are listed in the **History** dropdown and can be selected for use. Uncheck **Remember** to use this endpoint and API key only during the current browser session. 
 
-![Image of Advanced Settings dialog](images/remember-button.jpeg)
+![Image of Connection Settings dialog](images/connection-settings.png)
 
 API keys are created and removed from the API Gateway page in the AWS Console. An API key is still active until it is removed from API Gateway.
 
@@ -126,6 +126,23 @@ The following diagram image is an example of vertical alignment.
 ![Vertical alignment](images/vertical-alignment.png)
 
 
+### Locking Diagrams from Unintended Changes
+
+MSAM's permissions model allows anyone with access to the tool to create and update diagrams. You can lock a diagram from unintended changes by clicking the small lock icon at the top-right of the diagram. 
+
+Locking a diagram prevents changes to the diagram's contents or layout. Anyone can view the diagram, click on nodes and monitor for state changes. Additionally, anyone can unlock a locked diagram to make changes. This additional step prevents unintended changes.
+
+The following image shows the unlocked icon at the top right of a diagram.
+
+![Diagram Locked](images/diagram-unlocked.png)
+
+The following image show the locked icon at the top right of a diagram.
+
+![Diagram Unlocked](images/diagram-locked.png)
+
+
+
+
 ## Tiles
 
 A tile represents all of the cloud resources that make up a streaming channel, or some type of system or solution. A tile might include, for example, an on-premise video encoder, MediaConnect flows, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, MediaTailor instance, and CloudFront distribution. Any resource can be a member of more than one tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a tile's resources are aggregated and communicated by visual indications on the tile.
@@ -190,10 +207,11 @@ The upper area of the Subscribed Alarms tab contains subscribed alarms and the l
     	* CloudWatch Alarm Update Interval -- query MSAM for alarm state changes at this internal
     	* CloudWatch Event Update Interval -- query MSAM for event changes at this internal
     	* Refresh Tile Inventory Interval -- query MSAM for new and removed tiles at this interval
-    	* Never Cache Regions -- a list of regions to never inventory in the cloud
+    	* Inventory Regions -- indicates which regions are used to gather resource inventory
     	* Layout Method -- affects how diagram nodes are arranged during horizontal or vertical layout (default is **Directed**)
+		* Bulk Delete -- Remove all diagrams, tiles, alarm subscriptions, or everything from this stack. Be careful. You will need to use point-in-time recovery to restore this data.
 
-![Image of Advanced Settings dialog](images/advanced-settings.jpeg)
+![Image of Advanced Settings dialog](images/advanced-settings.png)
 
 * Tiles
 	* Add New Tile -- add an empty tile with the specified name to the Tiles tab

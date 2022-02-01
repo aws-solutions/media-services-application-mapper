@@ -6,6 +6,8 @@ This file contains helper functions for updating the cache.
 
 import os
 import json
+import re
+from datetime import datetime, timedelta
 
 import boto3
 from botocore.exceptions import ClientError
@@ -13,10 +15,13 @@ from botocore.config import Config
 from boto3.dynamodb.conditions import Key
 
 import chalicelib.settings as msam_settings
+from chalicelib import cache
 import chalicelib.cloudwatch as cloudwatch_data
 import chalicelib.connections as connection_cache
 import chalicelib.nodes as node_cache
 from chalicelib import tags
+
+import requests
 
 import defusedxml.ElementTree as ET
 
@@ -28,8 +33,25 @@ CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 SOLUTION_ID = os.environ['SOLUTION_ID']
 USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
+VERSION = os.environ['VERSION']
 
 SSM_LOG_GROUP_NAME = "MSAM/SSMRunCommand"
+
+METRICS_NAMESPACE = "MSAM"
+METRICS_NAME = "Resource Count"
+METRICS_ENDPOINT = 'https://metrics.awssolutionsbuilder.com/generic'
+
+UUID_RE = re.compile(
+    ('^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$'),
+    re.IGNORECASE)
+
+MONITORED_SERVICES = [
+    "medialive-input", "medialive-channel", "medialive-multiplex",
+    "mediapackage-channel", "mediapackage-origin-endpoint",
+    "mediastore-container", "speke-keyserver", "mediaconnect-flow",
+    "mediatailor-configuration", "ec2-instances", "link-devices",
+    "ssm-managed-instances", "s3", "cloudfront-distribution"
+]
 
 
 def update_alarms():
@@ -48,7 +70,7 @@ def update_alarms():
             alarm_groups[region_name].append(alarm_name)
         print(alarm_groups)
         # update each grouped list for a region
-        for region_name,alarm_names in alarm_groups:
+        for region_name, alarm_names in alarm_groups:
             # alarm_names = alarm_groups[region_name]
             cloudwatch_data.update_alarms(region_name, alarm_names)
     except ClientError as error:
@@ -84,6 +106,7 @@ def update_ssm_nodes():
     """
     def skip():
         print("skipping global region")
+
     return update_nodes_generic(
         update_global_func=skip,
         update_regional_func=node_cache.update_regional_ssm_ddb_items,
@@ -161,18 +184,17 @@ def ssm_run_command():
             KeyConditionExpression=Key("service").eq("ssm-managed-instance"),
             FilterExpression="contains(#data, :tagname)",
             ExpressionAttributeNames={"#data": "data"},
-            ExpressionAttributeValues={":tagname": "MSAM-NodeType"}
-            )
+            ExpressionAttributeValues={":tagname": "MSAM-NodeType"})
         items = response.get("Items", [])
         while "LastEvaluatedKey" in response:
             response = db_table.query(
-            IndexName="ServiceRegionIndex",
-            KeyConditionExpression=Key("service").eq("ssm-managed-instance"),
-            FilterExpression="contains(#data, :tagname)",
-            ExpressionAttributeNames={"#data": "data"},
-            ExpressionAttributeValues={":tagname": "MSAM-NodeType"},
-            ExclusiveStartKey=response['LastEvaluatedKey']
-            )
+                IndexName="ServiceRegionIndex",
+                KeyConditionExpression=Key("service").eq(
+                    "ssm-managed-instance"),
+                FilterExpression="contains(#data, :tagname)",
+                ExpressionAttributeNames={"#data": "data"},
+                ExpressionAttributeValues={":tagname": "MSAM-NodeType"},
+                ExclusiveStartKey=response['LastEvaluatedKey'])
             items.append(response.get("Items", []))
 
         for item in items:
@@ -183,40 +205,28 @@ def ssm_run_command():
         # get all the SSM documents applicable to MSAM, filtering by MSAM-NodeType tag
         # When we support more than just ElementalLive, add to the list of values for MSAM-NodeType during filtering
         document_list = ssm_client.list_documents(
-            Filters=[
-                {
+            Filters=[{
+                'Key': 'tag:MSAM-NodeType',
+                'Values': [
+                    'ElementalLive',
+                ]
+            }, {
+                'Key': 'Owner',
+                'Values': ['Self']
+            }])
+        document_ids = document_list['DocumentIdentifiers']
+        while "NextToken" in document_list:
+            document_list = ssm_client.list_documents(
+                Filters=[{
                     'Key': 'tag:MSAM-NodeType',
                     'Values': [
                         'ElementalLive',
                     ]
-                },
-                {
+                }, {
                     'Key': 'Owner',
-                    'Values': [
-                        'Self'
-                    ]
-                }
-            ]
-        )
-        document_ids = document_list['DocumentIdentifiers']
-        while "NextToken" in document_list:
-            document_list = ssm_client.list_documents(
-                Filters=[
-                    {
-                        'Key': 'tag:MSAM-NodeType',
-                        'Values': [
-                            'ElementalLive',
-                        ]
-                    },
-                    {
-                        'Key': 'Owner',
-                        'Values': [
-                            'Self'
-                        ]
-                    }
-                ],
-                NextToken=document_list["NextToken"]
-            )
+                    'Values': ['Self']
+                }],
+                NextToken=document_list["NextToken"])
             document_ids.append(document_list['DocumentIdentifiers'])
 
         document_names = {}
@@ -239,19 +249,18 @@ def ssm_run_command():
                             ],
                             DocumentName=name,
                             TimeoutSeconds=600,
-                            Parameters={
-                            },
+                            Parameters={},
                             MaxConcurrency='50',
                             MaxErrors='0',
                             CloudWatchOutputConfig={
                                 'CloudWatchLogGroupName': SSM_LOG_GROUP_NAME,
                                 'CloudWatchOutputEnabled': True
-                            }
-                        )
+                            })
                         print(response)
                     except ClientError as error:
                         print(error)
-                        if error.response['Error']['Code'] == "InvalidInstanceId":
+                        if error.response['Error'][
+                                'Code'] == "InvalidInstanceId":
                             continue
     except ClientError as error:
         print(error)
@@ -273,12 +282,13 @@ def process_ssm_run_command(event):
 
     try:
         # test to make sure stream names are always of this format, esp if you create your own SSM document
-        log_stream_name = event_dict['detail']['command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
+        log_stream_name = event_dict['detail'][
+            'command-id'] + "/" + instance_id + "/aws-runShellScript/stdout"
 
         response = log_client.get_log_events(
-                logGroupName=SSM_LOG_GROUP_NAME,
-                logStreamName=log_stream_name,
-            )
+            logGroupName=SSM_LOG_GROUP_NAME,
+            logStreamName=log_stream_name,
+        )
         #print(response)
         if command_status == "Success":
             # process document name (command)
@@ -311,33 +321,114 @@ def process_ssm_run_command(event):
             # which is different than when a command fails to execute altogether
             if command_status == "Failed" and "MSAMElementalLiveStatus" in command_name:
                 for log_event in response['events']:
-                    if "Not Running" in log_event['message'] or "Active: failed" in log_event['message']:
+                    if "Not Running" in log_event[
+                            'message'] or "Active: failed" in log_event[
+                                'message']:
                         metric_name = "MSAMElementalLiveStatus"
                         break
             else:
                 # log if command has timed out or failed
-                print(f"SSM Command Status: Command {command_name} sent to instance {instance_id} has {command_status}")
+                print(
+                    f"SSM Command Status: Command {command_name} sent to instance {instance_id} has {command_status}"
+                )
                 # create a metric for it
                 status = 1
-                metric_name = "MSAMSsmCommand"+command_status
+                metric_name = "MSAMSsmCommand" + command_status
 
-        cw_client.put_metric_data(
-            Namespace = SSM_LOG_GROUP_NAME,
-            MetricData = [
-                {
-                    'MetricName': metric_name,
-                    'Dimensions': [
-                        {
-                            'Name' : dimension_name,
-                            'Value' : instance_id
-                        },
-                    ],
-                    "Value": status,
-                    "Unit": "Count"
-                }
-            ]
-        )
+        cw_client.put_metric_data(Namespace=SSM_LOG_GROUP_NAME,
+                                  MetricData=[{
+                                      'MetricName':
+                                      metric_name,
+                                      'Dimensions': [
+                                          {
+                                              'Name': dimension_name,
+                                              'Value': instance_id
+                                          },
+                                      ],
+                                      "Value":
+                                      status,
+                                      "Unit":
+                                      "Count"
+                                  }])
     except ClientError as error:
         print(error)
-        print(f"SSM Command Status: Command {command_name} sent to instance {instance_id} has status {command_status}")
+        print(
+            f"SSM Command Status: Command {command_name} sent to instance {instance_id} has status {command_status}"
+        )
         print(f"Log stream name is {log_stream_name}")
+
+
+def generate_metrics(stackname):
+    """
+    This function is responsible for generating a resource count
+    of each service type in inventory. It puts the resulting
+    data to metrics with dimensions in CloudWatch.
+    """
+    client = boto3.client('cloudwatch', config=MSAM_BOTO3_CONFIG)
+    for resource_type in MONITORED_SERVICES:
+        resources = cache.cached_by_service(resource_type)
+        client.put_metric_data(Namespace=METRICS_NAMESPACE,
+                               MetricData=[
+                                   {
+                                       'MetricName':
+                                       METRICS_NAME,
+                                       'Dimensions': [{
+                                           'Name': 'Stack Name',
+                                           'Value': stackname
+                                       }, {
+                                           'Name': 'Resource Type',
+                                           'Value': resource_type
+                                       }],
+                                       'Value':
+                                       len(resources),
+                                       'Unit':
+                                       'Count'
+                                   },
+                               ])
+
+
+def report_metrics(stackname, hours):
+    """
+    This function is responsible for reporting anonymous resource counts.
+    """
+    cloudwatch = boto3.resource('cloudwatch', config=MSAM_BOTO3_CONFIG)
+    uuid = msam_settings.get_setting('uuid')
+    # verify the uuid format from settings
+    if UUID_RE.match(uuid) is None:
+        print("uuid in settings does not match required format")
+    else:
+        # get the metric
+        metric = cloudwatch.Metric(METRICS_NAMESPACE, METRICS_NAME)
+        # assemble the payload structure
+        _, solution_id, _ = SOLUTION_ID.split("/")
+        data = {
+            "Solution": solution_id,
+            "Version": VERSION,
+            "UUID": uuid,
+            "TimeStamp": str(datetime.now()),
+            "Data": {}
+        }
+        # get the max count for each resource type and add to payload
+        for resource_type in MONITORED_SERVICES:
+            response = metric.get_statistics(Dimensions=[{
+                'Name': 'Stack Name',
+                'Value': stackname
+            }, {
+                'Name': 'Resource Type',
+                'Value': resource_type
+            }],
+                                             StartTime=datetime.now() -
+                                             timedelta(hours=hours),
+                                             EndTime=datetime.now(),
+                                             Period=(hours * 3600),
+                                             Statistics=['Maximum'])
+            datapoints = response.get('Datapoints', [])
+            if datapoints:
+                data["Data"][resource_type] = int(datapoints[0]["Maximum"])
+        print(json.dumps(data, default=str, indent=4))
+        if data["Data"]:
+            # send it
+            response = requests.post(METRICS_ENDPOINT, json=data)
+            print(f"POST status code = {response.status_code}")
+        else:
+            print("skipping POST because of empty data")
