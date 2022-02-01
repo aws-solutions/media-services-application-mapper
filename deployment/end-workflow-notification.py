@@ -30,7 +30,7 @@ def main():
                                aws_service='execute-api')
     print(PAYLOAD)
     response = requests.post(NOTIFICATION_ENDPOINT, json=PAYLOAD, auth=auth, timeout=25)
-    print(response.text)
+    print(response.json())
     if response.status_code != 200:
         return 1
     else:
