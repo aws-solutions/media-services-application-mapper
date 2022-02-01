@@ -126,6 +126,23 @@ The following diagram image is an example of vertical alignment.
 ![Vertical alignment](images/vertical-alignment.png)
 
 
+### Locking Diagrams from Unintended Changes
+
+MSAM's permissions model allows anyone with access to the tool to create and update diagrams. You can lock a diagram from unintended changes by clicking the small lock icon at the top-right of the diagram. 
+
+Locking a diagram prevents changes to the diagram's contents or layout. Anyone can view the diagram, click on nodes and monitor for state changes. Additionally, anyone can unlock a locked diagram to make changes. This additional step prevents unintended changes.
+
+The following image shows the unlocked icon at the top right of a diagram.
+
+![Diagram Locked](images/diagram-unlocked.png)
+
+The following image show the locked icon at the top right of a diagram.
+
+![Diagram Unlocked](images/diagram-locked.png)
+
+
+
+
 ## Tiles
 
 A tile represents all of the cloud resources that make up a streaming channel, or some type of system or solution. A tile might include, for example, an on-premise video encoder, MediaConnect flows, an AWS MediaLive input and channel, MediaPackage channel and endpoints, SPEKE keyserver, MediaTailor instance, and CloudFront distribution. Any resource can be a member of more than one tile, such as an S3 bucket or CloudFront distribution. The alerts and alarms of a tile's resources are aggregated and communicated by visual indications on the tile.
