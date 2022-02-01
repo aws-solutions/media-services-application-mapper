@@ -162,7 +162,7 @@ See license [here](LICENSE.txt).
 <a name="metrics"></a>
 # Anonymous Metrics 
 
-This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution. For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html).
+This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution. For more information, including how to disable this capability, please see the [Install Guide](docs/INSTALL.md#metrics) for details on how to enable and disable this capability.
 
 ## Navigate
 Navigate to [Architecture](docs/ARCHITECTURE.md) | [Workshop](docs/WORKSHOP.md) | [Install](docs/INSTALL.md) | [Usage](docs/USAGE.md) | [Uninstall](docs/UNINSTALL.md) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)

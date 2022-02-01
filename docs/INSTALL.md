@@ -9,32 +9,6 @@ MSAM is installed into an AWS account using CloudFormation templates.
 * Google Chrome, Mozilla Firefox, Safari or another current browser with JavaScript enabled
 
 
-## Finding Installation Content
-
-Templates and other build generated files are hosted on an S3 bucket by project owner.
-
-### Release templates 
-These templates are ready to use to install the latest release of MSAM.
-
-```
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-browser-app-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-core-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-dynamodb-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-events-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-iam-roles-release.template
-```
-### Version-specific templates
-Templates are available for specific releases of the solution in a named version folder.
-```
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/aws-media-services-application-mapper-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-browser-app-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-core-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-dynamodb-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-events-release.template
-https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-iam-roles-release.template
-```
-
 ## CloudFormation Stack Creation
 
 * Login to CloudFormation using the same account used for creating and managing the Media Services
@@ -259,6 +233,31 @@ Each table and all indexes are configured for encryption at rest using Key Manag
 ### Point-in-time Recovery
 Each table is configured for point-in-time recovery. The recovery window is up to five calendar weeks. This window size is set by Amazon Web Services.
 
+## Finding Installation Content
+
+Official released templates and other build generated files are hosted by AWS Solutions Builder.
+
+### Release templates 
+These templates are ready to use to install the latest release of MSAM.
+
+```
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-browser-app-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-core-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-dynamodb-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-events-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/msam-iam-roles-release.template
+```
+### Version-specific templates
+Templates are available for specific releases of the solution in a named version folder.
+```
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/aws-media-services-application-mapper-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-browser-app-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-core-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-dynamodb-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-events-release.template
+https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/vX.X.X/msam-iam-roles-release.template
+```
 ## Versions and Updates
 Each deployed stack includes the release version number in the description. Release version numbers follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) specification.
 
@@ -385,6 +384,7 @@ The MSAM browser application in zipped form is available from the following URL.
 
 This file can be extracted into a web server or another type of hosting environment. Take this approach if you prefer not to use the CloudFormation template to host the application in an S3 bucket.
 
+<a name="metrics"></a>
 ## Anonymous Metrics
 
 This solution collects anonymous operational metrics to help the MSAM development team improve the quality and features of the solution. The operational metrics for this solution are the maximum count of each resource type in the MSAM inventory over the past 24 hours. The following JSON structure is an example of the metrics sent. We use this data to derive the scale, load, and storage needs placed on the application.
