@@ -10,7 +10,7 @@ When MSAM starts and a previous connection is not found, the user is prompted fo
 
 Toggle the **Do Not Remember**/**Remember** button on the Connection dialog to store the endpoint and API key for recall after the browser is closed. Remembered endpoints and API keys will remain for up to seven days without use before they are removed. Using an endpoint and API key will reset its expiration timer. Remembered endpoints are listed in the **History** dropdown and can be selected for use. Select **Do Not Remember** to use this endpoint and API key only during the current browser session. 
 
-![Image of Advanced Settings dialog](images/remember-button.jpeg)
+![Image of Connection Settings dialog](images/remember-button.jpeg)
 
 API keys are created and removed from the API Gateway page in the AWS Console. An API key is still active until it is removed from API Gateway.
 
@@ -207,10 +207,11 @@ The upper area of the Subscribed Alarms tab contains subscribed alarms and the l
     	* CloudWatch Alarm Update Interval -- query MSAM for alarm state changes at this internal
     	* CloudWatch Event Update Interval -- query MSAM for event changes at this internal
     	* Refresh Tile Inventory Interval -- query MSAM for new and removed tiles at this interval
-    	* Never Cache Regions -- a list of regions to never inventory in the cloud
+    	* Inventory Regions -- indicates which regions are used to gather resource inventory
     	* Layout Method -- affects how diagram nodes are arranged during horizontal or vertical layout (default is **Directed**)
+		* Bulk Delete -- Remove all diagrams, tiles, alarm subscriptions, or everything from this stack. Be careful. You will need to use point-in-time recovery to restore this data.
 
-![Image of Advanced Settings dialog](images/advanced-settings.jpeg)
+![Image of Advanced Settings dialog](images/advanced-settings.png)
 
 * Tiles
 	* Add New Tile -- add an empty tile with the specified name to the Tiles tab
