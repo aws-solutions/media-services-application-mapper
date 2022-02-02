@@ -129,16 +129,14 @@ def update_nodes_generic(update_global_func, update_regional_func,
         # start at the beginning if no previous setting
         if next_region is None and len(inventory_regions):
             next_region = inventory_regions[0]
-        else:
-            # otherwise it's saved for us
-            region_name = next_region
+        region_name = next_region
         # proceed only if we have a region
-        if not next_region is None:
+        if not region_name is None:
             # store the region for the next invocation
             try:
                 # use two copies in case we roll off the end
                 expanded = inventory_regions + inventory_regions
-                position = expanded.index(next_region)
+                position = expanded.index(region_name)
                 # process global after the end of the region list
                 if position >= 0:
                     next_region = expanded[position + 1]
