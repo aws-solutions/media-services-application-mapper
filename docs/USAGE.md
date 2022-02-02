@@ -199,6 +199,17 @@ After a diagram node is subscribed to an alarm:
 
 The upper area of the Subscribed Alarms tab contains subscribed alarms and the lower area contains MediaLive alerts. Use the control at the far right of the monitor tab to remove an alarm from a cloud resource. The diagram item will show a state change of any subscribed alarms.
 
+### MSAM CloudWatch Metrics
+
+Each MSAM stack sends metrics to CloudWatch to track the count of each type of resource known in it's inventory. MSAM will query it's Content table for the count of fourteen different resource types, including MediaLive Channels and Inputs, MediaPackage Channels and Origin Endpoints, S3 Buckets, etc. MSAM will send these metrics to CloudWatch once per hour. Metrics are stored under the **MSAM** namespace in CloudWatch, with dimensions for the resource type and stack name. The stack name is a dimension in determining the resource counts since different stacks of MSAM installed in the same account may be tracking different regions.
+
+You can use these metrics to set alarms to track inventory sizes in your account. For example, you could create an alarm to signal when:
+
+* the number of MediaLive channels is not equal to the number of MediaPackage channels
+* the number of buckets exceeds a threshold
+* there is a sudden change in the number of resources of a specific type (anomaly alarm)
+
+
 ## Menus
 
 * Settings
