@@ -6,12 +6,9 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
         // options for Fuse
         const model_options = {
             shouldSort: true,
-            tokenize: true,
-            matchAllTokens: true,
             threshold: 0.25,
             location: 0,
-            distance: 100,
-            maxPatternLength: 32,
+            distance: 1000,
             minMatchCharLength: 2,
             keys: [
                 "id",
@@ -36,7 +33,8 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                 "data.PrivateDnsName",
                 "data.PrivateIpAddress",
                 "data.PublicDnsName",
-                "data.PublicIpAddress"
+                "data.PublicIpAddress",
+                "stringtags"
             ]
         };
 
@@ -80,8 +78,8 @@ define(["jquery", "lodash", "app/model", "app/channels", "app/ui/diagrams"],
                 };
                 // search the model, find matching nodes
                 const model_matches = fuse_model.search(text);
-                const node_ids = _.map(model_matches, "id");
-                results.model = model_matches;
+                const node_ids = _.map(model_matches, "item.id");
+                results.model = _.map(model_matches, "item");
                 // find diagrams with one or more of the nodes
                 const contained_by = diagrams.have_any(node_ids);
                 results.diagram_contents = contained_by;

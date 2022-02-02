@@ -1,7 +1,7 @@
 /*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui/diagram_statemachine_factory", "app/ui/alert", "app/settings", "app/ui/vis_options"],
-    function($, _, ui_util, model, layout, diagram_statemachine_factory, alert, settings, vis_options) {
+    function ($, _, ui_util, model, layout, diagram_statemachine_factory, alert, settings, vis_options) {
         class Diagram {
 
             constructor(name, view_id) {
@@ -33,11 +33,13 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 // this.drawingSurfaceImageData;
                 // other state
                 this.first_fit = false;
+                // locking some functions (move, add, delete)
+                this.locked = false;
                 // This FSM manages the startup and state restoration
                 this.statemachine = diagram_statemachine_factory.create(this);
                 // development logging
-                this.statemachine.on("transition", (function() {
-                    return function(data) {
+                this.statemachine.on("transition", (function () {
+                    return function (data) {
                         // log the state transitions of the FSMs
                         console.log(data);
                     };
@@ -54,12 +56,12 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
 
             layout_vertical(save) {
                 var my_diagram = this;
-                settings.get("layout-method").then(function(response) {
+                settings.get("layout-method").then(function (response) {
                     var method = response.method;
                     var options = vis_options.vertical_layout;
                     options.layout.hierarchical.sortMethod = method;
-                    my_diagram.network.once("afterDrawing", (function() {
-                        return function() {
+                    my_diagram.network.once("afterDrawing", (function () {
+                        return function () {
                             console.log("layout finished");
                             my_diagram.network.setOptions(vis_options.without_layout);
                             my_diagram.layout_isolated(false);
@@ -76,12 +78,12 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
 
             layout_horizontal(save) {
                 var my_diagram = this;
-                settings.get("layout-method").then(function(response) {
+                settings.get("layout-method").then(function (response) {
                     var method = response.method;
                     var options = vis_options.horizontal_layout;
                     options.layout.hierarchical.sortMethod = method;
-                    my_diagram.network.once("afterDrawing", (function() {
-                        return function() {
+                    my_diagram.network.once("afterDrawing", (function () {
+                        return function () {
                             console.log("layout finished");
                             my_diagram.network.setOptions(vis_options.without_layout);
                             my_diagram.layout_isolated(false);
@@ -200,13 +202,13 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
 
             restore_nodes() {
                 var diagram = this;
-                return new Promise(function(resolve, reject) {
-                    layout.retrieve_layout(diagram).then(function(layout_items) {
+                return new Promise(function (resolve, reject) {
+                    layout.retrieve_layout(diagram).then(function (layout_items) {
                         var node_ids = _.map(layout_items, "id");
                         var nodes = _.compact(model.nodes.get(node_ids));
                         diagram.nodes.update(nodes);
                         resolve(layout_items);
-                    }).catch(function(error) {
+                    }).catch(function (error) {
                         console.log(error);
                         reject(error);
                     });
@@ -215,14 +217,14 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
 
             restore_layout(layout_items) {
                 var diagram = this;
-                return new Promise(function(resolve, reject) {
+                return new Promise(function (resolve, reject) {
                     var inner_promise;
                     if (!layout_items) {
                         inner_promise = layout.retrieve_layout(diagram);
                     } else {
                         inner_promise = Promise.resolve(layout_items);
                     }
-                    inner_promise.then(function(layout_items) {
+                    inner_promise.then(function (layout_items) {
                         for (let item of layout_items) {
                             var node = diagram.nodes.get(item.id);
                             if (node) {
@@ -230,7 +232,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                             }
                         }
                         resolve(layout_items);
-                    }).catch(function(error) {
+                    }).catch(function (error) {
                         console.log(error);
                         reject(error);
                     });
@@ -241,8 +243,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 for (let node_id of this.nodes.getIds()) {
                     // find all edges connected to this node
                     var matches = model.edges.get({
-                        filter: (function(local_node_id) {
-                            return function(edge) {
+                        filter: (function (local_node_id) {
+                            return function (edge) {
                                 return (edge.to == local_node_id || edge.from == local_node_id);
                             };
                         })(node_id)
@@ -267,8 +269,8 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     for (let id of node_ids) {
                         // query all edges from the model with this node
                         let filtered = _.filter(model.edges.get(),
-                            (function(local_id) {
-                                return function(edge) { return edge.to == local_id || edge.from == local_id; };
+                            (function (local_id) {
+                                return function (edge) { return edge.to == local_id || edge.from == local_id; };
                             })(id)
                         );
                         for (let edge of filtered) {
@@ -279,30 +281,30 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                                     diagram.edges.update(edge);
                                 }
                             } else
-                            if (edge.from == id) {
-                                // check 'to' node is on diagram
-                                if (diagram.nodes.get(edge.to)) {
-                                    // console.log(`${diagram.name} diagram connecting nodes ${edge.from} ${edge.to}`);
-                                    diagram.edges.update(edge);
+                                if (edge.from == id) {
+                                    // check 'to' node is on diagram
+                                    if (diagram.nodes.get(edge.to)) {
+                                        // console.log(`${diagram.name} diagram connecting nodes ${edge.from} ${edge.to}`);
+                                        diagram.edges.update(edge);
+                                    }
                                 }
-                            }
                         }
                     }
                 } else
-                if (event == "remove") {
-                    for (let id of node_ids) {
-                        // query all edges on the diagram 
-                        let filtered = _.filter(model.edges.get(),
-                            (function(local_id) {
-                                return function(edge) { return edge.to == local_id || edge.from == local_id; };
-                            })(id)
-                        );
-                        for (let edge of filtered) {
-                            console.log("removing unneeded edge");
-                            diagram.edges.remove(edge.id);
+                    if (event == "remove") {
+                        for (let id of node_ids) {
+                            // query all edges on the diagram 
+                            let filtered = _.filter(model.edges.get(),
+                                (function (local_id) {
+                                    return function (edge) { return edge.to == local_id || edge.from == local_id; };
+                                })(id)
+                            );
+                            for (let edge of filtered) {
+                                console.log("removing unneeded edge");
+                                diagram.edges.remove(edge.id);
+                            }
                         }
                     }
-                }
             }
 
             synchronize_content(event, node_ids) {
@@ -311,9 +313,9 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 if (event == "add") {
                     layout.save_layout(diagram, node_ids);
                 } else
-                if (event == "remove") {
-                    layout.delete_layout(diagram, node_ids);
-                }
+                    if (event == "remove") {
+                        layout.delete_layout(diagram, node_ids);
+                    }
             }
 
             hide_div() {
@@ -473,7 +475,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                 var diagram = this;
                 if (blinks > 0) {
                     setTimeout(
-                        function() {
+                        function () {
                             if (blinks % 2 == 0) {
                                 diagram.network.selectNodes(ids, false);
                             } else {
@@ -493,6 +495,31 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
                     $("#" + this.tab_icon_id).text("image_aspect_ratio");
                 }
             }
+
+            lock(state) {
+                const key = `diagram_lock_${this.view_id}`;
+                this.locked = Boolean(state).valueOf();
+                const promise = settings.put(key, { "name": this.name, "locked": this.locked });
+                return promise;
+            }
+
+            isLocked() {
+                const key = `diagram_lock_${this.view_id}`;
+                return new Promise((resolve, reject) => {
+                    const my_diagram = this;
+                    settings.get(key).then(function (value) {
+                        if (value) {
+                            my_diagram.locked = value.locked;
+                        }
+                        else {
+                            my_diagram.locked = false;
+                        }
+                        resolve(my_diagram.locked);
+                    }).catch((error) => {
+                        reject(error);
+                    });
+                });
+            }
         }
 
         function create(name, view_id) {
@@ -500,7 +527,7 @@ define(["jquery", "lodash", "app/ui/util", "app/model", "app/ui/layout", "app/ui
         }
 
         // this shuts down the browser's context menu
-        document.body.oncontextmenu = function() {
+        document.body.oncontextmenu = function () {
             return false;
         };
 

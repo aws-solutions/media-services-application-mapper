@@ -72,7 +72,11 @@
                                 "", [{
                                         "Ref": "MSAMBrowserAppBucket"
                                     },
-                                    ".s3.amazonaws.com"
+                                    ".s3.",
+                                    {
+                                        "Ref": "AWS::Region"
+                                    },
+                                    ".amazonaws.com"
                                 ]
                             ]
                         },
@@ -108,7 +112,11 @@
                                 "", [{
                                         "Ref": "MSAMBrowserAppLoggingBucket"
                                     },
-                                    ".s3.amazonaws.com"
+                                    ".s3.",
+                                    {
+                                        "Ref": "AWS::Region"
+                                    },
+                                    ".amazonaws.com"
                                 ]
                             ]
                         },
@@ -258,13 +266,21 @@
                     "Ref": "WebIAMRoleARN"
                 },
                 "Runtime": "python3.8",
-                "Timeout": 300
+                "Timeout": 900
             },
             "Metadata": {
                 "cfn_nag": {
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with AWSLambdaBasicExecutionRole defined in different template."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
                     }]
                 }
             }
@@ -323,6 +339,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with AWSLambdaBasicExecutionRole defined in different template."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
                     }]
                 }
             }

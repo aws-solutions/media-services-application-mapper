@@ -31,7 +31,7 @@ while getopts ':h' OPTION; do
       echo "SOLUTION_NAME=aws-media-services-application-mapper"
       echo "VERSION=v1.0.0"
       echo
-      echo "You may export export these variables in your environment and call the script using those variables:"
+      echo "You may export these variables in your environment and call the script using those variables:"
       echo "./$(basename $0) \$DIST_OUTPUT_BUCKET \$SOLUTION_NAME \$VERSION"
       echo 
       exit 1
@@ -69,7 +69,6 @@ fi
 template_dir="$PWD" # /deployment
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
-other_dist_dir="$template_dir/assets"
 source_dir="$template_dir/../source"
 
 echo "------------------------------------------------------------------------------"
@@ -83,10 +82,6 @@ echo "rm -rf $build_dist_dir"
 rm -rf $build_dist_dir
 echo "mkdir -p $build_dist_dir"
 mkdir -p $build_dist_dir
-echo "rm -rf $other_dist_dir"
-rm -rf $other_dist_dir
-echo "mkdir -p $other_dist_dir"
-mkdir -p $other_dist_dir
 
 # date stamp for this build
 STAMP=`date +%s`
@@ -125,21 +120,21 @@ echo
 
 EVENTS_ZIP="events.zip"
 cd $source_dir/events
-
+# clear the package directory
+rm -rf ./package
 # install all the requirements into package dir
-rm -f error.txt
 pip install --upgrade --force-reinstall --target ./package -r requirements.txt 2> error.txt
-RETVAL=$?
-if [ "$RETVAL" -ne "0" ]; then
+if [ $? -ne 0 ]; then
   echo "ERROR: Event collector package installation failed."
   cat error.txt
-  exit $RETVAL
+  rm error.txt
+  exit 1
 fi
 
 cd package
 zip -r9 ../$EVENTS_ZIP .
 cd ../
-zip -g $EVENTS_ZIP cloudwatch_alarm.py media_events.py
+zip -g9 $EVENTS_ZIP cloudwatch_alarm.py media_events.py
 mv $EVENTS_ZIP $build_dist_dir/events_$STAMP.zip
 cp msam-events-release.template $template_dist_dir
 
@@ -158,16 +153,27 @@ if [ $? -ne 0 ]; then
 fi
 mv dynamodb_resource.zip $build_dist_dir/dynamodb_resource_$STAMP.zip
 
+echo
+echo ------------------------------------
+echo Web application
+echo ------------------------------------
+echo
+
+# update web module dependencies
+cd $source_dir/html
+rm -rf node_modules
+npm install
+
 # add build stamp
 cd $source_dir/html
 echo "updating browser app build stamp"
 cp -f js/app/build-tmp.js js/app/build.js
-sed -i -e "s/DEV_0_0_0/$STAMP/g" js/app/build.js
-zip -q -r $build_dist_dir/msam-web-$STAMP.zip *
+sed -i -e "s/VERSION/$VERSION/g" js/app/build.js
+zip -q -r -9 $build_dist_dir/msam-web-$STAMP.zip *
 rm -f js/app/build.js-e
 
 # create a digest for the web content
-SHATEXT="`sha1sum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
+SHATEXT="`shasum $build_dist_dir/msam-web-$STAMP.zip | awk '{ print $1 }'`"
 echo web content archive SHA1 is $SHATEXT
 
 # update webcontent_resource.zip 
@@ -212,19 +218,11 @@ for F in *.template; do
     cp -f ${F} ${F/\.template/\-${STAMP}\.template}
 done
 
+# copy all processed templates to the regional assets directory
+cp *.template $build_dist_dir
+
 # copy the main template to the deployment dir
 cp aws-media-services-application-mapper-release.template $template_dir
-
-# generate digest values for the templates
-md5sum * >$other_dist_dir/md5.txt
-sha1sum * >$other_dist_dir/sha1.txt
-sha256sum * >$other_dist_dir/sha256.txt
-
-cd $build_dist_dir
-# generate digest values for the lambda zips and append to txts
-md5sum * >>$other_dist_dir/md5.txt
-sha1sum * >>$other_dist_dir/sha1.txt
-sha256sum * >>$other_dist_dir/sha256.txt
 
 echo
 echo ------------------------------------

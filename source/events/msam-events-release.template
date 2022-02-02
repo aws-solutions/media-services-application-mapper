@@ -2,6 +2,13 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Transform": "AWS::Serverless-2016-10-31",
     "Description": "Media Services Application Mapper Event Capture %%VERSION%%",
+    "Mappings": {
+        "SolutionId": {
+            "UserAgent": {
+                "Extra": "AwsSolution/SO0048/%%VERSION%%"
+            }
+        }
+    },
     "Resources": {
         "Collector": {
             "Type": "AWS::Serverless::Function",
@@ -44,7 +51,8 @@
                         },
                         "ITEM_TTL": {
                             "Ref": "ItemTTL"
-                        }
+                        },
+                        "SOLUTION_ID": { "Fn::FindInMap": ["SolutionId", "UserAgent", "Extra"] }
                     }
                 },
                 "Events": {
@@ -69,6 +77,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }
@@ -105,7 +121,8 @@
                         },
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
-                        }
+                        },
+                        "SOLUTION_ID": { "Fn::FindInMap": ["SolutionId", "UserAgent", "Extra"] }
                     }
                 },
                 "Events": {
@@ -129,6 +146,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }

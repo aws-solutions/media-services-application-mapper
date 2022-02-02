@@ -14,8 +14,9 @@ from botocore.config import Config
 SETTINGS_TABLE_NAME = os.environ["SETTINGS_TABLE_NAME"]
 
 # user-agent config
-STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/settings.py".format(stamp=STAMP))
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
+MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
 # DynamoDB
 DYNAMO_RESOURCE = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
@@ -57,7 +58,7 @@ def application_settings(request, item_key):
         print(item_key)
         settings = {}
         print(request.method)
-        if request.method == 'PUT' or request.method == 'POST':
+        if request.method in ('PUT', 'POST'):
             print(request.json_body)
             settings = request.json_body
             put_setting(item_key, settings)

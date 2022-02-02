@@ -2,9 +2,17 @@
        SPDX-License-Identifier: Apache-2.0 */
 
 define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", "app/ui/tile_view", "app/ui/diagrams", "app/alarms", "app/ui/confirmation"],
-    function($, _, model, event_alerts, cw_events, tile_view, diagrams, alarms, confirmation) {
+    function ($, _, model, event_alerts, cw_events, tile_view, diagrams, alarms, confirmation) {
 
         var last_displayed;
+
+        var consoleIcon = function (cell, formatterParams) {
+            return `<i class='fa fa-desktop'></i>`;
+        };
+
+        var trashIcon = function (cell, formatterParams) {
+            return `<i class='fa fa-trash'></i>`;
+        };
 
         var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
             placeholder: "No Recent Alerts",
@@ -64,20 +72,32 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             }, {
                 title: "Alarm State Updated",
                 field: "StateUpdated"
-            }, {
-                tooltip: "Unsubscribe from Alarm",
+            },
+            {
+                tooltip: "Navigate to Alarm",
                 headerSort: false,
-                formatter: "buttonCross",
+                formatter: consoleIcon,
                 width: 40,
-                align: "center",
-                cellClick: function(e, cell) {
+                hozAlign: "center",
+                cellClick: function (e, cell) {
+                    navigate_to_alarm(cell.getRow()._row.data);
+                }
+            },
+            {
+                tooltip: "Unsubscribe Alarm",
+                headerSort: false,
+                formatter: trashIcon,
+                width: 40,
+                hozAlign: "center",
+                cellClick: function (e, cell) {
                     unsubscribe_alarm(cell.getRow()._row.data);
                 }
-            }]
+            }
+            ]
         });
 
         //custom header filter
-        var dateFilterEditor = function(cell, onRendered, success, cancel, editorParams) {
+        var dateFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
 
             var container = $("<span></span>");
             //create and style input
@@ -90,10 +110,10 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
 
             inputs.css({
-                    "padding": "4px",
-                    "width": "50%",
-                    "box-sizing": "border-box",
-                })
+                "padding": "4px",
+                "width": "50%",
+                "box-sizing": "border-box",
+            })
                 .val(cell.getValue());
 
             function buildDateString() {
@@ -104,12 +124,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             }
 
             //submit new value on blur
-            inputs.on("change blur", function(e) {
+            inputs.on("change blur", function (e) {
                 success(buildDateString());
             });
 
             //submit new value on enter
-            inputs.on("keydown", function(e) {
+            inputs.on("keydown", function (e) {
                 if (e.keyCode == 13) {
                     success(buildDateString());
                 }
@@ -201,20 +221,23 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                     crossElement: "<i class='fa fa-info-circle' style='font-size:20px'></i>"
                 },
                 width: 50,
-                align: "center",
-                cellClick: function(e, cell) {
+                hozAlign: "center",
+                cellClick: function (e, cell) {
                     show_formatted_cloudwatch_event_data(cell.getRow()._row.data);
                 }
             }]
         });
 
 
-        var display_selected_node = function(node_id) {
+        var display_selected_node = function (node_id) {
             var node = model.nodes.get(node_id);
+            // console.log(JSON.stringify(node));
             last_displayed = node_id;
             var data = [];
             $("#nav-alarms-selected-item").html(node.header);
-            $("#nav-alerts-selected-item").html(node.header);
+            const link = (node.alerts_link || node.console_link)();
+            const consoleAnchor = `<a href="${link}" target="_blank" title="Navigate to Resource">${consoleIcon()}</a>`;
+            $("#nav-alerts-selected-item").html(node.header + "&nbsp;&nbsp;" + consoleAnchor);
             $("#nav-events-selected-item").html(node.header);
 
             // event alerts
@@ -227,7 +250,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             }
             alert_tabulator.replaceData(data);
             // alarms
-            require("app/alarms").alarms_for_subscriber(node.id).then(function(subscriptions) {
+            require("app/alarms").alarms_for_subscriber(node.id).then(function (subscriptions) {
                 // console.log(subscriptions);
                 for (let subscription of subscriptions) {
                     if (Number.isInteger(subscription.StateUpdated)) {
@@ -240,7 +263,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 alarm_tabulator.replaceData(subscriptions);
             });
             // cloudwatch events
-            cw_events.get_cloudwatch_events(node.id).then(function(events) {
+            cw_events.get_cloudwatch_events(node.id).then(function (events) {
                 // console.log(events);
                 for (let event of events) {
                     event.timestamp = new Date(event.timestamp).toISOString();
@@ -249,7 +272,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             });
         };
 
-        var display_selected_tile = function(name, members) {
+        var display_selected_tile = function (name, members) {
             var alert_data = [];
             var alarm_data = [];
             var promises = [];
@@ -265,11 +288,11 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                             alert_data.push(event_value.detail);
                         }
                     }
-                    (function(local_member_value, local_node, local_require, local_alarm_data, local_promises) {
-                        local_promises.push(new Promise(function(resolve, reject) {
+                    (function (local_member_value, local_node, local_require, local_alarm_data, local_promises) {
+                        local_promises.push(new Promise(function (resolve, reject) {
                             var local_node_id = local_member_value.id;
                             var local_node_name = local_node.name;
-                            local_require("app/alarms").alarms_for_subscriber(local_node_id).then(function(subscriptions) {
+                            local_require("app/alarms").alarms_for_subscriber(local_node_id).then(function (subscriptions) {
                                 // console.log(subscriptions);
                                 for (let subscription of subscriptions) {
                                     if (Number.isInteger(subscription.StateUpdated)) {
@@ -285,7 +308,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                     })(member_value, node, require, alarm_data, promises);
                 }
             }
-            Promise.all(promises).then(function() {
+            Promise.all(promises).then(function () {
                 alarm_tabulator.replaceData(alarm_data);
                 alert_tabulator.replaceData(alert_data);
                 alarm_tabulator.redraw();
@@ -293,14 +316,14 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             });
         };
 
-        var diagram_selection_listener = function(diagram, event) {
+        var diagram_selection_listener = function (diagram, event) {
             if (event.nodes.length > 0) {
                 last_displayed = event.nodes[0];
                 display_selected_node(event.nodes[0]);
             }
         };
 
-        var tile_view_click_listener = function(name, members) {
+        var tile_view_click_listener = function (name, members) {
             if (tile_view.selected()) {
                 last_displayed = {
                     name: name,
@@ -310,7 +333,7 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             }
         };
 
-        var event_alert_listener = function() {
+        var event_alert_listener = function () {
             refresh();
         };
 
@@ -320,17 +343,17 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
 
         alarms.add_callback(event_alert_listener);
 
-        diagrams.add_selection_callback(function(diagram, event) {
+        diagrams.add_selection_callback(function (diagram, event) {
             if (event.nodes.length > 0) {
                 display_selected_node(event.nodes[0]);
             }
         });
 
-        $("#monitor-subscribe-alarms-button").click(function() {
+        $("#monitor-subscribe-alarms-button").click(function () {
             require("app/ui/alarms_menu").show_alarm_subscribe_dialog();
         });
 
-        $("#monitor-unsubscribe-alarms-button").click(function() {
+        $("#monitor-unsubscribe-alarms-button").click(function () {
             var selected_alarms = alarm_tabulator.getSelectedData();
             var diagram = diagrams.shown();
             var selected_nodes = diagram.network.getSelectedNodes();
@@ -339,12 +362,12 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
                 (selected_nodes.length == 1 ? "" : "s") + " from " +
                 selected_alarms.length + " alarm" +
                 (selected_alarms.length == 1 ? "" : "s") + "?",
-                function() {
+                function () {
                     var promises = [];
                     for (let alarm of selected_alarms) {
                         promises.push(alarms.unsubscribe_from_alarm(alarm.Region, alarm.AlarmName, selected_nodes));
                     }
-                    Promise.all(promises).then(function() {
+                    Promise.all(promises).then(function () {
                         refresh();
                     });
                 });
@@ -356,18 +379,24 @@ define(["jquery", "lodash", "app/model", "app/events", "app/cloudwatch_events", 
             var node = model.nodes.get(row.ARN);
             if (node) {
                 // prompt if the node still exists
-                confirmation.show("Unsubscribe " + node.header + " from alarm " + row.AlarmName + "?",
-                    function() {
-                        alarms.unsubscribe_from_alarm(row.Region, row.AlarmName, [row.ARN]).then(function() {
+                confirmation.show(`Unsubscribe node ${node.name} from alarm ${row.AlarmName} in region ${row.Region}?`,
+                    function () {
+                        alarms.unsubscribe_from_alarm(row.Region, row.AlarmName, [row.ARN]).then(function () {
                             refresh();
                         });
                     });
             } else {
                 // otherwise just delete it
-                alarms.unsubscribe_from_alarm(row.Region, row.AlarmName, [row.ARN]).then(function() {
+                alarms.unsubscribe_from_alarm(row.Region, row.AlarmName, [row.ARN]).then(function () {
                     refresh();
                 });
             }
+        }
+
+        function navigate_to_alarm(row) {
+            console.log(row);
+            const url = `https://console.aws.amazon.com/cloudwatch/home?region=${row.Region}#alarmsV2:alarm/${row.AlarmName}?`;
+            window.open(url, '_blank').focus();
         }
 
         function show_formatted_cloudwatch_event_data(row) {

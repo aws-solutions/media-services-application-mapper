@@ -16,8 +16,9 @@ from botocore.config import Config
 CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 
 # user-agent config
-STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/cache.py".format(stamp=STAMP))
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
+MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
 
 def cached_by_service(service):
@@ -134,4 +135,5 @@ def regions():
     """
     service = boto3.client("ec2", config=MSAM_BOTO3_CONFIG)
     response = service.describe_regions()
-    return response["Regions"]
+    # return all the regions and 'global' for non-regional services
+    return response["Regions"] + [{'RegionName': 'global'}]

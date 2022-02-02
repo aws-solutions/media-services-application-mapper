@@ -14,20 +14,9 @@ define(["jquery", "app/api_check", "app/build", "app/connections"],
                 var current_connection = connections.get_current();
                 var endpoint = current_connection[0];
                 var api_key = current_connection[1];
-                var app_stamp = build.get_timestamp();
+                var app_stamp = build.get_version();
                 check.ping(endpoint, api_key).then(function(response) {
-                    var api_stamp = Number.parseInt(response.buildstamp);
-                    var browser_stamp = Number.parseInt(app_stamp);
-                    var delta_stamp = Math.abs(api_stamp - browser_stamp);
-                    if (Number.isNaN(delta_stamp)) {
-                        delta_stamp = 0;
-                    }
-                    var badge = `<span class="badge badge-info">Info</span>`;
-                    if (delta_stamp >= tolerance) {
-                        badge = `<span class="badge badge-warning">Warning</span>`;
-                    }
-                    var warning = `${badge} Browser and Endpoint build timestamps are ${Math.round(delta_stamp / (3600 * 24))} days apart.`;
-                    var message = `
+                var message = `
                 <p class="my-2">This tool shows the build numbers for the currently running browser application and the currently connected endpoint.</p>
                 <table class="table table-bordered my-2">
                     <thead>
@@ -46,11 +35,10 @@ define(["jquery", "app/api_check", "app/build", "app/connections"],
                         <tr>
                             <th scope="row">2</th>
                             <td>Endpoint API</td>
-                            <td>${response.buildstamp}</td>
+                            <td>${response.version}</td>
                         </tr>
                     </tbody>
                 </table>
-                <p class="my-2">${warning}</p>
                 `;
                     resolve({
                         name: name,

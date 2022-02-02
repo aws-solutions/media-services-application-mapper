@@ -7,7 +7,7 @@ env:
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
   RELEASE_OUTPUT_BUCKET: solutions
   VERSION: ${{ secrets.VERSION }}
-  RELEASE_BRANCH: main
+  RELEASE_BRANCH: main # change this to main later
 
 on:
   push:

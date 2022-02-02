@@ -21,7 +21,8 @@
                 "MemorySize": 2560,
                 "Environment": {
                     "Variables": {
-                        "BUILD_STAMP": "DEV_0_0_0"
+                        "BUILD_STAMP": "DEV_0_0_0",
+                        "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%"
                     }
                 },
                 "Role": { "Ref": "DynamoDBIAMRoleARN" },
@@ -33,6 +34,14 @@
                     "rules_to_suppress": [{
                         "id": "W58",
                         "reason": "Role with CloudWatch Logs permissions defined in different template."
+                    },
+                    {
+                        "id": "W92",
+                        "reason": "Lambda does not need ReservedConcurrentExecutions."
+                    },
+                    {
+                        "id": "W89",
+                        "reason": "Lambda does not need to be in a VPC."
                     }]
                 }
             }

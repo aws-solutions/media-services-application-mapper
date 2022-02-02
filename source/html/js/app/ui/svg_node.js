@@ -14,7 +14,7 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
 
     const wordWrap = (str, max) => str.length > max ? [`${str.substring(0, max - 1)} [...]`] : [str];
 
-    const create = (type_name, node_name, node_rgb, selected, id, data) => {
+    const create = (type_name, node_name, node_rgb, selected, id, data, generic_type_name) => {
         const inc_y = 35;
         const radius = 20;
         const width = 400;
@@ -50,7 +50,7 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
 
         for (let module of overlays) {
             let overlay = require(module);
-            if (overlay.match_type == type_name) {
+            if (overlay.match_type == (generic_type_name || type_name)) {
                 // console.log("applying overlay " + overlay.name);
                 overlay.decorate(drawing, font_size, width, height, id, data);
                 found = true;
@@ -77,10 +77,10 @@ define(["jquery", "lodash", "app/window", "app/ui/util", "app/plugins"], functio
     $("body").append(work_div_html);
 
     return {
-        selected: (type_name, node_name, node_rgb, id, data) =>
-            create(type_name, node_name, node_rgb, true, id, data),
-        unselected: (type_name, node_name, node_rgb, id, data) =>
-            create(type_name, node_name, node_rgb, false, id, data),
+        selected: (type_name, node_name, node_rgb, id, data, generic_type_name) =>
+            create(type_name, node_name, node_rgb, true, id, data, generic_type_name),
+        unselected: (type_name, node_name, node_rgb, id, data, generic_type_name) =>
+            create(type_name, node_name, node_rgb, false, id, data, generic_type_name),
         getDegradedRgb: () => degraded_rgb
     };
 });

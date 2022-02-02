@@ -21,9 +21,10 @@ from chalicelib import cache
 # TTL provided via CloudFormation
 CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
 
-STAMP = os.environ["BUILD_STAMP"]
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 # used to handle throttling, be very patient and back off a lot if needed
-MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, user_agent="aws-media-services-applications-mapper/{stamp}/nodes.py".format(stamp=STAMP))
+MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, **USER_AGENT_EXTRA)
 
 def update_regional_ddb_items(region_name):
     """
@@ -119,7 +120,7 @@ def s3_bucket_ddb_items():
     """
     items = []
     for bucket in s3_buckets():
-        arn = "arn:aws:s3:::{}".format(bucket["Name"])
+        arn = f'arn:aws:s3:::{bucket["Name"]}'
         service = "s3"
         items.append(node_to_ddb_item(arn, service, "global", bucket))
     return items
@@ -223,7 +224,7 @@ def speke_server_ddb_items(region):
         endpoint_data = json.loads(endpoint["data"])
         for server_url in [match.value for match in jsonpath_expr.find(endpoint_data)]:
             parsed = urlparse(server_url)
-            arn = "arn:oss:speke:::{}".format(hash(server_url))
+            arn = f"arn:oss:speke:::{hash(server_url)}"
             config = {"arn": arn, "endpoint": server_url, "scheme": parsed.scheme}
             service = "speke-keyserver"
             # print(config)
@@ -450,8 +451,8 @@ def medialive_multiplexes(region):
 
 def mediastore_containers(region):
     """
-    Return the MediaLive inputs for the given region.
-    NO TAGS
+    Return the MediaStore containers for the given region.
+    Supports tags.
     """
     items = []
     service_name = "mediastore"
@@ -463,6 +464,8 @@ def mediastore_containers(region):
             response = service.list_containers(NextToken=response["NextToken"])
             items = items + response['Containers']
         for item in items:
+            response = service.list_tags_for_resource(Resource=item['ARN'])
+            item['Tags'] = response['Tags']
             item['CreationTime'] = str(item['CreationTime'])
     else:
         print("not available in this region")
@@ -472,7 +475,7 @@ def mediastore_containers(region):
 def mediaconnect_flows(region):
     """
     Return the MediaConnect flows for the given region.
-    NO TAGS
+    Supports tags.
     """
     items = []
     service_name = 'mediaconnect'
@@ -487,7 +490,7 @@ def mediaconnect_flows(region):
             try:
                 flow_details = service.describe_flow(FlowArn=flow['FlowArn'])
                 response = service.list_tags_for_resource(ResourceArn=flow["FlowArn"])
-                flow_details["Tags"] = response["Tags"]
+                flow_details["Flow"]["Tags"] = response["Tags"]
             except ClientError as error:
                 print(error)
             items.append(flow_details['Flow'])

@@ -40,16 +40,12 @@ define({
         "app/mappers/connections/medialive_channel_input",
         "app/mappers/connections/medialive_channel_mediaconnect_flow",
     ],
-    "tools": [
-        "app/tools/build_numbers",
-        "app/tools/clear_http",
-        "app/tools/cross_region",
-        "app/tools/duplicate_names"
-    ],
     "overlays": [
         "app/ui/overlays/mediaconnect_flow",
         "app/ui/overlays/medialive_channel",
         "app/ui/overlays/medialive_multiplex",
+        "app/ui/overlays/ssm_managed_instance",
+        "app/ui/overlays/ec2_instance"
     ],
     "default-overlay": "app/ui/overlays/alarms_only"
 });

@@ -9,7 +9,6 @@ set -euo pipefail
 template_dir="$PWD"
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
-other_dist_dir="$template_dir/assets"
 
 # AWS default settings
 BUCKET="rodeolabz"
@@ -62,16 +61,26 @@ echo Regions = $REGIONS
 echo ACL Setting = $ACL
 echo Deploy Type = $DEPLOY_TYPE
 
+# Get account id
+account_id=$(aws sts get-caller-identity --query Account --output text)
+if [ $? -ne 0 ]; then
+  msg "ERROR: Failed to get AWS account ID"
+  exit 1
+fi
 
 for R in $REGIONS; do 
+  # Validate ownership of $BUCKET-$R
+  aws s3api head-bucket --bucket $BUCKET-$R --expected-bucket-owner $account_id
+  if [ $? -ne 0 ]; then
+    msg "ERROR: Your AWS account does not own s3://$BUCKET-$R/"
+    exit 1
+  fi
   if [ "$ACL" = "public-read" ]; then
       aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template" --acl public-read --storage-class INTELLIGENT_TIERING
       aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read  --storage-class INTELLIGENT_TIERING    
-      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --acl public-read  --storage-class INTELLIGENT_TIERING    
   else
       aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION --exclude "*release.template"  --storage-class INTELLIGENT_TIERING
       aws s3 sync $build_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION  --storage-class INTELLIGENT_TIERING
-      aws s3 sync $other_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/$VERSION  --storage-class INTELLIGENT_TIERING
   fi
 
   if [ "$DEPLOY_TYPE" = "release" ]; then

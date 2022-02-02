@@ -1,89 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <!-- 
-Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0
 -->
 
 <head>
     <title>Media Services Application Mapper</title>
-    <!-- material design -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/external/ajax/libs/tabulator/4.1.2/css/tabulator.min.css" integrity="sha256-NewTV8E6IyXxLZQ2qQcS8XCB2TOII73LVvH57rp9kiE=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/external/ajax/libs/tabulator/4.1.2/css/bootstrap/tabulator_bootstrap4.min.css" integrity="sha256-DDJiZD+ORXOovR4Qln+so9eW8YGdlqyaDRkxxPo0dRs=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/external/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/external/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" href="/external/iconfont/material-icons.css">
-    <link rel="stylesheet" href="/external/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/external/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
-    <script src="/external/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/vis/4.21.0/vis.min.js" integrity="sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/popper.js/1.14.4/umd/popper.min.js" integrity="sha256-EGs9T1xMHdvM1geM8jPpoo8EZ1V1VRsmcJz8OByENLA=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/tabulator/4.1.2/js/tabulator.min.js" integrity="sha256-C2vQLVoRZEK5WCH+4cp6B5CdxeAXev735CdK+2aPs7o=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/tabulator/4.1.2/js/jquery_wrapper.min.js" integrity="sha256-3hV8hYuqj/Es6MGB4/mfB+VXmhJvohcbdxvVhXtl1B4=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/handlebars.js/4.7.7/handlebars.min.js" crossorigin="anonymous"></script>
-    <script src="/external/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
-    <script src="/external/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script>
-    <script src="/external/ajax/libs/svg.js/2.6.6/svg.min.js" integrity="sha256-M8IkAPnXdVChgPQwts/KeepRP4ogs+hzBtPmVhUj5YA=" crossorigin="anonymous"></script>
-    <script src="/external/npm/renderjson@1.4.0/renderjson.min.js"></script>
-    <script src="/external/ajax/libs/URI.js/1.19.1/URI.min.js" integrity="sha256-D3tK9Rf/fVqBf6YDM8Q9NCNf/6+F2NOKnYSXHcl0keU=" crossorigin="anonymous"></script>
-    <script src="/external/npm/jssha@2.3.1/src/sha.min.js"></script>
-    <script src="/external/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
-    <script data-main="js/app" src="/external/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/node_modules/tabulator-tables/dist/css/tabulator.min.css" />
+    <link rel="stylesheet" href="/node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap4.min.css" />
+    <link rel="stylesheet" href="/node_modules/vis/dist/vis.min.css" />
+    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="/node_modules/material-icons/iconfont/material-icons.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/jqueryui/jquery-ui.min.js"></script>
+    <script src="/node_modules/vis/dist/vis.min.js"></script>
+    <script src="/node_modules/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <script src="/node_modules/tabulator-tables/dist/js/jquery_wrapper.min.js"></script>
+    <script src="/node_modules/handlebars/dist/handlebars.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="/node_modules/fuse.js/dist/fuse.js"></script>
+    <script src="/node_modules/svg.js/dist/svg.min.js"></script>
+    <script src="/node_modules/renderjson/renderjson.js"></script>
+    <script src="/node_modules/urijs/src/URI.min.js"></script>
+    <script src="/node_modules/moment/min/moment.min.js"></script>
+    <script data-main="js/app" src="/node_modules/requirejs/require.js"></script>
     <style>
         .borderless td,
         .borderless th {
             border: none;
         }
-        
+
         .selected-channel-tile {
             border-width: 5px !important;
             border: dashed;
         }
-        
+
         .unselected-channel-tile {
             border-width: 3px !important;
         }
-        
+
         .vis-network:focus {
             outline: none;
         }
-        
+
         .hidden-div {
             display: none;
         }
-        
+
         .hidden-compartment {
             display: none;
         }
-        
+
         .visible-div {
             display: inherit;
         }
-        
+
         .modal-xlg {
             max-width: 80% !important;
         }
-        
+
         .no-gutters {
             margin-right: 0;
             margin-left: 0;
         }
-        
+
         .vis-zoomIn {
             right: auto;
             left: 150px;
         }
-        
+
         .vis-zoomOut {
             right: auto;
             left: 190px;
         }
-        
+
         .vis-zoomExtends {
             bottom: 10px !important;
             right: auto;
@@ -100,26 +97,28 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <div class="my-0 py-0">Application Mapper</div>
             </b>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="settings_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="settings_dropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Settings
                     </a>
                     <div class="dropdown-menu" aria-labelledby="settings_dropdown">
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#endpoint_connection_modal">Connection
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#endpoint_connection_modal">Connection
                             Settings</a>
-                        <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#region_selection_modal">Regions
-                            Displayed</a> -->
                         <a class="dropdown-item" href="#" data-toggle="modal" id="advanced_settings_button">Advanced
                             Settings</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Tiles
                     </a>
                     <div class="dropdown-menu" aria-labelledby="channels_dropdown">
@@ -127,20 +126,23 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             Tile</a>
                         <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_add_to_tile_button">Add Selected
                             Node to Tile</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_duplicate_selected_tile_button">Duplicate Selected Tile</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_edit_selected_tile_button">Show/Edit Contents of Selected Tile</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" id="tiles_delete_selected_tile_button">Delete Selected Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            id="tiles_duplicate_selected_tile_button">Duplicate Selected Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            id="tiles_edit_selected_tile_button">Show/Edit Contents of Selected Tile</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            id="tiles_delete_selected_tile_button">Delete Selected Tile</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="diagram_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="diagram_dropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Diagram
                     </a>
                     <div class="dropdown-menu" aria-labelledby="diagram_dropdown">
                         <a class="dropdown-item" href="#" id="diagram_add_diagram">Add New Diagram</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" id="diagram_manage_contents">Manage Diagram Contents</a>
-                        <!-- <div class="dropdown-divider"></div> -->
                         <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Downstream Connected Nodes</a>
                         <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Upstream Connected Nodes</a>
                         <a class="dropdown-item" href="#" id="diagram_add_all_nodes">Add All Connected Nodes</a>
@@ -163,7 +165,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="alarms_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="alarms_dropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Alarms
                     </a>
                     <div class="dropdown-menu" aria-labelledby="alarms_dropdown">
@@ -173,10 +176,25 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="tools_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Tools
+                    <a class="nav-link dropdown-toggle" href="#" id="help_dropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Help
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="tools_dropdown" id="tools-dropdown-menu">
+                    <div class="dropdown-menu" aria-labelledby="help_dropdown" id="help-dropdown-menu">
+                        <a class="dropdown-item"
+                            href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=bug&template=bug_report.md&title="
+                            target="_blank" id="bug-report-button">Bug Report</a>
+                        <a class="dropdown-item"
+                            href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=enhancement&template=feature_request.md&title="
+                            target="_blank" id="request-feature-button">Feature Request</a>
+                        <a class="dropdown-item"
+                            href="https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html"
+                            target="_blank" id="implementation-guide-button">Implementation Guide</a>
+                        <a class="dropdown-item"
+                            href="https://aws.amazon.com/solutions/implementations/media-services-application-mapper/"
+                            target="_blank" id="landing-page-button">Solution Landing Page</a>
+                        <a class="dropdown-item" data_toggle="" href="#" id="build-version-button">MSAM Build
+                            Version</a>
                     </div>
                 </li>
             </ul>
@@ -184,22 +202,30 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 Something happened.
             </div>
             <!-- buttons for custom connections -->
-            <form class="form-inline px-4 my-2 my-lg-0" onsubmit="return false;">
-                <button type="button" id="connect-nodes-button" class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Connect Nodes"><i class="material-icons">trending_flat</i></button>
-                <button type="button" id="edit-connection-button" class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Edit Connection"><i class="material-icons">create</i></button>
-                <button type="button" id="delete-connection-button" class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Delete Connection"><i class="material-icons">remove_circle_outline</i></button>
-            </form>
-            <form class="form-inline pl-4 my-2 my-lg-0" onsubmit="return false;">
-                <input class="form-control mx-1" id="search_input" placeholder="Search Terms" onsubmit="return false;">
+            <span class="px-4 my-2 my-lg-0">
+                <button type="button" id="connect-nodes-button"
+                    class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Connect Nodes"><i
+                        class="material-icons">trending_flat</i></button>
+                <button type="button" id="edit-connection-button"
+                    class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Edit Connection"><i
+                        class="material-icons">create</i></button>
+                <button type="button" id="delete-connection-button"
+                    class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Delete Connection"><i
+                        class="material-icons">remove_circle_outline</i></button>
+            </span>
+            <span class="form-inline pl-4 my-2 my-lg-0" onsubmit="return false;">
+                <input class="form-control mx-1" id="search_input" placeholder="Search Terms" title="Search Terms"
+                    onsubmit="return false;">
                 <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button">
                     <i class="material-icons">search</i>
                 </a>
-            </form>
+            </span>
         </div>
     </nav>
     <nav>
         <div draggable="false" class="nav nav-tabs" id="diagram-tab" role="tablist">
-            <a draggable="false" class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab" href="#channel-tiles-outer" role="tab" aria-controls="channel-tiles-outer" aria-selected="false">
+            <a draggable="false" class="nav-item nav-link" id="channel-tiles-tab" data-toggle="tab"
+                href="#channel-tiles-outer" role="tab" aria-controls="channel-tiles-outer" aria-selected="false">
                 Tiles
                 <i id="channel-tiles-tab-icon" draggable="false" class="material-icons pl-1 small">
                     grid_on
@@ -209,9 +235,11 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </nav>
     <div id="diagram" style="height: 60%; width: 100%;">
         <div class="tab-content" id="diagram-tab-content" style="height: 100%; width: 100%;">
-            <div id="channel-tiles-outer" class="tab-pane d-none" role="tabpanel" aria-labelledby="channel-tiles-tab" style="height: inherit; width: inherit; overflow-y: auto; overflow-x: hidden;">
+            <div id="channel-tiles-outer" class="tab-pane d-none" role="tabpanel" aria-labelledby="channel-tiles-tab"
+                style="height: inherit; width: inherit; overflow-y: auto; overflow-x: hidden;">
                 <div class="btn-group dropright m-2">
-                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" id="tile-filter-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" id="tile-filter-dropdown"
+                        type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Showing All Tiles
                     </button>
                     <div class="dropdown-menu">
@@ -232,18 +260,27 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div id="information-compartment-flex">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a draggable="false" class="nav-item nav-link" id="nav-status-tab" data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
-                        <a draggable="false" class="nav-item nav-link" id="nav-search-tab" data-toggle="tab" href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
-                        <a draggable="false" class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
-                        <a draggable="false" class="nav-item nav-link d-none" id="nav-alarms-tab" data-toggle="tab" href="#nav-alarms" role="tab" aria-controls="nav-alarms" aria-selected="false">Subscribed Alarms</a>
-                        <a draggable="false" class="nav-item nav-link d-none" id="nav-alerts-tab" data-toggle="tab" href="#nav-alerts" role="tab" aria-controls="nav-alerts" aria-selected="false">Alerts</a>
-                        <a draggable="false" class="nav-item nav-link d-none" id="nav-events-tab" data-toggle="tab" href="#nav-events" role="tab" aria-controls="nav-events" aria-selected="false">Recent CloudWatch Events</a>
+                        <a draggable="false" class="nav-item nav-link" id="nav-status-tab" data-toggle="tab"
+                            href="#nav-status" role="tab" aria-controls="nav-status" aria-selected="false">Status</a>
+                        <a draggable="false" class="nav-item nav-link" id="nav-search-tab" data-toggle="tab"
+                            href="#nav-search" role="tab" aria-controls="nav-search" aria-selected="false">Search</a>
+                        <a draggable="false" class="nav-item nav-link" id="nav-data-tab" data-toggle="tab"
+                            href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Selected Item</a>
+                        <a draggable="false" class="nav-item nav-link d-none" id="nav-alarms-tab" data-toggle="tab"
+                            href="#nav-alarms" role="tab" aria-controls="nav-alarms" aria-selected="false">Subscribed
+                            Alarms</a>
+                        <a draggable="false" class="nav-item nav-link d-none" id="nav-alerts-tab" data-toggle="tab"
+                            href="#nav-alerts" role="tab" aria-controls="nav-alerts" aria-selected="false">Alerts</a>
+                        <a draggable="false" class="nav-item nav-link d-none" id="nav-events-tab" data-toggle="tab"
+                            href="#nav-events" role="tab" aria-controls="nav-events" aria-selected="false">Recent
+                            CloudWatch Events</a>
                     </div>
                 </nav>
             </div>
         </div>
         <div class="float-right border-bottom">
-            <button class="btn btn-outline-secondary btn-sm rounded h-auto" style="margin-top: 1px;" id="information-compartment-up-down-button" title="Raise/lower compartment">
+            <button class="btn btn-outline-secondary btn-sm rounded h-auto" style="margin-top: 1px;"
+                id="information-compartment-up-down-button" title="Raise/lower compartment">
                 <span class="material-icons">
                     swap_vert
                 </span>
@@ -255,23 +292,27 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div class="tab-pane  mt-3" id="nav-status" role="tabpanel" aria-labelledby="nav-status-tab">
             </div>
             <div class="tab-pane  mt-0 px-0" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
-                <form class="form-inline pl-4 my-2 py-2 my-lg-0" onsubmit="return false;">
-                    <input class="form-control mx-1" id="search_input_2" placeholder="Search Terms" onsubmit="return false;">
-                    <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button-2">
+                <span class="form-inline pl-4 my-2 py-2 my-lg-0">
+                    <input class="form-control mx-1" id="search_input_2" placeholder="Search Terms"
+                        title="Search Terms">
+                    <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now"
+                        id="search-now-button-2">
                         <i class="material-icons">search</i>
                     </a>
-                </form>
+                </span>
                 <div id="accordion" class="m-0 p-0">
                     <div class="card">
                         <div class="card-header py-0 my-0" id="headingOne">
                             <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#global-model-collapse" aria-expanded="false" aria-controls="global-model-collapse">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#global-model-collapse"
+                                    aria-expanded="false" aria-controls="global-model-collapse">
                                     Inventory (<span id="inventory-match-count">0</span> matches)
                                     <span id="global-model-search-text"></span>
                                 </button>
                             </h5>
                         </div>
-                        <div id="global-model-collapse" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div id="global-model-collapse" class="collapse" aria-labelledby="headingOne"
+                            data-parent="#accordion">
                             <small>
                                 <div id="global-model-search" class="card-body my-0 py-1">
                                 </div>
@@ -281,12 +322,15 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     <div class="card">
                         <div class="card-header py-0 my-0" id="headingTwo">
                             <h5 class="mb-0">
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#diagram-names-collapse" aria-expanded="false" aria-controls="diagram-names-collapse">
+                                <button class="btn btn-link collapsed" data-toggle="collapse"
+                                    data-target="#diagram-names-collapse" aria-expanded="false"
+                                    aria-controls="diagram-names-collapse">
                                     Diagram Names (<span id="diagram-names-match-count">0</span> matches)
                                 </button>
                             </h5>
                         </div>
-                        <div id="diagram-names-collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div id="diagram-names-collapse" class="collapse" aria-labelledby="headingTwo"
+                            data-parent="#accordion">
                             <small>
                                 <div id="diagram-names-match" class="card-body my-0 py-1">
                                 </div>
@@ -294,14 +338,17 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header py-0 my-0" id="headingTwo">
+                        <div class="card-header py-0 my-0" id="headingThree">
                             <h5 class="mb-0">
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#diagram-contents-collapse" aria-expanded="false" aria-controls="diagram-contents-collapse">
+                                <button class="btn btn-link collapsed" data-toggle="collapse"
+                                    data-target="#diagram-contents-collapse" aria-expanded="false"
+                                    aria-controls="diagram-contents-collapse">
                                     Diagram Contents (<span id="diagram-contents-match-count">0</span> matches)
                                 </button>
                             </h5>
                         </div>
-                        <div id="diagram-contents-collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div id="diagram-contents-collapse" class="collapse" aria-labelledby="headingThree"
+                            data-parent="#accordion">
                             <small>
                                 <div id="diagram-contents-match" class="card-body my-0 py-1">
                                 </div>
@@ -309,14 +356,17 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header py-0 my-0" id="headingTwo">
+                        <div class="card-header py-0 my-0" id="headingFour">
                             <h5 class="mb-0">
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#tile-names-collapse" aria-expanded="false" aria-controls="tile-names-collapse">
+                                <button class="btn btn-link collapsed" data-toggle="collapse"
+                                    data-target="#tile-names-collapse" aria-expanded="false"
+                                    aria-controls="tile-names-collapse">
                                     Tile Names (<span id="tile-names-match-count">0</span> matches)
                                 </button>
                             </h5>
                         </div>
-                        <div id="tile-names-collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div id="tile-names-collapse" class="collapse" aria-labelledby="headingFour"
+                            data-parent="#accordion">
                             <small>
                                 <div id="tile-names-match" class="card-body my-0 py-1">
                                 </div>
@@ -324,14 +374,17 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header py-0 my-0" id="headingTwo">
+                        <div class="card-header py-0 my-0" id="headingFive">
                             <h5 class="mb-0">
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#tile-contents-collapse" aria-expanded="false" aria-controls="tile-contents-collapse">
+                                <button class="btn btn-link collapsed" data-toggle="collapse"
+                                    data-target="#tile-contents-collapse" aria-expanded="false"
+                                    aria-controls="tile-contents-collapse">
                                     Tile Contents (<span id="tile-contents-match-count">0</span> matches)
                                 </button>
                             </h5>
                         </div>
-                        <div id="tile-contents-collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div id="tile-contents-collapse" class="collapse" aria-labelledby="headingFive"
+                            data-parent="#accordion">
                             <small>
                                 <div id="tile-contents-match" class="card-body my-0 py-1">
                                 </div>
@@ -341,19 +394,20 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
             </div>
             <div class="tab-pane  mt-3 px-3" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
-                <h6 class="card-subtitle mb-2 text-muted" id="nav-data-subtitle"></h6>
-                <p class="card-text small" id="nav-data-text"></p>
             </div>
-            <div class="tab-pane mt-3 px-3" id="nav-alarms" role="tabpanel" aria-labelledby="nav-alarms-tab" style="width: 100%;">
-                <h6 class="mb-2 text-muted" id="nav-alarms-selected-item"></h6>
+            <div class="tab-pane mt-3 px-3" id="nav-alarms" role="tabpanel" aria-labelledby="nav-alarms-tab"
+                style="width: 100%;">
+                <h6 class="mb-2 text-muted" id="nav-alarms-selected-item">Alarms: Nothing Selected</h6>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alarms-text"></p>
             </div>
-            <div class="tab-pane mt-3 px-3" id="nav-alerts" role="tabpanel" aria-labelledby="nav-alerts-tab" style="width: 100%;">
-                <h6 class="mb-2 text-muted" id="nav-alerts-selected-item"></h6>
+            <div class="tab-pane mt-3 px-3" id="nav-alerts" role="tabpanel" aria-labelledby="nav-alerts-tab"
+                style="width: 100%;">
+                <h6 class="mb-2 text-muted" id="nav-alerts-selected-item">Alerts: Nothing Selected</h6>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-alerts-text"></p>
             </div>
-            <div class="tab-pane mt-3 px-3" id="nav-events" role="tabpanel" aria-labelledby="nav-events-tab" style="width: 100%;">
-                <h6 class="mb-2 text-muted" id="nav-events-selected-item"></h6>
+            <div class="tab-pane mt-3 px-3" id="nav-events" role="tabpanel" aria-labelledby="nav-events-tab"
+                style="width: 100%;">
+                <h6 class="mb-2 text-muted" id="nav-events-selected-item">Events: Nothing Selected</h6>
                 <p class="small" style="max-width: 100%;" id="nav-monitor-events-text"></p>
             </div>
         </div>
@@ -362,7 +416,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <!-- Modals -->
 
     <!-- Region Selections -->
-    <div class="modal fade" id="region_selection_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="region_selection_modal_title" aria-hidden="true">
+    <div class="modal fade" id="region_selection_modal" tabindex="-1" role="dialog" data-backdrop="static"
+        data-keyboard="false" aria-labelledby="region_selection_modal_title" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -383,7 +438,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Endpoint Connections -->
-    <div class="modal fade" id="endpoint_connection_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="endpoint_connection_modal_title" aria-hidden="true">
+    <div class="modal fade" id="endpoint_connection_modal" tabindex="-1" role="dialog" data-backdrop="static"
+        data-keyboard="false" aria-labelledby="endpoint_connection_modal_title" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -409,16 +465,21 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" type="button" id="connectionHistoryMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">History</button>
-                            <div id="connectionHistoryDropdownMenu" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            </div>
-                        </div>
-                        <div class="btn-group-toggle" data-toggle="buttons">
-                            <label id="connectionRememberLabel" class="btn btn-outline-secondary active">
-                                <input id="connectionRemember" type="checkbox" checked autocomplete="off">
+                        <!-- <div class="btn-group-toggle" data-toggle="buttons"> -->
+                        <label id="connectionRememberLabel" class="active">
+                            <div
+                                class="d-inline-flex flex-row align-items-center p-2 mt-2 mb-0 border rounded bg-light">
+                                <input id="connectionRemember" type="checkbox" class="mx-2" checked autocomplete="off">
                                 <div id="connectionRememberText">Remember</div>
-                            </label>
+                            </div>
+                        </label>
+                        <!-- </div> -->
+                        <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="connectionHistoryMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">History</button>
+                            <div id="connectionHistoryDropdownMenu" class="dropdown-menu"
+                                aria-labelledby="dropdownMenuButton">
+                            </div>
                         </div>
                         <button type="button" id="save_endpoint_connection" class="btn btn-success">Connect</button>
                         <button type="button" id="cancel_endpoint_connection" class="btn btn-danger">Cancel</button>
@@ -429,7 +490,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Channel Definition -->
-    <div class="modal fade" id="channel_definition_modal" tabindex="-1" role="dialog" aria-labelledby="channel_definition_modal_title" aria-hidden="true">
+    <div class="modal fade" id="channel_definition_modal" tabindex="-1" role="dialog"
+        aria-labelledby="channel_definition_modal_title" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -453,8 +515,10 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save_channel_definition" class="btn btn-success" data-dismiss="modal">Save</button>
-                        <button type="button" id="cancel_channel_definition" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="save_channel_definition" class="btn btn-success"
+                            data-dismiss="modal">Save</button>
+                        <button type="button" id="cancel_channel_definition" class="btn btn-danger"
+                            data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -462,7 +526,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Channel Edit -->
-    <div class="modal fade" id="channel_edit_modal" tabindex="-1" role="dialog" aria-labelledby="channel_edit_modal_title" aria-hidden="true">
+    <div class="modal fade" id="channel_edit_modal" tabindex="-1" role="dialog"
+        aria-labelledby="channel_edit_modal_title" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -486,8 +551,10 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save_channel_edit" class="btn btn-success" data-dismiss="modal">Save</button>
-                        <button type="button" id="cancel_channel_edit" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="save_channel_edit" class="btn btn-success"
+                            data-dismiss="modal">Save</button>
+                        <button type="button" id="cancel_channel_edit" class="btn btn-danger"
+                            data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -495,7 +562,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Add Node to Channel -->
-    <div class="modal fade" id="channel_add_node_modal" tabindex="-1" role="dialog" aria-labelledby="channel_add_node_modal_title" aria-hidden="true">
+    <div class="modal fade" id="channel_add_node_modal" tabindex="-1" role="dialog"
+        aria-labelledby="channel_add_node_modal_title" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -516,8 +584,10 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save_channel_add_node" class="btn btn-success" data-dismiss="modal">Save</button>
-                        <button type="button" id="cancel_channel_add_node" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="save_channel_add_node" class="btn btn-success"
+                            data-dismiss="modal">Save</button>
+                        <button type="button" id="cancel_channel_add_node" class="btn btn-danger"
+                            data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -526,7 +596,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- Generic confirmation dialog -->
     <!-- Modal -->
-    <div class="modal fade" id="confirmation_dialog" tabindex="-1" role="dialog" aria-labelledby="confirmation_dialog_title" aria-hidden="true">
+    <div class="modal fade" id="confirmation_dialog" tabindex="-1" role="dialog"
+        aria-labelledby="confirmation_dialog_title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -540,14 +611,16 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" id="confirmation_dialog_proceed" class="btn btn-primary" data-dismiss="modal">Proceed</button>
+                    <button type="button" id="confirmation_dialog_proceed" class="btn btn-primary"
+                        data-dismiss="modal">Proceed</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Subscribe to Alarms -->
-    <div class="modal fade" id="subscribe_to_alarms_modal" tabindex="-1" role="dialog" aria-labelledby="subscribe_to_alarms_modal_title" aria-hidden="true">
+    <div class="modal fade" id="subscribe_to_alarms_modal" tabindex="-1" role="dialog"
+        aria-labelledby="subscribe_to_alarms_modal_title" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -559,17 +632,20 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     <div>
                         <div class="dropdown text-right mb-1">
                             Alarms from Region:&nbsp;
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Region
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="subscribe_to_alarms_region_dropdown">
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                id="subscribe_to_alarms_region_dropdown">
                             </div>
                         </div>
                         <div class="text-left mb-1" id="subscribe_to_alarms_progress">
                         </div>
                     </div>
                     <div class="mt-2" id="subscribe_to_alarms_modal_alarm_selection_header"><b>Select one or more
-                            alarms</b>&nbsp;(<span id="subscribe_to_alarms_modal_alarm_selection_count"></span>&nbsp;selected)</div>
+                            alarms</b>&nbsp;(<span
+                            id="subscribe_to_alarms_modal_alarm_selection_count"></span>&nbsp;selected)</div>
                     <div class="my-0 small" id="subscribe_to_alarms_modal_alarm_selection"></div>
                     <div class="mt-4" id="subscribe_to_alarms_modal_selected_items_header"><b>Subscribing selected
                             alarms above to these model items</b></div>
@@ -584,11 +660,13 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Tool Output Dialog -->
-    <div class="modal fade" id="tool_output_modal" tabindex="-1" role="dialog" aria-labelledby="tool_output_modal_title" aria-hidden="true">
+    <div class="modal fade" id="tool_output_modal" tabindex="-1" role="dialog" aria-labelledby="tool_output_modal_title"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="modal-title" id="tool_output_modal_title" style="width: 100%; text-align: center;">Tool Output
+                    <div class="modal-title" id="tool_output_modal_title" style="width: 100%; text-align: center;">Tool
+                        Output
                     </div>
                 </div>
                 <div class="modal-body">
@@ -600,7 +678,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="tool_output_model_close" class="btn btn-success" data-dismiss="modal">Close</button>
+                        <button type="button" id="tool_output_model_close" class="btn btn-success"
+                            data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -608,7 +687,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Advanced Settings -->
-    <div class="modal fade" id="advanced_settings_modal" tabindex="-1" role="dialog" aria-labelledby="advanced_settings_modal_title" aria-hidden="true">
+    <div class="modal fade" id="advanced_settings_modal" tabindex="-1" role="dialog"
+        aria-labelledby="advanced_settings_modal_title" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -621,7 +701,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <div class="input-group-prepend">
                             <span class="input-group-text">CloudWatch Alarm Update Interval</span>
                         </div>
-                        <input id="advanced-alarm-update-interval" type="text" class="form-control" style="text-align: right;" aria-label="Interval in Seconds">
+                        <input id="advanced-alarm-update-interval" type="text" class="form-control"
+                            style="text-align: right;" aria-label="Interval in Seconds">
                         <div class="input-group-append">
                             <span class="input-group-text">seconds</span>
                         </div>
@@ -630,7 +711,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <div class="input-group-prepend">
                             <span class="input-group-text">CloudWatch Event Update Interval</span>
                         </div>
-                        <input id="advanced-event-update-interval" type="text" class="form-control" style="text-align:right;" aria-label="Interval in Seconds">
+                        <input id="advanced-event-update-interval" type="text" class="form-control"
+                            style="text-align:right;" aria-label="Interval in Seconds">
                         <div class="input-group-append">
                             <span class="input-group-text">seconds</span>
                         </div>
@@ -639,19 +721,19 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <div class="input-group-prepend">
                             <span class="input-group-text">Refresh Tile Inventory Interval</span>
                         </div>
-                        <input id="advanced-tiles-refresh-interval" type="text" class="form-control" style="text-align:right;" aria-label="Interval in Seconds">
+                        <input id="advanced-tiles-refresh-interval" type="text" class="form-control"
+                            style="text-align:right;" aria-label="Interval in Seconds">
                         <div class="input-group-append">
                             <span class="input-group-text">seconds</span>
                         </div>
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 border rounded">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Never Cache Regions</span>
+                            <span class="input-group-text">Inventory Regions</span>
+                            <span id="inventory-regions-message"></span>
                         </div>
-                        <textarea rows="5" cols="40" id="advanced-never-cache-regions" class="form-control" aria-label="With textarea"></textarea>
-                        <div class="input-group-append">
-                            <span class="input-group-text">Delimit region names with spaces</span>
-                        </div>
+                        <div class="d-flex flex-wrap pt-2 w-100" id="advanced-inventory-global"></div>
+                        <div class="d-flex flex-wrap" id="advanced-inventory-regions"></div>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -670,10 +752,15 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             <span class="input-group-text">Bulk Delete</span>
                         </div>
                         <span class="d-flex border-top border-bottom flex-fill justify-content-around">
-                            <button type="button" id="bulk-delete-all-diagrams-button" class="btn btn-secondary my-2" title="Deletes all diagrams">Diagrams</button>
-                            <button type="button" id="bulk-delete-all-tiles-button" class="btn btn-secondary my-2" title="Deletes all tiles">Tiles</button>
-                            <button type="button" id="bulk-delete-all-alarm-subscriptions-button" class="btn btn-secondary my-2" title="Deletes all alarm subscriptions">Alarm Subscriptions</button>
-                            <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2" title="Deletes all diagrams, tiles and alarm subscriptions">All</button>
+                            <button type="button" id="bulk-delete-all-diagrams-button" class="btn btn-secondary my-2"
+                                title="Deletes all diagrams">Diagrams</button>
+                            <button type="button" id="bulk-delete-all-tiles-button" class="btn btn-secondary my-2"
+                                title="Deletes all tiles">Tiles</button>
+                            <button type="button" id="bulk-delete-all-alarm-subscriptions-button"
+                                class="btn btn-secondary my-2" title="Deletes all alarm subscriptions">Alarm
+                                Subscriptions</button>
+                            <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2"
+                                title="Deletes all diagrams, tiles and alarm subscriptions">All</button>
                         </span>
                         <div class="input-group-append">
                             <span class="input-group-text">Use With Caution</span>
@@ -690,7 +777,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- Create diagram dialog -->
     <!-- Modal -->
-    <div class="modal fade" id="create_diagram_dialog" tabindex="-1" role="dialog" aria-labelledby="create_diagram_dialog_title" aria-hidden="true">
+    <div class="modal fade" id="create_diagram_dialog" tabindex="-1" role="dialog"
+        aria-labelledby="create_diagram_dialog_title" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content p-2">
                 <div class="modal-header">
@@ -717,7 +805,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- Duplicate diagram dialog -->
     <!-- Modal -->
-    <div class="modal fade" id="dupe_diagram_dialog" tabindex="-1" role="dialog" aria-labelledby="dupe_diagram_dialog_title" aria-hidden="true">
+    <div class="modal fade" id="dupe_diagram_dialog" tabindex="-1" role="dialog"
+        aria-labelledby="dupe_diagram_dialog_title" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content p-2">
                 <div class="modal-header">
@@ -744,7 +833,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- Quick new tile name -->
     <!-- Modal -->
-    <div class="modal fade" id="quick_new_tile_dialog" tabindex="-1" role="dialog" aria-labelledby="quick_new_tile_dialog_title" aria-hidden="true">
+    <div class="modal fade" id="quick_new_tile_dialog" tabindex="-1" role="dialog"
+        aria-labelledby="quick_new_tile_dialog_title" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content p-2">
                 <div class="modal-header">
@@ -770,7 +860,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
     </div>
 
     <!-- Diagram Contents -->
-    <div class="modal fade" id="diagram_contents_modal" tabindex="-1" role="dialog" aria-labelledby="diagram_contents_title" aria-hidden="true">
+    <div class="modal fade" id="diagram_contents_modal" tabindex="-1" role="dialog"
+        aria-labelledby="diagram_contents_title" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-xlg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -794,16 +885,28 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                                 </td>
                                 <td class="align-middle" style="text-align: center;">
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="add-selected-to-diagram" data-toggle="tooltip" data-placement="top" title="Add Selected"><i class="fas fa-angle-right fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button"
+                                            class="btn btn-outline-secondary my-2" id="add-selected-to-diagram"
+                                            data-toggle="tooltip" data-placement="top" title="Add Selected"><i
+                                                class="fas fa-angle-right fa-2x"></i></button>
                                     </div>
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="remove-selected-from-diagram" data-toggle="tooltip" data-placement="top" title="Remove Selected"><i class="fas fa-angle-left fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button"
+                                            class="btn btn-outline-secondary my-2" id="remove-selected-from-diagram"
+                                            data-toggle="tooltip" data-placement="top" title="Remove Selected"><i
+                                                class="fas fa-angle-left fa-2x"></i></button>
                                     </div>
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="add-all-to-diagram" data-toggle="tooltip" data-placement="top" title="Add All"><i class="fas fa-angle-double-right fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button"
+                                            class="btn btn-outline-secondary my-2" id="add-all-to-diagram"
+                                            data-toggle="tooltip" data-placement="top" title="Add All"><i
+                                                class="fas fa-angle-double-right fa-2x"></i></button>
                                     </div>
                                     <div>
-                                        <button style="cursor: pointer;" type="button" class="btn btn-outline-secondary my-2" id="remove-all-from-diagram" data-toggle="tooltip" data-placement="top" title="Remove All"><i class="fas fa-angle-double-left fa-2x"></i></button>
+                                        <button style="cursor: pointer;" type="button"
+                                            class="btn btn-outline-secondary my-2" id="remove-all-from-diagram"
+                                            data-toggle="tooltip" data-placement="top" title="Remove All"><i
+                                                class="fas fa-angle-double-left fa-2x"></i></button>
                                     </div>
                                 </td>
                                 <td style="width: 47%;">
@@ -814,7 +917,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </table>
                     <div class="modal-footer">
                         <button type="button" id="diagram_contents_save" class="btn btn-success">Save</button>
-                        <button type="button" id="diagram_contents_cancel" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="diagram_contents_cancel" class="btn btn-danger"
+                            data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -823,7 +927,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- View tile diagram dialog -->
     <!-- Modal -->
-    <div class="modal fade" id="view_tile_diagram_dialog" tabindex="-1" role="dialog" aria-labelledby="view_tile_diagram_dialog_title" aria-hidden="true">
+    <div class="modal fade" id="view_tile_diagram_dialog" tabindex="-1" role="dialog"
+        aria-labelledby="view_tile_diagram_dialog_title" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content p-2">
                 <div class="modal-header">
@@ -846,7 +951,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="view_tile_diagram_show" class="btn btn-primary">Show</button>
-                    <button type="button" id="view_tile_diagram_generate_diagram_button" class="btn btn-success" data-dismiss="modal">Generate New Diagram</button>
+                    <button type="button" id="view_tile_diagram_generate_diagram_button" class="btn btn-success"
+                        data-dismiss="modal">Generate New Diagram</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -855,7 +961,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- Edit connection dialog -->
     <!-- Modal -->
-    <div class="modal fade" id="edit_connection_dialog" tabindex="-1" role="dialog" aria-labelledby="edit_connection_dialog_title" aria-hidden="true">
+    <div class="modal fade" id="edit_connection_dialog" tabindex="-1" role="dialog"
+        aria-labelledby="edit_connection_dialog_title" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content p-2">
                 <div class="modal-header">
@@ -889,7 +996,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
     <!-- CloudWatch Event Data View dialog -->
     <!-- Modal -->
-    <div class="modal fade" id="cloudwatch_event_data_view_modal" tabindex="-1" role="dialog" aria-labelledby="cloudwatch_event_data_view_title" aria-hidden="true">
+    <div class="modal fade" id="cloudwatch_event_data_view_modal" tabindex="-1" role="dialog"
+        aria-labelledby="cloudwatch_event_data_view_title" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-xlg h-75 mh-75" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -902,7 +1010,8 @@ Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     <div class="mw-25 mh-25 overflow-auto border border-info" id="cloudwatch_event_data_json">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="cloudwatch_event_data_view_close" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="button" id="cloudwatch_event_data_view_close" class="btn btn-info"
+                            data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

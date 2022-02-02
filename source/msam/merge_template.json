@@ -1,14 +1,36 @@
 {
     "Description": "Media Services Application Mapper REST API and Tasks %%VERSION%%",
+    "Mappings": {
+        "Send": {
+            "AnonymousUsage": {
+                "Data": "Yes"
+            }
+        }
+    },
+    "Conditions": {
+        "ReportAnonymousMetrics": {
+            "Fn::Equals": [
+                {
+                    "Fn::FindInMap": [
+                        "Send",
+                        "AnonymousUsage",
+                        "Data"
+                    ]
+                },
+                "Yes"
+            ]
+        }
+    },
     "Resources": {
-        "IncomingCloudwatchAlarm": {
+        "GenerateMetrics": {
+            "Type": "AWS::Serverless::Function",
             "Properties": {
-                "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
                 "CodeUri": {
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -22,7 +44,151 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
+                        "CACHE_ITEM_TTL": {
+                            "Ref": "CacheItemTTL"
+                        },
+                        "CHANNELS_TABLE_NAME": {
+                            "Ref": "ChannelsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
+                        },
+                        "EVENTS_TABLE_NAME": {
+                            "Ref": "EventsTableName"
+                        },
+                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
+                            "Ref": "CloudWatchEventsTableName"
+                        },
+                        "LAYOUT_TABLE_NAME": {
+                            "Ref": "LayoutTableName"
+                        },
+                        "SETTINGS_TABLE_NAME": {
+                            "Ref": "SettingsTableName"
+                        },
+                        "STACKNAME": {
+                            "Ref": "RootStackName"
+                        }
+                    }
+                },
+                "Role": {
+                    "Ref": "CoreIAMRoleARN"
+                },
+                "Description": "MSAM Lambda for periodically emitting metrics to multiple targets"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
+                }
+            }
+        },
+        "ReportMetrics": {
+            "Condition": "ReportAnonymousMetrics",
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "CodeUri": {
+                    "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+                    "Bucket": {
+                        "Fn::Join": [
+                            "-",
+                            [
+                                "%%BUCKET_NAME%%",
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "Environment": {
+                    "Variables": {
+                        "ALARMS_TABLE_NAME": {
+                            "Ref": "AlarmsTableName"
+                        },
+                        "CACHE_ITEM_TTL": {
+                            "Ref": "CacheItemTTL"
+                        },
+                        "CHANNELS_TABLE_NAME": {
+                            "Ref": "ChannelsTableName"
+                        },
+                        "CONTENT_TABLE_NAME": {
+                            "Ref": "ContentTableName"
+                        },
+                        "EVENTS_TABLE_NAME": {
+                            "Ref": "EventsTableName"
+                        },
+                        "CLOUDWATCH_EVENTS_TABLE_NAME": {
+                            "Ref": "CloudWatchEventsTableName"
+                        },
+                        "LAYOUT_TABLE_NAME": {
+                            "Ref": "LayoutTableName"
+                        },
+                        "SETTINGS_TABLE_NAME": {
+                            "Ref": "SettingsTableName"
+                        },
+                        "STACKNAME": {
+                            "Ref": "RootStackName"
+                        }
+                    }
+                },
+                "Role": {
+                    "Ref": "CoreIAMRoleARN"
+                },
+                "Description": "MSAM Lambda for periodically emitting metrics to multiple targets"
+            },
+            "Metadata": {
+                "cfn_nag": {
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
+                }
+            }
+        },
+        "IncomingCloudwatchAlarm": {
+            "Properties": {
+                "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
+                "CodeUri": {
+                    "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+                    "Bucket": {
+                        "Fn::Join": [
+                            "-",
+                            [
+                                "%%BUCKET_NAME%%",
+                                {
+                                    "Ref": "AWS::Region"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "Environment": {
+                    "Variables": {
+                        "ALARMS_TABLE_NAME": {
+                            "Ref": "AlarmsTableName"
+                        },
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -52,10 +218,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        }
+                    ]
                 }
             }
         },
@@ -66,7 +242,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -80,7 +257,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -111,10 +287,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
                 }
             }
         },
@@ -125,7 +311,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -139,7 +326,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -170,10 +356,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
                 }
             }
         },
@@ -184,7 +380,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -198,7 +395,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -229,10 +425,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
                 }
             }
         },
@@ -243,7 +449,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -257,7 +464,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -288,10 +494,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        }
+                    ]
                 }
             }
         },
@@ -302,7 +518,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -316,7 +533,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -347,10 +563,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
                 }
             }
         },
@@ -361,7 +587,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -375,7 +602,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -406,10 +632,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
                 }
             }
         },
@@ -420,7 +656,8 @@
                     "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
                     "Bucket": {
                         "Fn::Join": [
-                            "-", [
+                            "-",
+                            [
                                 "%%BUCKET_NAME%%",
                                 {
                                     "Ref": "AWS::Region"
@@ -434,7 +671,6 @@
                         "ALARMS_TABLE_NAME": {
                             "Ref": "AlarmsTableName"
                         },
-                        "BUILD_STAMP": "DEV_0_0_0",
                         "CACHE_ITEM_TTL": {
                             "Ref": "CacheItemTTL"
                         },
@@ -465,10 +701,20 @@
             },
             "Metadata": {
                 "cfn_nag": {
-                    "rules_to_suppress": [{
-                        "id": "W58",
-                        "reason": "Role with CloudWatch Logs permissions defined in different template."
-                    }]
+                    "rules_to_suppress": [
+                        {
+                            "id": "W58",
+                            "reason": "Role with CloudWatch Logs permissions defined in different template."
+                        },
+                        {
+                            "id": "W92",
+                            "reason": "Lambda does not need ReservedConcurrentExecutions."
+                        },
+                        {
+                            "id": "W89",
+                            "reason": "Lambda does not need to be in a VPC."
+                        }
+                    ]
                 }
             }
         },
@@ -480,19 +726,23 @@
                     "description": "How many Elemental Live events have completed?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [{
-                                "id": "0.aws:runShellScript",
-                                "runCommand": [
-                                    "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=complete"
-                                ]
-                            }]
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=complete"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 },
-                "Tags": [{
-                    "Key": "MSAM-NodeType",
-                    "Value": "ElementalLive"
-                }]
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
             }
         },
         "MSAMElementalLiveErroredEvents": {
@@ -503,19 +753,23 @@
                     "description": "How many Elemental Live events have errored?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [{
-                                "id": "0.aws:runShellScript",
-                                "runCommand": [
-                                    "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=error"
-                                ]
-                            }]
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=error"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 },
-                "Tags": [{
-                    "Key": "MSAM-NodeType",
-                    "Value": "ElementalLive"
-                }]
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
             }
         },
         "MSAMElementalLiveRunningEvents": {
@@ -526,19 +780,23 @@
                     "description": "How many Elemental Live events are running?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [{
-                                "id": "0.aws:runShellScript",
-                                "runCommand": [
-                                    "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=running"
-                                ]
-                            }]
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl -H \"Accept: application/xml\" http://localhost/api/live_events?filter=running"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 },
-                "Tags": [{
-                    "Key": "MSAM-NodeType",
-                    "Value": "ElementalLive"
-                }]
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
             }
         },
         "MSAMElementalLiveStatus": {
@@ -549,19 +807,23 @@
                     "description": "Is the Elemental Live process running?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [{
-                                "id": "0.aws:runShellScript",
-                                "runCommand": [
-                                    "sudo /etc/init.d/elemental_se status || sudo systemctl status elemental_se"
-                                ]
-                            }]
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "sudo /etc/init.d/elemental_se status || sudo systemctl status elemental_se"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 },
-                "Tags": [{
-                    "Key": "MSAM-NodeType",
-                    "Value": "ElementalLive"
-                }]
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
             }
         },
         "MSAMElementalLiveActiveAlerts": {
@@ -572,19 +834,23 @@
                     "description": "How many alerts are currently active on the encoder?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [{
-                                "id": "0.aws:runShellScript",
-                                "runCommand": [
-                                    "curl http://localhost/api/alerts.xml?filter=Active"
-                                ]
-                            }]
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "curl http://localhost/api/alerts.xml?filter=Active"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 },
-                "Tags": [{
-                    "Key": "MSAM-NodeType",
-                    "Value": "ElementalLive"
-                }]
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
             }
         },
         "MSAMSsmSystemStatus": {
@@ -595,19 +861,23 @@
                     "description": "Is this instance reachable?",
                     "runtimeConfig": {
                         "aws:runShellScript": {
-                            "properties": [{
-                                "id": "0.aws:runShellScript",
-                                "runCommand": [
-                                    "date"
-                                ]
-                            }]
+                            "properties": [
+                                {
+                                    "id": "0.aws:runShellScript",
+                                    "runCommand": [
+                                        "date"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 },
-                "Tags": [{
-                    "Key": "MSAM-NodeType",
-                    "Value": "ElementalLive"
-                }]
+                "Tags": [
+                    {
+                        "Key": "MSAM-NodeType",
+                        "Value": "ElementalLive"
+                    }
+                ]
             }
         },
         "UsagePlanKeyAssociation": {
@@ -625,12 +895,14 @@
         "UsagePlan": {
             "Type": "AWS::ApiGateway::UsagePlan",
             "Properties": {
-                "ApiStages": [{
-                    "ApiId": {
-                        "Ref": "RestAPI"
-                    },
-                    "Stage": "msam"
-                }],
+                "ApiStages": [
+                    {
+                        "ApiId": {
+                            "Ref": "RestAPI"
+                        },
+                        "Stage": "msam"
+                    }
+                ],
                 "Description": "MSAM default usage plan",
                 "UsagePlanName": "MSAM Usage Plan"
             },
@@ -708,6 +980,13 @@
             "AllowedPattern": "\\S+",
             "MinLength": 1,
             "ConstraintDescription": "Please enter a value for this field."
+        },
+        "RootStackName": {
+            "Description": "This is the root stack name used as a namespace for CloudWatch metrics.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
         }
     },
     "Outputs": {
@@ -724,7 +1003,9 @@
         "APIKeyID": {
             "Value": {
                 "Fn::Join": [
-                    "", [{
+                    "",
+                    [
+                        {
                             "Fn::Sub": "https://${AWS::Region}.console.aws.amazon.com/apigateway/home?region=${AWS::Region}#/api-keys/"
                         },
                         {

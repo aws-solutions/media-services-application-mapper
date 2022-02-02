@@ -14,8 +14,9 @@ from botocore.exceptions import ClientError
 from botocore.config import Config
 
 # user-agent config
-STAMP = os.environ["BUILD_STAMP"]
-MSAM_BOTO3_CONFIG = Config(user_agent="aws-media-services-applications-mapper/{stamp}/cloudwatch_alarm.py".format(stamp=STAMP))
+SOLUTION_ID = os.environ['SOLUTION_ID']
+USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
+MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
 ALARMS_TABLE_NAME = os.environ["ALARMS_TABLE_NAME"]
 TABLE_REGION = os.environ["EVENTS_TABLE_REGION"]
@@ -35,7 +36,7 @@ def lambda_handler(event, _):
         cloudwatch_resource = boto3.resource('cloudwatch', region_name=region)
         alarm = cloudwatch_resource.Alarm(alarm_name)
 
-        region_alarm_name = "{}:{}".format(region, alarm_name)
+        region_alarm_name = f"{region}:{alarm_name}"
         state = alarm.state_value
         # namespace = alarm.namespace
         state_updated = int(alarm.state_updated_timestamp.timestamp())
@@ -49,10 +50,10 @@ def lambda_handler(event, _):
                 Key={'RegionAlarmName': region_alarm_name, 'ResourceArn': resource_arn},
                 ExpressionAttributeValues={':state': state, ':updated': updated_timestamp, ':stateupdated': state_updated}
             )
-            print("{} updated via CloudWatch alarm change state event".format(resource_arn))
+            print(f"{resource_arn} updated via CloudWatch alarm change state event")
     except ClientError as error:
         if error.response['Error']['Code']=='ConditionalCheckFailedException':
-            print("No update made. Alarm key {} does not exist in database.".format(region_alarm_name))
+            print(f"No update made. Alarm key {region_alarm_name} does not exist in database.")
         print(error)
     return True
 

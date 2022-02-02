@@ -1,9 +1,7 @@
 networkx
-boto3
-botocore
-chalice
 jsonpath_ng
 fuzzywuzzy
 stringcase
 requests
 defusedxml
+crhelper
