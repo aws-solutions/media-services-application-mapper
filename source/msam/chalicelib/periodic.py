@@ -7,6 +7,7 @@ This file contains helper functions for updating the cache.
 import os
 import json
 import re
+import time
 from datetime import datetime, timedelta
 
 import boto3
@@ -403,7 +404,7 @@ def report_metrics(stackname, hours):
             "Solution": solution_id,
             "Version": VERSION,
             "UUID": uuid,
-            "TimeStamp": str(datetime.now()),
+            "TimeStamp": str(datetime.fromtimestamp(int(time.time()))),
             "Data": {}
         }
         # get the max count for each resource type and add to payload
