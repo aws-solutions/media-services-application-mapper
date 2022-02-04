@@ -43,7 +43,7 @@ jobs:
           echo WORKFLOW_NAME=$WORKFLOW_NAME >> $GITHUB_ENV
       - name: Determine pipeline type
         run: |
-          if [ $GITHUB_REF_NAME == $RELEASE_BRANCH ]; then
+          if [ $BRANCH == $RELEASE_BRANCH ]; then
             export PIPELINE_TYPE="release"
           else
             export PIPELINE_TYPE="feature"
