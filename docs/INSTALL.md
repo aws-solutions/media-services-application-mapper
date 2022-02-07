@@ -14,19 +14,21 @@ MSAM is installed into an AWS account using CloudFormation templates.
 * Login to CloudFormation using the same account used for creating and managing the Media Services
 * Click on Create Stack
 
-During the installation of the CloudFormation stacks you may be prompted to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Change Set" button where applicable, then press the Execute button.
+### IAM Resources
+
+Before launching the creation of any template discussed below, the CloudFormation console may prompt you to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Stack" button to start the installation process.
  
 ![Image of IAM Ackowlegement](images/ack-iam-resources.png)
 
-When you are installing a CloudFormation template listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URL below exactly as provided for any MSAM-supported region. Do not change the region name in the URL path or bucket name.
+When you are installing a CloudFormation template listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URL below exactly as provided for any MSAM-supported region. 
 
 ### Root Template: Install All MSAM Resources
 
 The CloudFormation templates distributed for MSAM include a root template that installs the complete solution into a single region. The root template nests and deploys the existing five templates automatically.
 
-If you need to upgrade your installation from the individual templates to the root template, see this note below about migrating your DynamoDB tables.
-
 `https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template`
+
+If you need to upgrade your installation from the individual templates to the root template, see this note below about the [migration tool](#dynamodb-table-migration-tool).
 
 #### Input Parameters
 
@@ -221,7 +223,7 @@ There are seven DynamoDB tables used by MSAM. They are:
 * [StackName]-Layout-[ID]
 * [StackName]-Settings-[ID]
 
-<br/>
+
 The following configuration is applied by the DynamoDB CloudFormation template.
 
 ### Capacity 
@@ -231,7 +233,9 @@ Each table is configured for on-demand read and write capacity. This allows MSAM
 Each table and all indexes are configured for encryption at rest using Key Management Service (KMS) and the AWS-managed Customer Master Key (CMK) for DynamoDB in your account.
 
 ### Point-in-time Recovery
-Each table is configured for point-in-time recovery. The recovery window is up to five calendar weeks. This window size is set by Amazon Web Services.
+Each table is configured for point-in-time recovery. The recovery window is up to five calendar weeks. This window size is set by Amazon Web Services. You can use this type of recovery to restore one or more copies of an MSAM table to a known place in time, and then use the [migration tool](#dynamodb-table-migration-tool) described below to copy data back into the live tables after reviewing the restored results.
+
+Read more about [Point-in-Time Recovery](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PointInTimeRecovery.html).
 
 ## Finding Installation Content
 
@@ -290,6 +294,7 @@ The Migration Tool is a Python program designed to copy data from one DynamoDB t
 
 * Setting up a duplicate system for production and test, with the same diagrams, alarms, and layout for both
 * Moving from an old to new installation of MSAM that cannot be upgraded with the templates
+* Using the [Point-in-Time Recovery](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PointInTimeRecovery.html) feature of DynamoDB to restore one or more MSAM tables to a previously known state.
 
 ### Requirements
 
@@ -320,6 +325,8 @@ optional arguments:
                         profile is used)
 ```
 
+### Warning
+This tool copies all records from one table to another without consideration for overwrite or data loss. It will overwrite existing keys in the target table if the same keys exist in the source table.
 
 ### Example: Duplicating Tables Between Two Stacks
 
@@ -414,9 +421,18 @@ Anonymous operational metrics are enabled by default when installing with the su
 
 There are two recommended ways to disable anonymous operational metrics.
 
+#### Disable the EventBridge Rule
+
+This is the least complicated way to disable anonymous metrics after you have installed the stacks. You can disable and enable metrics using this method without updating or changing the installation process.
+* Navigate to the EventBridge console
+* Find the EventBridge rule starting with the stack name and `ReportMetrics` in the name
+
+By default the rule will be set to run every 24 hours. You can select the rule and click the disable button at the top right of the page.
+
 #### Update the Mappings in the Core Template
 
-Change the Mapping shown below so the value of the `Data` key is `No` and install the template or update an existing stack. This will remove the associated Lambda and EventBridge Rule that periodically sends the metrics.
+* Change the Mapping shown below so the value of the `Data` key is `No`
+* Upload and install the template or update an existing stack
 
 ```
 "Mappings": {
@@ -428,10 +444,7 @@ Change the Mapping shown below so the value of the `Data` key is `No` and instal
 }
 ```
 
-#### Disable the EventBridge Rule
-
-Navigate to the EventBridge console.
-Find the EventBridge rule starting with the stack name and `ReportMetrics` in the name. By default the rule will be set to run every 24 hours. You can select the rule and click the disable button at the top right of the page.
+This will remove the associated Lambda and EventBridge Rule that periodically sends the metrics.
 
 
 ## Navigate
