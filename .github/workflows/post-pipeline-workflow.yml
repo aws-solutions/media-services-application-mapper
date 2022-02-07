@@ -1,14 +1,43 @@
 name: Post Pipeline Workflow
 on: 
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      pipeline_status:
+        description: "Status of the AWS pipeline"
+        required: true
+        default: Unknown
+        type: choice
+        options:
+          - Succeeded
+          - Failed
+          - Unknown
+      pipeline_message:
+        description: "Pipeline status details"
+        default: "No detailed message"
+        required: true
 env:
   VERSION: ${{ secrets.VERSION }}
   REGION: us-east-1
   SHORT_NAME: MSAM
+
 jobs:
+  process-notification:
+    name: Process Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get pipeline status
+        run: |
+          echo "Received pipeline_status: ${{ inputs.pipeline_status }}" 
+          echo "Received pipeline_message: ${{ inputs.pipeline_message}}"
+          if [ "${{ inputs.pipeline_status }}" = "Failed" ]; then
+            exit 1
+          fi
+
   create-update-tag-release:
     name: Create or update tag and release draft
     runs-on: ubuntu-latest
+    # only run if it succeeded and it was the release pipeline
+    if: ${{inputs.pipeline_status == 'Succeeded'}}
     steps:
       - name: Check Tags
         uses: actions/github-script@v5
@@ -97,6 +126,8 @@ jobs:
       actions: read
       id-token: write
       contents: read
+    # only run if it succeeded and it was the release pipeline
+    if: ${{inputs.pipeline_status == 'Succeeded'}}
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
