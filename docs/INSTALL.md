@@ -16,11 +16,11 @@ MSAM is installed into an AWS account using CloudFormation templates.
 
 ### IAM Resources
 
-At the beginning of the installation of the CloudFormation stacks you are prompted to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Change Set" button where applicable, then press the Execute button.
+Before launching the creation of any template discussed below, the CloudFormation console may prompt you to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Stack" button to start the installation process.
  
 ![Image of IAM Ackowlegement](images/ack-iam-resources.png)
 
-When you are installing a CloudFormation template listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URL below exactly as provided for any MSAM-supported region. Do not change the region name in the URL path or bucket name.
+When you are installing a CloudFormation template listed below, from Choose a Template select "Specify an Amazon S3 template URL" and paste in the URL below exactly as provided for any MSAM-supported region. 
 
 ### Root Template: Install All MSAM Resources
 
