@@ -14,7 +14,9 @@ MSAM is installed into an AWS account using CloudFormation templates.
 * Login to CloudFormation using the same account used for creating and managing the Media Services
 * Click on Create Stack
 
-During the installation of the CloudFormation stacks you may be prompted to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Change Set" button where applicable, then press the Execute button.
+### IAM Resources
+
+At the beginning of the installation of the CloudFormation stacks you are prompted to acknowledge creation of IAM resources, as seen in the sample screenshot below. Click the check-box next to each entry. Finally, click the "Create Change Set" button where applicable, then press the Execute button.
  
 ![Image of IAM Ackowlegement](images/ack-iam-resources.png)
 
