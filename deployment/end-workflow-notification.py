@@ -23,6 +23,8 @@ PAYLOAD['commit_id'] = os.environ.get('COMMIT_ID')
 PAYLOAD['workflow_run_id'] = os.environ.get('WORKFLOW_RUN_ID')
 PAYLOAD['version'] = os.environ.get('VERSION')
 PAYLOAD['pipeline_type'] = os.environ.get('PIPELINE_TYPE')
+PAYLOAD['notify_github_workflow_id'] = "post-pipeline-workflow.yml"
+
 def main():
     parsed = urlparse(NOTIFICATION_ENDPOINT)
     auth = BotoAWSRequestsAuth(aws_host=parsed.netloc,
