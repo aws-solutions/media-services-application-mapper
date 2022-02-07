@@ -26,9 +26,9 @@ When you are installing a CloudFormation template listed below, from Choose a Te
 
 The CloudFormation templates distributed for MSAM include a root template that installs the complete solution into a single region. The root template nests and deploys the existing five templates automatically.
 
-If you need to upgrade your installation from the individual templates to the root template, see this note below about migrating your DynamoDB tables.
-
 `https://solutions-reference.s3.amazonaws.com/aws-media-services-application-mapper/latest/aws-media-services-application-mapper-release.template`
+
+If you need to upgrade your installation from the individual templates to the root template, see this note below about the [migration tool](#dynamodb-table-migration-tool).
 
 #### Input Parameters
 
