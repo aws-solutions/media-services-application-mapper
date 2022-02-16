@@ -66,7 +66,7 @@ Decide on the nodes, type of data they contain, and how they will connect to oth
 
 ```
 [{
-    "arn": "arn:msam:user-defined-node:global:364349932524:207C7C03-61CE-4075-BAF6-B808C9F80C0D",
+    "arn": "arn:msam:user-defined-node:global:111122223333:207C7C03-61CE-4075-BAF6-B808C9F80C0D",
     "color": "#1E8900",
     "data": "{ \"NodeType\": \"Elemental Live Encoder\", \"Id\": \"contribution-stream-A\" }",
     "expires": 1741734757,
@@ -75,7 +75,7 @@ Decide on the nodes, type of data they contain, and how they will connect to oth
     "updated": 1741734757
 },
 {
-    "arn": "arn:msam:user-defined-node:global:364349932524:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9",
+    "arn": "arn:msam:user-defined-node:global:111122223333:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9",
     "color": "#1E8900",
     "data": "{ \"NodeType\": \"Elemental Live Encoder\", \"Id\": \"contribution-stream-B\" }",
     "expires": 1741734757,
@@ -92,23 +92,23 @@ The above JSON fragment shows two user-defined nodes representing on-premise vid
 
 ```
 [{
-    "arn": "arn:msam:user-defined-node:global:364349932524:56F67EE2-186F-446A-ACFF-1B56900B2F68:arn:msam:user-defined-node:global:364349932524:207C7C03-61CE-4075-BAF6-B808C9F80C0D",
+    "arn": "arn:msam:user-defined-node:global:111122223333:56F67EE2-186F-446A-ACFF-1B56900B2F68:arn:msam:user-defined-node:global:111122223333:207C7C03-61CE-4075-BAF6-B808C9F80C0D",
     "expires": 1741734757,
-    "from": "arn:msam:user-defined-node:global:364349932524:56F67EE2-186F-446A-ACFF-1B56900B2F68",
+    "from": "arn:msam:user-defined-node:global:111122223333:56F67EE2-186F-446A-ACFF-1B56900B2F68",
     "label": "HQ Stream A",
     "region": "global",
     "service": "user-defined-connection",
-    "to": "arn:msam:user-defined-node:global:364349932524:207C7C03-61CE-4075-BAF6-B808C9F80C0D",
+    "to": "arn:msam:user-defined-node:global:111122223333:207C7C03-61CE-4075-BAF6-B808C9F80C0D",
     "updated": 1741734757
 },
 {
-    "arn": "arn:msam:user-defined-node:global:364349932524:56F67EE2-186F-446A-ACFF-1B56900B2F68:arn:msam:user-defined-node:global:364349932524:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9",
+    "arn": "arn:msam:user-defined-node:global:111122223333:56F67EE2-186F-446A-ACFF-1B56900B2F68:arn:msam:user-defined-node:global:111122223333:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9",
     "expires": 1741734757,
-    "from": "arn:msam:user-defined-node:global:364349932524:56F67EE2-186F-446A-ACFF-1B56900B2F68",
+    "from": "arn:msam:user-defined-node:global:111122223333:56F67EE2-186F-446A-ACFF-1B56900B2F68",
     "label": "HQ Stream B",
     "region": "global",
     "service": "user-defined-connection",
-    "to": "arn:msam:user-defined-node:global:364349932524:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9",
+    "to": "arn:msam:user-defined-node:global:111122223333:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9",
     "updated": 1741734757
 }]
 ```
