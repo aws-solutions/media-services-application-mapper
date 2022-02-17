@@ -9,13 +9,6 @@
 # Paramenters:
 #  - solution-name: name of the solution for consistency
 
-# Check to see if input has been provided:
-if [ -z "$1" ]; then
-    echo "Please provide the trademark approved solution name for the open source package."
-    echo "For example: ./build-open-source-dist.sh trademarked-solution-name"
-    exit 1
-fi
-
 # Check to see if the required parameters have been provided:
 if [ -z "$1" ]; then
     echo "Please provide the trademark approved solution name for the open source package."
