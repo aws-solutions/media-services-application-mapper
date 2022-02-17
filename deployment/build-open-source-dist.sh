@@ -35,5 +35,6 @@ echo "[Init] Cleaning old open-source folder"
 echo "------------------------------------------------------------------------------"
 rm -rf $dist_dir
 mkdir -p $dist_dir
+touch $dist_dir/placeholder.empty
 
 exit 0
