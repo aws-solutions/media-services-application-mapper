@@ -11,4 +11,4 @@ from chalicelib.test_channels import TestChannels
 from chalicelib.test_cloudwatch import TestCloudWatch
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=3)
