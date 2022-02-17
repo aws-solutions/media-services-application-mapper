@@ -123,10 +123,10 @@ jobs:
         run: |
           cd deployment
           ./build-s3-dist.sh $DIST_OUTPUT_BUCKET ${{ github.event.repository.name }} $VERSION
-      # - name: Run unit tests
-      #   run: |
-      #     cd deployment
-      #     ./run-unit-tests.sh
+      - name: Run unit tests
+        run: |
+          cd deployment
+          ./run-unit-tests.sh
   
   pa11y-check-job:
     runs-on: ubuntu-latest
