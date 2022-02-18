@@ -20,7 +20,7 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
             var node = model.nodes.get(id);
             if (node) {
                 if (node.data.Data["AWS:InstanceInformation"].Content[0].ComputerName) {
-                    computer_name = node.data.Data["AWS:InstanceInformation"].Content[0].ComputerName;
+                    let computer_name = node.data.Data["AWS:InstanceInformation"].Content[0].ComputerName;
                     tools.set_info_text(computer_name, drawing, font_size, width, "Name");
                 }
             }

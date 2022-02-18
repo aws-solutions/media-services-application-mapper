@@ -358,7 +358,7 @@ def get_cloudwatch_events_state_source(state, source):
     """
     API entry point to retrieve all alert events in a given state (set, clear) from a specific source.
     """
-    return get_cloudwatch_events_state_source(state, source)
+    return cloudwatch_data.get_cloudwatch_events_state_source(state, source)
 
 
 @app.route('/cloudwatch/events/state/{state}/groups',

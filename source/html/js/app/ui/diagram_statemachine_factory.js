@@ -148,9 +148,7 @@ define(["jquery", "lodash", "app/ui/util", "app/ui/vis_options", "app/model", "a
                                     }
                                 });
                                 my_diagram.drag_container.on("mousedown", function(e) {
-                                    // console.log("mousedown");
                                     if (e.button == 2) {
-                                        selectedNodes = e.ctrlKey ? my_diagram.network.getSelectedNodes() : null;
                                         my_diagram.save_drawing_surface();
                                         my_diagram.drag_rect.startX = e.pageX - this.offsetLeft;
                                         my_diagram.drag_rect.startY = e.pageY - this.offsetTop;

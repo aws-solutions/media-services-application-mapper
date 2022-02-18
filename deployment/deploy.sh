@@ -64,7 +64,7 @@ echo Deploy Type = $DEPLOY_TYPE
 # Get account id
 account_id=$(aws sts get-caller-identity --query Account --output text)
 if [ $? -ne 0 ]; then
-  msg "ERROR: Failed to get AWS account ID"
+  echo "ERROR: Failed to get AWS account ID"
   exit 1
 fi
 
@@ -72,7 +72,7 @@ for R in $REGIONS; do
   # Validate ownership of $BUCKET-$R
   aws s3api head-bucket --bucket $BUCKET-$R --expected-bucket-owner $account_id
   if [ $? -ne 0 ]; then
-    msg "ERROR: Your AWS account does not own s3://$BUCKET-$R/"
+    echo "ERROR: Your AWS account does not own s3://$BUCKET-$R/"
     exit 1
   fi
   if [ "$ACL" = "public-read" ]; then

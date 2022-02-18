@@ -20,7 +20,7 @@ define(["jquery", "lodash", "app/events", "app/alarms", "app/ui/overlays/overlay
             var node = model.nodes.get(id);
             if (node) {
                 if (node.data.Tags.Name) {
-                    computer_name = node.data.Tags.Name;
+                    let computer_name = node.data.Tags.Name;
                     tools.set_info_text(computer_name, drawing, font_size, width, "Name");
                 }
             }
