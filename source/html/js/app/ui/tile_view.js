@@ -309,7 +309,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 $("#" + tile_row_div_id).append(tile);
                 const header_click_closure = function(hc_console, hc_name, hc_channel_members, hc_click_listeners) {
                     return function() {
-                        selection_listener(hc_name, hc_channel_members);
+                        selection_listener(hc_name);
                         for (let listener of hc_click_listeners) {
                             const local_listener = listener;
                             try {
