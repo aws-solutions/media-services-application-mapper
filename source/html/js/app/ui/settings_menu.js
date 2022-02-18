@@ -78,7 +78,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             return true;
         });
         $("#connectionRemember").on("change", function () {
-            store_locally = $("#connectionRemember").prop("checked");
+            const store_locally = $("#connectionRemember").prop("checked");
             console.log("store locally = " + store_locally);
         });
         $("#cancel_endpoint_connection").on("click", () => {
@@ -278,7 +278,7 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
             const alarm_interval = Number.parseInt($("#advanced-alarm-update-interval").val());
             const event_interval = Number.parseInt($("#advanced-event-update-interval").val());
             const tiles_interval = Number.parseInt($("#advanced-tiles-refresh-interval").val());
-            regions_array = _.map($("#advanced-inventory-regions input:checked,#advanced-inventory-global input:checked"), 'value');
+            const regions_array = _.map($("#advanced-inventory-regions input:checked,#advanced-inventory-global input:checked"), 'value');
             // validate it
             if (Number.isNaN(alarm_interval)) {
                 setAdvancedSettingsAlert("Please check the CloudWatch Alarm Update Interval");
