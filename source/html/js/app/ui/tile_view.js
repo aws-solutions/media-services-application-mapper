@@ -187,9 +187,9 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                     let alarm_count = 0;
                     let border_class = "border-success";
                     for (let member of channel_members) {
-                        filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
+                        const filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
                         alert_count += filtered_events.length;
-                        filtered_alarms = _.filter(cached_alarming_subscribers.current, { ResourceArn: member.id });
+                        const filtered_alarms = _.filter(cached_alarming_subscribers.current, { ResourceArn: member.id });
                         alarm_count += filtered_alarms.length;
                     }
                     if (alert_count + alarm_count) {
@@ -279,9 +279,9 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 let alert_count = 0;
                 let alarm_count = 0;
                 for (let member of channel_members) {
-                    filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
+                    const filtered_events = _.filter(cached_events.current, { resource_arn: member.id });
                     alert_count += filtered_events.length;
-                    filtered_alarms = _.filter(cached_alarming_subscribers.current, { ResourceArn: member.id });
+                    const filtered_alarms = _.filter(cached_alarming_subscribers.current, { ResourceArn: member.id });
                     alarm_count += filtered_alarms.length;
                 }
                 if (alert_count + alarm_count) {
@@ -309,7 +309,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
                 $("#" + tile_row_div_id).append(tile);
                 const header_click_closure = function(hc_console, hc_name, hc_channel_members, hc_click_listeners) {
                     return function() {
-                        selection_listener(hc_name, hc_channel_members);
+                        selection_listener(hc_name);
                         for (let listener of hc_click_listeners) {
                             const local_listener = listener;
                             try {
@@ -427,7 +427,7 @@ define(["jquery", "app/channels", "app/model", "app/ui/util", "app/events", "app
             const tile_name = selected();
             if (shown() && tile_name && tile_name !== "") {
                 channels.retrieve_channel(tile_name).then(function(source_contents) {
-                    source_node_ids = _.map(source_contents, "id").sort();
+                    const source_node_ids = _.map(source_contents, "id").sort();
                     channels_menu.show_quick_new_tile(source_node_ids);
                 });
             }

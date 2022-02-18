@@ -21,9 +21,6 @@ define(["jquery", "app/model", "app/channels", "app/ui/tile_view", "app/ui/util"
         };
 
         var display_selected_nodes = function(diagram, node_ids) {
-            nodes_ids = (Array.isArray(node_ids) ? node_ids : [node_ids]);
-            // console.log("this node");
-            // console.log(node_ids);
             var node = model.nodes.get(node_ids[0]);
             var found_on = diagrams.have_all(node.id);
             // console.log(found_on);
