@@ -54,10 +54,10 @@ define(["jquery", "app/connections", "app/regions", "app/ui/util", "app/api_chec
         $("#save_endpoint_connection").on("click", () => {
             try {
                 // trim the string, normalize the link, remove any trailing slash
-                endpoint = new URI($("#input_endpoint_url").val().trim()).normalize().toString().replace(/\/+$/, "");
+                const endpoint = new URI($("#input_endpoint_url").val().trim()).normalize().toString().replace(/\/+$/, "");
                 console.log("normalized to " + endpoint);
-                apiKey = $("#input_endpoint_key").val().trim();
-                store_locally = $("#connectionRemember").prop("checked");
+                const apiKey = $("#input_endpoint_key").val().trim();
+                const store_locally = $("#connectionRemember").prop("checked");
                 console.log("store locally = " + store_locally);
                 // test the provided info before saving
                 api_check.ping(endpoint, apiKey).then(function (response) {

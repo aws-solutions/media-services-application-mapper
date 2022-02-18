@@ -163,7 +163,7 @@ define(["lodash", "app/server", "app/connections", "app/settings"],
         var load_update_interval = function() {
             return new Promise(function(resolve, reject) {
                 settings.get(settings_key).then(function(value) {
-                    seconds = Number.parseInt(value);
+                    let seconds = Number.parseInt(value);
                     update_interval = seconds * 1000;
                     resolve();
                 });
