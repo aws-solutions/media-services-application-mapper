@@ -6,6 +6,7 @@ __pycache__/
 jslint-report.txt
 
 deployment/*.template
+deployment/test_venv
 
 **/global-s3-assets
 **/regional-s3-assets

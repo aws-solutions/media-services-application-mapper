@@ -31,7 +31,7 @@ define(['jquery', 'lodash', 'app/events', 'app/alarms', 'app/ui/overlays/overlay
         };
 
         const decorate = function(drawing, font_size, width, height, id, data) {
-            decorate_alarms(drawing, font_size, width, height, id, data);
+            decorate_alarms(drawing, font_size, width, height, id);
             decorate_events(drawing, font_size, width, height, id, data);
         };
 
