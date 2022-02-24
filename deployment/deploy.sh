@@ -88,9 +88,6 @@ for R in $REGIONS; do
       echo
       echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/latest/aws-media-services-application-mapper-release.template"
   else
-      cd $template_dist_dir
-      root_template="$( ls aws-media-services-application-mapper-release-[0-9]*.template )"
-      echo
-      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/$VERSION/$root_template"
+      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/$VERSION/aws-media-services-application-mapper-release.template"
   fi
 done
