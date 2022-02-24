@@ -230,12 +230,12 @@ jobs:
         with:
           path: deployment/
           key: ${{ github.sha }}
-      - name: Upload to S3
-        # deploy to our test bucket if not doing a release
-        if: ${{github.ref_name != env.RELEASE_BRANCH}}
-        run: |
-          cd deployment
-          ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repository.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
+      # - name: Upload to S3
+      #   # deploy to our test bucket if not doing a release
+      #   if: ${{github.ref_name != env.RELEASE_BRANCH}}
+      #   run: |
+      #     cd deployment
+      #     ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repository.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
       - name: Zip up regional and global assets
         run: |
           cd deployment
