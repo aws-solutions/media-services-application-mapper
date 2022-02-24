@@ -3,7 +3,7 @@ name: Push Workflow
 # global environment variables to all jobs
 env:
   REGION: us-east-1
-  DIST_OUTPUT_BUCKET: msam-dev
+  DIST_OUTPUT_BUCKET: solutions-features
   REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
   RELEASE_OUTPUT_BUCKET: solutions
   VERSION: ${{ secrets.VERSION }}
