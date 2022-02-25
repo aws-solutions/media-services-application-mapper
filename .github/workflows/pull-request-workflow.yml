@@ -3,7 +3,7 @@ name: Pull Request Workflow
 # global environment variables to all jobs
 env:
   REGION: us-east-1
-  DIST_OUTPUT_BUCKET: msam-pr-build
+  DIST_OUTPUT_BUCKET: solutions-features
 
 on: 
   pull_request:

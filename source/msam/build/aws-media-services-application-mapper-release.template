@@ -17,7 +17,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release-DEV_0_0_0.template"
+                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release.template"
                         ]
                     ]
                 }
@@ -38,7 +38,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release-DEV_0_0_0.template"
+                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release.template"
                         ]
                     ]
                 },
@@ -67,7 +67,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release-DEV_0_0_0.template"
+                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release.template"
                         ]
                     ]
                 },
@@ -141,7 +141,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release-DEV_0_0_0.template"
+                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release.template"
                         ]
                     ]
                 },
@@ -200,7 +200,7 @@
                                     ]
                                 ]
                             },
-                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release-DEV_0_0_0.template"
+                            ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release.template"
                         ]
                     ]
                 },

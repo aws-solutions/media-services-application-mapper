@@ -213,16 +213,8 @@ echo $TEMPLATES | \
 # clean up
 rm -f $template_dist_dir/*.template-e
 
-# copy processed templates to build-stamp-named templates
-for F in *.template; do
-    cp -f ${F} ${F/\.template/\-${STAMP}\.template}
-done
-
 # copy all processed templates to the regional assets directory
 cp *.template $build_dist_dir
-
-# copy the main template to the deployment dir
-cp aws-media-services-application-mapper-release.template $template_dir
 
 echo
 echo ------------------------------------
