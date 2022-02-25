@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.10.0] - February 2022
+
+### New
+
+```
+#180  Change never-cache-regions setting into the positive: cache-regions
+#184  Add a Help menu with documentation and issue reporting links
+#185  SSM Managed Instance tile includes system manager's instance name
+#186  Please introduce a method to lock diagrams to prevent unwanted changes
+#188  Pull and assemble /html/external during build time
+#197  Deprecate build timestamps and use semantic versions for identification
+#200  Connection dialog "Do Not Remember/Remember" button change request
+#210  Convert remaining custom resources to use crhelper
+#220  Integrate pa11y as a check in push and pull request workflows
+#227  S3 bucket to MediaLive connection mapper missing s3:// URLs
+#231  Support for AWS Elemental MediaLive CDI input type
+#232  Update dependencies: lodash and handlebars
+#237  Update S3 write scripts to check account ownership before write
+#241  Rename 'master' branch to 'main'
+#244  Remove packaged botocore and boto3
+#272  Resource type metrics
+#289  Add required pipeline files for Solutions build
+```
+
+### Fixed
+
+```
+#229  CI/CD failure
+#230  cfn-nag false positives
+#240  Update IAM role usage directions in Managed Instances guide
+#243  Address pylint issues
+#245  Use versions numbers versus build timestamps
+#250  Address pa11y findings
+#261  MediaConnect flow tag information doesn't show up in the UI
+#264  Add region to S3 origin host names for CloudFront
+#290  Change fictitious account #s to well-known fake account #s
+#294  Changes for SonarQube findings
+#297  Remove timestamps from template file names
+```
+
+
+### Contributors
+* @morjoan
+* @JimTharioAmazon
+
+
+
 ## [1.9.1] - May 2021
 
 

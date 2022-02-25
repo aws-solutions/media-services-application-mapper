@@ -4,7 +4,6 @@
 define(["jquery", "app/server", "app/connections", "app/model", "app/ui/svg_node"],
     function($, server, connections, model, svg_node) {
 
-        const color = "#D5DBDB";
         const update_distributions = function() {
             const local_svg_node = svg_node;
             const current = connections.get_current();
