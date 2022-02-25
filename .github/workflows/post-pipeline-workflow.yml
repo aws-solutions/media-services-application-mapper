@@ -27,9 +27,9 @@ jobs:
     steps:
       - name: Get pipeline status
         run: |
-          echo "Received pipeline_status: ${{ inputs.pipeline_status }}" 
-          echo "Received pipeline_message: ${{ inputs.pipeline_message}}"
-          if [ "${{ inputs.pipeline_status }}" = "Failed" ]; then
+          echo "Received pipeline_status: ${{ github.event.inputs.pipeline_status }}" 
+          echo "Received pipeline_message: ${{ github.event.inputs.pipeline_message}}"
+          if [ "${{ github.event.inputs.pipeline_status }}" = "Failed" ]; then
             exit 1
           fi
 
@@ -37,7 +37,7 @@ jobs:
     name: Create or update tag and release draft
     runs-on: ubuntu-latest
     # only run if it succeeded and it was the release pipeline
-    if: ${{inputs.pipeline_status == 'Succeeded'}}
+    if: ${{github.event.inputs.pipeline_status == 'Succeeded'}}
     steps:
       - name: Check Tags
         uses: actions/github-script@v5
@@ -127,7 +127,7 @@ jobs:
       id-token: write
       contents: read
     # only run if it succeeded and it was the release pipeline
-    if: ${{inputs.pipeline_status == 'Succeeded'}}
+    if: ${{github.event.inputs.pipeline_status == 'Succeeded'}}
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
