@@ -17,7 +17,7 @@
     "requirejs": "^2.3.6",
     "svg.js": "^2.6.6",
     "tabulator-tables": "^4.9.3",
-    "urijs": "^1.19.7",
+    "urijs": "^1.19.8",
     "vis": "^4.21.0"
   }
 }
