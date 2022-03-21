@@ -14,10 +14,13 @@
     "moment": "2.24",
     "object-hash": "^2.2.0",
     "renderjson": "^1.4.0",
-    "requirejs": "^2.3.6",
     "svg.js": "^2.6.6",
     "tabulator-tables": "^4.9.3",
     "urijs": "^1.19.7",
     "vis": "^4.21.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "jshint": "^2.13.4"
   }
 }

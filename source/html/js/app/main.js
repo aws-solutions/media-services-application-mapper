@@ -1,17 +1,19 @@
-/*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
 // this module bootstraps the state machine, which starts the application running
+// wait for the signal from JQuery before loading and initializing
 
-define(["jquery", "app/window"], function($, window) {
-    // wait for the signal before loading and initializing
-    $(window.document).ready(function() {
+$(window.document).ready(async function () {
+    // say hello
+    console.log("main");
+    try {
         // minimal modules required to start running
-        require(["app/statemachine", "app/ui/status_view"], function(statemachine) {
-            // say hello
-            console.log("main");
-            // start the outer FSM at the beginning
-            statemachine.getToolStateMachine().start();
-        });
-    });
+        const statemachine = await import("./statemachine.js");
+        await import("./ui/status_view.js");
+        // start the outer FSM at the beginning
+        statemachine.getToolStateMachine().start();
+    } catch (error) {
+        console.error(error);
+    }
 });
