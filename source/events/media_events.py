@@ -47,17 +47,13 @@ def lambda_handler(event, _):
         # remove arn that is for userIdentity or inputSecurityGroup
         # note: can't remove an item from a list that's being iterated over so doing it this way
         for arn in original_arns:
-            if "user" in arn or "role" in arn or "inputSecurityGroup" in arn:
-                pass
-            else:
+            if not ("user" in arn or "role" in arn or "inputSecurityGroup" in arn):
                 arns.append(arn)
         if arns:
             event["resource_arn"] = unquote(arns[0])
         # for certain events, the ARN is not labeled as an ARN but instead put in the resources list
-        if not arns and event["resources"]:
-            if "vod" not in event["resources"][0]:
+        if not arns and event["resources"] and "vod" not in event["resources"][0]:
                 event["resource_arn"] = event["resources"][0]
-
         # handle alerts
         if "Alert" in event["detail-type"]:
             # medialive alerts
@@ -110,12 +106,11 @@ def lambda_handler(event, _):
                     event["resource_arn"] = response["Arn"]
                 else:
                     print("Skipping this event. Origin ID not present in the HarvestJob event." + event["type"])
-        elif event["source"] == "aws.mediastore":
+        elif event["source"] == "aws.mediastore" and "MediaStore Object State Change" in event["type"]:
             # for object state change the resource is the object, not the container
             # so the captured arn needs to be fixed
-            if "MediaStore Object State Change" in event["type"]:
-                temp_arn = event["resource_arn"].split('/')
-                event["resource_arn"] = temp_arn[0] + "/" + temp_arn[1]
+            temp_arn = event["resource_arn"].split('/')
+            event["resource_arn"] = temp_arn[0] + "/" + temp_arn[1]
 
         # if item has no resource arn, don't save in DB
         if "resource_arn" in event:

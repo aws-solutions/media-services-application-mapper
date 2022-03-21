@@ -23,20 +23,23 @@ let intervalID;
 
 const settings_key = "app-alarm-update-interval";
 
-const subscribers_with_alarm_state = function (state) {
-    const current_connection = connections.get_current();
-    const url = current_connection[0];
-    const api_key = current_connection[1];
-    const current_endpoint = `${url}/cloudwatch/alarms/${state}/subscribers`;
+const server_get = (endpoint, api_key) => {
     return new Promise(function (resolve, reject) {
-        server.get(current_endpoint, api_key).then(function (response) {
-            // console.log(response);
+        server.get(endpoint, api_key).then(function (response) {
             resolve(response);
         }).catch(function (error) {
             console.error(error);
             reject(error);
         });
     });
+};
+
+const subscribers_with_alarm_state = function (state) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/cloudwatch/alarms/${state}/subscribers`;
+    return server_get(current_endpoint, api_key);
 };
 
 
@@ -46,15 +49,7 @@ const all_alarms_for_region = _.memoize(function (region) {
     const api_key = current_connection[1];
     region = encodeURIComponent(region);
     const current_endpoint = `${url}/cloudwatch/alarms/all/${region}`;
-    return new Promise(function (resolve, reject) {
-        server.get(current_endpoint, api_key).then(function (response) {
-            // console.log(response);
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
-    });
+    return server_get(current_endpoint, api_key);
 });
 
 const alarms_for_subscriber = _.memoize(function (arn) {
@@ -63,24 +58,12 @@ const alarms_for_subscriber = _.memoize(function (arn) {
     const api_key = current_connection[1];
     arn = encodeURIComponent(arn);
     const current_endpoint = `${url}/cloudwatch/alarms/subscriber/${arn}`;
-    return new Promise(function (resolve, reject) {
-        server.get(current_endpoint, api_key).then(function (response) {
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
-    });
+    return server_get(current_endpoint, api_key);
 });
 
-const subscribe_to_alarm = function (region, alarm_name, resource_arns) {
-    const current_connection = connections.get_current();
-    const url = current_connection[0];
-    const api_key = current_connection[1];
-    alarm_name = encodeURIComponent(alarm_name);
-    const current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/subscribe`;
+const server_post = (endpoint, api_key, resource_arns) => {
     return new Promise(function (resolve, reject) {
-        server.post(current_endpoint, api_key, resource_arns).then(function (response) {
+        server.post(endpoint, api_key, resource_arns).then(function (response) {
             for (let arn of resource_arns) {
                 clear_alarms_for_subscriber_cache(arn);
             }
@@ -92,6 +75,15 @@ const subscribe_to_alarm = function (region, alarm_name, resource_arns) {
     });
 };
 
+const subscribe_to_alarm = function (region, alarm_name, resource_arns) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    alarm_name = encodeURIComponent(alarm_name);
+    const current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/subscribe`;
+    return server_post(current_endpoint, api_key, resource_arns);
+};
+
 const unsubscribe_from_alarm = function (region, alarm_name, resource_arns) {
     // console.log(region, alarm_name, resource_arns);
     const current_connection = connections.get_current();
@@ -99,17 +91,7 @@ const unsubscribe_from_alarm = function (region, alarm_name, resource_arns) {
     const api_key = current_connection[1];
     alarm_name = encodeURIComponent(alarm_name);
     const current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/unsubscribe`;
-    return new Promise(function (resolve, reject) {
-        server.post(current_endpoint, api_key, resource_arns).then(function (response) {
-            for (let arn of resource_arns) {
-                clear_alarms_for_subscriber_cache(arn);
-            }
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
-    });
+    return server_post(current_endpoint, api_key, resource_arns);
 };
 
 const delete_all_subscribers = function () {
