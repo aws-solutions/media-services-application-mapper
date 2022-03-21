@@ -86,15 +86,13 @@ const map_config = function (cache_entry, items) {
         "console_link": (function () {
             const region = id.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/mediatailor/home?region=${region}#/config/${name}`;
-                return html;
+                return `https://console.aws.amazon.com/mediatailor/home?region=${region}#/config/${name}`;
             };
         })(),
         "cloudwatch_link": (function () {
             const region = id.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#logs:prefix=MediaTailor`;
-                return html;
+                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#logs:prefix=MediaTailor`;
             };
         })()
     };

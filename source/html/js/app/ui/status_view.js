@@ -14,8 +14,7 @@ var calculate_progress = function (fsm) {
     // get our current position within the states
     var index = states.indexOf(fsm.state);
     // calculate the current state position as a percentage
-    var percent = Number.parseInt(((index + 1) / states.length) * 100);
-    return percent;
+    return Number.parseInt(((index + 1) / states.length) * 100);
 };
 
 var show = function () {

@@ -74,14 +74,12 @@ export const update = function () {
                         const id = container.Name;
                         const region = container.ARN.split(":")[3];
                         return function () {
-                            const html = `https://${region}.console.aws.amazon.com/mediastore/home/containers/${id}`;
-                            return html;
+                            return `https://${region}.console.aws.amazon.com/mediastore/home/containers/${id}`;
                         };
                     })(),
                     "cloudwatch_link": (function () {
                         return function () {
-                            const html = `https://console.aws.amazon.com/cloudwatch/home`;
-                            return html;
+                            return `https://console.aws.amazon.com/cloudwatch/home`;
                         };
                     })()
                 };

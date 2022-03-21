@@ -15,7 +15,7 @@ var update_overlay = function () {
     // console.log("info overlay update");
     // get all the overlays
     for (let ov of overlays.all) {
-        if (ov.informational == true) {
+        if (ov.informational) {
             const nodes = model.nodes.get({
                 filter: (item) => { return ov.match_type == (item.generic_node_type || item.title); }
             });

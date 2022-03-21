@@ -205,7 +205,7 @@ export function create(diagram) {
                                 // drag-select
                                 my_diagram.drag_canvas = my_diagram.network.canvas.frame.canvas;
                                 my_diagram.drag_ctx = my_diagram.drag_canvas.getContext('2d');
-                                if (my_diagram.first_fit == false) {
+                                if (!my_diagram.first_fit) {
                                     my_diagram.first_fit = true;
                                     my_diagram.network.fit();
                                     my_diagram.statemachine.transition("ready-to-view");

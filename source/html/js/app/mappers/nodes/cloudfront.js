@@ -77,8 +77,7 @@ export const update = function () {
                             region = 'us-east-1';
                         }
                         return function () {
-                            let html = `https://console.aws.amazon.com/cloudfront/home?region=${region}#distribution-settings:${id}`;
-                            return html;
+                            return `https://console.aws.amazon.com/cloudfront/home?region=${region}#distribution-settings:${id}`;
                         };
                     })(),
                     "cloudwatch_link": (function () {
@@ -88,8 +87,7 @@ export const update = function () {
                             region = 'us-east-1';
                         }
                         return function () {
-                            let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/CloudFront;dimensions=DistributionId,Region`;
-                            return html;
+                            return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/CloudFront;dimensions=DistributionId,Region`;
                         };
                     })()
                 };

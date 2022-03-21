@@ -87,8 +87,7 @@ const map_flow = function (cache_entry, items) {
             let split_id = id.split(":");
             let region = split_id[3];
             return function () {
-                let html = `https://${region}.console.aws.amazon.com/mediaconnect/home?region=${region}#/flows/${id}`;
-                return html;
+                return `https://${region}.console.aws.amazon.com/mediaconnect/home?region=${region}#/flows/${id}`;
             };
         })(),
         "cloudwatch_link": (function () {
@@ -96,8 +95,7 @@ const map_flow = function (cache_entry, items) {
             let region = split_id[3];
             let name = split_id[split_id.length - 1];
             return function () {
-                let html = `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fMediaConnect*2cFlowARN*7d*20${name}`;
-                return html;
+                return `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bAWS*2fMediaConnect*2cFlowARN*7d*20${name}`;
             };
         })()
     };

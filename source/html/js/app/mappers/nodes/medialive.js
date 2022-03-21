@@ -119,24 +119,21 @@ const map_channel = function (cache_entry, items) {
             const id = channel.Id;
             const region = channel.Arn.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}`;
-                return html;
+                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}`;
             };
         })(),
         alerts_link: (function () {
             const id = channel.Id;
             const region = channel.Arn.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}/alerts`;
-                return html;
+                return`https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}/alerts`;
             };
         })(),
         cloudwatch_link: (function () {
             const id = channel.Id;
             const region = channel.Arn.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=MediaLive;dimensions=ChannelId,Pipeline`;
-                return html;
+                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=MediaLive;dimensions=ChannelId,Pipeline`;
             };
         })()
     };
@@ -181,14 +178,12 @@ const map_input = function (cache_entry, items) {
             const id = input.Id;
             const region = input.Arn.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
-                return html;
+                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
             };
         })(),
         cloudwatch_link: (function () {
             return function () {
-                const html = `https://console.aws.amazon.com/cloudwatch/home`;
-                return html;
+                return `https://console.aws.amazon.com/cloudwatch/home`;
             };
         })()
     };
@@ -233,16 +228,14 @@ const map_multiplex = function (cache_entry, items) {
             const id = input.Id;
             const region = input.Arn.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}`;
-                return html;
+                return `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}`;
             };
         })(),
         alerts_link: (function () {
             const id = input.Id;
             const region = input.Arn.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}/alerts`;
-                return html;
+                return `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}/alerts`;
             };
         })(),
         cloudwatch_link: (function () {
@@ -316,8 +309,7 @@ const map_device = function (cache_entry, items) {
         "console_link": (function () {
             const region = id.split(":")[3];
             return function () {
-                const html = `https://${region}.console.aws.amazon.com/medialive/home?region=${region}#!/devices/${name}`;
-                return html;
+                return `https://${region}.console.aws.amazon.com/medialive/home?region=${region}#!/devices/${name}`;
             };
         })(),
         "cloudwatch_link": (function () {

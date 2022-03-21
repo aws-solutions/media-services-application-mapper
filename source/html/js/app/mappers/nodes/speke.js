@@ -80,14 +80,12 @@ export const update = function () {
                     },
                     "console_link": (function () {
                         return function () {
-                            let html = `https://console.aws.amazon.com/`;
-                            return html;
+                            return `https://console.aws.amazon.com/`;
                         };
                     })(),
                     "cloudwatch_link": (function () {
                         return function () {
-                            let html = `https://console.aws.amazon.com/`;
-                            return html;
+                            return `https://console.aws.amazon.com/`;
                         };
                     })()
                 };

@@ -402,9 +402,7 @@ class Diagram {
         var xRange = this.get_start_to_end(this.drag_rect.startX, this.drag_rect.w);
         var yRange = this.get_start_to_end(this.drag_rect.startY, this.drag_rect.h);
 
-        var allNodes = this.nodes.get();
-        for (let i = 0; i < allNodes.length; i++) {
-            var curNode = allNodes[i];
+        for (let curNode of this.nodes.get()) {
             var nodePosition = this.network.getPositions([curNode.id]);
             var nodeXY = this.network.canvasToDOM({
                 x: nodePosition[curNode.id].x,
@@ -506,8 +504,7 @@ class Diagram {
     lock(state) {
         const key = `diagram_lock_${this.view_id}`;
         this.locked = Boolean(state).valueOf();
-        const promise = settings.put(key, { "name": this.name, "locked": this.locked });
-        return promise;
+        return settings.put(key, { "name": this.name, "locked": this.locked });
     }
 
     isLocked() {

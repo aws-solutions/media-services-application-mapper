@@ -83,14 +83,12 @@ export const update = function () {
                     },
                     "console_link": (function () {
                         return function () {
-                            const html = `#`;
-                            return html;
+                            return "#";
                         };
                     })(),
                     "cloudwatch_link": (function () {
                         return function () {
-                            const html = `#`;
-                            return html;
+                            return "#";
                         };
                     })()
                 };

@@ -75,15 +75,13 @@ export const update = function () {
                     "console_link": (function () {
                         const id = bucket.Name;
                         return function () {
-                            let html = `https://s3.console.aws.amazon.com/s3/buckets/${id}/?tab=overview`;
-                            return html;
+                            return `https://s3.console.aws.amazon.com/s3/buckets/${id}/?tab=overview`;
                         };
                     })(),
                     "cloudwatch_link": (function () {
                         const id = bucket.Name;
                         return function () {
-                            let html = `https://console.aws.amazon.com/cloudwatch/home#metricsV2:graph=~();search=${id};namespace=AWS/S3;dimensions=BucketName,StorageType`;
-                            return html;
+                            return `https://console.aws.amazon.com/cloudwatch/home#metricsV2:graph=~();search=${id};namespace=AWS/S3;dimensions=BucketName,StorageType`;
                         };
                     })()
                 };

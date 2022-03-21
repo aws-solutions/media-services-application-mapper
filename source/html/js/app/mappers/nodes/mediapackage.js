@@ -74,16 +74,14 @@ const update_channels = function (items) {
                         let id = channel.Id;
                         let region = channel.Arn.split(":")[3];
                         return function () {
-                            let html = `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${id}`;
-                            return html;
+                            return `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${id}`;
                         };
                     })(),
                     "cloudwatch_link": (function () {
                         let id = channel.Id;
                         let region = channel.Arn.split(":")[3];
                         return function () {
-                            let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel`;
-                            return html;
+                            return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel`;
                         };
                     })()
                 };
@@ -167,16 +165,14 @@ const update_endpoints = function (items) {
                         let parent_id = endpoint.ChannelId;
                         let region = endpoint.Arn.split(":")[3];
                         return function () {
-                            let html = `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${parent_id}/endpoints/${id}`;
-                            return html;
+                            return `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${parent_id}/endpoints/${id}`;
                         };
                     })(),
                     "cloudwatch_link": (function () {
                         let id = endpoint.Id;
                         let region = endpoint.Arn.split(":")[3];
                         return function () {
-                            let html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel,OriginEndpoint`;
-                            return html;
+                            return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel,OriginEndpoint`;
                         };
                     })()
                 };

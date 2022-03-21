@@ -23,7 +23,7 @@ var create_connection_record = function (options) {
         "to": `${options.to}`,
         "expires": options.expires || expires.unix()
     };
-    var record = {
+    return {
         "arn": `${options.from}:${options.to}`,
         "data": JSON.stringify(data),
         "expires": options.expires || expires.unix(),
@@ -34,7 +34,6 @@ var create_connection_record = function (options) {
         "to": `${options.to}`,
         "updated": updated.unix()
     };
-    return record;
 };
 
 var show_add_connection = (visible) => {

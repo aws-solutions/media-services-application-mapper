@@ -152,7 +152,7 @@ $("#save_channel_add_node").on("click", function () {
     const channel_checks = $("#channel_add_node_modal_channels input[type='checkbox']");
     const promises = [];
     for (let item of channel_checks) {
-        if ($(item).prop("checked") == true) {
+        if ($(item).prop("checked")) {
             promises.push(channels.update_channel($(item).val(), node_ids));
         }
     }

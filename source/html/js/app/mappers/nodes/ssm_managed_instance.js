@@ -96,15 +96,13 @@ const map_config = function (cache_entry, items) {
         "console_link": (function () {
             const region = id.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/systems-manager/managed-instances/${name}/description?region=${region}`;
-                return html;
+                return `https://console.aws.amazon.com/systems-manager/managed-instances/${name}/description?region=${region}`;
             };
         })(),
         "cloudwatch_link": (function () {
             const region = id.split(":")[3];
             return function () {
-                const html = `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bMSAM*2fSSMRunCommand*2c*22Instance*20ID*22*7d*20${name}`;
-                return html;
+                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();query=~'*7bMSAM*2fSSMRunCommand*2c*22Instance*20ID*22*7d*20${name}`;
             };
         })(),
         "generic_node_type": generic_node_type

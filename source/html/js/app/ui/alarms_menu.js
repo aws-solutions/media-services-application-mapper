@@ -81,8 +81,7 @@ const nodes_tabulator = new Tabulator("#subscribe_to_alarms_modal_selected_items
 
 
 const progress_bar_html = function (value, text, color_class) {
-    const html = `<div class="m-2"><div class="progress"><div class="progress-bar ${color_class}" role="progressbar" style="width: ${value}%" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100">${text}</div></div></div>`;
-    return html;
+    return `<div class="m-2"><div class="progress"><div class="progress-bar ${color_class}" role="progressbar" style="width: ${value}%" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100">${text}</div></div></div>`;
 };
 
 const start_progress_message = function () {
