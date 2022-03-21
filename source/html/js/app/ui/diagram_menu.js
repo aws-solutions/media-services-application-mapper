@@ -84,7 +84,7 @@ $("#diagram_remove_selected").on("click", function () {
 });
 
 $("#diagram_add_downstream").on("click", function () {
-    add_downstream_nodes()
+    add_downstream_nodes();
 });
 
 function add_downstream_nodes() {
