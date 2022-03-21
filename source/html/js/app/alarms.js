@@ -5,29 +5,29 @@ import * as server from "./server.js";
 import * as connections from "./connections.js";
 import * as settings from "./settings.js";
 
-var listeners = [];
+const listeners = [];
 
-var region_cache_clear_interval_ms = 60000;
+const region_cache_clear_interval_ms = 60000;
 
 // cache alarms in 'set' state
 // several modules use this at the same time
 
-var current_subscribers_with_alarms = [];
-var previous_subscribers_with_alarms = [];
+let current_subscribers_with_alarms = [];
+let previous_subscribers_with_alarms = [];
 
 // interval in millis to update the cache
 
-var update_interval;
+let update_interval;
 
-var intervalID;
+let intervalID;
 
-var settings_key = "app-alarm-update-interval";
+const settings_key = "app-alarm-update-interval";
 
-var subscribers_with_alarm_state = function (state) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/cloudwatch/alarms/${state}/subscribers`;
+const subscribers_with_alarm_state = function (state) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/cloudwatch/alarms/${state}/subscribers`;
     return new Promise(function (resolve, reject) {
         server.get(current_endpoint, api_key).then(function (response) {
             // console.log(response);
@@ -40,12 +40,12 @@ var subscribers_with_alarm_state = function (state) {
 };
 
 
-var all_alarms_for_region = _.memoize(function (region) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
+const all_alarms_for_region = _.memoize(function (region) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
     region = encodeURIComponent(region);
-    var current_endpoint = `${url}/cloudwatch/alarms/all/${region}`;
+    const current_endpoint = `${url}/cloudwatch/alarms/all/${region}`;
     return new Promise(function (resolve, reject) {
         server.get(current_endpoint, api_key).then(function (response) {
             // console.log(response);
@@ -57,12 +57,12 @@ var all_alarms_for_region = _.memoize(function (region) {
     });
 });
 
-var alarms_for_subscriber = _.memoize(function (arn) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
+const alarms_for_subscriber = _.memoize(function (arn) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
     arn = encodeURIComponent(arn);
-    var current_endpoint = `${url}/cloudwatch/alarms/subscriber/${arn}`;
+    const current_endpoint = `${url}/cloudwatch/alarms/subscriber/${arn}`;
     return new Promise(function (resolve, reject) {
         server.get(current_endpoint, api_key).then(function (response) {
             resolve(response);
@@ -73,12 +73,12 @@ var alarms_for_subscriber = _.memoize(function (arn) {
     });
 });
 
-var subscribe_to_alarm = function (region, alarm_name, resource_arns) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
+const subscribe_to_alarm = function (region, alarm_name, resource_arns) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
     alarm_name = encodeURIComponent(alarm_name);
-    var current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/subscribe`;
+    const current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/subscribe`;
     return new Promise(function (resolve, reject) {
         server.post(current_endpoint, api_key, resource_arns).then(function (response) {
             for (let arn of resource_arns) {
@@ -92,13 +92,13 @@ var subscribe_to_alarm = function (region, alarm_name, resource_arns) {
     });
 };
 
-var unsubscribe_from_alarm = function (region, alarm_name, resource_arns) {
+const unsubscribe_from_alarm = function (region, alarm_name, resource_arns) {
     // console.log(region, alarm_name, resource_arns);
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
     alarm_name = encodeURIComponent(alarm_name);
-    var current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/unsubscribe`;
+    const current_endpoint = `${url}/cloudwatch/alarm/${alarm_name}/region/${region}/unsubscribe`;
     return new Promise(function (resolve, reject) {
         server.post(current_endpoint, api_key, resource_arns).then(function (response) {
             for (let arn of resource_arns) {
@@ -112,11 +112,11 @@ var unsubscribe_from_alarm = function (region, alarm_name, resource_arns) {
     });
 };
 
-var delete_all_subscribers = function () {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/cloudwatch/alarms/subscribed`;
+const delete_all_subscribers = function () {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/cloudwatch/alarms/subscribed`;
     return new Promise((resolve, reject) => {
         server.delete_method(current_endpoint, api_key).then((response) => {
             alarms_for_subscriber.cache.clear();
@@ -128,7 +128,7 @@ var delete_all_subscribers = function () {
     });
 };
 
-var clear_alarms_for_subscriber_cache = function (subscribers) {
+const clear_alarms_for_subscriber_cache = function (subscribers) {
     if (Array.isArray(subscribers)) {
         for (let subscriber of subscribers) {
             alarms_for_subscriber.cache.delete(subscriber.ResourceArn);
@@ -140,14 +140,14 @@ var clear_alarms_for_subscriber_cache = function (subscribers) {
     }
 };
 
-var cache_update = function () {
+const cache_update = function () {
     // console.log("cache_update()");
     subscribers_with_alarm_state("ALARM").then(function (response) {
         // console.log("updated set event cache");
         previous_subscribers_with_alarms = current_subscribers_with_alarms;
         current_subscribers_with_alarms = _.sortBy(response, "ResourceArn");
-        var added = _.differenceBy(current_subscribers_with_alarms, previous_subscribers_with_alarms, "ResourceArn");
-        var removed = _.differenceBy(previous_subscribers_with_alarms, current_subscribers_with_alarms, "ResourceArn");
+        const added = _.differenceBy(current_subscribers_with_alarms, previous_subscribers_with_alarms, "ResourceArn");
+        const removed = _.differenceBy(previous_subscribers_with_alarms, current_subscribers_with_alarms, "ResourceArn");
         if (added.length || removed.length) {
             clear_alarms_for_subscriber_cache(added);
             clear_alarms_for_subscriber_cache(removed);
@@ -161,7 +161,7 @@ var cache_update = function () {
     });
 };
 
-var load_update_interval = function () {
+const load_update_interval = function () {
     return new Promise(function (resolve) {
         settings.get(settings_key).then(function (value) {
             let seconds = Number.parseInt(value);
@@ -171,13 +171,13 @@ var load_update_interval = function () {
     });
 };
 
-var set_update_interval_setting = function (seconds) {
+const set_update_interval_setting = function (seconds) {
     // create a default
     update_interval = seconds * 1000;
     return settings.put(settings_key, seconds);
 };
 
-var schedule_interval = function () {
+const schedule_interval = function () {
     if (intervalID) {
         clearInterval(intervalID);
     }
