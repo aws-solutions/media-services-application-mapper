@@ -1,4 +1,4 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
 This Lambda is responsible for receiving and storing CloudWatch alarm events.
@@ -38,7 +38,6 @@ def lambda_handler(event, _):
 
         region_alarm_name = f"{region}:{alarm_name}"
         state = alarm.state_value
-        # namespace = alarm.namespace
         state_updated = int(alarm.state_updated_timestamp.timestamp())
 
         subscribers = subscribers_to_alarm(region_alarm_name)

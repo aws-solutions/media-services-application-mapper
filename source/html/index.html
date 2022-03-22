@@ -19,10 +19,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <link rel="stylesheet" href="/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/jqueryui/jquery-ui.min.js"></script>
+    <script src="/node_modules/lodash/lodash.min.js"></script>
     <script src="/node_modules/vis/dist/vis.min.js"></script>
     <script src="/node_modules/tabulator-tables/dist/js/tabulator.min.js"></script>
     <script src="/node_modules/tabulator-tables/dist/js/jquery_wrapper.min.js"></script>
-    <script src="/node_modules/handlebars/dist/handlebars.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="/node_modules/fuse.js/dist/fuse.js"></script>
@@ -30,7 +30,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <script src="/node_modules/renderjson/renderjson.js"></script>
     <script src="/node_modules/urijs/src/URI.min.js"></script>
     <script src="/node_modules/moment/min/moment.min.js"></script>
-    <script data-main="js/app" src="/node_modules/requirejs/require.js"></script>
+    <script src="/node_modules/machina/lib/machina.min.js"></script>
+    <script src="/node_modules/js-cookie/src/js.cookie.js"></script>
+    <script src="/node_modules/object-hash/dist/object_hash.js"></script>
+    <script src="js/app/main.js" type="module"></script>
+    
     <style>
         .borderless td,
         .borderless th {
@@ -213,9 +217,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Delete Connection"><i
                         class="material-icons">remove_circle_outline</i></button>
             </span>
-            <span class="form-inline pl-4 my-2 my-lg-0" onsubmit="return false;">
+            <span class="form-inline pl-4 my-2 my-lg-0" onsubmit="() => { return false; }">
                 <input class="form-control mx-1" id="search_input" placeholder="Search Terms" title="Search Terms"
-                    onsubmit="return false;">
+                    onsubmit="() => { return false; }">
                 <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button">
                     <i class="material-icons">search</i>
                 </a>

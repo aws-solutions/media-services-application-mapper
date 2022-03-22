@@ -3,7 +3,7 @@ This module is the custom resource used by the MSAM's CloudFormation
 templates to populate the web bucket with contents of the MSAM web archive.
 """
 
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
