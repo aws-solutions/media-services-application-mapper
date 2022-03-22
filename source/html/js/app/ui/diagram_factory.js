@@ -32,11 +32,11 @@ class Diagram {
         this.tab_icon_id = this.tab_id + "_icon";
         this.diagram_id = "diagram_" + this.base_id;
         // drag-select
-        // this.drag_canvas;
-        // this.drag_ctx;
+        this.drag_canvas;
+        this.drag_ctx;
         this.drag_rect = {};
         this.drag = false;
-        // this.drawingSurfaceImageData;
+        this.drawingSurfaceImageData;
         // other state
         this.first_fit = false;
         // locking some functions (move, add, delete)
