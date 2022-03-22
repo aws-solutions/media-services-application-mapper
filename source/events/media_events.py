@@ -53,7 +53,7 @@ def lambda_handler(event, _):
             event["resource_arn"] = unquote(arns[0])
         # for certain events, the ARN is not labeled as an ARN but instead put in the resources list
         if not arns and event["resources"] and "vod" not in event["resources"][0]:
-                event["resource_arn"] = event["resources"][0]
+            event["resource_arn"] = event["resources"][0]
         # handle alerts
         if "Alert" in event["detail-type"]:
             # medialive alerts
