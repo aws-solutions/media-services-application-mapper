@@ -4,8 +4,7 @@
 import * as model from "../model.js";
 import * as statemachine from "../statemachine.js";
 
-
-var current_tab = '';
+var current_tab = "";
 var progressTimer;
 
 var calculate_progress = function (fsm) {
@@ -27,13 +26,24 @@ var update = function () {
     var id = "#nav-status";
     var tab = id + "-tab";
     if (current_tab !== tab) {
-        $(tab).tab('show');
+        $(tab).tab("show");
     }
-    var configuration_percent = calculate_progress(statemachine.getConfigurationStateMachine());
-    var model_data_percent = calculate_progress(statemachine.getModelDataStateMachine());
-    var configuration_class = configuration_percent < 100 ? "progress-bar-striped progress-bar-animated bg-warning" : "bg-success";
-    var model_data_class = model_data_percent < 100 ? "progress-bar-striped progress-bar-animated bg-warning" : "bg-success";
-    var configuration_stats = configuration_percent < 100 ? configuration_percent + "%" : "Ready";
+    var configuration_percent = calculate_progress(
+        statemachine.getConfigurationStateMachine()
+    );
+    var model_data_percent = calculate_progress(
+        statemachine.getModelDataStateMachine()
+    );
+    var configuration_class =
+        configuration_percent < 100
+            ? "progress-bar-striped progress-bar-animated bg-warning"
+            : "bg-success";
+    var model_data_class =
+        model_data_percent < 100
+            ? "progress-bar-striped progress-bar-animated bg-warning"
+            : "bg-success";
+    var configuration_stats =
+        configuration_percent < 100 ? configuration_percent + "%" : "Ready";
     var model_stats = `${model.nodes.length} Nodes, ${model.edges.length} Connections`;
     var html = `
         <table class="table table-sm borderless">
@@ -71,4 +81,3 @@ model.edges.on("add", function () {
 statemachine.getToolStateMachine().on("transition", function () {
     show();
 });
-

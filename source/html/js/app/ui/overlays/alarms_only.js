@@ -21,4 +21,3 @@ export const decorate = function (drawing, font_size, width, height, id) {
 };
 
 export const informational = false;
-

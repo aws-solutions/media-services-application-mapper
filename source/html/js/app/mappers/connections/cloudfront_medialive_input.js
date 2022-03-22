@@ -10,23 +10,28 @@ export const update = function () {
     const api_key = current[1];
     const items = [];
     return new Promise((resolve) => {
-        server.get(url + "/cached/cloudfront-distribution-medialive-input", api_key).then((connections) => {
-            for (let connection of connections) {
-                const data = JSON.parse(connection.data);
-                items.push({
-                    "id": connection.arn,
-                    "to": connection.to,
-                    "from": connection.from,
-                    "label": data.scheme,
-                    "data": data,
-                    "arrows": "to",
-                    "color": {
-                        "color": "black"
-                    }
-                });
-            }
-            resolve(items);
-        });
+        server
+            .get(
+                url + "/cached/cloudfront-distribution-medialive-input",
+                api_key
+            )
+            .then((connections) => {
+                for (let connection of connections) {
+                    const data = JSON.parse(connection.data);
+                    items.push({
+                        id: connection.arn,
+                        to: connection.to,
+                        from: connection.from,
+                        label: data.scheme,
+                        data: data,
+                        arrows: "to",
+                        color: {
+                            color: "black",
+                        },
+                    });
+                }
+                resolve(items);
+            });
     });
 };
 

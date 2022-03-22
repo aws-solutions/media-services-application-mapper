@@ -10,12 +10,15 @@ const retrieve_channel = _.memoize(function (name) {
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channel/${name}`;
     return new Promise(function (resolve, reject) {
-        server.get(current_endpoint, api_key).then(function (response) {
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .get(current_endpoint, api_key)
+            .then(function (response) {
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 });
 
@@ -36,7 +39,10 @@ const have_any = _.memoize(function (node_ids) {
                         // look for model matches
                         retrieve_channel(local_name).then(function (contents) {
                             const channel_keys = Object.keys(contents).sort();
-                            const intersect = local_lodash.intersection(local_node_ids, channel_keys);
+                            const intersect = local_lodash.intersection(
+                                local_node_ids,
+                                channel_keys
+                            );
                             // console.log(intersect);
                             if (intersect.length > 0) {
                                 matches.push(local_name);
@@ -61,13 +67,16 @@ const create_channel = function (name, nodes) {
     const current_endpoint = `${url}/channel/${name}`;
     return new Promise(function (resolve, reject) {
         const data = nodes;
-        server.post(current_endpoint, api_key, data).then(function (response) {
-            clear_function_cache();
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .post(current_endpoint, api_key, data)
+            .then(function (response) {
+                clear_function_cache();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -79,13 +88,16 @@ const delete_channel = function (name) {
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channel/${name}`;
     return new Promise((resolve, reject) => {
-        server.delete_method(current_endpoint, api_key).then((response) => {
-            clear_function_cache();
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .delete_method(current_endpoint, api_key)
+            .then((response) => {
+                clear_function_cache();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -95,42 +107,51 @@ const channel_list = _.memoize(function () {
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channels`;
     return new Promise(function (resolve, reject) {
-        server.get(current_endpoint, api_key).then(function (response) {
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .get(current_endpoint, api_key)
+            .then(function (response) {
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 });
 
 const arn_to_channels = _.memoize(function (arn) {
     const local_arn = arn;
     return new Promise(function (outerResolve, outerReject) {
-        channel_list().then(function (channels) {
-            const matches = [];
-            const promises = [];
-            for (let channel_name of channels) {
-                const local_channel_name = channel_name;
-                promises.push(new Promise(function (resolve) {
-                    retrieve_channel(local_channel_name).then(function (members) {
-                        for (let member_value of members) {
-                            if (member_value.id === local_arn) {
-                                matches.push(local_channel_name);
-                                break;
-                            }
-                        }
-                        resolve();
-                    });
-                }));
-            }
-            Promise.all(promises).then(function () {
-                outerResolve(matches.sort());
+        channel_list()
+            .then(function (channels) {
+                const matches = [];
+                const promises = [];
+                for (let channel_name of channels) {
+                    const local_channel_name = channel_name;
+                    promises.push(
+                        new Promise(function (resolve) {
+                            retrieve_channel(local_channel_name).then(function (
+                                members
+                            ) {
+                                for (let member_value of members) {
+                                    if (member_value.id === local_arn) {
+                                        matches.push(local_channel_name);
+                                        break;
+                                    }
+                                }
+                                resolve();
+                            });
+                        })
+                    );
+                }
+                Promise.all(promises).then(function () {
+                    outerResolve(matches.sort());
+                });
+            })
+            .catch(function (error) {
+                console.error(error);
+                outerReject(error);
             });
-        }).catch(function (error) {
-            console.error(error);
-            outerReject(error);
-        });
     });
 });
 
@@ -147,13 +168,16 @@ const delete_all_channels = function () {
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channels`;
     return new Promise((resolve, reject) => {
-        server.delete_method(current_endpoint, api_key).then((response) => {
-            clear_function_cache();
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .delete_method(current_endpoint, api_key)
+            .then((response) => {
+                clear_function_cache();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -176,5 +200,5 @@ export {
     channel_list,
     arn_to_channels,
     have_any,
-    delete_all_channels as delete_all
+    delete_all_channels as delete_all,
 };

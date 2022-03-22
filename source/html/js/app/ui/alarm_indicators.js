@@ -5,8 +5,10 @@ import * as model from "../model.js";
 import * as alarms from "../alarms.js";
 import * as diagrams from "./diagrams.js";
 
-
-const updateAlarmState = function (current_alarming_subscribers, previous_alarming_subscribers) {
+const updateAlarmState = function (
+    current_alarming_subscribers,
+    previous_alarming_subscribers
+) {
     // iterate through current 'set' alerts
     const alarming_nodes = [];
     const inactive_nodes = [];
@@ -21,7 +23,10 @@ const updateAlarmState = function (current_alarming_subscribers, previous_alarmi
                 let selected = node.render.alert_selected();
                 let unselected = node.render.alert_unselected();
                 // only update the node if the SVG changes
-                if (selected != node.image.selected || unselected != node.image.unselected) {
+                if (
+                    selected != node.image.selected ||
+                    unselected != node.image.unselected
+                ) {
                     node.image.selected = selected;
                     node.image.unselected = unselected;
                     model.nodes.update(node);
@@ -55,7 +60,10 @@ const updateAlarmState = function (current_alarming_subscribers, previous_alarmi
             // only switch the node render if the node is neither alarming nor alerting
             let selected = node.render.normal_selected();
             let unselected = node.render.normal_unselected();
-            if (selected != node.image.selected || unselected != node.image.unselected) {
+            if (
+                selected != node.image.selected ||
+                unselected != node.image.unselected
+            ) {
                 node.image.selected = selected;
                 node.image.unselected = unselected;
                 model.nodes.update(node);
@@ -71,4 +79,3 @@ const updateAlarmState = function (current_alarming_subscribers, previous_alarmi
 };
 
 alarms.add_callback(updateAlarmState);
-

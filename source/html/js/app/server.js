@@ -7,8 +7,8 @@ let request_timeout = 60 * 1000;
 const get = function (url, api_key) {
     return new Promise((resolve, reject) => {
         const headers = {
-            'Accept': 'application/json',
-            'x-api-key': api_key
+            Accept: "application/json",
+            "x-api-key": api_key,
         };
         // get the library contents
         $.ajax({
@@ -21,7 +21,7 @@ const get = function (url, api_key) {
             error: (data) => {
                 reject(data);
             },
-            timeout: request_timeout
+            timeout: request_timeout,
         });
     });
 };
@@ -29,8 +29,8 @@ const get = function (url, api_key) {
 const post = function (url, api_key, data) {
     return new Promise((resolve, reject) => {
         const headers = {
-            'Accept': 'application/json',
-            'x-api-key': api_key
+            Accept: "application/json",
+            "x-api-key": api_key,
         };
         // get the library contents
         $.ajax({
@@ -46,7 +46,7 @@ const post = function (url, api_key, data) {
                 console.log(data);
                 reject(data);
             },
-            timeout: request_timeout
+            timeout: request_timeout,
         });
     });
 };
@@ -54,8 +54,8 @@ const post = function (url, api_key, data) {
 const delete_method = function (url, api_key) {
     return new Promise((resolve, reject) => {
         const headers = {
-            'Accept': 'application/json',
-            'x-api-key': api_key
+            Accept: "application/json",
+            "x-api-key": api_key,
         };
         // get the library contents
         $.ajax({
@@ -70,7 +70,7 @@ const delete_method = function (url, api_key) {
                 console.log(data);
                 reject(data);
             },
-            timeout: request_timeout
+            timeout: request_timeout,
         });
     });
 };
@@ -78,8 +78,8 @@ const delete_method = function (url, api_key) {
 const delete_method_with_body = function (url, api_key, data) {
     return new Promise((resolve, reject) => {
         const headers = {
-            'Accept': 'application/json',
-            'x-api-key': api_key
+            Accept: "application/json",
+            "x-api-key": api_key,
         };
         // get the library contents
         $.ajax({
@@ -95,7 +95,7 @@ const delete_method_with_body = function (url, api_key, data) {
                 console.log(data);
                 reject(data);
             },
-            timeout: request_timeout
+            timeout: request_timeout,
         });
     });
 };

@@ -1,12 +1,10 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as alert_events from "../../events.js";
 import * as alarms from "../../alarms.js";
 import * as tools from "./overlay_tools.js";
 import * as model from "../../model.js";
-
 
 export const match_type = "MediaConnect Flow";
 

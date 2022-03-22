@@ -13,12 +13,15 @@ const get_setting = _.memoize(function (id) {
     const current_endpoint = `${url}/settings/${id}`;
     // return a promise that response with result
     return new Promise((resolve, reject) => {
-        server.get(current_endpoint, api_key).then((response) => {
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .get(current_endpoint, api_key)
+            .then((response) => {
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 });
 
@@ -31,13 +34,16 @@ const put_setting = function (id, value) {
     const current_endpoint = `${url}/settings/${id}`;
     return new Promise((resolve, reject) => {
         const data = value;
-        server.post(current_endpoint, api_key, data).then((response) => {
-            clear_function_cache();
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .post(current_endpoint, api_key, data)
+            .then((response) => {
+                clear_function_cache();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -49,13 +55,16 @@ const remove_setting = function (id) {
     // create the resource url
     const current_endpoint = `${url}/settings/${id}`;
     return new Promise((resolve, reject) => {
-        server.delete_method(current_endpoint, api_key).then((response) => {
-            clear_function_cache();
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .delete_method(current_endpoint, api_key)
+            .then((response) => {
+                clear_function_cache();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -63,8 +72,4 @@ const clear_function_cache = function () {
     get_setting.cache.clear();
 };
 
-export {
-    get_setting as get,
-    put_setting as put,
-    remove_setting as remove
-};
+export { get_setting as get, put_setting as put, remove_setting as remove };

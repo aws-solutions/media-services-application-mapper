@@ -7,7 +7,6 @@ import * as tile_view from "./tile_view.js";
 import * as ui_util from "./util.js";
 import * as diagrams from "./diagrams.js";
 
-
 var data_div_id = "nav-data";
 var alerts_div_id = "nav-alerts";
 var alarms_div_id = "nav-alarms";
@@ -32,7 +31,7 @@ var display_selected_nodes = function (diagram, node_ids) {
         diagram_link_ids.push({
             id: id,
             node_id: node.id,
-            diagram: diagram
+            diagram: diagram,
         });
         diagram_links += html;
     }
@@ -46,7 +45,7 @@ var display_selected_nodes = function (diagram, node_ids) {
                 let id = ui_util.makeid();
                 channel_tile_link_ids.push({
                     id: id,
-                    name: name
+                    name: name,
                 });
                 let html = `<a href="#" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                 tile_links = tile_links + html;
@@ -66,7 +65,9 @@ var display_selected_nodes = function (diagram, node_ids) {
         renderjson.set_icons("+", "-");
         renderjson.set_show_to_level(1);
         let html = `
-                    <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">${node.header}&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
+                    <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">${
+            node.header
+        }&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
                     ${tile_html}
                     ${diagram_html}
                     ${cache_html}
@@ -77,13 +78,15 @@ var display_selected_nodes = function (diagram, node_ids) {
         // }
         $("#" + data_div_id).append(html);
         var json = renderjson(data);
-        $("#" + data_div_id + "-text")[0].appendChild(
-            json
-        );
+        $("#" + data_div_id + "-text")[0].appendChild(json);
         // attach click handlers to tile links
         for (let link of channel_tile_link_ids) {
             let id = link.id;
-            let eventClosure = (function (local_tile_view, local_link, local_jq) {
+            let eventClosure = (function (
+                local_tile_view,
+                local_link,
+                local_jq
+            ) {
                 var local_view = local_tile_view;
                 var local_name = local_link.name;
                 return function () {
@@ -99,23 +102,29 @@ var display_selected_nodes = function (diagram, node_ids) {
         // attach click handlers to diagram links
         for (let item of diagram_link_ids) {
             let id = item.id;
-            let eventClosure = function (local_item) {
+            let eventClosure = (function (local_item) {
                 var local_diagram = local_item.diagram;
                 var local_node_id = local_item.node_id;
                 var local_blinks = blinks;
                 return function () {
-                    local_diagram.network.once("afterDrawing", (function () {
-                        return function () {
-                            local_diagram.network.fit({
-                                nodes: [local_node_id],
-                                animation: true
-                            });
-                            local_diagram.blink(local_blinks, local_node_id);
-                        };
-                    })());
+                    local_diagram.network.once(
+                        "afterDrawing",
+                        (function () {
+                            return function () {
+                                local_diagram.network.fit({
+                                    nodes: [local_node_id],
+                                    animation: true,
+                                });
+                                local_diagram.blink(
+                                    local_blinks,
+                                    local_node_id
+                                );
+                            };
+                        })()
+                    );
                     local_diagram.show();
                 };
-            }(item);
+            })(item);
             $("#" + id).on("click", eventClosure);
         }
     });
@@ -123,15 +132,40 @@ var display_selected_nodes = function (diagram, node_ids) {
     // if medialive channel/multiplex or mediaconnect flow, alerts apply
     if (node_ids[0].includes("managed-instance")) {
         show_elements([data_div_id, alarms_div_id, data_tab_id, alarms_tab_id]);
-        hide_elements([alerts_div_id, events_div_id, alerts_tab_id, events_tab_id]);
-    } else if ((node_ids[0].includes("medialive") && node_ids[0].includes("channel")) || node_ids[0].includes("multiplex") || node_ids[0].includes("mediaconnect")) {
-        show_elements([data_div_id, alerts_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
+        hide_elements([
+            alerts_div_id,
+            events_div_id,
+            alerts_tab_id,
+            events_tab_id,
+        ]);
+    } else if (
+        (node_ids[0].includes("medialive") &&
+            node_ids[0].includes("channel")) ||
+        node_ids[0].includes("multiplex") ||
+        node_ids[0].includes("mediaconnect")
+    ) {
+        show_elements([
+            data_div_id,
+            alerts_div_id,
+            alarms_div_id,
+            events_div_id,
+            data_tab_id,
+            alarms_tab_id,
+            alerts_tab_id,
+            events_tab_id,
+        ]);
     } else {
-        show_elements([data_div_id, alarms_div_id, events_div_id, data_tab_id, alarms_tab_id, events_tab_id]);
+        show_elements([
+            data_div_id,
+            alarms_div_id,
+            events_div_id,
+            data_tab_id,
+            alarms_tab_id,
+            events_tab_id,
+        ]);
         hide_elements([alerts_div_id, alerts_tab_id]);
     }
 };
-
 
 var display_selected_edges = function (diagram, edges) {
     var edge = model.edges.get(edges[0]);
@@ -153,9 +187,15 @@ var display_selected_edges = function (diagram, edges) {
     $("#" + data_div_id + "-from").append(renderjson(fromNode.data));
     $("#" + data_div_id + "-to").append(renderjson(toNode.data));
     show_elements([data_div_id, data_tab_id]);
-    hide_elements([alarms_div_id, alerts_div_id, events_div_id, alarms_tab_id, alerts_tab_id, events_tab_id]);
+    hide_elements([
+        alarms_div_id,
+        alerts_div_id,
+        events_div_id,
+        alarms_tab_id,
+        alerts_tab_id,
+        events_tab_id,
+    ]);
 };
-
 
 var display_selected_tile = function (name, members) {
     renderjson.set_icons("+", "-");
@@ -177,15 +217,29 @@ var display_selected_tile = function (name, members) {
             `;
     $("#" + data_div_id).empty();
     $("#" + data_div_id).append(html);
-    $("#" + data_div_id + "-text")[0].appendChild(
-        renderjson(data)
-    );
-    show_elements([data_tab_id, alarms_tab_id, alerts_tab_id, data_div_id, alarms_div_id, alerts_div_id]);
+    $("#" + data_div_id + "-text")[0].appendChild(renderjson(data));
+    show_elements([
+        data_tab_id,
+        alarms_tab_id,
+        alerts_tab_id,
+        data_div_id,
+        alarms_div_id,
+        alerts_div_id,
+    ]);
     hide_elements([events_tab_id, events_div_id]);
 };
 
 var display_no_selection = function () {
-    hide_elements([data_tab_id, alarms_tab_id, alerts_tab_id, events_tab_id, data_div_id, alerts_div_id, alarms_div_id, events_div_id]);
+    hide_elements([
+        data_tab_id,
+        alarms_tab_id,
+        alerts_tab_id,
+        events_tab_id,
+        data_div_id,
+        alerts_div_id,
+        alarms_div_id,
+        events_div_id,
+    ]);
 };
 
 // accepts a list of element IDs to hide
@@ -202,7 +256,6 @@ var show_elements = function (element_list) {
         $("#" + element_list[id]).removeClass("d-none");
     }
 };
-
 
 var tile_view_listener = function (name, members) {
     var selected = tile_view.selected();
@@ -222,13 +275,11 @@ diagrams.add_selection_callback(function (diagram, event) {
     // console.log(event);
     if (event.nodes.length > 0) {
         display_selected_nodes(diagram, event.nodes);
-    } else
-        if (event.edges.length > 0) {
-            display_selected_edges(diagram, event.edges);
-        } else
-            if (event.nodes.length == 0 && event.edges.length == 0) {
-                display_no_selection();
-            }
+    } else if (event.edges.length > 0) {
+        display_selected_edges(diagram, event.edges);
+    } else if (event.nodes.length == 0 && event.edges.length == 0) {
+        display_no_selection();
+    }
 });
 
 tile_view.add_selection_callback(tile_view_listener);

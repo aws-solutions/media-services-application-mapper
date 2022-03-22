@@ -1,7 +1,6 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as settings from "../settings.js";
 import * as diagram_factory from "./diagram_factory.js";
 import * as nav_alert from "./alert.js";
@@ -61,7 +60,7 @@ var remove_diagram = function (name) {
     const key = `diagram_lock_${view_id}`;
     settings.remove(key);
     // select the tile tab
-    $("#channel-tiles-tab").tab('show');
+    $("#channel-tiles-tab").tab("show");
 };
 
 var get_by_name = function (name) {
@@ -72,30 +71,37 @@ var save_diagrams = function () {
     // var settings = _.map(Object.values(diagrams), ["name", "view_id"]);
     var diagram_map = _.map(Object.values(diagrams), function (item) {
         return {
-            "name": item.name,
-            "view_id": item.view_id
+            name: item.name,
+            view_id: item.view_id,
         };
     });
     // console.log(settings);
-    settings.put("diagrams", diagram_map).then(function () {
-        console.log("diagrams saved");
-    }).catch(function (error) {
-        console.error(error);
-    });
+    settings
+        .put("diagrams", diagram_map)
+        .then(function () {
+            console.log("diagrams saved");
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
 };
 
 var load_diagrams = function () {
     return new Promise((resolve) => {
         // load diagram names from the cloud on initialization
         settings.get("diagrams").then(function (diagrams) {
-            console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
+            console.log(
+                "load user-defined diagrams: " + JSON.stringify(diagrams)
+            );
             if (Array.isArray(diagrams) && diagrams.length > 0) {
                 for (let diagram of diagrams) {
                     add_diagram(diagram.name, diagram.view_id, false);
                 }
             } else {
                 // no diagrams, create default View from previous Global View
-                console.log("no used-defined diagrams, creating default diagram");
+                console.log(
+                    "no used-defined diagrams, creating default diagram"
+                );
                 add_diagram("Default", "global", true);
             }
             resolve();
@@ -130,7 +136,7 @@ function have_any(node_ids) {
         if (intersect.length > 0) {
             results.push({
                 diagram: diagram.name,
-                found: intersect
+                found: intersect,
             });
         }
     }
@@ -142,39 +148,49 @@ const update_lock_visibility = () => {
     if (shown_diagram()) {
         // show the lock
         $("#diagram-lock-button").removeClass("d-none");
-    }
-    else {
+    } else {
         // hide the lock
         $("#diagram-lock-button").addClass("d-none");
     }
 };
 
 const update_lock_state = () => {
-    const menu_ids = ["diagram_manage_contents", "diagram_add_downstream",
-        "diagram_add_upstream", "diagram_add_all_nodes", "nodes_align_vertical", "nodes_align_horizontal", "nodes_layout_vertical",
-        "nodes_layout_horizontal", "nodes_layout_isolated", "diagram_remove_selected", "diagram_remove_diagram"];
+    const menu_ids = [
+        "diagram_manage_contents",
+        "diagram_add_downstream",
+        "diagram_add_upstream",
+        "diagram_add_all_nodes",
+        "nodes_align_vertical",
+        "nodes_align_horizontal",
+        "nodes_layout_vertical",
+        "nodes_layout_horizontal",
+        "nodes_layout_isolated",
+        "diagram_remove_selected",
+        "diagram_remove_diagram",
+    ];
     // only update if we're showing a diagram
     let diagram = shown_diagram();
     if (diagram) {
         // get the lock state from settings
         diagram.isLocked().then((locked) => {
-            console.log(`diagram ${diagram.name} is ${locked ? "locked" : "unlocked"}`);
+            console.log(
+                `diagram ${diagram.name} is ${locked ? "locked" : "unlocked"}`
+            );
             // update the lock icon
-            const html = locked ? 'lock' : 'lock_open';
+            const html = locked ? "lock" : "lock_open";
             $("#diagram-lock-icon").html(html);
             // change the state of the vis.js network to match the lock
             const options = {
                 interaction: {
-                    dragNodes: !locked
-                }
+                    dragNodes: !locked,
+                },
             };
             diagram.network.setOptions(options);
             // update menu items for diagrams
             for (let id of menu_ids) {
                 if (locked) {
                     $(`#${id}`).addClass("disabled");
-                }
-                else {
+                } else {
                     $(`#${id}`).removeClass("disabled");
                 }
             }
@@ -193,7 +209,9 @@ const create_lock_compartment = () => {
     // create
     const h_offset = 30;
     const v_offset = 2;
-    const style = `position: absolute; top: ${diagramPosition.top + v_offset}px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
+    const style = `position: absolute; top: ${
+        diagramPosition.top + v_offset
+    }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
     const buttonDiv = `<div id="diagram-lock-button" style="${style}"><span title="Lock/Unlock Changes" id="diagram-lock-icon" class="material-icons">lock_open</span></div>`;
     // console.log(buttonDiv);
     diagramDiv.before(buttonDiv);
@@ -215,7 +233,7 @@ const create_lock_compartment = () => {
 // this is the initialization code for the diagrams component
 load_diagrams().then(() => {
     create_lock_compartment();
-    $("#diagram-tab").on('shown.bs.tab', () => {
+    $("#diagram-tab").on("shown.bs.tab", () => {
         update_lock_visibility();
         update_lock_state();
     });
@@ -236,6 +254,5 @@ export {
     get_by_name,
     have_all,
     have_any,
-    add_selection_callback
+    add_selection_callback,
 };
-
