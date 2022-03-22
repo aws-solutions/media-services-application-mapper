@@ -17,9 +17,5 @@
     "tabulator-tables": "^4.9.3",
     "urijs": "^1.19.7",
     "vis": "^4.21.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.11.0",
-    "jshint": "^2.13.4"
   }
 }
