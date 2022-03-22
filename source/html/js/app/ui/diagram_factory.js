@@ -455,15 +455,13 @@ class Diagram {
     }
 
     get_start_to_end(start, theLen) {
-        return theLen > 0
-            ? {
-                  start: start,
-                  end: start + theLen,
-              }
-            : {
-                  start: start + theLen,
-                  end: start,
-              };
+        return theLen > 0 ? {
+            start: start,
+            end: start + theLen,
+        } : {
+            start: start + theLen,
+            end: start,
+        };
     }
 
     add_singleclick_callback(callback, once = false) {

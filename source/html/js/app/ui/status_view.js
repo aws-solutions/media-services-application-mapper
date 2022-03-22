@@ -35,13 +35,9 @@ var update = function () {
         statemachine.getModelDataStateMachine()
     );
     var configuration_class =
-        configuration_percent < 100
-            ? "progress-bar-striped progress-bar-animated bg-warning"
-            : "bg-success";
+        configuration_percent < 100 ? "progress-bar-striped progress-bar-animated bg-warning" : "bg-success";
     var model_data_class =
-        model_data_percent < 100
-            ? "progress-bar-striped progress-bar-animated bg-warning"
-            : "bg-success";
+        model_data_percent < 100 ? "progress-bar-striped progress-bar-animated bg-warning" : "bg-success";
     var configuration_stats =
         configuration_percent < 100 ? configuration_percent + "%" : "Ready";
     var model_stats = `${model.nodes.length} Nodes, ${model.edges.length} Connections`;

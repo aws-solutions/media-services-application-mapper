@@ -288,22 +288,11 @@ $("#advanced_settings_button").on("click", async function () {
         $("#advanced-inventory-regions").empty();
         const all_regions = module.get_available();
         for (let item of all_regions) {
-            const id =
-                item.RegionName == "global"
-                    ? "#advanced-inventory-global"
-                    : "#advanced-inventory-regions";
+            const id = item.RegionName == "global" ? "#advanced-inventory-global" : "#advanced-inventory-regions";
             const checkbox = `<label class="border-0 mx-2" style="cursor: pointer;">
-                            <input id="${util.makeid()}" type="checkbox" ${
-                inventory_regions.indexOf(item.RegionName) != -1
-                    ? "checked"
-                    : ""
-            } value="${item.RegionName}">
-                            ${
-                                item.RegionName == "global"
-                                    ? "Global services (S3, CloudFront)"
-                                    : item.RegionName
-                            }
-                            </label > `;
+                    <input id="${util.makeid()}" type="checkbox" ${inventory_regions.indexOf(item.RegionName) != -1 ? "checked" : ""} value="${item.RegionName}">
+                    ${item.RegionName == "global" ? "Global services (S3, CloudFront)" : item.RegionName}
+                    </label > `;
             $(id).append(checkbox);
         }
         $("#advanced-alarm-update-interval").val(
@@ -390,8 +379,7 @@ $("#bulk-delete-all-diagrams-button").click(async function () {
     let diagrams = await settings.get("diagrams");
     let count = diagrams.length;
     confirmation.show(
-        `< p > This action will delete ${count} diagram${
-            count == 1 ? "" : "s"
+        `< p > This action will delete ${count} diagram${count == 1 ? "" : "s"
         }. The browser will reload after completion.Continue ?</p > `,
         async function () {
             const layout = await import("./layout.js");
@@ -406,8 +394,7 @@ $("#bulk-delete-all-tiles-button").click(async function () {
     let channels = await settings.get("channels");
     let count = channels.length;
     confirmation.show(
-        `< p > This action will delete ${count} tile${
-            count == 1 ? "" : "s"
+        `< p > This action will delete ${count} tile${count == 1 ? "" : "s"
         }. The browser will reload after completion.Continue ?</p > `,
         async function () {
             (await import("../channels.js")).delete_all();
@@ -434,10 +421,8 @@ $("#bulk-delete-all-button").click(async function () {
     let diagrams = await settings.get("diagrams");
     let diagram_count = diagrams.length;
     confirmation.show(
-        `< p > This action will delete ${diagram_count} diagram${
-            diagram_count == 1 ? "" : "s"
-        }, ${channel_count} tile${
-            channel_count == 1 ? "" : "s"
+        `< p > This action will delete ${diagram_count} diagram${diagram_count == 1 ? "" : "s"
+        }, ${channel_count} tile${channel_count == 1 ? "" : "s"
         }, and all alarm subscriptions in the tool.The browser will reload after completion.Continue ?</p > `,
         async function () {
             await Promise.all([

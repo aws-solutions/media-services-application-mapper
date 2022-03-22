@@ -105,9 +105,7 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
     const newEdgeOpts = {
         color: {
             color:
-                active_alert === true && newState !== "normal"
-                    ? "red"
-                    : "black",
+                active_alert === true && newState !== "normal" ? "red" : "black",
         },
         dashes: active_alert === true && newState !== "normal",
         hoverWidth: 1,
