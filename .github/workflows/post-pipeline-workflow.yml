@@ -81,8 +81,7 @@ jobs:
                   tag_name: `${VERSION}`,
                   release_id: rel.id,
                   name: `${SHORT_NAME} ${VERSION}`,
-                  draft: true,
-                  body: "Update this description with release notes, etc."
+                  draft: true
                 })
                 updated = true
                 break
@@ -95,8 +94,8 @@ jobs:
         id: create_tag
         # create a new tag since version tag wasn't found
         run: |
-          git config --global user.email "me@example.com"
-          git config --global user.name "tagairosin"
+          git config --global user.email "msam@example.com"
+          git config --global user.name "msam"
           git tag -f -a ${VERSION} -m "tagging for release"
           git push -f origin ${VERSION}
           echo "tag created"

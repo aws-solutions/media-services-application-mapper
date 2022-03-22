@@ -689,6 +689,9 @@
                         "LAYOUT_TABLE_NAME": {
                             "Ref": "LayoutTableName"
                         },
+                        "NOTES_TABLE_NAME": {
+                            "Ref": "NotesTableName"
+                        },
                         "SETTINGS_TABLE_NAME": {
                             "Ref": "SettingsTableName"
                         }
@@ -961,6 +964,13 @@
         },
         "CloudWatchEventsTableName": {
             "Description": "This is the DynamoDB table name that stores CloudWatch events for MSAM.",
+            "Type": "String",
+            "AllowedPattern": "\\S+",
+            "MinLength": 1,
+            "ConstraintDescription": "Please enter a value for this field."
+        },
+        "NotesTableName": {
+            "Description": "This is the DynamoDB table name that stores resource notes.",
             "Type": "String",
             "AllowedPattern": "\\S+",
             "MinLength": 1,

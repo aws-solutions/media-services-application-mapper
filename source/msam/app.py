@@ -15,6 +15,7 @@ import chalicelib.cloudwatch as cloudwatch_data
 import chalicelib.layout as node_layout
 import chalicelib.periodic as periodic_handlers
 import chalicelib.settings as msam_settings
+import chalicelib.notes as resource_notes
 
 app = Chalice(app_name='msam')
 
@@ -482,3 +483,37 @@ def report_metrics(_):
     Entry point for the CloudWatch scheduled task to report anonymous resource metrics.
     """
     return periodic_handlers.report_metrics(STACKNAME, METRICS_REPORTING_RATE_HOURS)
+
+
+@app.route('/notes/{resource_arn}',
+           cors=True,
+           api_key_required=True,
+           methods=['GET'])
+def get_resource_notes(resource_arn):
+    """
+    API entry point to return notes for a given resource.
+    """
+    return resource_notes.get_resource_notes(resource_arn)
+
+
+@app.route('/notes',
+           cors=True,
+           api_key_required=True,
+           methods=['GET'])
+def all_notes():
+    """
+    API entry point to return notes for all resource.
+    """
+    return resource_notes.get_all_notes()
+
+
+@app.route('/notes/{resource_arn}',
+           cors=True,
+           api_key_required=True,
+           methods=['POST'],
+           content_types=['text/plain'])
+def update_resource_notes(resource_arn):
+    """
+    API entry point to update notes of a given resource.
+    """
+    return resource_notes.update_resource_notes(resource_arn, app.current_request)

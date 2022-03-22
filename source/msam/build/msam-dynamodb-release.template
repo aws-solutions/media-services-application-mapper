@@ -380,6 +380,28 @@
                     "SSEEnabled": true
                 }
             }
+        },
+        "ResourceNotes": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [{
+                        "AttributeName": "resource_arn",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [{
+                        "AttributeName": "resource_arn",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": true
+                },
+                "SSESpecification": {
+                    "SSEEnabled": true
+                }
+            }
         }
     },
     "Parameters": {
@@ -433,6 +455,12 @@
                 "Ref": "CloudWatchEvents"
             },
             "Description": "CloudWatchEvents table resource name"
+        },
+        "NotesTable": {
+            "Value": {
+                "Ref": "ResourceNotes"
+            },
+            "Description": "Notes table resource name"
         }
     }
 }
