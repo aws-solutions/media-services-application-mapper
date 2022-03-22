@@ -4,7 +4,6 @@
 // Cookie: MSAM_CURRENT = "Cookie Name" or missing (not saved)
 // Cookie: MSAM_ENDPOINT_<ID> = "{ URL, Key, Last }"
 
-
 const cookie_name_current = "MSAM_CURRENT",
     cookie_name_prefix = "MSAM_ENDPOINT_",
     session_current = "MSAM_CURRENT",
@@ -36,7 +35,7 @@ const get_current = _.memoize(function () {
     if (payload) {
         // set the cookie again for expiration
         Cookies.set(cookie_name_current, payload, {
-            expires: max_age
+            expires: max_age,
         });
         var name = payload;
         payload = Cookies.get(name);
@@ -44,7 +43,7 @@ const get_current = _.memoize(function () {
         if (payload) {
             // set the cookie again for expiration
             Cookies.set(name, payload, {
-                expires: max_age
+                expires: max_age,
             });
             // set the session storage if not already
             if (!current) {
@@ -60,17 +59,20 @@ const get_current = _.memoize(function () {
 const set_current = function (url, api_key, store = true) {
     clear_function_cache();
     var current = [url, api_key];
-    window.sessionStorage.setItem(session_current, window.btoa(JSON.stringify(current)));
+    window.sessionStorage.setItem(
+        session_current,
+        window.btoa(JSON.stringify(current))
+    );
     var cookie_name = cookie_name_prefix + objectHash.sha1(url);
     var encoded = window.btoa(JSON.stringify(current));
     if (store) {
         // add or update MSAM_ENDPOINT_<ID> cookie
         Cookies.set(cookie_name, encoded, {
-            expires: max_age
+            expires: max_age,
         });
         // rewrite MSAM_CURRENT cookie
         Cookies.set(cookie_name_current, cookie_name, {
-            expires: max_age
+            expires: max_age,
         });
     } else {
         Cookies.remove(cookie_name_current);
@@ -91,7 +93,7 @@ var key = current_url.searchParams.get("key");
 if (endpoint && key) {
     // strip any trailing slashes
     if (endpoint.endsWith("/")) {
-        endpoint = endpoint.substring(0, (endpoint.length - 1));
+        endpoint = endpoint.substring(0, endpoint.length - 1);
     }
     console.log("Connection override with URL parameters");
     set_current(endpoint, key, false);

@@ -1,15 +1,14 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-   
 export const diagram_pre_options = {
     layout: {
         hierarchical: {
-            enabled: true
-        }
+            enabled: true,
+        },
     },
     physics: {
-        enabled: false
+        enabled: false,
     },
     interaction: {
         dragNodes: true,
@@ -23,40 +22,40 @@ export const diagram_pre_options = {
             speed: {
                 x: 10,
                 y: 10,
-                zoom: 0.02
+                zoom: 0.02,
             },
-            bindToWindow: true
+            bindToWindow: true,
         },
         multiselect: true,
         navigationButtons: true,
         selectable: true,
         selectConnectedEdges: true,
         tooltipDelay: 300,
-        zoomView: false
-    }
+        zoomView: false,
+    },
 };
 
 export const with_layout = {
     layout: {
-        improvedLayout: true
+        improvedLayout: true,
     },
     nodes: {
         widthConstraint: {
-            maximum: 200
-        }
+            maximum: 200,
+        },
     },
     edges: {
         smooth: {
-            enabled: false
-        }
+            enabled: false,
+        },
     },
     physics: {
         enabled: true,
         minVelocity: 25,
         stabilization: {
             enabled: true,
-            iterations: 10
-        }
+            iterations: 10,
+        },
     },
     interaction: {
         dragNodes: true,
@@ -70,32 +69,32 @@ export const with_layout = {
             speed: {
                 x: 10,
                 y: 10,
-                zoom: 0.02
+                zoom: 0.02,
             },
-            bindToWindow: true
+            bindToWindow: true,
         },
         multiselect: true,
         navigationButtons: true,
         selectable: true,
         selectConnectedEdges: true,
         tooltipDelay: 300,
-        zoomView: false
-    }
+        zoomView: false,
+    },
 };
 
 export const without_layout = {
     layout: {
         hierarchical: {
-            enabled: false
-        }
+            enabled: false,
+        },
     },
     edges: {
         smooth: {
-            enabled: false
-        }
+            enabled: false,
+        },
     },
     physics: {
-        enabled: false
+        enabled: false,
     },
     interaction: {
         dragNodes: true,
@@ -109,17 +108,17 @@ export const without_layout = {
             speed: {
                 x: 10,
                 y: 10,
-                zoom: 0.02
+                zoom: 0.02,
             },
-            bindToWindow: true
+            bindToWindow: true,
         },
         multiselect: true,
         navigationButtons: true,
         selectable: true,
         selectConnectedEdges: true,
         tooltipDelay: 300,
-        zoomView: false
-    }
+        zoomView: false,
+    },
 };
 
 export const vertical_layout = {
@@ -130,17 +129,17 @@ export const vertical_layout = {
             sortMethod: "hubsize",
             nodeSpacing: 250,
             treeSpacing: 250,
-            levelSeparation: 250
-        }
+            levelSeparation: 250,
+        },
     },
     edges: {
         smooth: {
-            enabled: false
-        }
+            enabled: false,
+        },
     },
     physics: {
-        enabled: false
-    }
+        enabled: false,
+    },
 };
 
 export const horizontal_layout = {
@@ -151,15 +150,15 @@ export const horizontal_layout = {
             sortMethod: "hubsize",
             nodeSpacing: 250,
             treeSpacing: 250,
-            levelSeparation: 350
-        }
+            levelSeparation: 350,
+        },
     },
     edges: {
         smooth: {
-            enabled: false
-        }
+            enabled: false,
+        },
     },
     physics: {
-        enabled: false
-    }
+        enabled: false,
+    },
 };

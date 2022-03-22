@@ -16,28 +16,30 @@ export const refresh = _.memoize(function () {
     const api_key = current_connection[1];
     const all_endpoint = `${url}/regions`;
     return new Promise(function (resolve, reject) {
-        server.get(all_endpoint, api_key).then(function (data) {
-            available = data;
-            available.sort(function (a, b) {
-                const nameA = a.RegionName;
-                const nameB = b.RegionName;
-                if (nameA < nameB) {
-                    return -1;
-                } else
-                    if (nameA > nameB) {
+        server
+            .get(all_endpoint, api_key)
+            .then(function (data) {
+                available = data;
+                available.sort(function (a, b) {
+                    const nameA = a.RegionName;
+                    const nameB = b.RegionName;
+                    if (nameA < nameB) {
+                        return -1;
+                    } else if (nameA > nameB) {
                         return 1;
                     } else {
                         // names must be equal
                         return 0;
                     }
+                });
+                const module = {
+                    get_available: get_available,
+                };
+                resolve(module);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
             });
-            const module = {
-                "get_available": get_available
-            };
-            resolve(module);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
     });
 });

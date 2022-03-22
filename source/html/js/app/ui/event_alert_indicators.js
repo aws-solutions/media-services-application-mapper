@@ -1,11 +1,9 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as model from "../model.js";
 import * as event_alerts from "../events.js";
 import * as diagrams from "./diagrams.js";
-
 
 /**
  * Retrieve all edges originating from the given arn.
@@ -16,7 +14,7 @@ const getEdges = (arn) => {
         filter: (item) => {
             // first arn in the edge id is the source
             return item.id.startsWith(`${arn}:`);
-        }
+        },
     });
     return _.isArray(edges) ? edges : [edges];
 };
@@ -32,15 +30,21 @@ const getEdgesByPipeline = (arn, pipeline, bidi = true) => {
         options = {
             filter: (item) => {
                 // the arn as the source or target and the pipeline number at the end
-                return ((item.id.includes(`:${arn}:`) || item.id.startsWith(`${arn}:`)) &&
-                    item.id.endsWith(`:${pipeline}`));
-            }
+                return (
+                    (item.id.includes(`:${arn}:`) ||
+                        item.id.startsWith(`${arn}:`)) &&
+                    item.id.endsWith(`:${pipeline}`)
+                );
+            },
         };
     } else {
         options = {
             filter: (item) => {
-                return item.id.startsWith(`${arn}:`) && item.id.endsWith(`:${pipeline}`);
-            }
+                return (
+                    item.id.startsWith(`${arn}:`) &&
+                    item.id.endsWith(`:${pipeline}`)
+                );
+            },
         };
     }
     const edges = model.edges.get(options);
@@ -53,11 +57,11 @@ const getEdgesByPipeline = (arn, pipeline, bidi = true) => {
  * @param {Boolean} alertState If true, alert setting call, or false for alert clearing
  * @param {String} dataSet Default to 'nodes. Only other possible option is 'edges'.
  */
-const updateUIHandler = (node, alertState = true, dataSet = 'nodes') => {
+const updateUIHandler = (node, alertState = true, dataSet = "nodes") => {
     let matches = [];
-    if (dataSet === 'nodes') {
+    if (dataSet === "nodes") {
         matches = diagrams.have_all([node.id]);
-    } else if (dataSet === 'edges') {
+    } else if (dataSet === "edges") {
         // both nodes of an edge need to be on a diagram for the edge to be there
         matches = diagrams.have_all([node.from, node.to]);
     }
@@ -72,14 +76,14 @@ const updateUIHandler = (node, alertState = true, dataSet = 'nodes') => {
 const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
     let selected = null;
     let unselected = null;
-    let newState = 'normal';
+    let newState = "normal";
 
     if (node.degraded) {
-        newState = 'degraded';
+        newState = "degraded";
         selected = node.render.degraded_selected();
         unselected = node.render.degraded_unselected();
     } else if (node.alerting) {
-        newState = 'alerting';
+        newState = "alerting";
         selected = node.render.alert_selected();
         unselected = node.render.alert_unselected();
     } else {
@@ -87,7 +91,10 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
         unselected = node.render.normal_unselected();
     }
 
-    if (selected != node.image.selected || unselected != node.image.unselected) {
+    if (
+        selected != node.image.selected ||
+        unselected != node.image.unselected
+    ) {
         /** Update the node */
         node.image.selected = selected;
         node.image.unselected = unselected;
@@ -96,9 +103,12 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
     }
 
     const newEdgeOpts = {
-        color: { color: (active_alert === true && newState !== 'normal') ? 'red' : 'black' },
-        dashes: (active_alert === true && newState !== 'normal'),
-        hoverWidth: 1
+        color: {
+            color:
+                active_alert === true && newState !== "normal" ? "red" : "black",
+        },
+        dashes: active_alert === true && newState !== "normal",
+        hoverWidth: 1,
     };
 
     let edges;
@@ -106,11 +116,11 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
         // get edges in both directions if possible
         edges = getEdgesByPipeline(node.id, parseInt(alert_details.pipeline));
     }
-    // else 
+    // else
     // if (_.has(alert_details, "pipeline")) {
     //     // get outbound edges by pipeline
     //     edges = getEdgesByPipeline(node.id, parseInt(alert_details.pipeline), false);
-    // } 
+    // }
     else {
         // get outbound edges
         edges = getEdges(node.id);
@@ -123,13 +133,16 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
         // console.log(JSON.stringify(edge));
         // console.log(`edge: ${edge.id}`);
 
-        if (edge.color.color !== newEdgeOpts.color.color || edge.dashes !== newEdgeOpts.dashes) {
+        if (
+            edge.color.color !== newEdgeOpts.color.color ||
+            edge.dashes !== newEdgeOpts.dashes
+        ) {
             // console.log("edge needs update");
             edge.color = newEdgeOpts.color;
             edge.dashes = newEdgeOpts.dashes;
             edge.hoverWidth = newEdgeOpts.hoverWidth;
             model.edges.update(edge);
-            updateUIHandler(edge, active_alert, 'edges');
+            updateUIHandler(edge, active_alert, "edges");
         } else {
             // console.log("edge is correct");
         }
@@ -178,12 +191,20 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
             if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
                 // create the attribute if its not there
                 if (!_.isArray(node.running_pipelines)) {
-                    if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "SINGLE_PIPELINE") {
+                    if (
+                        _.has(node.data, "ChannelClass") &&
+                        node.data.ChannelClass === "SINGLE_PIPELINE"
+                    ) {
                         node.running_pipelines = new Array(1);
-                    } else if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "STANDARD") {
+                    } else if (
+                        _.has(node.data, "ChannelClass") &&
+                        node.data.ChannelClass === "STANDARD"
+                    ) {
                         node.running_pipelines = new Array(2);
                     } else if (_.has(node.data, "PipelinesRunningCount")) {
-                        let count = Number.parseInt(node.data.PipelinesRunningCount);
+                        let count = Number.parseInt(
+                            node.data.PipelinesRunningCount
+                        );
                         node.running_pipelines = new Array(count);
                     } else {
                         node.running_pipelines = new Array(1);
@@ -192,7 +213,10 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
                 }
                 let index = Number.parseInt(item.detail.pipeline);
                 node.running_pipelines[index] = 0;
-                node.degraded = (_.sum(node.running_pipelines) > 0) && (_.sum(node.running_pipelines) < node.running_pipelines.length);
+                node.degraded =
+                    _.sum(node.running_pipelines) > 0 &&
+                    _.sum(node.running_pipelines) <
+                        node.running_pipelines.length;
             } else {
                 node.degraded = false;
             }
@@ -203,13 +227,17 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
     // cleared alerts are present in the previous list and not in the current list
 
-    let uniq_cleared_alerts = _.differenceBy(previous_alerts, current_alerts, (item) => {
-        if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
-            return `${item.resource_arn}:${item.detail.pipeline}`;
-        } else {
-            return `${item.resource_arn}`;
+    let uniq_cleared_alerts = _.differenceBy(
+        previous_alerts,
+        current_alerts,
+        (item) => {
+            if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
+                return `${item.resource_arn}:${item.detail.pipeline}`;
+            } else {
+                return `${item.resource_arn}`;
+            }
         }
-    });
+    );
 
     console.log(`unique cleared alerts: ${uniq_cleared_alerts.length}`);
 
@@ -223,12 +251,20 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
             if (_.has(cleared, "detail") && _.has(cleared.detail, "pipeline")) {
                 // create the attribute if its not there
                 if (!_.isArray(node.running_pipelines)) {
-                    if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "SINGLE_PIPELINE") {
+                    if (
+                        _.has(node.data, "ChannelClass") &&
+                        node.data.ChannelClass === "SINGLE_PIPELINE"
+                    ) {
                         node.running_pipelines = new Array(1);
-                    } else if (_.has(node.data, "ChannelClass") && node.data.ChannelClass === "STANDARD") {
+                    } else if (
+                        _.has(node.data, "ChannelClass") &&
+                        node.data.ChannelClass === "STANDARD"
+                    ) {
                         node.running_pipelines = new Array(2);
                     } else if (_.has(node.data, "PipelinesRunningCount")) {
-                        let count = Number.parseInt(node.data.PipelinesRunningCount);
+                        let count = Number.parseInt(
+                            node.data.PipelinesRunningCount
+                        );
                         node.running_pipelines = new Array(count);
                     } else {
                         node.running_pipelines = new Array(1);
@@ -237,7 +273,10 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
                 }
                 let index = Number.parseInt(cleared.detail.pipeline);
                 node.running_pipelines[index] = 1;
-                node.degraded = (_.sum(node.running_pipelines) > 0) && (_.sum(node.running_pipelines) < node.running_pipelines.length);
+                node.degraded =
+                    _.sum(node.running_pipelines) > 0 &&
+                    _.sum(node.running_pipelines) <
+                        node.running_pipelines.length;
             } else {
                 node.degraded = false;
             }
@@ -247,4 +286,3 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
 };
 
 event_alerts.add_callback(updateEventAlertState);
-

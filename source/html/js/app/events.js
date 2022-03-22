@@ -32,7 +32,8 @@ var retrieve_for_state = function (state) {
     var api_key = current_connection[1];
     var current_endpoint = `${url}/cloudwatch/events/state/${state}`;
     return new Promise(function (resolve, reject) {
-        server.get(current_endpoint, api_key)
+        server
+            .get(current_endpoint, api_key)
             .then(resolve)
             .catch(function (error) {
                 console.error(error);
@@ -42,32 +43,54 @@ var retrieve_for_state = function (state) {
 };
 
 var cache_update = function () {
-    retrieve_for_state("set").then(function (response) {
-        // console.log("updated set event cache");
-        previous_set_events = current_set_events;
-        current_set_events = response;
-        previous_medialive_events = _.filter(previous_set_events, function (i) {
-            return (i.source == "aws.medialive");
-        });
-        current_medialive_events = _.filter(current_set_events, function (i) {
-            return (i.source == "aws.medialive");
-        });
-        previous_mediaconnect_events = _.filter(previous_set_events, function (i) {
-            return (i.source == "aws.mediaconnect");
-        });
-        current_mediaconnect_events = _.filter(current_set_events, function (i) {
-            return (i.source == "aws.mediaconnect");
-        });
-        var added = _.differenceBy(current_set_events, previous_set_events, "alarm_id");
-        var removed = _.differenceBy(previous_set_events, current_set_events, "alarm_id");
-        if (added.length || removed.length) {
-            for (let f of listeners) {
-                f(current_set_events, previous_set_events);
+    retrieve_for_state("set")
+        .then(function (response) {
+            // console.log("updated set event cache");
+            previous_set_events = current_set_events;
+            current_set_events = response;
+            previous_medialive_events = _.filter(
+                previous_set_events,
+                function (i) {
+                    return i.source == "aws.medialive";
+                }
+            );
+            current_medialive_events = _.filter(
+                current_set_events,
+                function (i) {
+                    return i.source == "aws.medialive";
+                }
+            );
+            previous_mediaconnect_events = _.filter(
+                previous_set_events,
+                function (i) {
+                    return i.source == "aws.mediaconnect";
+                }
+            );
+            current_mediaconnect_events = _.filter(
+                current_set_events,
+                function (i) {
+                    return i.source == "aws.mediaconnect";
+                }
+            );
+            var added = _.differenceBy(
+                current_set_events,
+                previous_set_events,
+                "alarm_id"
+            );
+            var removed = _.differenceBy(
+                previous_set_events,
+                current_set_events,
+                "alarm_id"
+            );
+            if (added.length || removed.length) {
+                for (let f of listeners) {
+                    f(current_set_events, previous_set_events);
+                }
             }
-        }
-    }).catch(function (error) {
-        console.error(error);
-    });
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
 };
 
 var load_update_interval = function () {
@@ -99,12 +122,12 @@ load_update_interval();
 // return {
 export function get_cached_events() {
     return {
-        "current": current_set_events,
-        "previous": previous_set_events,
-        "current_mediaconnect": current_mediaconnect_events,
-        "previous_mediaconnect": previous_mediaconnect_events,
-        "current_medialive": current_medialive_events,
-        "previous_medialive": previous_medialive_events
+        current: current_set_events,
+        previous: previous_set_events,
+        current_mediaconnect: current_mediaconnect_events,
+        previous_mediaconnect: previous_mediaconnect_events,
+        current_medialive: current_medialive_events,
+        previous_medialive: previous_medialive_events,
     };
 }
 
@@ -129,4 +152,3 @@ export function set_update_interval(seconds) {
 export function get_update_interval() {
     return update_interval;
 }
-

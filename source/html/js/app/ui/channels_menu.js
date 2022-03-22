@@ -1,13 +1,11 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as model from "../model.js";
 import * as ui_util from "./util.js";
 import * as channels from "../channels.js";
 import * as alert from "./alert.js";
 import * as diagrams from "./diagrams.js";
-
 
 $("#tiles_add_new_tile_button").on("click", function () {
     const diagram = diagrams.shown();
@@ -43,14 +41,17 @@ $("#save_channel_definition").on("click", function () {
     console.log("save new channel = " + channel_name);
     const diagram = diagrams.shown();
     const node_ids = diagram.network.getSelectedNodes();
-    channels.create_channel(channel_name, node_ids).then(async function (response) {
-        console.log(response);
-        alert.show("Tile created");
-        const tile_view = await import("./tile_view.js");
-        tile_view.redraw_tiles();
-    }).catch(function (error) {
-        console.error(error);
-    });
+    channels
+        .create_channel(channel_name, node_ids)
+        .then(async function (response) {
+            console.log(response);
+            alert.show("Tile created");
+            const tile_view = await import("./tile_view.js");
+            tile_view.redraw_tiles();
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
 });
 
 $("#channel_definition_modal").on("show.bs.modal", function () {
@@ -67,7 +68,9 @@ $("#channel_definition_modal").on("show.bs.modal", function () {
     let index = 0;
     for (let id of diagram.network.getSelectedNodes()) {
         const node = model.nodes.get(id);
-        channel_content += `<tr><th scope="row">${++index}</th><td>${node.title}</td><td>${node.id}</td></tr>`;
+        channel_content += `<tr><th scope="row">${++index}</th><td>${
+            node.title
+        }</td><td>${node.id}</td></tr>`;
     }
     const html = `
         <table class="table table-sm table-hover">
@@ -95,7 +98,11 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
     let index = 0;
     for (let id of diagram.network.getSelectedNodes()) {
         const node = model.nodes.get(id);
-        channel_content += `<tr><th scope="row">${++index}</th><td>${node.title}</td><td draggable="true" data-node-id="${node.id}">${node.id}</td></tr>`;
+        channel_content += `<tr><th scope="row">${++index}</th><td>${
+            node.title
+        }</td><td draggable="true" data-node-id="${node.id}">${
+            node.id
+        }</td></tr>`;
     }
     const html = `
         <table class="my-3 table table-sm table-hover">
@@ -149,7 +156,9 @@ $("#save_channel_add_node").on("click", function () {
     for (let item of members) {
         node_ids.push($(item).attr("data-node-id"));
     }
-    const channel_checks = $("#channel_add_node_modal_channels input[type='checkbox']");
+    const channel_checks = $(
+        "#channel_add_node_modal_channels input[type='checkbox']"
+    );
     const promises = [];
     for (let item of channel_checks) {
         if ($(item).prop("checked")) {
@@ -172,7 +181,7 @@ const clear_quick_new_tile_alert = function () {
     $("#quick_new_tile_dialog_alert").replaceWith(html);
 };
 
-$("#quick_new_tile_dialog").on('shown.bs.modal', function () {
+$("#quick_new_tile_dialog").on("shown.bs.modal", function () {
     clear_quick_new_tile_alert();
     $("#quick_new_tile_dialog_name").val("");
     $("#quick_new_tile_dialog_name").focus();
@@ -185,31 +194,38 @@ $("#quick_new_tile_dialog_proceed").on("click", function () {
         // check it
         const valid_name = new RegExp("^\\w+");
         if (valid_name.test(channel_name)) {
-            const node_ids = JSON.parse($("#quick_new_tile_dialog").attr("node_ids"));
-            channels.create_channel(channel_name, node_ids).then(async function (response) {
-                console.log(response);
-                $("#quick_new_tile_dialog").modal('hide');
-                alert.show("Tile created");
-                const tile_view = await import("./tile_view.js");
-                tile_view.redraw_tiles();
-            }).catch(function (error) {
-                console.error(error);
-            });
+            const node_ids = JSON.parse(
+                $("#quick_new_tile_dialog").attr("node_ids")
+            );
+            channels
+                .create_channel(channel_name, node_ids)
+                .then(async function (response) {
+                    console.log(response);
+                    $("#quick_new_tile_dialog").modal("hide");
+                    alert.show("Tile created");
+                    const tile_view = await import("./tile_view.js");
+                    tile_view.redraw_tiles();
+                })
+                .catch(function (error) {
+                    console.error(error);
+                });
         } else {
-            set_quick_new_tile_alert("Names must start with an alphanumeric character");
+            set_quick_new_tile_alert(
+                "Names must start with an alphanumeric character"
+            );
         }
     } catch (error) {
         console.log(error);
-        set_quick_new_tile_alert("Names must start with an alphanumeric character");
+        set_quick_new_tile_alert(
+            "Names must start with an alphanumeric character"
+        );
     }
 });
 
 function show_quick_new_tile(node_ids) {
     const encoded = JSON.stringify(node_ids);
     $("#quick_new_tile_dialog").attr("node_ids", encoded);
-    $("#quick_new_tile_dialog").modal('show');
+    $("#quick_new_tile_dialog").modal("show");
 }
 
-export {
-    show_quick_new_tile
-};
+export { show_quick_new_tile };

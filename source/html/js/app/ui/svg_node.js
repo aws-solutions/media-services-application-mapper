@@ -5,17 +5,27 @@ import * as ui_util from "./util.js";
 import * as overlays from "./overlays/overlays.js";
 
 const max_line_length = 25;
-const font_family = 'Arial';
+const font_family = "Arial";
 const work_div_id = ui_util.makeid();
-const work_div_style = 'overflow:hidden;top:-100%;left:-100%;position:absolute;opacity:0;';
+const work_div_style =
+    "overflow:hidden;top:-100%;left:-100%;position:absolute;opacity:0;";
 const work_div_html = `<div id="${work_div_id}" style="${work_div_style}"></div>`;
 const border_rgb = "#a6a6a6";
 const selected_border_rgb = "#262626";
 const degraded_rgb = "#ffff33";
 
-const wordWrap = (str, max) => str.length > max ? [`${str.substring(0, max - 1)} [...]`] : [str];
+const wordWrap = (str, max) =>
+    str.length > max ? [`${str.substring(0, max - 1)} [...]`] : [str];
 
-const create = (type_name, node_name, node_rgb, selected, id, data, generic_type_name) => {
+const create = (
+    type_name,
+    node_name,
+    node_rgb,
+    selected,
+    id,
+    data,
+    generic_type_name
+) => {
     const inc_y = 35;
     const radius = 20;
     const width = 400;
@@ -27,11 +37,18 @@ const create = (type_name, node_name, node_rgb, selected, id, data, generic_type
     $("#" + work_div_id).empty();
 
     const drawing = SVG(work_div_id).size(width, height);
-    drawing.rect(width, height).radius(radius).fill(selected ? selected_border_rgb : border_rgb);
-    drawing.rect(width - w_border, height - w_border).radius(radius).fill(node_rgb).dmove(w_border / 2, w_border / 2);
+    drawing
+        .rect(width, height)
+        .radius(radius)
+        .fill(selected ? selected_border_rgb : border_rgb);
+    drawing
+        .rect(width - w_border, height - w_border)
+        .radius(radius)
+        .fill(node_rgb)
+        .dmove(w_border / 2, w_border / 2);
 
     const typeLabel = drawing.text(type_name + ":").y(pos_y);
-    typeLabel.font({ family: font_family, size: font_size, weight: 'bold' });
+    typeLabel.font({ family: font_family, size: font_size, weight: "bold" });
     typeLabel.cx(width / 2);
 
     pos_y += inc_y;
@@ -68,19 +85,48 @@ const create = (type_name, node_name, node_rgb, selected, id, data, generic_type
     const regex = /id="\w+"\s*/g;
     const modified = code.replace(regex, "");
     // console.log(modified);
-    return 'data:image/svg+xml;base64,' + window.btoa(modified);
+    return "data:image/svg+xml;base64," + window.btoa(modified);
 };
 
 // add the hidden SVG rendering div to the end of the body
 $("body").append(work_div_html);
 
-
-export const selected = (type_name, node_name, node_rgb, id, data, generic_type_name) => {
-    return create(type_name, node_name, node_rgb, true, id, data, generic_type_name);
+export const selected = (
+    type_name,
+    node_name,
+    node_rgb,
+    id,
+    data,
+    generic_type_name
+) => {
+    return create(
+        type_name,
+        node_name,
+        node_rgb,
+        true,
+        id,
+        data,
+        generic_type_name
+    );
 };
 
-export const unselected = (type_name, node_name, node_rgb, id, data, generic_type_name) => {
-    return create(type_name, node_name, node_rgb, false, id, data, generic_type_name);
+export const unselected = (
+    type_name,
+    node_name,
+    node_rgb,
+    id,
+    data,
+    generic_type_name
+) => {
+    return create(
+        type_name,
+        node_name,
+        node_rgb,
+        false,
+        id,
+        data,
+        generic_type_name
+    );
 };
 
 export const getDegradedRgb = () => degraded_rgb;

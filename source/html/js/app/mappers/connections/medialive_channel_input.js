@@ -10,26 +10,27 @@ export const update = () => {
     const api_key = current[1];
     const items = [];
     return new Promise((resolve) => {
-        server.get(`${url}/cached/medialive-channel-medialive-input`, api_key).then((connections) => {
-            for (let connection of connections) {
-                const data = JSON.parse(connection.data);
-                items.push({
-                    "id": connection.arn,
-                    "to": connection.to,
-                    "from": connection.from,
-                    "data": data,
-                    "label": data.scheme,
-                    "arrows": "to",
-                    "color": {
-                        "color": "black"
-                    },
-                    dashes: false,
-                });
-            }
-            resolve(items);
-        });
+        server
+            .get(`${url}/cached/medialive-channel-medialive-input`, api_key)
+            .then((connections) => {
+                for (let connection of connections) {
+                    const data = JSON.parse(connection.data);
+                    items.push({
+                        id: connection.arn,
+                        to: connection.to,
+                        from: connection.from,
+                        data: data,
+                        label: data.scheme,
+                        arrows: "to",
+                        color: {
+                            color: "black",
+                        },
+                        dashes: false,
+                    });
+                }
+                resolve(items);
+            });
     });
 };
 
-
-export const module_name = 'MediaLive Channel to MediaLive Input';
+export const module_name = "MediaLive Channel to MediaLive Input";

@@ -1,11 +1,9 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as alarms from "../../alarms.js";
 import * as tools from "./overlay_tools.js";
 import * as model from "../../model.js";
-
 
 export const match_type = "EC2 Instance";
 
@@ -24,7 +22,13 @@ const decorate_information = function (drawing, font_size, width, height, id) {
     if (node) {
         if (node.data.Tags.Name) {
             let computer_name = node.data.Tags.Name;
-            tools.set_info_text(computer_name, drawing, font_size, width, "Name");
+            tools.set_info_text(
+                computer_name,
+                drawing,
+                font_size,
+                width,
+                "Name"
+            );
         }
     }
 };
@@ -33,6 +37,5 @@ export const decorate = function (drawing, font_size, width, height, id) {
     decorate_alarms(drawing, font_size, width, height, id);
     decorate_information(drawing, font_size, width, height, id);
 };
-
 
 export const informational = true;

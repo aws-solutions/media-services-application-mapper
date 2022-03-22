@@ -16,7 +16,7 @@ const configurationStateMachine = new machina.Fsm({
             "*": function () {
                 this.deferUntilTransition();
                 this.transition("get-saved-connection");
-            }
+            },
         },
         "get-saved-connection": {
             _onEnter: function () {
@@ -30,38 +30,43 @@ const configurationStateMachine = new machina.Fsm({
                     var endpoint = current_connection[0];
                     var api_key = current_connection[1];
                     var instance = this;
-                    api_check.ping(endpoint, api_key).then(function (response) {
-                        // test worked
-                        console.log("still working");
-                        console.log(response);
-                        instance.connectionExists();
-                    }).catch(function (error) {
-                        console.error("not working");
-                        console.error(error);
-                        instance.noSavedConnection();
-                    });
+                    api_check
+                        .ping(endpoint, api_key)
+                        .then(function (response) {
+                            // test worked
+                            console.log("still working");
+                            console.log(response);
+                            instance.connectionExists();
+                        })
+                        .catch(function (error) {
+                            console.error("not working");
+                            console.error(error);
+                            instance.noSavedConnection();
+                        });
                 }
             },
-            "noSavedConnection": "get-connection-from-ui",
-            "connectionExists": "configuration-ready"
+            noSavedConnection: "get-connection-from-ui",
+            connectionExists: "configuration-ready",
         },
         "get-connection-from-ui": {
             _onEnter: function () {
                 console.log("prompting for connection");
-                settings_menu.setConnectionAlert("One working endpoint connection is required");
+                settings_menu.setConnectionAlert(
+                    "One working endpoint connection is required"
+                );
                 settings_menu.showConnectionDialog();
             },
             _onExit: function () {
                 settings_menu.clearConnectionAlert();
             },
-            "connectionChanged": "configuration-ready",
+            connectionChanged: "configuration-ready",
         },
         "configuration-ready": {
             _onEnter: function () {
                 // this will notify the parent state machine
                 this.handle("configurationReady");
-            }
-        }
+            },
+        },
     },
     connectionChanged: function () {
         this.handle("connectionChanged");
@@ -86,7 +91,7 @@ const configurationStateMachine = new machina.Fsm({
     },
     start: function () {
         this.handle("start");
-    }
+    },
 });
 
 // This FSM tracks the state of model data initial loading
@@ -98,25 +103,25 @@ const modelDataStateMachine = new machina.Fsm({
             "*": function () {
                 this.deferUntilTransition();
                 this.transition("get-saved-channels");
-            }
+            },
         },
         "get-saved-channels": {
             // pull in settings from Dynamo, later
             _onEnter: function () {
                 this.transition("get-saved-layouts");
-            }
+            },
         },
         "get-saved-layouts": {
             // pull in settings from Dynamo, later
             _onEnter: function () {
                 this.transition("get-associated-alarms");
-            }
+            },
         },
         "get-associated-alarms": {
             // pull in settings from Dynamo, later
             _onEnter: function () {
                 this.transition("get-model-data");
-            }
+            },
         },
         "get-model-data": {
             _onEnter: async function () {
@@ -130,22 +135,22 @@ const modelDataStateMachine = new machina.Fsm({
                 // tell the model module to map the services
                 model.map(f);
             },
-            modelDataReady: "model-data-ready"
+            modelDataReady: "model-data-ready",
         },
         "model-data-ready": {
             // done
             _onEnter: function () {
                 this.handle("modelDataReady");
             },
-            refreshModelData: "get-saved-channels"
-        }
+            refreshModelData: "get-saved-channels",
+        },
     },
-    "start": function () {
+    start: function () {
         this.handle("start");
     },
-    "modelDataReady": function () {
+    modelDataReady: function () {
         this.handle("modelDataReady");
-    }
+    },
 });
 
 const toolStateMachine = new machina.Fsm({
@@ -156,34 +161,33 @@ const toolStateMachine = new machina.Fsm({
             "*": function () {
                 this.deferUntilTransition();
                 this.transition("disable-ui");
-            }
+            },
         },
         "disable-ui": {
             _onEnter: function () {
                 this.transition("get-configuration");
-            }
+            },
         },
         "get-configuration": {
             _child: configurationStateMachine,
-            configurationReady: "enable-ui"
+            configurationReady: "enable-ui",
         },
         "enable-ui": {
             _onEnter: function () {
                 this.transition("get-model-data");
-            }
+            },
         },
         "get-model-data": {
             _child: modelDataStateMachine,
-            modelDataReady: "update-visual-model"
+            modelDataReady: "update-visual-model",
         },
         "update-visual-model": {
             _onEnter: function () {
                 this.handle("visualModelReady");
             },
-            "visualModelReady": "visual-model-fresh"
+            visualModelReady: "visual-model-fresh",
             // update tile view, select first tile
             // update channel view (this happens with tile selection)
-
         },
         "visual-model-fresh": {
             _onEnter: async function () {
@@ -205,7 +209,7 @@ const toolStateMachine = new machina.Fsm({
                 await import("./ui/user_defined.js");
                 await import("./ui/help_menu.js");
                 // show the tiles tab
-                $("#channel-tiles-tab").tab('show');
+                $("#channel-tiles-tab").tab("show");
             },
             // start a timer and/or events to watch model data
             refreshModelData: function () {
@@ -214,30 +218,36 @@ const toolStateMachine = new machina.Fsm({
                 this.deferUntilTransition();
                 this.transition("get-model-data");
             },
-            "connectionChanged": function () {
+            connectionChanged: function () {
                 // prompt for reload
-                confirmation.show("<p>Would you like to reload from the new endpoint?</p>", function () {
-                    window.location.reload();
-                });
+                confirmation.show(
+                    "<p>Would you like to reload from the new endpoint?</p>",
+                    function () {
+                        window.location.reload();
+                    }
+                );
             },
-            "regionsChanged": function () {
+            regionsChanged: function () {
                 // prompt for reload
-                confirmation.show("<p>Would you like to reload for the changed regions?</p>", function () {
-                    window.location.reload();
-                });
-            }
+                confirmation.show(
+                    "<p>Would you like to reload for the changed regions?</p>",
+                    function () {
+                        window.location.reload();
+                    }
+                );
+            },
         },
         "visual-model-stale": {
             // transitions here when model needs to update storage or reverse
-        }
+        },
     },
-    "start": function () {
+    start: function () {
         this.handle("start");
     },
-    "refreshModelData": function () {
+    refreshModelData: function () {
         this.handle("refreshModelData");
     },
-    "visualModelReady": function () {
+    visualModelReady: function () {
         this.handle("visualModelReady");
     },
     connectionChanged: function () {
@@ -254,7 +264,7 @@ const toolStateMachine = new machina.Fsm({
     },
     regionsExist: function () {
         this.handle("regionsExist");
-    }
+    },
 });
 
 toolStateMachine.on("transition", function (data) {

@@ -1,12 +1,11 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as alert_events from "../../events.js";
 import * as alarms from "../../alarms.js";
 import * as tools from "./overlay_tools.js";
 
-export const match_type = 'MediaLive Multiplex';
+export const match_type = "MediaLive Multiplex";
 
 const decorate_alarms = function (drawing, font_size, width, height, id) {
     let alarm_count = 0;

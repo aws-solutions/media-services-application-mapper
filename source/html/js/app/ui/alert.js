@@ -7,9 +7,8 @@ const div_id = "alert_div";
 
 export const show = function (message) {
     $("#" + div_id).html(message);
-    $("#" + div_id).fadeIn('slow');
+    $("#" + div_id).fadeIn("slow");
     setTimeout(function () {
-        $("#" + div_id).fadeOut('slow');
+        $("#" + div_id).fadeOut("slow");
     }, timeout);
 };
-
