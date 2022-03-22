@@ -9,8 +9,11 @@ import * as overlay_ec2_instance from "./ec2_instance.js";
 import * as overlay_alarms_only from "./alarms_only.js";
 
 export const all = [
-    overlay_mediaconnect_flow, overlay_medialive_channel,
-    overlay_medialive_multiplex, overlay_ssm_managed_instance, overlay_ec2_instance
+    overlay_mediaconnect_flow,
+    overlay_medialive_channel,
+    overlay_medialive_multiplex,
+    overlay_ssm_managed_instance,
+    overlay_ec2_instance,
 ];
 
 export const default_overlay = overlay_alarms_only;

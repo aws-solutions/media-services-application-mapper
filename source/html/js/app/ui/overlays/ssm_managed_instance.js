@@ -5,7 +5,6 @@ import * as alarms from "../../alarms.js";
 import * as tools from "./overlay_tools.js";
 import * as model from "../../model.js";
 
-
 export const match_type = "SSM Managed Instance";
 
 var decorate_alarms = function (drawing, font_size, width, height, id) {
@@ -22,8 +21,16 @@ var decorate_information = function (drawing, font_size, width, height, id) {
     var node = model.nodes.get(id);
     if (node) {
         if (node.data.Data["AWS:InstanceInformation"].Content[0].ComputerName) {
-            let computer_name = node.data.Data["AWS:InstanceInformation"].Content[0].ComputerName;
-            tools.set_info_text(computer_name, drawing, font_size, width, "Name");
+            let computer_name =
+                node.data.Data["AWS:InstanceInformation"].Content[0]
+                    .ComputerName;
+            tools.set_info_text(
+                computer_name,
+                drawing,
+                font_size,
+                width,
+                "Name"
+            );
         }
     }
 };
@@ -34,4 +41,3 @@ export const decorate = function (drawing, font_size, width, height, id) {
 };
 
 export const informational = true;
-

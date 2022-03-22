@@ -11,6 +11,5 @@ export const show = function (html, on_proceed) {
         $("#confirmation_dialog_proceed").unbind("click");
     });
     $("#confirmation_dialog_body").html(html);
-    $("#confirmation_dialog").modal('show');
+    $("#confirmation_dialog").modal("show");
 };
-

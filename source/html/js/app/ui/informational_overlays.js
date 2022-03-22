@@ -1,11 +1,9 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as model from "../model.js";
 import * as overlays from "./overlays/overlays.js";
 import * as diagrams from "./diagrams.js";
-
 
 var intervalID;
 // interval in millis to update the cache
@@ -17,7 +15,11 @@ var update_overlay = function () {
     for (let ov of overlays.all) {
         if (ov.informational) {
             const nodes = model.nodes.get({
-                filter: (item) => { return ov.match_type == (item.generic_node_type || item.title); }
+                filter: (item) => {
+                    return (
+                        ov.match_type == (item.generic_node_type || item.title)
+                    );
+                },
             });
 
             for (let node of nodes) {
@@ -33,7 +35,10 @@ var update_overlay = function () {
                 }
 
                 // only update the node if the SVG changes
-                if (selected != node.image.selected || unselected != node.image.unselected) {
+                if (
+                    selected != node.image.selected ||
+                    unselected != node.image.unselected
+                ) {
                     node.image.selected = selected;
                     node.image.unselected = unselected;
                     model.nodes.update(node);
@@ -54,7 +59,12 @@ var schedule_interval = function () {
         clearInterval(intervalID);
     }
     intervalID = setInterval(update_overlay, update_interval);
-    console.log("informational overlays: interval scheduled " + update_interval + "ms, intervalID = " + intervalID);
+    console.log(
+        "informational overlays: interval scheduled " +
+            update_interval +
+            "ms, intervalID = " +
+            intervalID
+    );
 };
 
 schedule_interval();

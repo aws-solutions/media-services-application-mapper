@@ -6,7 +6,6 @@ import * as layout from "./layout.js";
 import * as alert from "./alert.js";
 import * as diagrams from "./diagrams.js";
 
-
 $("#nodes_layout_vertical").on("click", function () {
     var shown = diagrams.shown();
     if (shown) {

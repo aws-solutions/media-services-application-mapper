@@ -25,12 +25,15 @@ const settings_key = "app-alarm-update-interval";
 
 const server_get = (endpoint, api_key) => {
     return new Promise(function (resolve, reject) {
-        server.get(endpoint, api_key).then(function (response) {
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .get(endpoint, api_key)
+            .then(function (response) {
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -41,7 +44,6 @@ const subscribers_with_alarm_state = function (state) {
     const current_endpoint = `${url}/cloudwatch/alarms/${state}/subscribers`;
     return server_get(current_endpoint, api_key);
 };
-
 
 const all_alarms_for_region = _.memoize(function (region) {
     const current_connection = connections.get_current();
@@ -63,15 +65,18 @@ const alarms_for_subscriber = _.memoize(function (arn) {
 
 const server_post = (endpoint, api_key, resource_arns) => {
     return new Promise(function (resolve, reject) {
-        server.post(endpoint, api_key, resource_arns).then(function (response) {
-            for (let arn of resource_arns) {
-                clear_alarms_for_subscriber_cache(arn);
-            }
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .post(endpoint, api_key, resource_arns)
+            .then(function (response) {
+                for (let arn of resource_arns) {
+                    clear_alarms_for_subscriber_cache(arn);
+                }
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -100,13 +105,16 @@ const delete_all_subscribers = function () {
     const api_key = current_connection[1];
     const current_endpoint = `${url}/cloudwatch/alarms/subscribed`;
     return new Promise((resolve, reject) => {
-        server.delete_method(current_endpoint, api_key).then((response) => {
-            alarms_for_subscriber.cache.clear();
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .delete_method(current_endpoint, api_key)
+            .then((response) => {
+                alarms_for_subscriber.cache.clear();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -115,7 +123,7 @@ const clear_alarms_for_subscriber_cache = function (subscribers) {
         for (let subscriber of subscribers) {
             alarms_for_subscriber.cache.delete(subscriber.ResourceArn);
         }
-    } else if (typeof subscribers == 'string') {
+    } else if (typeof subscribers == "string") {
         alarms_for_subscriber.cache.delete(subscribers);
     } else {
         alarms_for_subscriber.cache.clear();
@@ -124,23 +132,36 @@ const clear_alarms_for_subscriber_cache = function (subscribers) {
 
 const cache_update = function () {
     // console.log("cache_update()");
-    subscribers_with_alarm_state("ALARM").then(function (response) {
-        // console.log("updated set event cache");
-        previous_subscribers_with_alarms = current_subscribers_with_alarms;
-        current_subscribers_with_alarms = _.sortBy(response, "ResourceArn");
-        const added = _.differenceBy(current_subscribers_with_alarms, previous_subscribers_with_alarms, "ResourceArn");
-        const removed = _.differenceBy(previous_subscribers_with_alarms, current_subscribers_with_alarms, "ResourceArn");
-        if (added.length || removed.length) {
-            clear_alarms_for_subscriber_cache(added);
-            clear_alarms_for_subscriber_cache(removed);
-            for (let f of listeners) {
-                f(current_subscribers_with_alarms, previous_subscribers_with_alarms);
+    subscribers_with_alarm_state("ALARM")
+        .then(function (response) {
+            // console.log("updated set event cache");
+            previous_subscribers_with_alarms = current_subscribers_with_alarms;
+            current_subscribers_with_alarms = _.sortBy(response, "ResourceArn");
+            const added = _.differenceBy(
+                current_subscribers_with_alarms,
+                previous_subscribers_with_alarms,
+                "ResourceArn"
+            );
+            const removed = _.differenceBy(
+                previous_subscribers_with_alarms,
+                current_subscribers_with_alarms,
+                "ResourceArn"
+            );
+            if (added.length || removed.length) {
+                clear_alarms_for_subscriber_cache(added);
+                clear_alarms_for_subscriber_cache(removed);
+                for (let f of listeners) {
+                    f(
+                        current_subscribers_with_alarms,
+                        previous_subscribers_with_alarms
+                    );
+                }
             }
-        }
-        // }
-    }).catch(function (error) {
-        console.error(error);
-    });
+            // }
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
 };
 
 const load_update_interval = function () {
@@ -180,8 +201,8 @@ setInterval(function () {
 // return {
 export function get_subscribers_with_alarms() {
     return {
-        "current": current_subscribers_with_alarms,
-        "previous": previous_subscribers_with_alarms
+        current: current_subscribers_with_alarms,
+        previous: previous_subscribers_with_alarms,
     };
 }
 
@@ -199,7 +220,7 @@ export {
     subscribe_to_alarm,
     unsubscribe_from_alarm,
     alarms_for_subscriber,
-    delete_all_subscribers
+    delete_all_subscribers,
 };
 
 export function set_update_interval(seconds) {

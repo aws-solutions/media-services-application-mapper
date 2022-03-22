@@ -24,7 +24,7 @@ function drop_node_to_diagram(event) {
             /*ignore jslint start*/
             canvas = diagram.network.DOMtoCanvas({
                 x: event.clientX,
-                y: event.clientY
+                y: event.clientY,
             });
             /*ignore jslint end*/
             diagram.nodes.update(node);
@@ -56,14 +56,18 @@ function drop_diagram_to_diagram() {
     var nodes;
     var node_ids;
     if (source_diagram && target_diagram) {
-        console.log("add diagram contents from " + source_diagram.name + " to diagram " + target_diagram.name);
+        console.log(
+            "add diagram contents from " +
+                source_diagram.name +
+                " to diagram " +
+                target_diagram.name
+        );
         nodes = source_diagram.nodes.get();
         target_diagram.nodes.update(nodes);
         node_ids = _.map(Array.from(nodes), "id");
         layout.save_layout(target_diagram, node_ids);
         target_diagram.network.fit();
     }
-
 }
 
 function drop_diagram_to_tile(tile) {
@@ -72,7 +76,12 @@ function drop_diagram_to_tile(tile) {
     var node_ids;
     var html;
     if (source_diagram) {
-        console.log("add diagram contents from " + source_diagram.name + " to tile " + name);
+        console.log(
+            "add diagram contents from " +
+                source_diagram.name +
+                " to tile " +
+                name
+        );
         html = `Add contents from diagram ${source_diagram.name} to tile ${name}?`;
         confirmation.show(html, function () {
             node_ids = source_diagram.nodes.getIds();
@@ -88,7 +97,12 @@ function drop_tile_to_diagram() {
     var tile_name = drag_id;
     var target_diagram = diagrams.shown();
     if (target_diagram) {
-        console.log("add tile contents from " + tile_name + " to diagram " + target_diagram.name);
+        console.log(
+            "add tile contents from " +
+                tile_name +
+                " to diagram " +
+                target_diagram.name
+        );
         channels.retrieve_channel(tile_name).then(function (contents) {
             var channel_node_ids = _.map(contents, "id").sort();
             // vis returns null for each id it can't find, therefore _.compact
@@ -100,7 +114,6 @@ function drop_tile_to_diagram() {
             target_diagram.network.fit();
         });
     }
-
 }
 
 function drop_tile_to_tile(tile) {
@@ -111,13 +124,19 @@ function drop_tile_to_tile(tile) {
         html = `Add contents from tile ${source_tile_name} to tile ${target_tile_name}?`;
         confirmation.show(html, function () {
             var source_node_ids;
-            channels.retrieve_channel(source_tile_name).then(function (source_contents) {
-                source_node_ids = _.map(source_contents, "id").sort();
-                return channels.update_channel(target_tile_name, source_node_ids);
-            }).then(function () {
-                alert.show("Added to tile");
-                tile_view.redraw_tiles();
-            });
+            channels
+                .retrieve_channel(source_tile_name)
+                .then(function (source_contents) {
+                    source_node_ids = _.map(source_contents, "id").sort();
+                    return channels.update_channel(
+                        target_tile_name,
+                        source_node_ids
+                    );
+                })
+                .then(function () {
+                    alert.show("Added to tile");
+                    tile_view.redraw_tiles();
+                });
         });
     }
 }
@@ -152,10 +171,12 @@ function drop_tile_to_tile_canvas() {
     var html = `Create a new tile from tile ${source_tile_name} contents?`;
     confirmation.show(html, function () {
         var source_node_ids;
-        channels.retrieve_channel(source_tile_name).then(function (source_contents) {
-            source_node_ids = _.map(source_contents, "id").sort();
-            channels_menu.show_quick_new_tile(source_node_ids);
-        });
+        channels
+            .retrieve_channel(source_tile_name)
+            .then(function (source_contents) {
+                source_node_ids = _.map(source_contents, "id").sort();
+                channels_menu.show_quick_new_tile(source_node_ids);
+            });
     });
 }
 
@@ -165,79 +186,86 @@ $("body").on("dragstart", function (event) {
             console.log("dragging node");
             drag_id = event.target.attributes["data-node-id"].value;
             drag_type = "node";
-        } else
-            if (event.target.attributes["data-diagram-name"]) {
-                console.log("dragging diagram");
-                drag_id = event.target.attributes["data-diagram-name"].value;
-                drag_type = "diagram";
-            } else
-                if (event.target.attributes["data-tile-name"]) {
-                    console.log("dragging tile");
-                    drag_id = event.target.attributes["data-tile-name"].value;
-                    drag_type = "tile";
-                } else {
-                    console.log("ignoring unknown draggable");
-                }
+        } else if (event.target.attributes["data-diagram-name"]) {
+            console.log("dragging diagram");
+            drag_id = event.target.attributes["data-diagram-name"].value;
+            drag_type = "diagram";
+        } else if (event.target.attributes["data-tile-name"]) {
+            console.log("dragging tile");
+            drag_id = event.target.attributes["data-tile-name"].value;
+            drag_type = "tile";
+        } else {
+            console.log("ignoring unknown draggable");
+        }
     } catch (exception) {
         console.log(exception);
     }
 });
 
-$("#diagram-tab-content")[0].addEventListener("dragenter", async function (event) {
-    const shown = diagrams.shown();
-    if (shown) {
-        if (await shown.isLocked()) {
-            event.dataTransfer.dropEffect = "none";
-        }
-        else {
-            event.dataTransfer.dropEffect = "copy";
-            event.preventDefault();
-        }
-    }
-    else {
-        event.dataTransfer.dropEffect = "copy";
-        event.preventDefault();
-    }
-}, false);
-
-$("#diagram-tab-content")[0].addEventListener("dragover", async function (event) {
-    const shown = diagrams.shown();
-    if (shown) {
-        if (await shown.isLocked()) {
-            event.dataTransfer.dropEffect = "none";
-        }
-        else {
-            event.dataTransfer.dropEffect = "copy";
-            event.preventDefault();
-        }
-    }
-    else {
-        event.dataTransfer.dropEffect = "copy";
-        event.preventDefault();
-    }
-}, false);
-
-$("#diagram-tab-content")[0].addEventListener("dragend", function (event) {
-    event.preventDefault();
-}, false);
-
-$("#diagram-tab-content")[0].addEventListener("drop", function (event) {
-    var tile;
-    event.preventDefault();
-    if (drag_type === "node" && drag_id) {
-        if (diagrams.shown()) {
-            drop_node_to_diagram(event);
-        } else if (tile_view.shown()) {
-            tile = $(event.target).parents("div[data-channel-name]");
-            console.log(tile);
-            if (tile.length === 1) {
-                drop_node_to_tile(tile);
+$("#diagram-tab-content")[0].addEventListener(
+    "dragenter",
+    async function (event) {
+        const shown = diagrams.shown();
+        if (shown) {
+            if (await shown.isLocked()) {
+                event.dataTransfer.dropEffect = "none";
             } else {
-                drop_node_to_tile_canvas();
+                event.dataTransfer.dropEffect = "copy";
+                event.preventDefault();
             }
+        } else {
+            event.dataTransfer.dropEffect = "copy";
+            event.preventDefault();
         }
-    } else
-        if (drag_type === "diagram" && drag_id) {
+    },
+    false
+);
+
+$("#diagram-tab-content")[0].addEventListener(
+    "dragover",
+    async function (event) {
+        const shown = diagrams.shown();
+        if (shown) {
+            if (await shown.isLocked()) {
+                event.dataTransfer.dropEffect = "none";
+            } else {
+                event.dataTransfer.dropEffect = "copy";
+                event.preventDefault();
+            }
+        } else {
+            event.dataTransfer.dropEffect = "copy";
+            event.preventDefault();
+        }
+    },
+    false
+);
+
+$("#diagram-tab-content")[0].addEventListener(
+    "dragend",
+    function (event) {
+        event.preventDefault();
+    },
+    false
+);
+
+$("#diagram-tab-content")[0].addEventListener(
+    "drop",
+    function (event) {
+        var tile;
+        event.preventDefault();
+        if (drag_type === "node" && drag_id) {
+            if (diagrams.shown()) {
+                drop_node_to_diagram(event);
+            } else if (tile_view.shown()) {
+                tile = $(event.target).parents("div[data-channel-name]");
+                console.log(tile);
+                if (tile.length === 1) {
+                    drop_node_to_tile(tile);
+                } else {
+                    drop_node_to_tile_canvas();
+                }
+            }
+        } else if (drag_type === "diagram" && drag_id) {
             if (diagrams.shown()) {
                 drop_diagram_to_diagram();
             } else if (tile_view.shown()) {
@@ -249,20 +277,19 @@ $("#diagram-tab-content")[0].addEventListener("drop", function (event) {
                     drop_diagram_to_tile_canvas();
                 }
             }
-        } else
-            if (drag_type === "tile" && drag_id) {
-                if (diagrams.shown()) {
-                    drop_tile_to_diagram();
-                } else if (tile_view.shown()) {
-                    tile = $(event.target).parents("div[data-channel-name]");
-                    console.log(tile);
-                    if (tile.length === 1) {
-                        drop_tile_to_tile(tile);
-                    } else {
-                        drop_tile_to_tile_canvas();
-                    }
+        } else if (drag_type === "tile" && drag_id) {
+            if (diagrams.shown()) {
+                drop_tile_to_diagram();
+            } else if (tile_view.shown()) {
+                tile = $(event.target).parents("div[data-channel-name]");
+                console.log(tile);
+                if (tile.length === 1) {
+                    drop_tile_to_tile(tile);
+                } else {
+                    drop_tile_to_tile_canvas();
                 }
             }
-}, false);
-
- 
+        }
+    },
+    false
+);

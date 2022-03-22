@@ -12,9 +12,18 @@ import * as node_mediatailor from "./nodes/mediatailor.js";
 import * as node_ec2 from "./nodes/ec2.js";
 import * as node_ssm_managed_instance from "./nodes/ssm_managed_instance.js";
 
-export const nodes = [node_cloudfront, node_medialive, node_mediapackage,
-    node_mediastore, node_s3, node_speke, node_user_defined_node, node_mediatailor,
-    node_ec2, node_ssm_managed_instance];
+export const nodes = [
+    node_cloudfront,
+    node_medialive,
+    node_mediapackage,
+    node_mediastore,
+    node_s3,
+    node_speke,
+    node_user_defined_node,
+    node_mediatailor,
+    node_ec2,
+    node_ssm_managed_instance,
+];
 
 import * as conn_cloudfront_medialive_input from "./connections/cloudfront_medialive_input.js";
 import * as conn_mediaconnect_flow_medialive_input from "./connections/mediaconnect_flow_medialive_input.js";
@@ -63,6 +72,5 @@ export const connections = [
     conn_medialive_channel_s3_bucket,
     conn_link_device_medialive_input,
     conn_medialive_channel_input,
-    conn_medialive_channel_mediaconnect_flow
+    conn_medialive_channel_mediaconnect_flow,
 ];
-

@@ -11,7 +11,6 @@
 //     "updated": 1535853752
 // }
 
-
 import * as server from "../../server.js";
 import * as connections from "../../connections.js";
 
@@ -25,73 +24,81 @@ export const update = function () {
     const api_key = current[1];
     const items = [];
     return new Promise((resolve) => {
-        server.get(url + "/cached/user-defined-connection", api_key).then((connections) => {
-            // group edges between nodes regardless of direction
-            let edge_groups = _.reduce(
-                connections,
-                function (result, connection) {
-                    let id;
-                    if (connection.to > connection.from) {
-                        id = `${connection.from}:${connection.to}`;
-                    } else {
-                        id = `${connection.to}:${connection.from}`;
-                    }
-                    (result[id] || (result[id] = [])).push(connection);
-                    return result;
-                }, {}
-            );
-            // iterate through each grouping to create the correct curvature and prevent overlap
-            _.forEach(edge_groups, function (value) {
-                // order the grouped connections by to, from and label
-                let connections = _.orderBy(value, ['from', 'to', 'label']);
-                let previous_from;
-                for (let index in connections) {
-                    let connection = connections[index];
-                    let data;
-                    // data attribute is not required on custom connections
-                    if (typeof connection.data == 'undefined') {
-                        data = {};
-                    } else {
-                        data = JSON.parse(connection.data);
-                    }
-                    //  connection options for vis.js
-                    const options = {
-                        "id": connection.arn,
-                        "to": connection.to,
-                        "from": connection.from,
-                        "label": connection.label,
-                        "data": data,
-                        "arrows": "to",
-                        "color": {
-                            "color": "black"
-                        }
-                    };
-                    // more than one connection needs curving, otherwise defaults to straight
-                    if (connections.length > 1) {
-                        options.smooth = { enabled: true };
-                        // alternating counter-clockwise and clockwise curve
-                        if (index % 2 == 0) {
-                            // first of the pair uses clockwise
-                            options.smooth.type = 'curvedCW';
+        server
+            .get(url + "/cached/user-defined-connection", api_key)
+            .then((connections) => {
+                // group edges between nodes regardless of direction
+                let edge_groups = _.reduce(
+                    connections,
+                    function (result, connection) {
+                        let id;
+                        if (connection.to > connection.from) {
+                            id = `${connection.from}:${connection.to}`;
                         } else {
-                            // second of the pair might change direction
-                            if (previous_from && connection.from === previous_from) {
-                                // same direction, use counterclockwise
-                                options.smooth.type = 'curvedCCW';
-                            } else {
-                                // opposite direction, use clockwise
-                                options.smooth.type = 'curvedCW';
-                            }
+                            id = `${connection.to}:${connection.from}`;
                         }
-                        // determine the curvature needed, expands every 2
-                        options.smooth.roundness = (Math.floor(index / 2) * curvature_increment) + curvature_increment;
+                        (result[id] || (result[id] = [])).push(connection);
+                        return result;
+                    },
+                    {}
+                );
+                // iterate through each grouping to create the correct curvature and prevent overlap
+                _.forEach(edge_groups, function (value) {
+                    // order the grouped connections by to, from and label
+                    let connections = _.orderBy(value, ["from", "to", "label"]);
+                    let previous_from;
+                    for (let index in connections) {
+                        let connection = connections[index];
+                        let data;
+                        // data attribute is not required on custom connections
+                        if (typeof connection.data == "undefined") {
+                            data = {};
+                        } else {
+                            data = JSON.parse(connection.data);
+                        }
+                        //  connection options for vis.js
+                        const options = {
+                            id: connection.arn,
+                            to: connection.to,
+                            from: connection.from,
+                            label: connection.label,
+                            data: data,
+                            arrows: "to",
+                            color: {
+                                color: "black",
+                            },
+                        };
+                        // more than one connection needs curving, otherwise defaults to straight
+                        if (connections.length > 1) {
+                            options.smooth = { enabled: true };
+                            // alternating counter-clockwise and clockwise curve
+                            if (index % 2 == 0) {
+                                // first of the pair uses clockwise
+                                options.smooth.type = "curvedCW";
+                            } else {
+                                // second of the pair might change direction
+                                if (
+                                    previous_from &&
+                                    connection.from === previous_from
+                                ) {
+                                    // same direction, use counterclockwise
+                                    options.smooth.type = "curvedCCW";
+                                } else {
+                                    // opposite direction, use clockwise
+                                    options.smooth.type = "curvedCW";
+                                }
+                            }
+                            // determine the curvature needed, expands every 2
+                            options.smooth.roundness =
+                                Math.floor(index / 2) * curvature_increment +
+                                curvature_increment;
+                        }
+                        previous_from = connection.from;
+                        items.push(options);
                     }
-                    previous_from = connection.from;
-                    items.push(options);
-                }
+                });
+                resolve(items);
             });
-            resolve(items);
-        });
     });
 };
 

@@ -1,14 +1,12 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as model from "../model.js";
 import * as ui_util from "./util.js";
 import * as layout from "./layout.js";
 import * as alert from "./alert.js";
 import * as diagrams from "./diagrams.js";
 import * as confirmation from "./confirmation.js";
-
 
 var vary_multiplier = 8;
 
@@ -21,23 +19,24 @@ var inventory_tabulator = new Tabulator("#diagram_contents_inventory", {
     height: 600,
     layout: "fitColumns",
     groupBy: ["title"],
-    initialSort: [
-        { column: "id" },
-        { column: "name" }
+    initialSort: [{ column: "id" }, { column: "name" }],
+    columns: [
+        {
+            title: "Name",
+            field: "name",
+            headerFilter: true,
+        },
+        {
+            title: "AWS Region",
+            field: "region",
+            headerFilter: true,
+        },
+        {
+            title: "ARN",
+            field: "id",
+            headerFilter: true,
+        },
     ],
-    columns: [{
-        title: "Name",
-        field: "name",
-        headerFilter: true
-    }, {
-        title: "AWS Region",
-        field: "region",
-        headerFilter: true
-    }, {
-        title: "ARN",
-        field: "id",
-        headerFilter: true
-    }]
 });
 
 var diagram_tabulator = new Tabulator("#diagram_contents_diagram", {
@@ -49,23 +48,24 @@ var diagram_tabulator = new Tabulator("#diagram_contents_diagram", {
     height: 600,
     layout: "fitColumns",
     groupBy: ["title"],
-    initialSort: [
-        { column: "id" },
-        { column: "name" }
+    initialSort: [{ column: "id" }, { column: "name" }],
+    columns: [
+        {
+            title: "Name",
+            field: "name",
+            headerFilter: true,
+        },
+        {
+            title: "AWS Region",
+            field: "region",
+            headerFilter: true,
+        },
+        {
+            title: "ARN",
+            field: "id",
+            headerFilter: true,
+        },
     ],
-    columns: [{
-        title: "Name",
-        field: "name",
-        headerFilter: true
-    }, {
-        title: "AWS Region",
-        field: "region",
-        headerFilter: true
-    }, {
-        title: "ARN",
-        field: "id",
-        headerFilter: true
-    }]
 });
 
 $("#diagram_remove_selected").on("click", function () {
@@ -73,10 +73,14 @@ $("#diagram_remove_selected").on("click", function () {
     if (shown) {
         var selected = shown.network.getSelectedNodes();
         if (Array.isArray(selected) && selected.length > 0) {
-            var html = `Remove ${selected.length} node${(selected.length == 1 ? "" : "s")} from the diagram?`;
+            var html = `Remove ${selected.length} node${
+                selected.length == 1 ? "" : "s"
+            } from the diagram?`;
             confirmation.show(html, function () {
                 shown.nodes.remove(selected);
-                var message = `${selected.length} node${(selected.length == 1 ? "" : "s")} removed`;
+                var message = `${selected.length} node${
+                    selected.length == 1 ? "" : "s"
+                } removed`;
                 alert.show(message);
             });
         }
@@ -99,13 +103,20 @@ function add_downstream_nodes() {
             }
         }
         // only add nodes not yet on the diagram
-        var add_nodes = _.difference(connected.sort(), shown.nodes.getIds().sort());
+        var add_nodes = _.difference(
+            connected.sort(),
+            shown.nodes.getIds().sort()
+        );
         // use _.compact to remove nulls if id not found
         var nodes = _.compact(model.nodes.get(add_nodes));
         var view = shown.network.getViewPosition();
         shown.nodes.update(nodes);
         for (let node of nodes) {
-            shown.network.moveNode(node.id, ui_util.vary(view.x, node.size * vary_multiplier), ui_util.vary(view.y, node.size * vary_multiplier));
+            shown.network.moveNode(
+                node.id,
+                ui_util.vary(view.x, node.size * vary_multiplier),
+                ui_util.vary(view.y, node.size * vary_multiplier)
+            );
         }
         var node_ids = _.map(nodes, "id");
         layout.save_layout(shown, node_ids);
@@ -129,13 +140,20 @@ function add_upstream_nodes() {
             }
         }
         // only add nodes not yet on the diagram
-        var add_nodes = _.difference(connected.sort(), shown.nodes.getIds().sort());
+        var add_nodes = _.difference(
+            connected.sort(),
+            shown.nodes.getIds().sort()
+        );
         // use _.compact to remove nulls if id not found
         var nodes = _.compact(model.nodes.get(add_nodes));
         var view = shown.network.getViewPosition();
         shown.nodes.update(nodes);
         for (let node of nodes) {
-            shown.network.moveNode(node.id, ui_util.vary(view.x, node.size * vary_multiplier), ui_util.vary(view.y, node.size * vary_multiplier));
+            shown.network.moveNode(
+                node.id,
+                ui_util.vary(view.x, node.size * vary_multiplier),
+                ui_util.vary(view.y, node.size * vary_multiplier)
+            );
         }
         var node_ids = _.map(nodes, "id");
         layout.save_layout(shown, node_ids);
@@ -158,7 +176,7 @@ var clear_create_diagram_alert = function () {
     $("#create_diagram_dialog_alert").replaceWith(html);
 };
 
-$("#create_diagram_dialog").on('shown.bs.modal', function () {
+$("#create_diagram_dialog").on("shown.bs.modal", function () {
     clear_create_diagram_alert();
     $("#create_diagram_dialog_name").val("");
     $("#create_diagram_dialog_name").focus();
@@ -175,15 +193,19 @@ $("#create_diagram_dialog_proceed").on("click", function () {
             var d = diagrams.add(name, _.snakeCase(name), true);
             alert.show("Diagram created");
             // hide the dialog
-            $("#create_diagram_dialog").modal('hide');
+            $("#create_diagram_dialog").modal("hide");
             // select the new tab
             d.show();
         } else {
-            set_create_diagram_alert("Names must start with an alphanumeric character");
+            set_create_diagram_alert(
+                "Names must start with an alphanumeric character"
+            );
         }
     } catch (error) {
         console.log(error);
-        set_create_diagram_alert("Names must start with an alphanumeric character");
+        set_create_diagram_alert(
+            "Names must start with an alphanumeric character"
+        );
     }
 });
 
@@ -197,7 +219,7 @@ var clear_dupe_diagram_alert = function () {
     $("#dupe_diagram_dialog_alert").replaceWith(html);
 };
 
-$("#dupe_diagram_dialog").on('shown.bs.modal', function () {
+$("#dupe_diagram_dialog").on("shown.bs.modal", function () {
     clear_dupe_diagram_alert();
     $("#dupe_diagram_dialog_name").val("");
     $("#dupe_diagram_dialog_name").focus();
@@ -217,34 +239,45 @@ $("#dupe_diagram_dialog_proceed").on("click", function () {
                 new_diagram.nodes.update(current_diagram.nodes.get());
                 var positions = current_diagram.network.getPositions();
                 for (let key of Object.keys(positions)) {
-                    new_diagram.network.moveNode(key, positions[key].x, positions[key].y);
+                    new_diagram.network.moveNode(
+                        key,
+                        positions[key].x,
+                        positions[key].y
+                    );
                 }
                 layout.save_layout(new_diagram);
                 alert.show("Diagram duplicated");
                 // hide the dialog
-                $("#dupe_diagram_dialog").modal('hide');
+                $("#dupe_diagram_dialog").modal("hide");
                 // select the new tab
                 new_diagram.show();
             } else {
-                set_dupe_diagram_alert("Names must start with an alphanumeric character");
+                set_dupe_diagram_alert(
+                    "Names must start with an alphanumeric character"
+                );
             }
         } catch (error) {
             console.log(error);
-            set_dupe_diagram_alert("Names must start with an alphanumeric character");
+            set_dupe_diagram_alert(
+                "Names must start with an alphanumeric character"
+            );
         }
     }
 });
 
 $("#add-diagram-button,#diagram_add_diagram").on("click", function () {
-    $("#create_diagram_dialog").modal('show');
+    $("#create_diagram_dialog").modal("show");
 });
 
-$("#duplicate-diagram-button,#diagram_duplicate_diagram").on("click", function () {
-    var diagram = diagrams.shown();
-    if (diagram) {
-        $("#dupe_diagram_dialog").modal('show');
+$("#duplicate-diagram-button,#diagram_duplicate_diagram").on(
+    "click",
+    function () {
+        var diagram = diagrams.shown();
+        if (diagram) {
+            $("#dupe_diagram_dialog").modal("show");
+        }
     }
-});
+);
 
 $("#remove-diagram-button,#diagram_remove_diagram").on("click", function () {
     var diagram = diagrams.shown();
@@ -259,17 +292,20 @@ $("#remove-diagram-button,#diagram_remove_diagram").on("click", function () {
     }
 });
 
-$("#diagram_contents_modal").on('shown.bs.modal', function () {
+$("#diagram_contents_modal").on("shown.bs.modal", function () {
     inventory_tabulator.setData(model.nodes.get());
     var current = diagrams.shown();
     diagram_tabulator.setData(current.nodes.get());
 });
 
-$("#manage-diagram-contents-button,#diagram_manage_contents").on("click", function () {
-    if (diagrams.shown()) {
-        $("#diagram_contents_modal").modal('show');
+$("#manage-diagram-contents-button,#diagram_manage_contents").on(
+    "click",
+    function () {
+        if (diagrams.shown()) {
+            $("#diagram_contents_modal").modal("show");
+        }
     }
-});
+);
 
 $("#add-selected-to-diagram").on("click", function () {
     var inv_selected = inventory_tabulator.getSelectedData();
@@ -304,6 +340,5 @@ $("#diagram_contents_save").on("click", function () {
     diagram.nodes.update(nodes);
     diagram.nodes.remove(remove_ids);
     // // hide the dialog
-    $("#diagram_contents_modal").modal('hide');
+    $("#diagram_contents_modal").modal("hide");
 });
-

@@ -1,7 +1,6 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-
 import * as model from "./model.js";
 import * as channels from "./channels.js";
 import * as diagrams from "./ui/diagrams.js";
@@ -37,8 +36,8 @@ const model_options = {
         "data.PrivateIpAddress",
         "data.PublicDnsName",
         "data.PublicIpAddress",
-        "stringtags"
-    ]
+        "stringtags",
+    ],
 };
 
 let fuse_model;
@@ -77,7 +76,7 @@ function search(text) {
             tile_names: [],
             tile_contents: [],
             diagram_names: [],
-            diagram_contents: []
+            diagram_contents: [],
         };
         // search the model, find matching nodes
         const model_matches = fuse_model.search(text);
@@ -98,39 +97,43 @@ function search(text) {
             results.tile_contents = matches;
         });
         // find tiles with the text or containing the model nodes
-        const status = { "processed": 0 };
+        const status = { processed: 0 };
         channels.channel_list().then(function (channel_names) {
             const local_channel_names = channel_names;
             for (let channel_name of local_channel_names) {
                 const local_channel_name = channel_name;
                 // check for a name partial match
-                const includes = local_channel_name.toLowerCase().includes(text.toLowerCase());
+                const includes = local_channel_name
+                    .toLowerCase()
+                    .includes(text.toLowerCase());
                 if (includes) {
                     results.tile_names.push(local_channel_name);
                 }
                 // check the contents of the channel
-                channels.retrieve_channel(local_channel_name).then(function (contents) {
-                    const channel_node_ids = local_lodash.map(contents, "id").sort();
-                    const intersect = local_lodash.intersection(node_ids, channel_node_ids);
-                    if (intersect.length > 0) {
-                        results.tile_contents.push({
-                            tile: local_channel_name,
-                            found: intersect
-                        });
-                    }
-                    status.processed++;
-                    if (status.processed == local_channel_names.length) {
-                        local_outer_resolve(results);
-                    }
-                });
+                channels
+                    .retrieve_channel(local_channel_name)
+                    .then(function (contents) {
+                        const channel_node_ids = local_lodash
+                            .map(contents, "id")
+                            .sort();
+                        const intersect = local_lodash.intersection(
+                            node_ids,
+                            channel_node_ids
+                        );
+                        if (intersect.length > 0) {
+                            results.tile_contents.push({
+                                tile: local_channel_name,
+                                found: intersect,
+                            });
+                        }
+                        status.processed++;
+                        if (status.processed == local_channel_names.length) {
+                            local_outer_resolve(results);
+                        }
+                    });
             }
         });
     });
 }
 
-export {
-    search_nodes,
-    search_tiles,
-    update,
-    search
-};
+export { search_nodes, search_tiles, update, search };

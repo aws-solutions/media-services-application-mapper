@@ -5,7 +5,6 @@ import * as server from "./server.js";
 import * as connections from "./connections.js";
 import * as mappers from "./mappers/mappers.js";
 
-
 const nodes = new vis.DataSet();
 const edges = new vis.DataSet();
 
@@ -27,30 +26,31 @@ const map = function (callback) {
                 resolve();
             });
         }
-    }).then(function () {
-        var promises = [];
-        for (let mapper of mappers.connections) {
-            console.log(mapper.module_name);
-            promises.push(mapper.update());
-        }
-        Promise.all(promises).then(function (resolved_values) {
-            for (let items of resolved_values) {
-                edges.update(items);
+    })
+        .then(function () {
+            var promises = [];
+            for (let mapper of mappers.connections) {
+                console.log(mapper.module_name);
+                promises.push(mapper.update());
             }
-            for (let node of nodes.get()) {
-                // add stringified tags to the node, will be used during search
-                node.stringtags = JSON.stringify(node.data.Tags);
-                nodes.update(node);
-            }
-            if (typeof callback !== 'undefined') {
-                callback();
-            }
+            Promise.all(promises).then(function (resolved_values) {
+                for (let items of resolved_values) {
+                    edges.update(items);
+                }
+                for (let node of nodes.get()) {
+                    // add stringified tags to the node, will be used during search
+                    node.stringtags = JSON.stringify(node.data.Tags);
+                    nodes.update(node);
+                }
+                if (typeof callback !== "undefined") {
+                    callback();
+                }
+            });
+        })
+        .catch((error) => {
+            console.error(error);
         });
-    }).catch((error) => {
-        console.error(error);
-    });
 };
-
 
 const put_records = function (record) {
     var current = connections.get_current();
@@ -61,13 +61,16 @@ const put_records = function (record) {
         record = [record];
     }
     return new Promise(function (resolve, reject) {
-        server.post(current_endpoint, api_key, record).then(function (response) {
-            console.log(response);
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .post(current_endpoint, api_key, record)
+            .then(function (response) {
+                console.log(response);
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
@@ -77,13 +80,16 @@ const delete_record = function (arn) {
     var api_key = current[1];
     var current_endpoint = `${url}/cached/arn/${encodeURIComponent(arn)}`;
     return new Promise(function (resolve, reject) {
-        server.delete_method(current_endpoint, api_key).then(function (response) {
-            console.log(response);
-            resolve(response);
-        }).catch(function (error) {
-            console.error(error);
-            reject(error);
-        });
+        server
+            .delete_method(current_endpoint, api_key)
+            .then(function (response) {
+                console.log(response);
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
     });
 };
 
