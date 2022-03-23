@@ -9,23 +9,12 @@ const retrieve_channel = _.memoize(function (name) {
     const url = current_connection[0];
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channel/${name}`;
-    return new Promise(function (resolve, reject) {
-        server
-            .get(current_endpoint, api_key)
-            .then(function (response) {
-                resolve(response);
-            })
-            .catch(function (error) {
-                console.error(error);
-                reject(error);
-            });
-    });
+    return server_get(current_endpoint, api_key);
 });
 
 const have_any = _.memoize(function (node_ids) {
     const local_lodash = _;
     const local_node_ids = node_ids;
-    // console.log(node_ids);
     const matches = [];
     // return a list of channel names that have any of these nodes
     return new Promise(function (outer_resolve) {
@@ -35,7 +24,6 @@ const have_any = _.memoize(function (node_ids) {
                 const local_name = name;
                 promises.push(
                     new Promise(function (resolve) {
-                        // console.log(name);
                         // look for model matches
                         retrieve_channel(local_name).then(function (contents) {
                             const channel_keys = Object.keys(contents).sort();
@@ -43,7 +31,6 @@ const have_any = _.memoize(function (node_ids) {
                                 local_node_ids,
                                 channel_keys
                             );
-                            // console.log(intersect);
                             if (intersect.length > 0) {
                                 matches.push(local_name);
                             }
@@ -87,11 +74,29 @@ const delete_channel = function (name) {
     const url = current_connection[0];
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channel/${name}`;
+    return server_delete(current_endpoint, api_key);
+};
+
+const server_delete = (endpoint, api_key) => {
     return new Promise((resolve, reject) => {
         server
-            .delete_method(current_endpoint, api_key)
+            .delete_method(endpoint, api_key)
             .then((response) => {
                 clear_function_cache();
+                resolve(response);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
+const server_get = (endpoint, api_key) => {
+    return new Promise(function (resolve, reject) {
+        server
+            .get(endpoint, api_key)
+            .then(function (response) {
                 resolve(response);
             })
             .catch(function (error) {
@@ -106,17 +111,7 @@ const channel_list = _.memoize(function () {
     const url = current_connection[0];
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channels`;
-    return new Promise(function (resolve, reject) {
-        server
-            .get(current_endpoint, api_key)
-            .then(function (response) {
-                resolve(response);
-            })
-            .catch(function (error) {
-                console.error(error);
-                reject(error);
-            });
-    });
+    return server_get(current_endpoint, api_key);
 });
 
 const arn_to_channels = _.memoize(function (arn) {
@@ -145,7 +140,8 @@ const arn_to_channels = _.memoize(function (arn) {
                     );
                 }
                 Promise.all(promises).then(function () {
-                    outerResolve(matches.sort());
+                    matches.sort();
+                    outerResolve(matches);
                 });
             })
             .catch(function (error) {
@@ -167,18 +163,7 @@ const delete_all_channels = function () {
     const url = current_connection[0];
     const api_key = current_connection[1];
     const current_endpoint = `${url}/channels`;
-    return new Promise((resolve, reject) => {
-        server
-            .delete_method(current_endpoint, api_key)
-            .then((response) => {
-                clear_function_cache();
-                resolve(response);
-            })
-            .catch(function (error) {
-                console.error(error);
-                reject(error);
-            });
-    });
+    return server_delete(current_endpoint, api_key);
 };
 
 // pre-warming the function cache to speed tile drawing

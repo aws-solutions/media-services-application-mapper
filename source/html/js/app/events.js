@@ -45,7 +45,6 @@ var retrieve_for_state = function (state) {
 var cache_update = function () {
     retrieve_for_state("set")
         .then(function (response) {
-            // console.log("updated set event cache");
             previous_set_events = current_set_events;
             current_set_events = response;
             previous_medialive_events = _.filter(
@@ -119,7 +118,6 @@ var schedule_interval = function () {
 
 load_update_interval();
 
-// return {
 export function get_cached_events() {
     return {
         current: current_set_events,

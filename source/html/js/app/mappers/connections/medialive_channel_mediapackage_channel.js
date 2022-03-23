@@ -15,8 +15,8 @@ export const update = () => {
                 `${url}/cached/medialive-channel-mediapackage-channel`,
                 api_key
             )
-            .then((connections) => {
-                for (let connection of connections) {
+            .then((results) => {
+                for (let connection of results) {
                     const data = JSON.parse(connection.data);
                     const options = {
                         id: connection.arn,
@@ -29,7 +29,7 @@ export const update = () => {
                         dashes: false,
                     };
                     const hasMoreConnections = _.filter(
-                        connections,
+                        results,
                         (function (local_connection) {
                             return function (o) {
                                 if (

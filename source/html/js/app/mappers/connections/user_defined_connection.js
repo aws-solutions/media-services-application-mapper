@@ -26,10 +26,10 @@ export const update = function () {
     return new Promise((resolve) => {
         server
             .get(url + "/cached/user-defined-connection", api_key)
-            .then((connections) => {
+            .then((results) => {
                 // group edges between nodes regardless of direction
                 let edge_groups = _.reduce(
-                    connections,
+                    results,
                     function (result, connection) {
                         let id;
                         if (connection.to > connection.from) {

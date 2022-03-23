@@ -16,8 +16,8 @@ export const update = function () {
                     "/cached/mediapackage-origin-endpoint-mediatailor-configuration",
                 api_key
             )
-            .then((connections) => {
-                for (let connection of connections) {
+            .then((results) => {
+                for (let connection of results) {
                     const data = JSON.parse(connection.data);
                     const human_type = data.scheme.replace(/_/, " ");
                     items.push({

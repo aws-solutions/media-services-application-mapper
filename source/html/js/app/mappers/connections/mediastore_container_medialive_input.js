@@ -12,8 +12,8 @@ export const update = function () {
     return new Promise((resolve) => {
         server
             .get(url + "/cached/mediastore-container-medialive-input", api_key)
-            .then((connections) => {
-                for (let connection of connections) {
+            .then((results) => {
+                for (let connection of results) {
                     const data = JSON.parse(connection.data);
                     items.push({
                         id: connection.arn,

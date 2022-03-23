@@ -11,8 +11,8 @@ export const update = () => {
     const items = [];
     return new Promise((resolve) => {
         const endpoint = `${url}/cached/medialive-channel-multiplex`;
-        server.get(endpoint, api_key).then((connections) => {
-            for (let connection of connections) {
+        server.get(endpoint, api_key).then((results) => {
+            for (let connection of results) {
                 const data = JSON.parse(connection.data);
                 const options = {
                     id: connection.arn,
@@ -26,7 +26,7 @@ export const update = () => {
                 };
                 const shouldEndWith = connection.arn.endsWith("0") ? "1" : "0";
                 const local_connection = connection;
-                const hasMoreConnections = _.filter(connections, function (o) {
+                const hasMoreConnections = _.filter(results, function (o) {
                     if (
                         o.from === local_connection.from &&
                         o.to === local_connection.to
