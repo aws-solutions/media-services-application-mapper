@@ -330,8 +330,7 @@ def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0, limit
     """
     cw_events = []
     # limit request cannot be more than 100 for now
-    if limit > 100:
-        limit = 100
+    limit = min(limit, 100)
     try:
         resource_arn = unquote(resource_arn)
         dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)

@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """
-This module sends notification about the end of a workflow run
-and its associated artifacts.
+This module invokes an endpoint to deploy the built template for testing.
 """
 
 import os
@@ -15,6 +14,10 @@ API_REGION = os.environ.get('AWS_DEFAULT_REGION')
 TEST_ENDPOINT = os.environ.get('TEST_ENDPOINT')
 
 def main():
+    """
+    Invokes endpoint for testing built template.
+    """
+
     parsed = urlparse(TEST_ENDPOINT)
     auth = BotoAWSRequestsAuth(aws_host=parsed.netloc,
                                aws_region=API_REGION,
@@ -23,8 +26,7 @@ def main():
     print(response.json())
     if response.status_code != 200:
         return 1
-    else:
-        return 0
+    return 0
 
 if __name__ == "__main__":
     main()
