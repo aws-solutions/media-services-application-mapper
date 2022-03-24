@@ -15,7 +15,6 @@ export const update = function () {
             .get(url + "/cached/ec2-instance", api_key)
             .then(function (configs) {
                 for (let cache_entry of configs) {
-                    // console.log(cache_entry);
                     map_config(cache_entry, items);
                 }
                 resolve(items);
@@ -39,7 +38,7 @@ const map_config = function (cache_entry, items) {
             node_type = config.Tags["MSAM-NodeType"];
         }
     }
-    let node_data = {
+    const node_data = {
         overlay: "informational",
         cache_update: cache_entry.updated,
         id: id,
@@ -56,11 +55,11 @@ const map_config = function (cache_entry, items) {
         size: 55,
         render: {
             normal_unselected: (function () {
-                let local_node_type = node_type;
-                let local_name = name;
-                let local_rgb = rgb;
-                let local_id = id;
-                let local_generic_node_type = generic_node_type;
+                const local_node_type = node_type;
+                const local_name = name;
+                const local_rgb = rgb;
+                const local_id = id;
+                const local_generic_node_type = generic_node_type;
                 return function () {
                     return svg_node.unselected(
                         local_node_type,
@@ -73,11 +72,11 @@ const map_config = function (cache_entry, items) {
                 };
             })(),
             normal_selected: (function () {
-                let local_node_type = node_type;
-                let local_name = name;
-                let local_rgb = rgb;
-                let local_id = id;
-                let local_generic_node_type = generic_node_type;
+                const local_node_type = node_type;
+                const local_name = name;
+                const local_rgb = rgb;
+                const local_id = id;
+                const local_generic_node_type = generic_node_type;
                 return function () {
                     return svg_node.selected(
                         local_node_type,
@@ -90,9 +89,9 @@ const map_config = function (cache_entry, items) {
                 };
             })(),
             alert_unselected: (function () {
-                let local_node_type = node_type;
-                let local_name = name;
-                let local_id = id;
+                const local_node_type = node_type;
+                const local_name = name;
+                const local_id = id;
                 const local_generic_node_type = generic_node_type;
                 return function () {
                     return svg_node.unselected(
@@ -106,9 +105,9 @@ const map_config = function (cache_entry, items) {
                 };
             })(),
             alert_selected: (function () {
-                let local_node_type = node_type;
-                let local_name = name;
-                let local_id = id;
+                const local_node_type = node_type;
+                const local_name = name;
+                const local_id = id;
                 const local_generic_node_type = generic_node_type;
                 return function () {
                     return svg_node.selected(

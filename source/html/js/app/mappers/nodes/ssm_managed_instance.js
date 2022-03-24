@@ -15,7 +15,6 @@ export const update = function () {
             .get(url + "/cached/ssm-managed-instance", api_key)
             .then(function (configs) {
                 for (let cache_entry of configs) {
-                    // console.log(cache_entry);
                     map_config(cache_entry, items);
                 }
                 resolve(items);

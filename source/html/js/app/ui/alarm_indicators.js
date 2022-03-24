@@ -19,7 +19,6 @@ const updateAlarmState = function (
             // track which nodes are signaling an alert
             if (!alarming_nodes.includes(subscriber.ResourceArn)) {
                 alarming_nodes.push(subscriber.ResourceArn);
-                // console.log("setting alert color for " + node.id);
                 let selected = node.render.alert_selected();
                 let unselected = node.render.alert_unselected();
                 // only update the node if the SVG changes
@@ -31,7 +30,6 @@ const updateAlarmState = function (
                     node.image.unselected = unselected;
                     model.nodes.update(node);
                     let matches = diagrams.have_all([node.id]);
-                    // console.log(matches);
                     for (let diagram of matches) {
                         diagram.nodes.update(node);
                         diagram.alert(true);
@@ -68,7 +66,6 @@ const updateAlarmState = function (
                 node.image.unselected = unselected;
                 model.nodes.update(node);
                 let matches = diagrams.have_all([node.id]);
-                // console.log(matches);
                 for (let diagram of matches) {
                     diagram.nodes.update(node);
                     diagram.alert(false);

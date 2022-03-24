@@ -103,9 +103,6 @@ const update_link_devices = function (items) {
 
 const map_channel = function (cache_entry, items) {
     const channel = JSON.parse(cache_entry.data);
-
-    // console.log('Channel: %o', channel);
-
     const name = channel.Name;
     const id = channel.Arn;
     const rgb = "#1E8900";
@@ -168,24 +165,24 @@ const map_channel = function (cache_entry, items) {
                 ))(),
         },
         console_link: (function () {
-            const id = channel.Id;
+            const local_id = channel.Id;
             const region = channel.Arn.split(":")[3];
             return function () {
-                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}`;
+                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${local_id}`;
             };
         })(),
         alerts_link: (function () {
-            const id = channel.Id;
+            const local_id = channel.Id;
             const region = channel.Arn.split(":")[3];
             return function () {
-                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${id}/alerts`;
+                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/channels/${local_id}/alerts`;
             };
         })(),
         cloudwatch_link: (function () {
-            const id = channel.Id;
+            const local_id = channel.Id;
             const region = channel.Arn.split(":")[3];
             return function () {
-                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=MediaLive;dimensions=ChannelId,Pipeline`;
+                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${local_id};namespace=MediaLive;dimensions=ChannelId,Pipeline`;
             };
         })(),
     };
@@ -196,9 +193,6 @@ const map_channel = function (cache_entry, items) {
 
 const map_input = function (cache_entry, items) {
     const input = JSON.parse(cache_entry.data);
-
-    // console.log('Input: %o', input);
-
     const name = input.Name;
     const id = input.Arn;
     const node_type = "MediaLive Input";
@@ -261,10 +255,10 @@ const map_input = function (cache_entry, items) {
                 ))(),
         },
         console_link: (function () {
-            const id = input.Id;
+            const local_id = input.Id;
             const region = input.Arn.split(":")[3];
             return function () {
-                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${id}`;
+                return `https://console.aws.amazon.com/medialive/home?region=${region}#!/inputs/${local_id}`;
             };
         })(),
         cloudwatch_link: (function () {
@@ -280,9 +274,6 @@ const map_input = function (cache_entry, items) {
 
 const map_multiplex = function (cache_entry, items) {
     const input = JSON.parse(cache_entry.data);
-
-    // console.log('Input: %o', input);
-
     const name = input.Name;
     const id = input.Arn;
     const node_type = "MediaLive Multiplex";
@@ -345,17 +336,17 @@ const map_multiplex = function (cache_entry, items) {
                 ))(),
         },
         console_link: (function () {
-            const id = input.Id;
+            const local_id = input.Id;
             const region = input.Arn.split(":")[3];
             return function () {
-                return `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}`;
+                return `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${local_id}`;
             };
         })(),
         alerts_link: (function () {
-            const id = input.Id;
+            const local_id = input.Id;
             const region = input.Arn.split(":")[3];
             return function () {
-                return `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${id}/alerts`;
+                return `https://console.aws.amazon.com/medialive/multiplex?region=${region}#/${local_id}/alerts`;
             };
         })(),
         cloudwatch_link: (function () {

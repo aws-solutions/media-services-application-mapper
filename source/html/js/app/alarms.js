@@ -90,7 +90,6 @@ const subscribe_to_alarm = function (region, alarm_name, resource_arns) {
 };
 
 const unsubscribe_from_alarm = function (region, alarm_name, resource_arns) {
-    // console.log(region, alarm_name, resource_arns);
     const current_connection = connections.get_current();
     const url = current_connection[0];
     const api_key = current_connection[1];
@@ -131,10 +130,8 @@ const clear_alarms_for_subscriber_cache = function (subscribers) {
 };
 
 const cache_update = function () {
-    // console.log("cache_update()");
     subscribers_with_alarm_state("ALARM")
         .then(function (response) {
-            // console.log("updated set event cache");
             previous_subscribers_with_alarms = current_subscribers_with_alarms;
             current_subscribers_with_alarms = _.sortBy(response, "ResourceArn");
             const added = _.differenceBy(
@@ -198,7 +195,6 @@ setInterval(function () {
     }
 }, region_cache_clear_interval_ms);
 
-// return {
 export function get_subscribers_with_alarms() {
     return {
         current: current_subscribers_with_alarms,

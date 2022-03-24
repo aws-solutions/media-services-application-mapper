@@ -11,7 +11,6 @@ var add_connection_button = "connect-nodes-button";
 var remove_connection_button = "delete-connection-button";
 var label_edit_compartment = "edit-connection-button";
 var label_edit_button = "edit-connection-button";
-// var label_edit_input = "label-edit-input";
 
 var create_connection_record = function (options) {
     var updated = moment(new Date());
@@ -167,7 +166,6 @@ $("#edit_connection_dialog_proceed").click(() => {
     var expires_seconds = moment(
         $("#edit_connection_dialog_expiration").val()
     ).format("X");
-    // var expires_seconds = (Date.parse($("#edit_connection_dialog_expiration").val()) / 1000).toFixed(0);
     var diagram = diagrams.shown();
     console.log(`diagram is ${diagram.name}`);
     var selected = diagram.network.getSelectedEdges();
@@ -182,7 +180,6 @@ $("#edit_connection_dialog_proceed").click(() => {
             label: new_label,
             expires: new_expires,
         });
-        // console.log(record);
         // write the table first
         model
             .put_records(record)
@@ -206,7 +203,6 @@ $("#edit_connection_dialog_proceed").click(() => {
                 color: "black",
             },
         };
-        // console.log(updated_edge);
         // update in-memory model
         model.edges.update(updated_edge);
         // refresh each diagram containing to and from nodes
@@ -223,7 +219,6 @@ diagrams.add_selection_callback(function (diagram, event) {
     if (event.nodes.length == 2) {
         diagram = diagrams.shown();
         var connected = diagram.network.getConnectedNodes(event.nodes[0]);
-        // console.log(connected);
         if (!connected.includes(event.nodes[1])) {
             show_add_connection(true);
         }

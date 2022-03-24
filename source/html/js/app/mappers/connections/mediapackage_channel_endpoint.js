@@ -16,8 +16,8 @@ export const update = function () {
                     "/cached/mediapackage-channel-mediapackage-origin-endpoint",
                 api_key
             )
-            .then((connections) => {
-                for (let connection of connections) {
+            .then((results) => {
+                for (let connection of results) {
                     const data = JSON.parse(connection.data);
                     items.push({
                         id: connection.arn,

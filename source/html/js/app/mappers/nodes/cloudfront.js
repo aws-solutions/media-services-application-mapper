@@ -21,7 +21,7 @@ export const update = function () {
                     const item = JSON.parse(cache_entry.data);
                     const name = item.Id;
                     const id = item.ARN;
-                    let node_data = {
+                    const node_data = {
                         cache_update: cache_entry.updated,
                         id: id,
                         region: cache_entry.region,
@@ -37,10 +37,10 @@ export const update = function () {
                         size: 55,
                         render: {
                             normal_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -51,10 +51,10 @@ export const update = function () {
                                 };
                             })(),
                             normal_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -65,9 +65,9 @@ export const update = function () {
                                 };
                             })(),
                             alert_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -78,9 +78,9 @@ export const update = function () {
                                 };
                             })(),
                             alert_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -92,23 +92,23 @@ export const update = function () {
                             })(),
                         },
                         console_link: (function () {
-                            let id = item.Id;
+                            const local_id = item.Id;
                             let region = item.ARN.split(":")[3];
                             if (region.trim().length == 0) {
                                 region = "us-east-1";
                             }
                             return function () {
-                                return `https://console.aws.amazon.com/cloudfront/home?region=${region}#distribution-settings:${id}`;
+                                return `https://console.aws.amazon.com/cloudfront/home?region=${region}#distribution-settings:${local_id}`;
                             };
                         })(),
                         cloudwatch_link: (function () {
-                            let id = item.Id;
+                            const local_id = item.Id;
                             let region = item.ARN.split(":")[3];
                             if (region.trim().length == 0) {
                                 region = "us-east-1";
                             }
                             return function () {
-                                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/CloudFront;dimensions=DistributionId,Region`;
+                                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${local_id};namespace=AWS/CloudFront;dimensions=DistributionId,Region`;
                             };
                         })(),
                     };
