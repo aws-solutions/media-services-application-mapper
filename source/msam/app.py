@@ -551,5 +551,7 @@ def delete_all_notes():
 
 @app.lambda_function(name='DeleteAllResourceNotes')
 def delete_all_resource_notes(event, context):
-    # print("this will delete all the resource notes")
+    """
+    Function that does actual deletion of all resource notes.
+    """
     return resource_notes.delete_all_notes()
