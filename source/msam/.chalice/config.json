@@ -18,6 +18,7 @@
         "SETTINGS_TABLE_NAME": "media-services-application-mapper-settings",
         "CLOUDWATCH_EVENTS_TABLE_NAME": "media-services-application-mapper-cloudwatchevents",
         "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+        "DELETE_NOTES_FUNCTION": "delete_notes_function",
         "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
         "VERSION": "%%VERSION%%"
     }

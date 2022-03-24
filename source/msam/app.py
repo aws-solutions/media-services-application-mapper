@@ -381,7 +381,12 @@ def get_cloudwatch_events_resource_arn(resource_arn):
     """
     API entry point to return all CloudWatch events related to a node.
     """
-    return cloudwatch_data.get_cloudwatch_events_resource(resource_arn)
+    limit = 100
+    if app.current_request.query_params is not None and app.current_request.query_params.get(
+            'limit') == 'true':
+        limit = app.current_request.query_params.get('limit')
+    return cloudwatch_data.get_cloudwatch_events_resource(
+        resource_arn=resource_arn, limit=limit)
 
 
 @app.route('/cloudwatch/events/{resource_arn}/{start_time}',
@@ -392,8 +397,11 @@ def get_cloudwatch_events_resource_arn_start(resource_arn, start_time):
     """
     API entry point to return all CloudWatch events related to a node from start_time to now.
     """
+    limit = 100
+    if app.current_request.query_params is not None and app.current_request.query_params.get('limit') == 'true':
+        limit = app.current_request.query_params.get('limit')
     return cloudwatch_data.get_cloudwatch_events_resource(
-        resource_arn, start_time)
+        resource_arn=resource_arn, start_time=start_time, limit=limit)
 
 
 @app.route('/cloudwatch/events/{resource_arn}/{start_time}/{end_time}',
@@ -405,8 +413,11 @@ def get_cloudwatch_events_resource_arn_start_end(resource_arn, start_time,
     """
     API entry point to return all CloudWatch events related to a node for a given time range.
     """
+    limit = 100
+    if app.current_request.query_params is not None and app.current_request.query_params.get('limit') == 'true':
+        limit = app.current_request.query_params.get('limit')
     return cloudwatch_data.get_cloudwatch_events_resource(
-        resource_arn, start_time, end_time)
+        resource_arn, start_time, end_time, limit)
 
 
 @app.route('/ping', cors=True, api_key_required=True, methods=['GET'])
@@ -517,3 +528,28 @@ def update_resource_notes(resource_arn):
     API entry point to update notes of a given resource.
     """
     return resource_notes.update_resource_notes(resource_arn, app.current_request)
+
+@app.route('/notes/{resource_arn}',
+           cors=True,
+           api_key_required=True,
+           methods=['DELETE'])
+def delete_resource_notes(resource_arn):
+    """
+    API entry point to return notes for a given resource.
+    """
+    return resource_notes.delete_resource_notes(resource_arn)
+
+@app.route('/notes',
+           cors=True,
+           api_key_required=True,
+           methods=['DELETE'])
+def delete_all_notes():
+    """
+    API entry point to return notes for a given resource.
+    """
+    return resource_notes.delete_all_notes_proxy()
+
+@app.lambda_function(name='DeleteAllResourceNotes')
+def delete_all_resource_notes(event, context):
+    # print("this will delete all the resource notes")
+    return resource_notes.delete_all_notes()

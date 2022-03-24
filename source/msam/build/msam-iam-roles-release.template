@@ -211,6 +211,11 @@
                                 ],
                                 "Effect": "Allow",
                                 "Resource": "*"
+                            },
+                            {
+                                "Action": "lambda:InvokeFunction",
+                                "Effect": "Allow",
+                                "Resource": "*"
                             }
                         ]
                     },
