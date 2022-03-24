@@ -133,12 +133,10 @@ class Diagram {
                 isolated.set(node.title, group);
             }
         }
-        // console.log(isolated);
         var dimensions = diagram.node_dimensions();
         var pad_x = Math.ceil(dimensions.max_width * 1.25);
         var pad_y = Math.ceil(dimensions.max_height * 1.25);
         for (let value of isolated.values()) {
-            // console.log(value);
             var node_ids = value;
             var bounds = diagram.bounds();
             // extra padding at the start
@@ -148,7 +146,6 @@ class Diagram {
             var nodes_per_row = Math.ceil(Math.sqrt(node_ids.length));
             var current_row_nodes = 0;
             for (let id of node_ids) {
-                // console.log(id, current_x, current_y);
                 diagram.network.moveNode(id, current_x, current_y);
                 current_row_nodes += 1;
                 if (current_row_nodes < nodes_per_row) {
@@ -183,7 +180,7 @@ class Diagram {
             // print only
             console.log(error);
             max_height = 0;
-            max_height = 0;
+            max_width = 0;
         }
         return {
             max_width: max_width,
@@ -307,13 +304,11 @@ class Diagram {
                     if (edge.to == id) {
                         // check 'from' node is on diagram
                         if (diagram.nodes.get(edge.from)) {
-                            // console.log(`${diagram.name} diagram connecting nodes ${edge.from} ${edge.to}`);
                             diagram.edges.update(edge);
                         }
                     } else if (edge.from == id) {
                         // check 'to' node is on diagram
                         if (diagram.nodes.get(edge.to)) {
-                            // console.log(`${diagram.name} diagram connecting nodes ${edge.from} ${edge.to}`);
                             diagram.edges.update(edge);
                         }
                     }
@@ -340,7 +335,6 @@ class Diagram {
 
     synchronize_content(event, node_ids) {
         var diagram = this;
-        // if (event == "add" || event == "update") {
         if (event == "add") {
             layout.save_layout(diagram, node_ids);
         } else if (event == "remove") {

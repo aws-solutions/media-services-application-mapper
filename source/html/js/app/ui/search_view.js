@@ -217,7 +217,6 @@ function search_now() {
 
 // enter key handler
 $("#search_input,#search_input_2").keypress(function (event) {
-    // console.log(event);
     var keycode = event.keyCode ? event.keyCode : event.which;
     if (keycode == "13") {
         if (event.target.id == "search_input") {
@@ -230,7 +229,6 @@ $("#search_input,#search_input_2").keypress(function (event) {
 });
 
 $("#search-now-button,#search-now-button-2").click(function (event) {
-    // console.log(event);
     if (event.target.id == "search-now-button") {
         $("#search_input_2").val($("#search_input").val());
     } else {

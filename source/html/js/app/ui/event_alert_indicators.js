@@ -24,7 +24,6 @@ const getEdges = (arn) => {
  */
 
 const getEdgesByPipeline = (arn, pipeline, bidi = true) => {
-    // console.log(arn, pipeline);
     let options;
     if (bidi) {
         options = {
@@ -116,17 +115,10 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
         // get edges in both directions if possible
         edges = getEdgesByPipeline(node.id, parseInt(alert_details.pipeline));
     }
-    // else
-    // if (_.has(alert_details, "pipeline")) {
-    //     // get outbound edges by pipeline
-    //     edges = getEdgesByPipeline(node.id, parseInt(alert_details.pipeline), false);
-    // }
     else {
         // get outbound edges
         edges = getEdges(node.id);
     }
-
-    // console.log("edges: " + JSON.stringify(edges));
 
     /** Update the edges */
     edges.forEach((edge) => {
@@ -137,14 +129,11 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
             edge.color.color !== newEdgeOpts.color.color ||
             edge.dashes !== newEdgeOpts.dashes
         ) {
-            // console.log("edge needs update");
             edge.color = newEdgeOpts.color;
             edge.dashes = newEdgeOpts.dashes;
             edge.hoverWidth = newEdgeOpts.hoverWidth;
             model.edges.update(edge);
             updateUIHandler(edge, active_alert, "edges");
-        } else {
-            // console.log("edge is correct");
         }
     });
 };
@@ -152,9 +141,6 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
 const updateEventAlertState = (current_alerts, previous_alerts) => {
     /** iterate through current 'set' alerts */
     let alerting_nodes = new Set();
-
-    // console.log(`current alerts: ${current_alerts.length}`);
-    // console.log(`previous alerts: ${previous_alerts.length}`);
 
     // we only need one unique alert per arn/pipeline
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
@@ -174,9 +160,6 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
             return `${item.resource_arn}`;
         }
     });
-
-    // console.log(`unique current alerts: ${uniq_current_alerts.length}`);
-    // console.log(`unique previous alerts: ${uniq_previous_alerts.length}`);
 
     // use the filtered lists
     current_alerts = uniq_current_alerts;

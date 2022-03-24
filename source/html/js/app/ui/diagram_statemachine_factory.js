@@ -32,7 +32,6 @@ export function create(diagram) {
                         );
                         var added = false;
                         for (let item of existing_tabs) {
-                            // console.log(index, item);
                             if (
                                 $(item).attr("data-diagram-name") >
                                 my_diagram.name
@@ -46,7 +45,6 @@ export function create(diagram) {
                         if (!added) {
                             $("#" + my_diagram.tab_container_id).append(tab);
                         }
-                        // $("#add-diagram-button").before(tab);
                         my_diagram.diagram_container.append(diagram_div);
                         my_diagram.container = $("#" + my_diagram.diagram_id);
                         this.transition("create-diagram");
@@ -99,7 +97,6 @@ export function create(diagram) {
                             "click",
                             (function () {
                                 return function (event) {
-                                    // console.log(my_diagram.name + " diagram click");
                                     if (event.nodes.length > 0) {
                                         alert.show(
                                             event.nodes.length + " selected"
@@ -171,7 +168,6 @@ export function create(diagram) {
                             })()
                         );
                         my_diagram.drag_container.on("mousemove", function (e) {
-                            // console.log("mousemove");
                             if (my_diagram.drag) {
                                 my_diagram.restore_drawing_surface();
                                 my_diagram.drag_rect.w =
@@ -226,7 +222,6 @@ export function create(diagram) {
                             }
                         });
                         my_diagram.drag_container.on("mouseup", function (e) {
-                            // console.log("mouseup");
                             if (e.button == 2) {
                                 my_diagram.restore_drawing_surface();
                                 my_diagram.drag = false;

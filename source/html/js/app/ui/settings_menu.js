@@ -12,7 +12,6 @@ const history_to_buttons = function (history) {
     const local_jq = $;
     let index = 0;
     for (let item of history) {
-        // console.log(item);
         const id = util.makeid();
         const url = item[0];
         const apiKey = item[1];
@@ -136,7 +135,6 @@ const set_inventory_regions = function (regions) {
 
 if (connections.get_current() !== null) {
     updateConnectionDialog();
-    // updateRegionDialog();
 }
 
 // add a save handler for the connection dialog
