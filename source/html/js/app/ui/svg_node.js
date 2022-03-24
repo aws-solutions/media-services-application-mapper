@@ -66,7 +66,6 @@ const create = (
     let found = false;
     for (let overlay of overlays.all) {
         if (overlay.match_type == (generic_type_name || type_name)) {
-            // console.log("applying overlay " + overlay.name);
             overlay.decorate(drawing, font_size, width, height, id, data);
             found = true;
         }
@@ -74,7 +73,6 @@ const create = (
 
     // use the default overlay if needed
     if (!found) {
-        // console.log("using default overlay for " + id)
         let overlay = overlays.default_overlay;
         overlay.decorate(drawing, font_size, width, height, id, data);
     }
@@ -84,7 +82,6 @@ const create = (
     // remove randomly generated ids from the SVG code
     const regex = /id="\w+"\s*/g;
     const modified = code.replace(regex, "");
-    // console.log(modified);
     return "data:image/svg+xml;base64," + window.btoa(modified);
 };
 

@@ -165,7 +165,6 @@ const populate_selected_items = function (node_ids) {
         "data-node-ids",
         JSON.stringify(_.map(data, "id"))
     );
-    // $("#subscribe_to_alarms_modal_selected_items").tabulator("setData", data);
     nodes_tabulator.setData(data);
 };
 
@@ -213,7 +212,6 @@ function show_alarm_subscribe_dialog() {
 }
 
 $("#subscribe_to_alarms_save").on("click", function () {
-    // const diagram = diagrams.shown();
     const node_ids = JSON.parse(
         $("#subscribe_to_alarms_modal").attr("data-node-ids")
     );

@@ -12,8 +12,8 @@ export const update = function () {
     return new Promise((resolve) => {
         server
             .get(url + "/cached/medialive-input-medialive-channel", api_key)
-            .then((connections) => {
-                for (let connection of connections) {
+            .then((results) => {
+                for (let connection of results) {
                     const data = JSON.parse(connection.data);
                     const options = {
                         id: connection.arn,
@@ -25,7 +25,7 @@ export const update = function () {
                         color: { color: "black" },
                     };
                     const hasMoreConnections = _.filter(
-                        connections,
+                        results,
                         (function (local_connection) {
                             return function (o) {
                                 if (

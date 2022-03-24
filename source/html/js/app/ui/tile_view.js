@@ -50,7 +50,6 @@ const alarm_callback = function () {
 
 const selection_listener = function (name) {
     toggle_tile(name);
-    // select(name);
 };
 
 const selected = function () {
@@ -95,7 +94,6 @@ const scroll_to_tile = function (name) {
 };
 
 const select = function (name) {
-    // query = `[data-channel-name][data-channel-name!='${name}']`;
     const unselected_tiles = $(".selected-channel-tile");
     unselected_tiles.removeClass("selected-channel-tile");
     const query = `[data-channel-name='${name}']`;
@@ -128,7 +126,6 @@ function tab_alert(state) {
 }
 
 const show_edit_dialog = function (name, members) {
-    // console.log(members);
     $("#channel_edit_name").val(name);
     $("#channel_edit_name").attr("data-original-name", name);
     $("#channel_edit_modal_items").empty();
@@ -185,7 +182,6 @@ const show_edit_dialog = function (name, members) {
 };
 
 const update_tile_info = async function () {
-    // console.log("update_tile_info");
     const cached_events = event_alerts.get_cached_events();
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
     const channel_list = await channels.channel_list();
@@ -197,7 +193,6 @@ const update_tile_info = async function () {
             const service_count_id = tile_id + "_services";
             const event_count_id = tile_id + "_events";
             const alarm_count_id = tile_id + "_alarms";
-            // console.log(channel_members);
             const service_count = channel_members.length;
             let alert_count = 0;
             let alarm_count = 0;
@@ -309,7 +304,6 @@ const redraw_tiles = async function () {
         const channel_members = await channels.retrieve_channel(
             local_channel_name
         );
-        // console.log(channel_members);
         const service_count = channel_members.length;
         let alert_count = 0;
         let alarm_count = 0;
@@ -473,10 +467,6 @@ $("#view_tile_diagram_generate_diagram_button").on("click", function () {
     // populate
     const nodes = _.compact(model.nodes.get(node_ids));
     diagram.nodes.update(nodes);
-    // diagram.network.once("afterDrawing", function() {
-    //     // layout
-    //     diagram.layout_vertical(true);
-    // });
     // show
     diagram.show();
     $("#view_tile_diagram_dialog").modal("hide");
@@ -484,13 +474,10 @@ $("#view_tile_diagram_generate_diagram_button").on("click", function () {
 
 $("#save_channel_edit").on("click", function () {
     const edited_name = $("#channel_edit_name").val();
-    // console.log(edited_name);
     const original_name = $("#channel_edit_name").attr("data-original-name");
-    // console.log(original_name);
     const member_checkboxes = $(
         "#channel_edit_members_table input[type='checkbox']"
     );
-    // console.log(member_checkboxes);
     channels
         .delete_channel(original_name)
         .then(function () {
@@ -658,7 +645,6 @@ channels
         schedule_interval();
         event_alerts.add_callback(event_alert_callback);
         alarms.add_callback(alarm_callback);
-        // add_selection_callback(selection_listener);
     });
 
 const select_external = function (name) {

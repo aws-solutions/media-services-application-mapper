@@ -22,7 +22,6 @@ const blinks = 10;
 var display_selected_nodes = function (diagram, node_ids) {
     var node = model.nodes.get(node_ids[0]);
     var found_on = diagrams.have_all(node.id);
-    // console.log(found_on);
     var diagram_links = "";
     var diagram_link_ids = [];
     for (let diagram of found_on) {
@@ -59,9 +58,6 @@ var display_selected_nodes = function (diagram, node_ids) {
             cache_html = `<p class="card-text small text-muted mt-0 pt-0"><b>Updated:</b> ${updated.toString()}</p>`;
         }
         var data = node.data;
-        // console.log(data);
-        // $("#search_input").val("");
-        // $("#nav-data-subtitle").html(node.title);
         renderjson.set_icons("+", "-");
         renderjson.set_show_to_level(1);
         let html = `
@@ -73,9 +69,7 @@ var display_selected_nodes = function (diagram, node_ids) {
                     ${cache_html}
                     <p class="card-text small" id="${data_div_id}-text"></p>
                     `;
-        // if (empty) {
         $("#" + data_div_id).empty();
-        // }
         $("#" + data_div_id).append(html);
         var json = renderjson(data);
         $("#" + data_div_id + "-text")[0].appendChild(json);
@@ -260,7 +254,6 @@ var show_elements = function (element_list) {
 var tile_view_listener = function (name, members) {
     var selected = tile_view.selected();
     if (selected === name) {
-        // show();
         display_selected_tile(name, members);
     } else if (selected) {
         channels.retrieve_channel(selected).then((members) => {
@@ -272,7 +265,6 @@ var tile_view_listener = function (name, members) {
 };
 
 diagrams.add_selection_callback(function (diagram, event) {
-    // console.log(event);
     if (event.nodes.length > 0) {
         display_selected_nodes(diagram, event.nodes);
     } else if (event.edges.length > 0) {

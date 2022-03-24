@@ -5,7 +5,6 @@ import * as server from "./server.js";
 import * as connections from "./connections.js";
 
 export function get_cloudwatch_events(arn) {
-    //console.log(arn);
     var current_connection = connections.get_current();
     var url = current_connection[0];
     var api_key = current_connection[1];

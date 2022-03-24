@@ -68,14 +68,12 @@ var get_by_name = function (name) {
 };
 
 var save_diagrams = function () {
-    // var settings = _.map(Object.values(diagrams), ["name", "view_id"]);
     var diagram_map = _.map(Object.values(diagrams), function (item) {
         return {
             name: item.name,
             view_id: item.view_id,
         };
     });
-    // console.log(settings);
     settings
         .put("diagrams", diagram_map)
         .then(function () {
@@ -204,8 +202,6 @@ const create_lock_compartment = () => {
     // get the location and size of the diagram div
     const diagramPosition = diagramDiv.position();
     const width = diagramDiv.width();
-    // console.log(`POSITION: ${JSON.stringify(position)}`);
-    // console.log(`WIDTH: ${width}`);
     // create
     const h_offset = 30;
     const v_offset = 2;
@@ -213,7 +209,6 @@ const create_lock_compartment = () => {
         diagramPosition.top + v_offset
     }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
     const buttonDiv = `<div id="diagram-lock-button" style="${style}"><span title="Lock/Unlock Changes" id="diagram-lock-icon" class="material-icons">lock_open</span></div>`;
-    // console.log(buttonDiv);
     diagramDiv.before(buttonDiv);
     $("#diagram-lock-button").click(() => {
         const diagram = shown_diagram();

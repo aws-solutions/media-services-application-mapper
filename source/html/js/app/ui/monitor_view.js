@@ -253,7 +253,6 @@ var events_tabulator = new Tabulator("#nav-monitor-events-text", {
 
 var display_selected_node = async function (node_id) {
     var node = model.nodes.get(node_id);
-    // console.log(JSON.stringify(node));
     last_displayed = node_id;
     var data = [];
     $("#nav-alarms-selected-item").html(node.header);
@@ -276,7 +275,6 @@ var display_selected_node = async function (node_id) {
     // alarms
     const alarms = await import("../alarms.js");
     alarms.alarms_for_subscriber(node.id).then(function (subscriptions) {
-        // console.log(subscriptions);
         for (let subscription of subscriptions) {
             if (Number.isInteger(subscription.StateUpdated)) {
                 subscription.StateUpdated = new Date(
@@ -292,7 +290,6 @@ var display_selected_node = async function (node_id) {
     });
     // cloudwatch events
     cw_events.get_cloudwatch_events(node.id).then(function (events) {
-        // console.log(events);
         for (let event of events) {
             event.timestamp = new Date(event.timestamp).toISOString();
         }
@@ -398,7 +395,6 @@ $("#monitor-unsubscribe-alarms-button").click(function () {
     var selected_alarms = alarm_tabulator.getSelectedData();
     var diagram = diagrams.shown();
     var selected_nodes = diagram.network.getSelectedNodes();
-    // console.log(selected_alarms);
     confirmation.show(
         "Unsubscribe selected node" +
             (selected_nodes.length == 1 ? "" : "s") +
