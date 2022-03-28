@@ -296,6 +296,7 @@ export function create(diagram) {
                 },
                 "ready-to-view": {
                     _onEnter: function () {
+                        const fsm = this;
                         my_diagram.add_node_dataset_callback(function (
                             event,
                             properties
@@ -310,6 +311,7 @@ export function create(diagram) {
                                 properties.items
                             );
                         });
+                        fsm.emit("diagram-ready");
                     },
                 },
             },
