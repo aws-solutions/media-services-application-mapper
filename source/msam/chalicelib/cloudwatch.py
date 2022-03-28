@@ -324,11 +324,13 @@ def get_cloudwatch_events_state_groups(state):
     return group
 
 
-def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0):
+def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0, limit=100):
     """
     API entry point to retrieve all CloudWatch events related to a given resource.
     """
     cw_events = []
+    # limit request cannot be more than 100 for now
+    limit = min(limit, 100)
     try:
         resource_arn = unquote(resource_arn)
         dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
@@ -342,15 +344,21 @@ def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0):
                 start_time)
         else:
             key = Key('resource_arn').eq(resource_arn)
-        response = table.query(KeyConditionExpression=key)
+        response = table.query(KeyConditionExpression=key,
+            ScanIndexForward=False,
+            Limit=limit)
         if "Items" in response:
             cw_events = response["Items"]
-        while "LastEvaluatedKey" in response:
+        remaining_items = limit - len(cw_events)
+        while "LastEvaluatedKey" in response and remaining_items > 0:
             response = table.query(
                 KeyConditionExpression=key,
-                ExclusiveStartKey=response['LastEvaluatedKey'])
+                ExclusiveStartKey=response['LastEvaluatedKey'],
+                ScanIndexForward=False,
+                Limit=remaining_items)
             if "Items" in response:
                 cw_events = cw_events + response["Items"]
+                remaining_items = limit - len(cw_events)
     except ClientError as error:
         print(error)
     return cw_events

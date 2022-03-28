@@ -114,6 +114,12 @@
                             "Outputs.CloudWatchEventsTable"
                         ]
                     },
+                    "NotesTableName": {
+                        "Fn::GetAtt": [
+                            "DynamoDBModuleStack",
+                            "Outputs.NotesTable"
+                        ]
+                    },
                     "CoreIAMRoleARN": {
                         "Fn::GetAtt": [
                             "IAMModuleStack",
