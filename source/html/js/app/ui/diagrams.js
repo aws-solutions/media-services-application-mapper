@@ -135,15 +135,15 @@ function have_any(node_ids, match_sort = false) {
             results.push({
                 diagram: diagram.name,
                 found: intersect,
-                percent: (intersect.length / node_ids.length).toFixed(2) * 100
+                percent: ((intersect.length / node_ids.length) * 100).toFixed(0)
             });
         }
     }
     if (match_sort) {
-        return _.orderBy(results, ["percent", "diagram"], ['desc', 'asc']);
+        return _.orderBy(results, [function (item) { return `${item.percent}`.padStart(3, '0'); }, "diagram"], ['desc', 'asc']);
     }
     else {
-        return _.orderBy(results, ["diagram", "percent"], ['asc', 'desc']);
+        return _.orderBy(results, ["diagram", function (item) { return `${item.percent}`.padStart(3, '0'); }], ['asc', 'desc']);
     }
 }
 

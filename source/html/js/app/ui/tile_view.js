@@ -135,27 +135,24 @@ const show_edit_dialog = function (name, members) {
         const checkbox_id = ui_util.makeid();
         if (node) {
             channel_content += `
-                                        <tr><th scope="row">${index + 1}</th>
-                                        <td>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id
-                }">
-                                        </div>
-                                        </td>
-                                        <td>${node.title}</td><td>${node.id
-                }</td></tr>
-                                    `;
+                    <tr><th scope="row">${index + 1}</th>
+                    <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
+                    </div>
+                    </td>
+                    <td>${node.title}</td><td>${node.id}</td></tr>
+                `;
         } else {
             channel_content += `
-                                        <tr><th scope="row">${index + 1}</th>
-                                        <td>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id
-                }">
-                                        </div>
-                                        </td>
-                                        <td>Expired</td><td>Expired</td></tr>
-                                    `;
+                    <tr><th scope="row">${index + 1}</th>
+                    <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member.id}">
+                    </div>
+                    </td>
+                    <td><b>Missing Resource</b></td><td>${member.id}</td></tr>
+                `;
         }
         index++;
     }
@@ -186,14 +183,19 @@ const update_tile_info = async function () {
         if (channel_members) {
             const query = `[data-channel-name='${channel_name}']`;
             const tile_id = $(query).attr("id");
-            const service_count_id = tile_id + "_services";
+            const resource_count_id = tile_id + "_resources";
+            const missing_count_id = tile_id + "_missing";
             const event_count_id = tile_id + "_events";
             const alarm_count_id = tile_id + "_alarms";
-            const service_count = channel_members.length;
+            const resource_count = channel_members.length;
             let alert_count = 0;
             let alarm_count = 0;
+            let missing_count = 0;
             let border_class = "border-success";
             for (let member of channel_members) {
+                if(!model.nodes.get(member.id)){
+                    missing_count ++;
+                }
                 const filtered_events = _.filter(cached_events.current, {
                     resource_arn: member.id,
                 });
@@ -215,14 +217,18 @@ const update_tile_info = async function () {
             }
             $("#" + tile_id).attr("data-alert-count", alert_count);
             $("#" + tile_id).attr("data-alarm-count", alarm_count);
+            $("#" + tile_id).attr("data-resource-count", resource_count);
+            $("#" + tile_id).attr("data-missing-count", missing_count);
             $("#" + tile_id).addClass(border_class);
-            $("#" + service_count_id).html(`${service_count} cloud resources`);
+            $("#" + resource_count_id).html(`${resource_count} cloud resource${resource_count === 1 ? "" : "s"}`);
+            $(`#${missing_count_id}`).html(`<strong>${missing_count} missing resource${missing_count === 1 ? "" : "s"}</strong>`);
             $("#" + event_count_id).html(
                 `${alert_count} alert event${alert_count === 1 ? "" : "s"}`
             );
             $("#" + alarm_count_id).html(
                 `${alarm_count} alarm${alarm_count === 1 ? "" : "s"}`
             );
+
         }
     }
     sort_tiles();
@@ -298,10 +304,14 @@ const redraw_tiles = async function () {
         const channel_members = await channels.retrieve_channel(
             local_channel_name
         );
-        const service_count = channel_members.length;
+        const resource_count = channel_members.length;
         let alert_count = 0;
         let alarm_count = 0;
+        let missing_count = 0;
         for (let member of channel_members) {
+            if(!model.nodes.get(member.id)){
+                missing_count ++;
+            }
             const filtered_events = _.filter(cached_events.current, {
                 resource_arn: member.id,
             });
@@ -318,18 +328,20 @@ const redraw_tiles = async function () {
         if (local_channel_name == selected()) {
             border_class = `${border_class} selected-channel-tile`;
         }
+
         const channel_card_id = ui_util.makeid();
         const header_id = channel_card_id + "_header";
         const menu_id = channel_card_id + "_menu";
         const dropdown_id = channel_card_id + "_dropdown";
         const tile = `
-                        <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
+                        <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${channel_members.length}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
                             <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${local_channel_name}
                             </div>
                             <div class="card-body text-info my-0 py-1">
                                 <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${alert_count === 1 ? "" : "s"}</h5>
                                 <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${alarm_count === 1 ? "" : "s"}</h5>
-                                <p class="card-text small my-0 py-0" id="${channel_card_id}_services">${service_count} cloud resources</p>
+                                <p class="card-text small my-0 py-0" id="${channel_card_id}_resources" style="cursor: pointer;">${resource_count} cloud resource${resource_count === 1 ? "" : "s"}</p>
+                                <p class="d-none card-text small my-0 py-0" id="${channel_card_id}_missing" style="cursor: pointer;"><strong>${missing_count} missing resource${missing_count === 1 ? "" : "s"}</strong></p>
                             </div>
                             <div class="btn-group btn-group-sm" aria-label="Tile Footer" style="height: 14%;">
                                 <div style="position: absolute; top: 0; left: ${tile_width_px - 32}px; cursor: pointer;">
@@ -345,8 +357,14 @@ const redraw_tiles = async function () {
                         </div>
                     `;
         $("#" + tile_row_div_id).append(tile);
+        if (missing_count) {
+            $(`#${channel_card_id}_missing`).removeClass("d-none");
+        }
         // closure to capture state
         (function () {
+            $(`#${channel_card_id}_resources,#${channel_card_id}_missing`).click(() => {
+                $(`#${header_id}`).trigger("click");
+            });
             const node_ids = _.map(channel_members, "id");
             $(`#${menu_id}`).click(() => {
                 console.log(`click ${menu_id} ${local_channel_name}`);
@@ -409,6 +427,7 @@ const redraw_tiles = async function () {
         ) {
             return function () {
                 selection_listener(hc_name);
+                $("#nav-data-tab").tab("show");
                 for (let listener of hc_click_listeners) {
                     const local_listener = listener;
                     try {
