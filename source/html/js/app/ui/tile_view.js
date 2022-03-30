@@ -367,7 +367,6 @@ const redraw_tiles = async function () {
             });
             const node_ids = _.map(channel_members, "id");
             $(`#${menu_id}`).click(() => {
-                console.log(`click ${menu_id} ${local_channel_name}`);
                 const matches = diagrams.have_any(node_ids, true);
                 console.log(matches);
                 $(`#${dropdown_id}`).empty();
