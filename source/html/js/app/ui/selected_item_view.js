@@ -11,11 +11,13 @@ var data_div_id = "nav-data";
 var alerts_div_id = "nav-alerts";
 var alarms_div_id = "nav-alarms";
 var events_div_id = "nav-events";
+var notes_div_id = "nav-notes";
 
 var data_tab_id = "nav-data-tab";
 var alerts_tab_id = "nav-alerts-tab";
 var alarms_tab_id = "nav-alarms-tab";
 var events_tab_id = "nav-events-tab";
+var notes_tab_id = "nav-notes-tab";
 
 const blinks = 10;
 
@@ -125,7 +127,7 @@ var display_selected_nodes = function (diagram, node_ids) {
     // if node is managed instance, alerts and cloudwatch events don't apply
     // if medialive channel/multiplex or mediaconnect flow, alerts apply
     if (node_ids[0].includes("managed-instance")) {
-        show_elements([data_div_id, alarms_div_id, data_tab_id, alarms_tab_id]);
+        show_elements([data_div_id, alarms_div_id, notes_div_id, data_tab_id, alarms_tab_id, notes_tab_id]);
         hide_elements([
             alerts_div_id,
             events_div_id,
@@ -143,19 +145,23 @@ var display_selected_nodes = function (diagram, node_ids) {
             alerts_div_id,
             alarms_div_id,
             events_div_id,
+            notes_div_id,
             data_tab_id,
             alarms_tab_id,
             alerts_tab_id,
             events_tab_id,
+            notes_tab_id
         ]);
     } else {
         show_elements([
             data_div_id,
             alarms_div_id,
             events_div_id,
+            notes_div_id,
             data_tab_id,
             alarms_tab_id,
             events_tab_id,
+            notes_tab_id
         ]);
         hide_elements([alerts_div_id, alerts_tab_id]);
     }
@@ -180,7 +186,7 @@ var display_selected_edges = function (diagram, edges) {
     $("#" + data_div_id + "-data").append(renderjson(edge.data));
     $("#" + data_div_id + "-from").append(renderjson(fromNode.data));
     $("#" + data_div_id + "-to").append(renderjson(toNode.data));
-    show_elements([data_div_id, data_tab_id]);
+    show_elements([data_div_id, notes_div_id, data_tab_id, notes_tab_id]);
     hide_elements([
         alarms_div_id,
         alerts_div_id,
@@ -229,10 +235,12 @@ var display_no_selection = function () {
         alarms_tab_id,
         alerts_tab_id,
         events_tab_id,
+        notes_tab_id,
         data_div_id,
         alerts_div_id,
         alarms_div_id,
         events_div_id,
+        notes_div_id
     ]);
 };
 

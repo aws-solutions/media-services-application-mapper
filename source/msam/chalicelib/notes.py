@@ -67,12 +67,13 @@ def update_resource_notes(resource_arn, notes):
     """
     result = {"message": "notes saved"}
     timestamp = int(time.time())
+    arn = unquote(resource_arn)
     try:
         # print(notes.raw_body.decode("utf-8"))
-        string_notes = notes.raw_body.decode("utf-8")
+        string_notes = notes.json_body
         item = {
                 "timestamp": timestamp,
-                "resource_arn": resource_arn,
+                "resource_arn": arn,
                 "notes": string_notes
             }
         NOTES_TABLE.put_item(Item=item)
@@ -86,8 +87,9 @@ def delete_resource_notes(resource_arn):
     API entry point to delete notes of a given resource.
     """
     result = {"message": "notes deleted"}
+    arn = unquote(resource_arn)
     try:
-        NOTES_TABLE.delete_item(Key={"resource_arn": resource_arn})
+        NOTES_TABLE.delete_item(Key={"resource_arn": arn})
     except ClientError as error:
         print(error)
         result = {"exception": str(error)}
