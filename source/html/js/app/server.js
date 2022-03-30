@@ -39,12 +39,12 @@ const post = function (url, api_key, data) {
             data: JSON.stringify(data),
             headers: headers,
             contentType: "application/json",
-            success: (data) => {
-                resolve(data);
+            success: (response) => {
+                resolve(response);
             },
-            error: (data) => {
-                console.log(data);
-                reject(data);
+            error: (response) => {
+                console.log(response);
+                reject(response);
             },
             timeout: request_timeout,
         });
@@ -88,12 +88,12 @@ const delete_method_with_body = function (url, api_key, data) {
             data: JSON.stringify(data),
             headers: headers,
             contentType: "application/json",
-            success: (data) => {
-                resolve(data);
+            success: (response) => {
+                resolve(response);
             },
-            error: (data) => {
-                console.log(data);
-                reject(data);
+            error: (response) => {
+                console.log(response);
+                reject(response);
             },
             timeout: request_timeout,
         });

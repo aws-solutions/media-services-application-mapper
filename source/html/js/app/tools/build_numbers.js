@@ -17,13 +17,13 @@ const run_tool = function () {
             .ping(endpoint, api_key)
             .then(function (response) {
                 const message = `
-                <p class="my-2">This tool shows the build numbers for the currently running browser application and the currently connected endpoint.</p>
+                <p class="my-2">This tool shows the versions for the currently running browser application and the currently connected endpoint.</p>
                 <table class="table table-bordered my-2">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Component</th>
-                            <th scope="col">Build Timestamp</th>
+                            <th scope="col">Version</th>
                         </tr>
                     </thead>
                     <tbody>

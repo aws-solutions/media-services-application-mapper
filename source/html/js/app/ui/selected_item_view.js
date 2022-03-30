@@ -199,7 +199,7 @@ var display_selected_edges = function (diagram, edges) {
 
 var display_selected_tile = function (name, members) {
     renderjson.set_icons("+", "-");
-    renderjson.set_show_to_level(2);
+    renderjson.set_show_to_level(3);
     var data = [];
     var missing = [];
     for (let member_value of members) {
@@ -210,7 +210,9 @@ var display_selected_tile = function (name, members) {
             missing.push(member_value.id);
         }
     }
-    data.push({ "missing-nodes": missing });
+    if (missing.length) {
+        data.unshift({ "Missing-Tile-Resources": missing });
+    }
     var html = `
             <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">Tile: ${name}</h6>
             <p class="card-text small" id="${data_div_id}-text"></p>

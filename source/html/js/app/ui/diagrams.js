@@ -122,7 +122,7 @@ function have_all(node_ids) {
     return _.orderBy(results, ["name"]);
 }
 
-function have_any(node_ids) {
+function have_any(node_ids, match_sort = false) {
     var results = [];
     node_ids = node_ids || [];
     if (!Array.isArray(node_ids)) {
@@ -135,10 +135,16 @@ function have_any(node_ids) {
             results.push({
                 diagram: diagram.name,
                 found: intersect,
+                percent: ((intersect.length / node_ids.length) * 100).toFixed(0)
             });
         }
     }
-    return _.orderBy(results, ["diagram"]);
+    if (match_sort) {
+        return _.orderBy(results, [function (item) { return `${item.percent}`.padStart(3, '0'); }, "diagram"], ['desc', 'asc']);
+    }
+    else {
+        return _.orderBy(results, ["diagram", function (item) { return `${item.percent}`.padStart(3, '0'); }], ['asc', 'desc']);
+    }
 }
 
 const update_lock_visibility = () => {
@@ -205,9 +211,8 @@ const create_lock_compartment = () => {
     // create
     const h_offset = 30;
     const v_offset = 2;
-    const style = `position: absolute; top: ${
-        diagramPosition.top + v_offset
-    }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
+    const style = `position: absolute; top: ${diagramPosition.top + v_offset
+        }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
     const buttonDiv = `<div id="diagram-lock-button" style="${style}"><span title="Lock/Unlock Changes" id="diagram-lock-icon" class="material-icons">lock_open</span></div>`;
     diagramDiv.before(buttonDiv);
     $("#diagram-lock-button").click(() => {

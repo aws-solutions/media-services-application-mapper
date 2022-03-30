@@ -46,8 +46,8 @@ let cached_tile_names;
 
 const update = function () {
     fuse_model = new Fuse(model.nodes.get(), model_options);
-    channels.channel_list().then(function (channels) {
-        cached_tile_names = channels;
+    channels.channel_list().then(function (results) {
+        cached_tile_names = results;
     });
 };
 

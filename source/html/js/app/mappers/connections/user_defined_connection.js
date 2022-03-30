@@ -45,10 +45,10 @@ export const update = function () {
                 // iterate through each grouping to create the correct curvature and prevent overlap
                 _.forEach(edge_groups, function (value) {
                     // order the grouped connections by to, from and label
-                    let connections = _.orderBy(value, ["from", "to", "label"]);
+                    let ordered_connections = _.orderBy(value, ["from", "to", "label"]);
                     let previous_from;
-                    for (let index in connections) {
-                        let connection = connections[index];
+                    for (let index in ordered_connections) {
+                        let connection = ordered_connections[index];
                         let data;
                         // data attribute is not required on custom connections
                         if (typeof connection.data == "undefined") {
@@ -69,7 +69,7 @@ export const update = function () {
                             },
                         };
                         // more than one connection needs curving, otherwise defaults to straight
-                        if (connections.length > 1) {
+                        if (ordered_connections.length > 1) {
                             options.smooth = { enabled: true };
                             // alternating counter-clockwise and clockwise curve
                             if (index % 2 == 0) {
