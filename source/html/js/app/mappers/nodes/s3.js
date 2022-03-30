@@ -22,7 +22,7 @@ export const update = function () {
                     bucket.Arn = "arn:aws:s3:::" + bucket.Name;
                     const name = bucket.Name;
                     const id = bucket.Arn;
-                    let node_data = {
+                    const node_data = {
                         cache_update: cache_entry.updated,
                         id: bucket.Arn,
                         region: cache_entry.region,
@@ -38,10 +38,10 @@ export const update = function () {
                         size: 55,
                         render: {
                             normal_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -52,10 +52,10 @@ export const update = function () {
                                 };
                             })(),
                             normal_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -66,9 +66,9 @@ export const update = function () {
                                 };
                             })(),
                             alert_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -79,9 +79,9 @@ export const update = function () {
                                 };
                             })(),
                             alert_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -93,15 +93,15 @@ export const update = function () {
                             })(),
                         },
                         console_link: (function () {
-                            const id = bucket.Name;
+                            const bucket_name = bucket.Name;
                             return function () {
-                                return `https://s3.console.aws.amazon.com/s3/buckets/${id}/?tab=overview`;
+                                return `https://s3.console.aws.amazon.com/s3/buckets/${bucket_name}/?tab=overview`;
                             };
                         })(),
                         cloudwatch_link: (function () {
-                            const id = bucket.Name;
+                            const bucket_name = bucket.Name;
                             return function () {
-                                return `https://console.aws.amazon.com/cloudwatch/home#metricsV2:graph=~();search=${id};namespace=AWS/S3;dimensions=BucketName,StorageType`;
+                                return `https://console.aws.amazon.com/cloudwatch/home#metricsV2:graph=~();search=${bucket_name};namespace=AWS/S3;dimensions=BucketName,StorageType`;
                             };
                         })(),
                     };
