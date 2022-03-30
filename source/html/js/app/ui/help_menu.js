@@ -19,6 +19,6 @@ $("#build-version-button").on("click", function () {
             show_result(result.success, result.message);
         })
         .catch(function (error) {
-            show_result(false, error)
+            show_result(false, error);
         });
 });
