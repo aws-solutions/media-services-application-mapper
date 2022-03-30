@@ -20,7 +20,7 @@ const update_channels = function (items) {
                     const channel = JSON.parse(cache_entry.data);
                     const name = channel.Id;
                     const id = channel.Arn;
-                    let node_data = {
+                    const node_data = {
                         cache_update: cache_entry.updated,
                         id: channel.Arn,
                         region: cache_entry.region,
@@ -36,10 +36,10 @@ const update_channels = function (items) {
                         size: 55,
                         render: {
                             normal_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -50,10 +50,10 @@ const update_channels = function (items) {
                                 };
                             })(),
                             normal_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -64,9 +64,9 @@ const update_channels = function (items) {
                                 };
                             })(),
                             alert_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -77,9 +77,9 @@ const update_channels = function (items) {
                                 };
                             })(),
                             alert_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -91,17 +91,17 @@ const update_channels = function (items) {
                             })(),
                         },
                         console_link: (function () {
-                            let id = channel.Id;
-                            let region = channel.Arn.split(":")[3];
+                            const local_id = channel.Id;
+                            const local_region = channel.Arn.split(":")[3];
                             return function () {
-                                return `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${id}`;
+                                return `https://console.aws.amazon.com/mediapackage/home?region=${local_region}#/channels/${local_id}`;
                             };
                         })(),
                         cloudwatch_link: (function () {
-                            let id = channel.Id;
-                            let region = channel.Arn.split(":")[3];
+                            const local_id = channel.Id;
+                            const local_region = channel.Arn.split(":")[3];
                             return function () {
-                                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel`;
+                                return `https://console.aws.amazon.com/cloudwatch/home?region=${local_region}#metricsV2:graph=~();search=${local_id};namespace=AWS/MediaPackage;dimensions=Channel`;
                             };
                         })(),
                     };
@@ -135,7 +135,7 @@ const update_endpoints = function (items) {
                     const endpoint = JSON.parse(cache_entry.data);
                     const name = endpoint.Id;
                     const id = endpoint.Arn;
-                    let node_data = {
+                    const node_data = {
                         cache_update: cache_entry.updated,
                         id: id,
                         region: cache_entry.region,
@@ -151,10 +151,10 @@ const update_endpoints = function (items) {
                         size: 55,
                         render: {
                             normal_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -165,10 +165,10 @@ const update_endpoints = function (items) {
                                 };
                             })(),
                             normal_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_rgb = rgb;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_rgb = rgb;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -179,9 +179,9 @@ const update_endpoints = function (items) {
                                 };
                             })(),
                             alert_unselected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
@@ -192,9 +192,9 @@ const update_endpoints = function (items) {
                                 };
                             })(),
                             alert_selected: (function () {
-                                let local_node_type = node_type;
-                                let local_name = name;
-                                let local_id = id;
+                                const local_node_type = node_type;
+                                const local_name = name;
+                                const local_id = id;
                                 return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
@@ -206,18 +206,18 @@ const update_endpoints = function (items) {
                             })(),
                         },
                         console_link: (function () {
-                            let id = endpoint.Id;
-                            let parent_id = endpoint.ChannelId;
-                            let region = endpoint.Arn.split(":")[3];
+                            const local_id = endpoint.Id;
+                            const parent_id = endpoint.ChannelId;
+                            const local_region = endpoint.Arn.split(":")[3];
                             return function () {
-                                return `https://console.aws.amazon.com/mediapackage/home?region=${region}#/channels/${parent_id}/endpoints/${id}`;
+                                return `https://console.aws.amazon.com/mediapackage/home?region=${local_region}#/channels/${parent_id}/endpoints/${local_id}`;
                             };
                         })(),
                         cloudwatch_link: (function () {
-                            let id = endpoint.Id;
-                            let region = endpoint.Arn.split(":")[3];
+                            const local_id = endpoint.Id;
+                            const local_region = endpoint.Arn.split(":")[3];
                             return function () {
-                                return `https://console.aws.amazon.com/cloudwatch/home?region=${region}#metricsV2:graph=~();search=${id};namespace=AWS/MediaPackage;dimensions=Channel,OriginEndpoint`;
+                                return `https://console.aws.amazon.com/cloudwatch/home?region=${local_region}#metricsV2:graph=~();search=${local_id};namespace=AWS/MediaPackage;dimensions=Channel,OriginEndpoint`;
                             };
                         })(),
                     };

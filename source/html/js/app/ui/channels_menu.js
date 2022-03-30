@@ -93,12 +93,12 @@ $("#channel_definition_modal").on("hide.bs.modal", function () {
 });
 
 $("#channel_add_node_modal").on("show.bs.modal", function () {
-    let channel_content = "";
+    let selected_content = "";
     const diagram = diagrams.shown();
     let index = 0;
     for (let id of diagram.network.getSelectedNodes()) {
         const node = model.nodes.get(id);
-        channel_content += `<tr><th scope="row">${++index}</th><td>${
+        selected_content += `<tr><th scope="row">${++index}</th><td>${
             node.title
         }</td><td draggable="true" data-node-id="${node.id}">${
             node.id
@@ -114,7 +114,7 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
                 </tr>
             </thead>
             <tbody>
-                ${channel_content}
+                ${selected_content}
             </tbody>
         </table>`;
     $("#channel_add_node_modal_items").html(html);

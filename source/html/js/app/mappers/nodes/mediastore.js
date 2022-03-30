@@ -92,10 +92,10 @@ export const update = function () {
                             })(),
                         },
                         console_link: (function () {
-                            const id = container.Name;
-                            const region = container.ARN.split(":")[3];
+                            const local_id = container.Name;
+                            const local_region = container.ARN.split(":")[3];
                             return function () {
-                                return `https://${region}.console.aws.amazon.com/mediastore/home/containers/${id}`;
+                                return `https://${local_region}.console.aws.amazon.com/mediastore/home/containers/${local_id}`;
                             };
                         })(),
                         cloudwatch_link: (function () {
