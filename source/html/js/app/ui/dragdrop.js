@@ -36,7 +36,7 @@ function drop_node_to_diagram(event) {
 function drop_node_to_tile(tile) {
     // get node
     var node = model.nodes.get(drag_id);
-    var name = tile.attr("data-channel-name");
+    var name = filterXSS(tile.attr("data-channel-name"));
     var html;
     if (node) {
         html = `Add ${node.header} to tile ${name}?`;

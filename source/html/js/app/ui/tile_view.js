@@ -53,7 +53,7 @@ const selection_listener = function (name) {
 
 const selected = function () {
     const tile = $(".selected-channel-tile");
-    return tile.attr("data-channel-name");
+    return filterXSS(tile.attr("data-channel-name"));
 };
 
 const toggle_tile = function (name) {

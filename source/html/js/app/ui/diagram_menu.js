@@ -185,7 +185,7 @@ $("#create_diagram_dialog").on("shown.bs.modal", function () {
 $("#create_diagram_dialog_proceed").on("click", function () {
     try {
         // get the name
-        var name = $("#create_diagram_dialog_name").val();
+        var name = filterXSS($("#create_diagram_dialog_name").val());
         // check it
         var valid_name = new RegExp("^\\w+");
         if (valid_name.test(name)) {
