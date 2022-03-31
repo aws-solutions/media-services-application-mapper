@@ -71,7 +71,7 @@ function drop_diagram_to_diagram() {
 }
 
 function drop_diagram_to_tile(tile) {
-    var name = tile.attr("data-channel-name");
+    var name = filterXSS(tile.attr("data-channel-name"));
     var source_diagram = diagrams.get_by_name(drag_id);
     var node_ids;
     var html;

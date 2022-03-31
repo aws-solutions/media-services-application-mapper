@@ -230,7 +230,7 @@ $("#dupe_diagram_dialog_proceed").on("click", function () {
     if (current_diagram) {
         try {
             // get the name
-            var name = $("#dupe_diagram_dialog_name").val();
+            var name = filterXSS($("#dupe_diagram_dialog_name").val());
             // check it
             var valid_name = new RegExp("^\\w+");
             if (valid_name.test(name)) {
