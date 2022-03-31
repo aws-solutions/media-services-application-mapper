@@ -77,6 +77,27 @@ jobs:
             grep --invert-match "/external/" | \
             xargs ../../node_modules/jshint/bin/jshint
 
+  codeql-check-job:
+    runs-on: ubuntu-latest
+    name: Check source code with CodeQL
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python' ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+
   build-job:
     runs-on: ubuntu-latest
     needs:
@@ -85,7 +106,8 @@ jobs:
         trufflehog-scan-job,
         bandit-check-job,
         pylint-check-job,
-        jshint-check-job
+        jshint-check-job,
+        codeql-check-job
       ]
     steps:
       - name: Check out repo
