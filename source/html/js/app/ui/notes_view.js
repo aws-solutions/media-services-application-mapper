@@ -197,14 +197,18 @@ $("#" + save_notes_button).click(() => {
     notes.update_resource_notes(resource_info.id, notes_value).then(function (response) {
         alert.show("Notes saved");
         console.log(response);
+        // after saving, hide the textarea, and show the rendered notes
+        hide_elements([editable_notes_div_id]);
+        render_html_notes(resource_info);
+        show_elements([rendered_notes_div_id]);
     });
 });
 
 $("#" + cancel_notes_button).click(() => {
     console.log('cancel notes button clicked');
     hide_elements([editable_notes_div_id]);
-    let resource_id = resource_selected();
-    render_html_notes(resource_id);
+    let resource_info = resource_selected();
+    render_html_notes(resource_info);
     show_elements([rendered_notes_div_id]);
 });
 
