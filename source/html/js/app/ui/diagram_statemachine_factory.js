@@ -36,7 +36,7 @@ export function create(diagram) {
                                 $(item).attr("data-diagram-name") >
                                 my_diagram.name
                             ) {
-                                var id = $(item).attr("id");
+                                var id = filterXSS($(item).attr("id"));
                                 $("#" + id).before(tab);
                                 added = true;
                                 break;

@@ -36,7 +36,7 @@ function drop_node_to_diagram(event) {
 function drop_node_to_tile(tile) {
     // get node
     var node = model.nodes.get(drag_id);
-    var name = tile.attr("data-channel-name");
+    var name = filterXSS(tile.attr("data-channel-name"));
     var html;
     if (node) {
         html = `Add ${node.header} to tile ${name}?`;
@@ -71,7 +71,7 @@ function drop_diagram_to_diagram() {
 }
 
 function drop_diagram_to_tile(tile) {
-    var name = tile.attr("data-channel-name");
+    var name = filterXSS(tile.attr("data-channel-name"));
     var source_diagram = diagrams.get_by_name(drag_id);
     var node_ids;
     var html;
@@ -118,7 +118,7 @@ function drop_tile_to_diagram() {
 
 function drop_tile_to_tile(tile) {
     var source_tile_name = drag_id;
-    var target_tile_name = tile.attr("data-channel-name");
+    var target_tile_name = filterXSS(tile.attr("data-channel-name"));
     var html;
     if (source_tile_name !== target_tile_name) {
         html = `Add contents from tile ${source_tile_name} to tile ${target_tile_name}?`;

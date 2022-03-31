@@ -28,7 +28,6 @@ const update_resource_notes = function (arn, notes) {
     var api_key = current_connection[1];
     var current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
     return new Promise(function (resolve, reject) {
-        const data = notes;
         server
             .post(current_endpoint, api_key, notes)
             .then(function (response) {
