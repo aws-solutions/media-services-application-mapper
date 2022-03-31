@@ -13,6 +13,7 @@
     "moment": "2.24",
     "object-hash": "^2.2.0",
     "renderjson": "^1.4.0",
+    "showdown": "^2.0.3",
     "svg.js": "^2.6.6",
     "tabulator-tables": "^4.9.3",
     "urijs": "^1.19.7",

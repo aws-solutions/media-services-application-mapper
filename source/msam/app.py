@@ -522,7 +522,7 @@ def all_notes():
            cors=True,
            api_key_required=True,
            methods=['POST'],
-           content_types=['text/plain'])
+           content_types=['text/plain', 'application/json'])
 def update_resource_notes(resource_arn):
     """
     API entry point to update notes of a given resource.

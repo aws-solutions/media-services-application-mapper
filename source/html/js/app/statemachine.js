@@ -202,6 +202,7 @@ const toolStateMachine = new machina.Fsm({
                 await import("./ui/informational_overlays.js");
                 await import("./ui/monitor_view.js");
                 await import("./ui/nodes_menu.js");
+                await import("./ui/notes_view.js");
                 await import("./ui/search_view.js");
                 await import("./ui/selected_item_view.js");
                 await import("./ui/tile_view.js");
