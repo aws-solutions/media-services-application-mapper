@@ -118,7 +118,7 @@ function drop_tile_to_diagram() {
 
 function drop_tile_to_tile(tile) {
     var source_tile_name = drag_id;
-    var target_tile_name = tile.attr("data-channel-name");
+    var target_tile_name = filterXSS(tile.attr("data-channel-name"));
     var html;
     if (source_tile_name !== target_tile_name) {
         html = `Add contents from tile ${source_tile_name} to tile ${target_tile_name}?`;

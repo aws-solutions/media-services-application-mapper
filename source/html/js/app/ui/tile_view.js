@@ -478,7 +478,7 @@ $("#view_tile_diagram_show").on("click", function () {
 });
 
 $("#view_tile_diagram_generate_diagram_button").on("click", function () {
-    const tile_name = $("#view_tile_diagram_dialog").attr("data-tile-name");
+    const tile_name = filterXSS($("#view_tile_diagram_dialog").attr("data-tile-name"));
     const node_ids = JSON.parse(
         $("#view_tile_diagram_dialog").attr("data-node-ids")
     );
