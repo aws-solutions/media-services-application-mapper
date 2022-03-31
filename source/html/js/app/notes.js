@@ -20,7 +20,7 @@ const get_resource_notes = function (arn) {
                 reject(error);
             });
     });
-}
+};
 
 const update_resource_notes = function (arn, notes) {
     var current_connection = connections.get_current();
@@ -39,7 +39,7 @@ const update_resource_notes = function (arn, notes) {
                 reject(error);
             });
     });
-}
+};
 
 const delete_resource_notes = function(arn) {
     var current_connection = connections.get_current();
@@ -57,7 +57,7 @@ const delete_resource_notes = function(arn) {
                 reject(error);
             });
     });
-}
+};
 
 export {
     get_resource_notes,

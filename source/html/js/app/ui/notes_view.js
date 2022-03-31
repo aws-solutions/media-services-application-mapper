@@ -186,7 +186,7 @@ $("#" + delete_notes_button).click(() => {
             console.log(result);
             alert.show("Notes deleted");
             render_html_notes(resource_info);
-        })
+        });
     });
 });
 
@@ -237,7 +237,7 @@ var resource_selected = function() {
         resource_info.header = `Tile: ${resource_info.id}`;
     }
     return resource_info;
-}
+};
 
 var render_html_notes = function (resource) {
     var html;
@@ -248,7 +248,7 @@ var render_html_notes = function (resource) {
     notes.get_resource_notes(resource.id).then(function (this_note) {
         if(this_note?.length > 0) {
             let converter = new showdown.Converter();
-            let text = this_note[0].notes
+            let text = this_note[0].notes;
             html = converter.makeHtml(text);
         }
         else {
