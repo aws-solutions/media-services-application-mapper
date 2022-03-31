@@ -32,7 +32,6 @@ var editable_notes_div_id = "notes-editable-markdown";
 var notes_textarea_id = "notes-textarea";
 
 var display_selected_nodes = function (diagram, node_ids) {
-    var node = model.nodes.get(node_ids[0]);
     let resource_info = resource_selected();
     render_html_notes(resource_info);
 
@@ -90,7 +89,7 @@ var display_selected_nodes = function (diagram, node_ids) {
     }
 };
 
-var display_selected_edges = function (diagram, edges) {
+var display_selected_edges = function () {
     // var edge = model.edges.get(edges[0]);
     // console.log(edge.id);
     let resource_info = resource_selected();
@@ -111,7 +110,7 @@ var display_selected_edges = function (diagram, edges) {
     ]);
 };
 
-var display_selected_tile = function (name, members) {
+var display_selected_tile = function () {
     let resource_info = resource_selected();
     render_html_notes(resource_info);
     show_elements([
@@ -246,7 +245,7 @@ var resource_selected = function() {
 var render_html_notes = function (resource) {
     var html;
     $("#" + rendered_notes_div_id).empty();
-    var header = `<h6 class="card-subtitle mb-2 text-muted">${resource.header}</h6><br \>`;
+    var header = `<h6 class="card-subtitle mb-2 text-muted">${resource.header}</h6><br/>`;
 
     $("#" + rendered_notes_div_id).append(header);
     notes.get_resource_notes(resource.id).then(function (this_note) {
