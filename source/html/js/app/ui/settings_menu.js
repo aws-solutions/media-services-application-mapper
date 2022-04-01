@@ -106,28 +106,29 @@ const get_inventory_regions = function () {
     });
 };
 
-const set_inventory_regions = function (regions) {
-    console.log("updating inventory-regions: " + JSON.stringify(regions));
+const remove_inventory_regions_setting = (resolve) => {
+    console.log("empty array, removing setting");
+    settings.remove("inventory-regions").then(function () {
+        resolve();
+    });
+};
+
+const set_inventory_regions = function (inventory_regions) {
+    console.log("updating inventory-regions: " + JSON.stringify(inventory_regions));
     return new Promise(function (resolve, reject) {
-        if (!Array.isArray(regions)) {
+        if (!Array.isArray(inventory_regions)) {
             reject("regions must by an array");
         } else {
-            if (regions.length == 1 && regions[0].length == 0) {
-                console.log("empty array, removing setting");
-                settings.remove("inventory-regions").then(function () {
-                    resolve();
-                });
-            } else if (regions.length > 0) {
+            if (inventory_regions.length == 1 && inventory_regions[0].length == 0) {
+                remove_inventory_regions_setting(resolve);
+            } else if (inventory_regions.length > 0) {
                 settings
-                    .put("inventory-regions", regions.sort())
+                    .put("inventory-regions", inventory_regions.sort())
                     .then(function () {
                         resolve();
                     });
             } else {
-                console.log("empty array, removing setting");
-                settings.remove("inventory-regions").then(function () {
-                    resolve();
-                });
+                remove_inventory_regions_setting(resolve);
             }
         }
     });

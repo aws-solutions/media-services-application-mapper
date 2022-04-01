@@ -301,11 +301,7 @@ def get_cloudwatch_events_state_groups(state):
             all_down_pipelines = list(filter(is_pl_down, same_arn_events))
             same_down_pipelines = list(filter(is_same_pl, all_down_pipelines))
             diff_down_pipelines = list(filter(is_diff_pl, all_down_pipelines))
-            if len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0:
-                event["detail"]["degraded"] = bool(True)
-                group["degraded"].append(event)
-            elif len(
-                    diff_down_pipelines) == 0 and len(same_down_pipelines) > 0:
+            if (len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0) or (len(diff_down_pipelines) == 0 and len(same_down_pipelines) > 0):
                 event["detail"]["degraded"] = bool(True)
                 group["degraded"].append(event)
             elif len(diff_down_pipelines) > 0 and len(same_down_pipelines) > 0:

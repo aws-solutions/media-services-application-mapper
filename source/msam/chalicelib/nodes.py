@@ -26,6 +26,14 @@ USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 # used to handle throttling, be very patient and back off a lot if needed
 MSAM_BOTO3_CONFIG = Config(retries={'max_attempts': 15}, **USER_AGENT_EXTRA)
 
+
+def print_no_region():
+    """
+    Printed many times in this module
+    """
+    print("not available in this region")
+
+
 def update_regional_ddb_items(region_name):
     """
     Update all services in the cache for a region.
@@ -361,7 +369,7 @@ def mediapackage_channels(region):
             items = items + response['Channels']
         jsonpath_expr.update(items, "XXXXXXXXXXXX")
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -380,7 +388,7 @@ def mediapackage_origin_endpoints(region):
             response = service.list_origin_endpoints(NextToken=response["NextToken"])
             items = items + response['OriginEndpoints']
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -399,7 +407,7 @@ def medialive_channels(region):
             response = service.list_channels(NextToken=response["NextToken"])
             items = items + response['Channels']
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -418,7 +426,7 @@ def medialive_inputs(region):
             response = service.list_inputs(NextToken=response["NextToken"])
             items = items + response['Inputs']
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -445,7 +453,7 @@ def medialive_multiplexes(region):
                 del plex_response['ResponseMetadata']
                 items.append(plex_response)
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -468,7 +476,7 @@ def mediastore_containers(region):
             item['Tags'] = response['Tags']
             item['CreationTime'] = str(item['CreationTime'])
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -495,7 +503,7 @@ def mediaconnect_flows(region):
                 print(error)
             items.append(flow_details['Flow'])
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -519,7 +527,7 @@ def mediatailor_configurations(region):
                 del response['ResponseMetadata']
             items.append(response)
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -557,7 +565,7 @@ def ssm_managed_instances(region):
                         device['Tags'][tag['Key']] = tag['Value']
                 items.append(device)
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 
@@ -585,7 +593,7 @@ def ec2_instances(region):
                         instance['Tags'] = final_tags
                 items.append(instance)
     else:
-        print("not available in this region")
+        print_no_region()
     return items
 
 def link_devices(region):
@@ -603,5 +611,5 @@ def link_devices(region):
             response = service.list_input_devices(NextToken=response["NextToken"])
             items = items + response['InputDevices']
     else:
-        print("not available in this region")
+        print_no_region()
     return items

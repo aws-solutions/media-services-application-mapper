@@ -21,12 +21,12 @@ var notes_tab_id = "nav-notes-tab";
 
 const blinks = 10;
 
-var display_selected_nodes = function (diagram, node_ids) {
+var display_selected_nodes = function (node_ids) {
     var node = model.nodes.get(node_ids[0]);
-    var found_on = diagrams.have_all(node.id);
+    var matches = diagrams.have_all(node.id);
     var diagram_links = "";
     var diagram_link_ids = [];
-    for (let diagram of found_on) {
+    for (let diagram of matches) {
         var id = ui_util.makeid();
         var html = `<a href="#" data-diagram-name="${diagram.name}" draggable="true" id="${id}">${diagram.name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
         diagram_link_ids.push({
@@ -43,12 +43,12 @@ var display_selected_nodes = function (diagram, node_ids) {
         if (tile_names.length > 0) {
             var tile_links = "";
             for (let name of tile_names) {
-                let id = ui_util.makeid();
+                let tile_id = ui_util.makeid();
                 channel_tile_link_ids.push({
-                    id: id,
+                    id: tile_id,
                     name: name,
                 });
-                let html = `<a href="#" data-tile-name="${name}" draggable="true" id="${id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
+                let html = `<a href="#" data-tile-name="${name}" draggable="true" id="${tile_id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
                 tile_links = tile_links + html;
             }
             tile_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Tiles:</b>&nbsp;&nbsp;${tile_links}</p>`;
@@ -77,7 +77,6 @@ var display_selected_nodes = function (diagram, node_ids) {
         $("#" + data_div_id + "-text")[0].appendChild(json);
         // attach click handlers to tile links
         for (let link of channel_tile_link_ids) {
-            let id = link.id;
             let eventClosure = (function (
                 local_tile_view,
                 local_link,
@@ -93,11 +92,10 @@ var display_selected_nodes = function (diagram, node_ids) {
                     local_view.blink(local_name);
                 };
             })(tile_view, link, $);
-            $("#" + id).on("click", eventClosure);
+            $("#" + link.id).on("click", eventClosure);
         }
         // attach click handlers to diagram links
         for (let item of diagram_link_ids) {
-            let id = item.id;
             let eventClosure = (function (local_item) {
                 var local_diagram = local_item.diagram;
                 var local_node_id = local_item.node_id;
@@ -121,7 +119,7 @@ var display_selected_nodes = function (diagram, node_ids) {
                     local_diagram.show();
                 };
             })(item);
-            $("#" + id).on("click", eventClosure);
+            $(`#${item.id}`).on("click", eventClosure);
         }
     });
     // if node is managed instance, alerts and cloudwatch events don't apply
@@ -266,8 +264,8 @@ var tile_view_listener = function (name, members) {
     if (selected === name) {
         display_selected_tile(name, members);
     } else if (selected) {
-        channels.retrieve_channel(selected).then((members) => {
-            display_selected_tile(selected, members);
+        channels.retrieve_channel(selected).then((tile_contents) => {
+            display_selected_tile(selected, tile_contents);
         });
     } else {
         display_no_selection();
@@ -276,7 +274,7 @@ var tile_view_listener = function (name, members) {
 
 diagrams.add_selection_callback(function (diagram, event) {
     if (event.nodes.length > 0) {
-        display_selected_nodes(diagram, event.nodes);
+        display_selected_nodes(event.nodes);
     } else if (event.edges.length > 0) {
         display_selected_edges(diagram, event.edges);
     } else if (event.nodes.length == 0 && event.edges.length == 0) {

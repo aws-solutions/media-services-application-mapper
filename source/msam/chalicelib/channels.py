@@ -25,6 +25,7 @@ MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 # DynamoDB
 DYNAMO_RESOURCE = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
 
+CHANNEL_PROJECTION = "channel,id"
 
 def delete_channel_nodes(name):
     """
@@ -44,12 +45,12 @@ def delete_channel_nodes(name):
         # remove the members
         try:
             response = table.query(
-                ProjectionExpression="channel,id",
+                ProjectionExpression=CHANNEL_PROJECTION,
                 KeyConditionExpression=Key('channel').eq(name))
             items = response.get("Items", [])
             while "LastEvaluatedKey" in response:
                 response = table.query(
-                    ProjectionExpression="channel,id",
+                    ProjectionExpression=CHANNEL_PROJECTION,
                     KeyConditionExpression=Key('channel').eq(name),
                     ExclusiveStartKey=response["LastEvaluatedKey"])
                 items = items + response.get("Items", [])
@@ -147,11 +148,11 @@ def delete_all_channels():
         # empty the value in settings
         msam_settings.put_setting("channels", [])
         # empty the channels table
-        response = table.scan(ProjectionExpression="channel,id")
+        response = table.scan(ProjectionExpression=CHANNEL_PROJECTION)
         items = response.get("Items", [])
         while "LastEvaluatedKey" in response:
             response = table.scan(
-                ProjectionExpression="channel,id",
+                ProjectionExpression=CHANNEL_PROJECTION,
                 ExclusiveStartKey=response["LastEvaluatedKey"])
             items = items + response.get("Items", [])
         for item in items:
