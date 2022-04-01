@@ -104,11 +104,11 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v2
         - name: Install eslint
-          run: npm install eslint
+          run: npm install -g eslint
         - name: Check with eslint
           run: |
             cd source/html
-            ../../node_modules/eslint/bin/eslint.js
+            eslint
 
   codeql-check-job:
     runs-on: ubuntu-latest
