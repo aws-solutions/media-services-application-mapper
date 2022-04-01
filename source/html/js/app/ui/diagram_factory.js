@@ -234,14 +234,14 @@ class Diagram {
         });
     }
 
-    restore_layout(layout_items) {
+    restore_layout(diagram_contents) {
         var diagram = this;
         return new Promise(function (resolve, reject) {
             var inner_promise;
-            if (!layout_items) {
+            if (!diagram_contents) {
                 inner_promise = layout.retrieve_layout(diagram);
             } else {
-                inner_promise = Promise.resolve(layout_items);
+                inner_promise = Promise.resolve(diagram_contents);
             }
             inner_promise
                 .then(function (layout_items) {

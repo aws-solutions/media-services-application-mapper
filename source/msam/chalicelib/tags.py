@@ -103,20 +103,19 @@ def update_tiles():
         # filter down the results
         for record in items:
             cloud_resource = json.loads(record["data"])
-            if "Tags" in cloud_resource:
-                if "MSAM-Tile" in cloud_resource["Tags"]:
-                    arn = record["arn"]
-                    tile_name = cloud_resource["Tags"]["MSAM-Tile"]
-                    print(f"arn {arn} needed on tile {tile_name}")
-                    nodes = channels.get_channel_nodes(tile_name)
-                    ids = [item["id"] for item in nodes]
-                    print(f"existing tile contents: {json.dumps(ids)}")
-                    if arn not in ids:
-                        print(f"adding {arn} to tile {tile_name}")
-                        ids.append(arn)
-                        print(f"updated tile contents: {json.dumps(ids)}")
-                        channels.set_channel_nodes(tile_name, ids)
-                    else:
-                        print("already present on tile")
+            if ("Tags" in cloud_resource) and ("MSAM-Tile" in cloud_resource["Tags"]):
+                arn = record["arn"]
+                tile_name = cloud_resource["Tags"]["MSAM-Tile"]
+                print(f"arn {arn} needed on tile {tile_name}")
+                nodes = channels.get_channel_nodes(tile_name)
+                ids = [item["id"] for item in nodes]
+                print(f"existing tile contents: {json.dumps(ids)}")
+                if arn not in ids:
+                    print(f"adding {arn} to tile {tile_name}")
+                    ids.append(arn)
+                    print(f"updated tile contents: {json.dumps(ids)}")
+                    channels.set_channel_nodes(tile_name, ids)
+                else:
+                    print("already present on tile")
     except ClientError as error:
         print(error)
