@@ -108,7 +108,7 @@ jobs:
         - name: Check with eslint
           run: |
             cd source/html
-            eslint
+            eslint js/app
 
   codeql-check-job:
     runs-on: ubuntu-latest
