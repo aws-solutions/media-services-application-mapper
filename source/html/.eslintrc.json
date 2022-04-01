@@ -11,6 +11,7 @@
     },
     "rules": {},
     "globals": {
+        "_": true,
         "Cookies": true,
         "Fuse": true,
         "filterXSS": true,
