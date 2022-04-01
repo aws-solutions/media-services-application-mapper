@@ -48,35 +48,34 @@ def update_diagrams():
         # filter down the results
         for record in items:
             cloud_resource = json.loads(record["data"])
-            if "Tags" in cloud_resource:
-                if "MSAM-Diagram" in cloud_resource["Tags"]:
-                    arn = record["arn"]
-                    diagram_name = cloud_resource["Tags"]["MSAM-Diagram"]
-                    print(f"arn {arn} needed on diagram {diagram_name}")
-                    diagrams = settings.get_setting("diagrams")
-                    if not diagrams:
-                        diagrams = []
-                    found_diagram = False
-                    view_id = None
-                    for diagram in diagrams:
-                        if diagram["name"] == diagram_name:
-                            view_id = diagram["view_id"]
-                            found_diagram = True
-                            print(f"found diagram id {view_id}")
-                    if not found_diagram:
-                        view_id = stringcase.snakecase(diagram_name)
-                        print(f"new diagram id {view_id}")
-                        diagrams.append({"name": diagram_name, "view_id": view_id})
-                        settings.put_setting("diagrams", diagrams)
-                        print("created diagram id {view_id}")
-                    # check if this node is already on the diagram layout
-                    if not layout.has_node(view_id, arn):
-                        print(f"adding node {arn} to diagram id {view_id}")
-                        # add the node arn to the layout
-                        layout_items = [{"view": view_id, "id": arn, "x": 0, "y": 0}]
-                        layout.set_node_layout(layout_items)
-                    else:
-                        print(f"node {arn} already on diagram id {view_id}")
+            if ("Tags" in cloud_resource) and ("MSAM-Diagram" in cloud_resource["Tags"]):
+                arn = record["arn"]
+                diagram_name = cloud_resource["Tags"]["MSAM-Diagram"]
+                print(f"arn {arn} needed on diagram {diagram_name}")
+                diagrams = settings.get_setting("diagrams")
+                if not diagrams:
+                    diagrams = []
+                found_diagram = False
+                view_id = None
+                for diagram in diagrams:
+                    if diagram["name"] == diagram_name:
+                        view_id = diagram["view_id"]
+                        found_diagram = True
+                        print(f"found diagram id {view_id}")
+                if not found_diagram:
+                    view_id = stringcase.snakecase(diagram_name)
+                    print(f"new diagram id {view_id}")
+                    diagrams.append({"name": diagram_name, "view_id": view_id})
+                    settings.put_setting("diagrams", diagrams)
+                    print("created diagram id {view_id}")
+                # check if this node is already on the diagram layout
+                if not layout.has_node(view_id, arn):
+                    print(f"adding node {arn} to diagram id {view_id}")
+                    # add the node arn to the layout
+                    layout_items = [{"view": view_id, "id": arn, "x": 0, "y": 0}]
+                    layout.set_node_layout(layout_items)
+                else:
+                    print(f"node {arn} already on diagram id {view_id}")
     except ClientError as error:
         print(error)
 

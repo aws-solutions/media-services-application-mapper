@@ -1158,22 +1158,28 @@ def medialive_channel_mediaconnect_flow_ddb_items():
                             flow_data = json.loads(flow["data"])
                             # for each flow, process each source
                             for flow_source in flow_data["Sources"]:
-                                if "Transport" in flow_source:
-                                    if "rtp" in flow_source["Transport"]["Protocol"]:
-                                        if dest_ip_port == flow_source["IngestIp"]+":"+str(flow_source["IngestPort"]):
-                                            #add this connection
-                                            config = {
-                                                "from":
-                                                ml_channel["arn"],
-                                                "to":
-                                                flow["arn"],
-                                                "scheme": flow_source["Transport"]["Protocol"].upper()
-                                            }
-                                            print(config)
-                                            items.append(
-                                                connection_to_ddb_item(
-                                                    ml_channel["arn"], flow["arn"],
-                                                    "medialive-channel-mediaconnect-flow", config))
+                                if ("Transport" in flow_source) and (
+                                        "rtp"
+                                        in flow_source["Transport"]["Protocol"]
+                                ) and (dest_ip_port
+                                       == flow_source["IngestIp"] + ":" +
+                                       str(flow_source["IngestPort"])):
+                                    #add this connection
+                                    config = {
+                                        "from":
+                                        ml_channel["arn"],
+                                        "to":
+                                        flow["arn"],
+                                        "scheme":
+                                        flow_source["Transport"]
+                                        ["Protocol"].upper()
+                                    }
+                                    print(config)
+                                    items.append(
+                                        connection_to_ddb_item(
+                                            ml_channel["arn"], flow["arn"],
+                                            "medialive-channel-mediaconnect-flow",
+                                            config))
     except ClientError as error:
         print(error)
     return items

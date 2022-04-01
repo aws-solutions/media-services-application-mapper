@@ -115,7 +115,6 @@ def alarms_for_subscriber(resource_arn):
     """
     API entry point to return all alarms subscribed to by a node.
     """
-    # split_items = []
     scanned_items = []
     try:
         resource_arn = unquote(resource_arn)
@@ -142,11 +141,8 @@ def alarms_for_subscriber(resource_arn):
             name = split_attr[1]
             item["Region"] = region
             item["AlarmName"] = name
-            # alarm = {"Region": region, "AlarmName": name}
-            # split_items.append(alarm)
     except ClientError as error:
         print(error)
-    # return [dict(t) for t in {tuple(d.items()) for d in split_items}]
     return scanned_items
 
 

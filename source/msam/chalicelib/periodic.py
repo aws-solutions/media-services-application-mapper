@@ -72,7 +72,6 @@ def update_alarms():
         print(alarm_groups)
         # update each grouped list for a region
         for region_name, alarm_names in alarm_groups:
-            # alarm_names = alarm_groups[region_name]
             cloudwatch_data.update_alarms(region_name, alarm_names)
     except ClientError as error:
         print(error)
