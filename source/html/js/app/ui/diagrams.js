@@ -31,12 +31,12 @@ var add_selection_callback = function (callback) {
 };
 
 var add_diagram = function (name, view_id, save) {
-    var diagram = diagram_factory.create(name, view_id);
-    diagrams[name] = diagram;
+    const new_diagram = diagram_factory.create(name, view_id);
+    diagrams[name] = new_diagram;
     if (save) {
         save_diagrams();
     }
-    diagram.add_singleclick_callback(function (diagram, event) {
+    new_diagram.add_singleclick_callback(function (diagram, event) {
         for (let callback of selection_callbacks) {
             try {
                 callback(diagram, event);
@@ -45,7 +45,7 @@ var add_diagram = function (name, view_id, save) {
             }
         }
     });
-    return diagram;
+    return new_diagram;
 };
 
 var remove_diagram = function (name) {
@@ -87,12 +87,12 @@ var save_diagrams = function () {
 var load_diagrams = function () {
     return new Promise((resolve) => {
         // load diagram names from the cloud on initialization
-        settings.get("diagrams").then(function (diagrams) {
+        settings.get("diagrams").then(function (all_diagrams) {
             console.log(
-                "load user-defined diagrams: " + JSON.stringify(diagrams)
+                "load user-defined diagrams: " + JSON.stringify(all_diagrams)
             );
-            if (Array.isArray(diagrams) && diagrams.length > 0) {
-                for (let diagram of diagrams) {
+            if (Array.isArray(all_diagrams) && all_diagrams.length > 0) {
+                for (let diagram of all_diagrams) {
                     add_diagram(diagram.name, diagram.view_id, false);
                 }
             } else {

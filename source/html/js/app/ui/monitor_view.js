@@ -272,8 +272,6 @@ var display_selected_node = async function (node_id) {
         }
     }
     alert_tabulator.replaceData(data);
-    // alarms
-    const alarms = await import("../alarms.js");
     alarms.alarms_for_subscriber(node.id).then(function (subscriptions) {
         for (let subscription of subscriptions) {
             if (Number.isInteger(subscription.StateUpdated)) {
@@ -323,30 +321,28 @@ var display_selected_tile = function (name, members) {
                     new Promise(function (resolve) {
                         var local_node_id = local_member_value.id;
                         var local_node_name = local_node.name;
-                        import("../alarms.js").then((alarms) => {
-                            alarms
-                                .alarms_for_subscriber(local_node_id)
-                                .then(function (subscriptions) {
-                                    for (let subscription of subscriptions) {
-                                        if (
-                                            Number.isInteger(
-                                                subscription.StateUpdated
-                                            )
-                                        ) {
-                                            subscription.StateUpdated =
-                                                new Date(
-                                                    subscription.StateUpdated *
-                                                        1000
-                                                ).toISOString();
-                                        }
-                                        subscription.ARN = local_node_id;
-                                        subscription.name = local_node_name;
+                        alarms
+                            .alarms_for_subscriber(local_node_id)
+                            .then(function (subscriptions) {
+                                for (let subscription of subscriptions) {
+                                    if (
+                                        Number.isInteger(
+                                            subscription.StateUpdated
+                                        )
+                                    ) {
+                                        subscription.StateUpdated =
+                                            new Date(
+                                                subscription.StateUpdated *
+                                                1000
+                                            ).toISOString();
                                     }
-                                    local_alarm_data =
-                                        local_alarm_data.concat(subscriptions);
-                                    resolve();
-                                });
-                        });
+                                    subscription.ARN = local_node_id;
+                                    subscription.name = local_node_name;
+                                }
+                                local_alarm_data =
+                                    local_alarm_data.concat(subscriptions);
+                                resolve();
+                            });
                     })
                 );
             })(member_value, node, alarm_data, promises);

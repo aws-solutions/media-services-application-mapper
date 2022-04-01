@@ -21,7 +21,7 @@ const create = (
     type_name,
     node_name,
     node_rgb,
-    selected,
+    is_selected,
     id,
     data,
     generic_type_name
@@ -31,7 +31,7 @@ const create = (
     const width = 400;
     const height = 200;
     const font_size = 25;
-    const w_border = selected ? Math.ceil(width * 0.05) : Math.ceil(width * 0.025);
+    const w_border = is_selected ? Math.ceil(width * 0.05) : Math.ceil(width * 0.025);
     let pos_y = 10;
 
     $("#" + work_div_id).empty();
@@ -40,7 +40,7 @@ const create = (
     drawing
         .rect(width, height)
         .radius(radius)
-        .fill(selected ? selected_border_rgb : border_rgb);
+        .fill(is_selected ? selected_border_rgb : border_rgb);
     drawing
         .rect(width - w_border, height - w_border)
         .radius(radius)

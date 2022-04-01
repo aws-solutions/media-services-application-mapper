@@ -90,8 +90,6 @@ var display_selected_nodes = function (diagram, node_ids) {
 };
 
 var display_selected_edges = function () {
-    // var edge = model.edges.get(edges[0]);
-    // console.log(edge.id);
     let resource_info = resource_selected();
     render_html_notes(resource_info);
     show_elements([data_div_id, 
@@ -261,13 +259,13 @@ var render_html_notes = function (resource) {
     });
 };
 
-var tile_view_listener = function (name, members) {
+var tile_view_listener = function (name) {
     var selected = tile_view.selected();
     if (selected === name) {
-        display_selected_tile(name, members);
+        display_selected_tile();
     } else if (selected) {
-        channels.retrieve_channel(selected).then((members) => {
-            display_selected_tile(selected, members);
+        channels.retrieve_channel(selected).then(() => {
+            display_selected_tile();
         });
     } else {
         display_no_selection();
@@ -278,7 +276,7 @@ diagrams.add_selection_callback(function (diagram, event) {
     if (event.nodes.length > 0) {
         display_selected_nodes(diagram, event.nodes);
     } else if (event.edges.length > 0) {
-        display_selected_edges(diagram, event.edges);
+        display_selected_edges();
     } else if (event.nodes.length == 0 && event.edges.length == 0) {
         display_no_selection();
     }

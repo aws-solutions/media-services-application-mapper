@@ -83,10 +83,10 @@ const blink = function (blinks, tile) {
 const scroll_to_tile = function (name) {
     // scroll to the selected item
     const query = `[data-channel-name='${name}']`;
-    const selected = $(query);
+    const tile_element = $(query);
     $("#" + tile_row_div_id).animate(
         {
-            scrollTop: selected.offset().top,
+            scrollTop: tile_element.offset().top,
         },
         "slow"
     );

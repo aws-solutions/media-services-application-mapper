@@ -76,11 +76,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Pa11y
-        run: npm install pa11y
+        run: npm install -g pa11y
       - name: Check with Pa11y
         run: |
           cd source/html
-          find . -iname '*.html' | xargs -I '{}' ../../node_modules/pa11y/bin/pa11y.js {}
+          find . -iname '*.html' | xargs -I '{}' pa11y {}
 
   jshint-check-job:
     runs-on: ubuntu-latest
@@ -89,13 +89,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install JShint
-        run: npm install jshint
+        run: npm install -g jshint
       - name: Check with JShint
         run: |
           cd source/html
           find . -name '*.js' -type f -print | \
             grep --invert-match "/external/" | \
-            xargs ../../node_modules/jshint/bin/jshint
+            jshint
+
+  eslint-check-job:
+      runs-on: ubuntu-latest
+      name: Check source code with eslint
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Install eslint
+          run: npm install -g eslint
+        - name: Check with eslint
+          run: |
+            cd source/html
+            eslint js/app
 
   codeql-check-job:
     runs-on: ubuntu-latest
@@ -128,6 +141,7 @@ jobs:
         bandit-check-job,
         pylint-check-job,
         jshint-check-job,
+        eslint-check-job,
         codeql-check-job
       ]
     # use a specific environment for this build that has secrets defined 

@@ -95,16 +95,16 @@ $("#channel_definition_modal").on("hide.bs.modal", function () {
 $("#channel_add_node_modal").on("show.bs.modal", function () {
     let selected_content = "";
     const diagram = diagrams.shown();
-    let index = 0;
+    let selected_index = 0;
     for (let id of diagram.network.getSelectedNodes()) {
         const node = model.nodes.get(id);
-        selected_content += `<tr><th scope="row">${++index}</th><td>${
+        selected_content += `<tr><th scope="row">${++selected_index}</th><td>${
             node.title
         }</td><td draggable="true" data-node-id="${node.id}">${
             node.id
         }</td></tr>`;
     }
-    const html = `
+    const selected_html = `
         <table class="my-3 table table-sm table-hover">
             <thead>
                 <tr>
@@ -117,14 +117,14 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
                 ${selected_content}
             </tbody>
         </table>`;
-    $("#channel_add_node_modal_items").html(html);
+    $("#channel_add_node_modal_items").html(selected_html);
     channels.channel_list().then(function (channel_list) {
         let channel_content = "";
-        let index = 0;
+        let channel_index = 0;
         for (let member of channel_list.sort()) {
             const checkbox_id = ui_util.makeid();
             channel_content += `
-                    <tr><th scope="row">${++index}</th>
+                    <tr><th scope="row">${++channel_index}</th>
                     <td>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="${checkbox_id}" value="${member}">
@@ -133,7 +133,7 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
                     <td>${member}</td></tr>
                 `;
         }
-        const html = `
+        const channel_html = `
                 <table id="channel_add_node_modal_items_table" class="my-3 table table-sm table-hover">
                     <thead>
                         <tr>
@@ -146,7 +146,7 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
                         ${channel_content}
                     </tbody>
                 </table>`;
-        $("#channel_add_node_modal_channels").html(html);
+        $("#channel_add_node_modal_channels").html(channel_html);
     });
 });
 

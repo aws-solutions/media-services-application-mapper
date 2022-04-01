@@ -122,9 +122,6 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
 
     /** Update the edges */
     edges.forEach((edge) => {
-        // console.log(JSON.stringify(edge));
-        // console.log(`edge: ${edge.id}`);
-
         if (
             edge.color.color !== newEdgeOpts.color.color ||
             edge.dashes !== newEdgeOpts.dashes

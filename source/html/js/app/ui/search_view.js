@@ -191,10 +191,9 @@ function display_results_tile_contents_matches(results) {
     for (let item of anchor_handler_data) {
         let anchor_id = item.anchor_id;
         let eventClosure = (function (local_item, local_jq, local_tile_view) {
-            let name = local_item.tile;
             return function () {
                 local_jq("#channel-tiles-tab").tab("show");
-                local_tile_view.blink(name);
+                local_tile_view.blink(local_item.tile);
             };
         })(item, $, tile_view);
         $("#" + anchor_id).on("click", eventClosure);
