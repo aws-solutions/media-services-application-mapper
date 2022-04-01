@@ -97,6 +97,19 @@ jobs:
             grep --invert-match "/external/" | \
             xargs ../../node_modules/jshint/bin/jshint
 
+  eslint-check-job:
+      runs-on: ubuntu-latest
+      name: Check source code with eslint
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Install eslint
+          run: npm install eslint
+        - name: Check with eslint
+          run: |
+            cd source/html
+            ../../node_modules/eslint/bin/eslint.js
+
   codeql-check-job:
     runs-on: ubuntu-latest
     name: Check source code with CodeQL
@@ -128,6 +141,7 @@ jobs:
         bandit-check-job,
         pylint-check-job,
         jshint-check-job,
+        eslint-check-job,
         codeql-check-job
       ]
     # use a specific environment for this build that has secrets defined 
