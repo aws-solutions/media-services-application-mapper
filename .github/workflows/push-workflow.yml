@@ -65,23 +65,6 @@ jobs:
           cd source
           ./tools/pylint.sh
 
-  pa11y-check-job:
-    runs-on: ubuntu-latest
-    needs:
-      [
-        build-job
-      ]
-    name: Check HTML code with Pa11y for accessibility
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install Pa11y
-        run: npm install -g pa11y
-      - name: Check with Pa11y
-        run: |
-          cd source/html
-          find . -iname '*.html' | xargs -I '{}' pa11y {}
-
   jshint-check-job:
     runs-on: ubuntu-latest
     name: Check source code with JShint
@@ -189,7 +172,24 @@ jobs:
         run: |
           cd deployment
           ./run-unit-tests.sh
-      
+
+  pa11y-check-job:
+    runs-on: ubuntu-latest
+    needs:
+      [
+        build-job
+      ]
+    name: Check HTML code with Pa11y for accessibility
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Pa11y
+        run: npm install -g pa11y
+      - name: Check with Pa11y
+        run: |
+          cd source/html
+          find . -iname '*.html' | xargs -I '{}' pa11y {}
+
   cfn-lint-job:
     name: Run cfn-lint on templates
     runs-on: ubuntu-latest
@@ -235,7 +235,8 @@ jobs:
     needs:
       [
         cfn-lint-job,
-        cfn-nag-job        
+        cfn-nag-job,
+        pa11y-check-job        
       ]
     runs-on: ubuntu-latest
     environment: push_env
