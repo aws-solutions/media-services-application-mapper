@@ -217,7 +217,7 @@ const map_input = function (cache_entry, items) {
                 node_map_handler(node_type, name, rgb, id, false, input))(),
             normal_selected: (() =>
                 node_map_handler(node_type, name, rgb, id, true, input))(),
-            alert_unselected: (() =>
+            alert_unselected: (() =>    // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -226,7 +226,7 @@ const map_input = function (cache_entry, items) {
                     false,
                     input
                 ))(),
-            alert_selected: (() =>
+            alert_selected: (() =>      // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -235,7 +235,7 @@ const map_input = function (cache_entry, items) {
                     true,
                     input
                 ))(),
-            degraded_unselected: (() =>
+            degraded_unselected: (() => // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -244,7 +244,7 @@ const map_input = function (cache_entry, items) {
                     false,
                     input
                 ))(),
-            degraded_selected: (() =>
+            degraded_selected: (() =>   // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -298,7 +298,7 @@ const map_multiplex = function (cache_entry, items) {
                 node_map_handler(node_type, name, rgb, id, false, input))(),
             normal_selected: (() =>
                 node_map_handler(node_type, name, rgb, id, true, input))(),
-            alert_unselected: (() =>
+            alert_unselected: (() =>    // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -307,7 +307,7 @@ const map_multiplex = function (cache_entry, items) {
                     false,
                     input
                 ))(),
-            alert_selected: (() =>
+            alert_selected: (() =>      // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -316,7 +316,7 @@ const map_multiplex = function (cache_entry, items) {
                     true,
                     input
                 ))(),
-            degraded_unselected: (() =>
+            degraded_unselected: (() => // nosonar
                 node_map_handler(
                     node_type,
                     name,
@@ -325,7 +325,7 @@ const map_multiplex = function (cache_entry, items) {
                     false,
                     input
                 ))(),
-            degraded_selected: (() =>
+            degraded_selected: (() =>   // nosonar
                 node_map_handler(
                     node_type,
                     name,
