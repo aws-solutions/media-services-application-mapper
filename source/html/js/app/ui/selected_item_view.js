@@ -28,13 +28,12 @@ var display_selected_nodes = function (node_ids) {
     var diagram_link_ids = [];
     for (let diagram of matches) {
         var id = ui_util.makeid();
-        var html = `<a href="#" data-diagram-name="${diagram.name}" draggable="true" id="${id}">${diagram.name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
         diagram_link_ids.push({
             id: id,
             node_id: node.id,
             diagram: diagram,
         });
-        diagram_links += html;
+        diagram_links += `<a href="#" data-diagram-name="${diagram.name}" draggable="true" id="${id}">${diagram.name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
     }
     var diagram_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Diagrams:</b>&nbsp;&nbsp;${diagram_links}</p>`;
     channels.arn_to_channels(node.id).then(function (tile_names) {
@@ -48,8 +47,7 @@ var display_selected_nodes = function (node_ids) {
                     id: tile_id,
                     name: name,
                 });
-                let html = `<a href="#" data-tile-name="${name}" draggable="true" id="${tile_id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
-                tile_links = tile_links + html;
+                tile_links = tile_links + `<a href="#" data-tile-name="${name}" draggable="true" id="${tile_id}">${name}</a>&nbsp;&nbsp;&nbsp;&nbsp;`;
             }
             tile_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Tiles:</b>&nbsp;&nbsp;${tile_links}</p>`;
         }
@@ -62,17 +60,15 @@ var display_selected_nodes = function (node_ids) {
         var data = node.data;
         renderjson.set_icons("+", "-");
         renderjson.set_show_to_level(1);
-        let html = `
-                    <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">${
-            node.header
-        }&nbsp;&nbsp;&nbsp;&nbsp;<small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
-                    ${tile_html}
-                    ${diagram_html}
-                    ${cache_html}
-                    <p class="card-text small" id="${data_div_id}-text"></p>
-                    `;
         $("#" + data_div_id).empty();
-        $("#" + data_div_id).append(html);
+        $("#" + data_div_id).append(`<h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">${node.header}&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <small><a target="_blank" class="mb-2" href="${node.console_link()}">AWS Console</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a target="_blank" class="mb-2" href="${node.cloudwatch_link()}">AWS CloudWatch</a></small></h6>
+                                    ${tile_html}
+                                    ${diagram_html}
+                                    ${cache_html}
+                                    <p class="card-text small" id="${data_div_id}-text"></p>
+                                    `);
         var json = renderjson(data);
         $("#" + data_div_id + "-text")[0].appendChild(json);
         // attach click handlers to tile links
