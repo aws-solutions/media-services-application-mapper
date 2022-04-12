@@ -9,7 +9,7 @@ export const update = function () {
     const url = current[0];
     const api_key = current[1];
     const items = [];
-    return new Promise((resolve) => {
+    return new Promise((resolve) => {   // nosonar
         server
             .get(url + "/cached/medialive-input-medialive-channel", api_key)
             .then((results) => {
