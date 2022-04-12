@@ -98,8 +98,8 @@ class Diagram {
             options.layout.hierarchical.sortMethod = method;
             my_diagram.network.once(
                 "afterDrawing",
-                (function () {  // nosonar
-                    return function () {    // nosonar
+                (function () {  // NOSONAR
+                    return function () {    // NOSONAR
                         console.log("layout finished");
                         my_diagram.network.setOptions(
                             vis_options.without_layout
@@ -287,7 +287,7 @@ class Diagram {
         }
     }
 
-    synchronize_edges(event, node_ids) {
+    synchronize_edges(event, node_ids) {    // NOSONAR
         var diagram = this;
         if (event == "add" || event == "update") {
             for (let id of node_ids) {
@@ -319,7 +319,7 @@ class Diagram {
                 // query all edges on the diagram
                 let filtered = _.filter(
                     model.edges.get(),
-                    (function (local_id) {  // nosonar
+                    (function (local_id) {  // NOSONAR
                         return function (edge) {
                             return edge.to == local_id || edge.from == local_id;
                         };

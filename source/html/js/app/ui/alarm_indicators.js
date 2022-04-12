@@ -5,7 +5,7 @@ import * as model from "../model.js";
 import * as alarms from "../alarms.js";
 import * as diagrams from "./diagrams.js";
 
-const updateAlarmState = function (
+const updateAlarmState = function (     // NOSONAR
     current_alarming_subscribers,
     previous_alarming_subscribers
 ) {

@@ -107,7 +107,7 @@ export const update = function () {
                                 return "#";
                             };
                         })(),
-                        cloudwatch_link: (function () { // nosonar
+                        cloudwatch_link: (function () { // NOSONAR
                             return function () {
                                 return "#";
                             };

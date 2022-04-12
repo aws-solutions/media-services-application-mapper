@@ -29,7 +29,7 @@ CLOUDWATCH_EVENTS_TABLE = DYNAMO_RESOURCE.Table(os.environ["CLOUDWATCH_EVENTS_TA
 CONTENT_TABLE_NAME = os.environ["CONTENT_TABLE_NAME"]
 
 
-def lambda_handler(event, _):   # nosonar
+def lambda_handler(event, _):   # NOSONAR
     """
     Entry point for CloudWatch event receipt.
     """

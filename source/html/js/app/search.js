@@ -67,7 +67,7 @@ const search_tiles = function (text) {
 
 function search(text) {
     const local_lodash = _;
-    return new Promise(function (outer_resolve) {
+    return new Promise(function (outer_resolve) {   // NOSONAR
         const local_outer_resolve = outer_resolve;
         fuse_model = new Fuse(model.nodes.get(), model_options);
         const results = {

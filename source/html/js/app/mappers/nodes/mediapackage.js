@@ -150,12 +150,12 @@ const update_endpoints = function (items) {
                         name: name,
                         size: 55,
                         render: {
-                            normal_unselected: (function () {   // nosonar
+                            normal_unselected: (function () {   // NOSONAR
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_rgb = rgb;
                                 const local_id = id;
-                                return function () {    // nosonar
+                                return function () {    // NOSONAR
                                     return local_svg_node.unselected(
                                         local_node_type,
                                         local_name,
@@ -164,12 +164,12 @@ const update_endpoints = function (items) {
                                     );
                                 };
                             })(),
-                            normal_selected: (function () { // nosonar
+                            normal_selected: (function () { // NOSONAR
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_rgb = rgb;
                                 const local_id = id;
-                                return function () {    // nosonar
+                                return function () {    // NOSONAR
                                     return local_svg_node.selected(
                                         local_node_type,
                                         local_name,
@@ -178,11 +178,11 @@ const update_endpoints = function (items) {
                                     );
                                 };
                             })(),
-                            alert_unselected: (function () {    // nosonar
+                            alert_unselected: (function () {    // NOSONAR
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_id = id;
-                                return function () {    // nosonar
+                                return function () {    // NOSONAR
                                     return local_svg_node.unselected(
                                         local_node_type,
                                         local_name,
@@ -191,11 +191,11 @@ const update_endpoints = function (items) {
                                     );
                                 };
                             })(),
-                            alert_selected: (function () {  // nosonar
+                            alert_selected: (function () {  // NOSONAR
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_id = id;
-                                return function () {    // nosonar
+                                return function () {    // NOSONAR
                                     return local_svg_node.selected(
                                         local_node_type,
                                         local_name,
