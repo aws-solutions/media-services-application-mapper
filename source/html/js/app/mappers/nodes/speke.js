@@ -107,7 +107,7 @@ export const update = function () {
                                 return `https://console.aws.amazon.com/`;
                             };
                         })(),
-                        cloudwatch_link: (function () {
+                        cloudwatch_link: (function () { // nosonar
                             return function () {
                                 return `https://console.aws.amazon.com/`;
                             };

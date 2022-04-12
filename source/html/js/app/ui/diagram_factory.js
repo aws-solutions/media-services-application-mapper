@@ -98,8 +98,8 @@ class Diagram {
             options.layout.hierarchical.sortMethod = method;
             my_diagram.network.once(
                 "afterDrawing",
-                (function () {
-                    return function () {
+                (function () {  // nosonar
+                    return function () {    // nosonar
                         console.log("layout finished");
                         my_diagram.network.setOptions(
                             vis_options.without_layout
@@ -319,7 +319,7 @@ class Diagram {
                 // query all edges on the diagram
                 let filtered = _.filter(
                     model.edges.get(),
-                    (function (local_id) {
+                    (function (local_id) {  // nosonar
                         return function (edge) {
                             return edge.to == local_id || edge.from == local_id;
                         };
@@ -483,18 +483,6 @@ class Diagram {
     }
 
     add_node_dataset_callback(callback, once = false) {
-        if (once) {
-            if (!this.node_dataset_callbacks_once.includes(callback)) {
-                this.node_dataset_callbacks_once.push(callback);
-            }
-        } else {
-            if (!this.node_dataset_callbacks.includes(callback)) {
-                this.node_dataset_callbacks.push(callback);
-            }
-        }
-    }
-
-    remove_node_dataset_callback(callback, once = false) {
         if (once) {
             if (!this.node_dataset_callbacks_once.includes(callback)) {
                 this.node_dataset_callbacks_once.push(callback);
