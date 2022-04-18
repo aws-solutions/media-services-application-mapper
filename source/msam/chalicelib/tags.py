@@ -24,6 +24,12 @@ SOLUTION_ID = os.environ['SOLUTION_ID']
 USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
+# common strings used in queries and scans
+CONTAINS_FILTER = "contains(#data, :tagname)"
+ATTRIBUTE_NAMES = {"#data": "data"}
+DIAGRAM_ATTRIBUTE_VALUES = {":tagname": "MSAM-Diagram"}
+TILE_ATTRIBUTE_VALUES = {":tagname": "MSAM-Tile"}
+
 
 def update_diagrams():
     """
@@ -34,21 +40,25 @@ def update_diagrams():
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
         # expensive textual scan
-        response = ddb_table.scan(FilterExpression="contains(#data, :tagname)", ExpressionAttributeNames={"#data": "data"}, ExpressionAttributeValues={":tagname": "MSAM-Diagram"})
+        response = ddb_table.scan(
+            FilterExpression=CONTAINS_FILTER,
+            ExpressionAttributeNames=ATTRIBUTE_NAMES,
+            ExpressionAttributeValues=DIAGRAM_ATTRIBUTE_VALUES)
         items = response["Items"]
         # check for paging
         while "LastEvaluatedKey" in response:
             # scan again with start key
             response = ddb_table.scan(
-                FilterExpression="contains(#data, :tagname)",
-                ExpressionAttributeNames={"#data": "data"},
-                ExpressionAttributeValues={":tagname": "MSAM-Diagram"},
+                FilterExpression=CONTAINS_FILTER,
+                ExpressionAttributeNames=ATTRIBUTE_NAMES,
+                ExpressionAttributeValues=DIAGRAM_ATTRIBUTE_VALUES,
                 ExclusiveStartKey=response['LastEvaluatedKey'])
             items = items + response["Items"]
         # filter down the results
         for record in items:
             cloud_resource = json.loads(record["data"])
-            if ("Tags" in cloud_resource) and ("MSAM-Diagram" in cloud_resource["Tags"]):
+            if ("Tags" in cloud_resource) and ("MSAM-Diagram"
+                                               in cloud_resource["Tags"]):
                 arn = record["arn"]
                 diagram_name = cloud_resource["Tags"]["MSAM-Diagram"]
                 print(f"arn {arn} needed on diagram {diagram_name}")
@@ -72,7 +82,12 @@ def update_diagrams():
                 if not layout.has_node(view_id, arn):
                     print(f"adding node {arn} to diagram id {view_id}")
                     # add the node arn to the layout
-                    layout_items = [{"view": view_id, "id": arn, "x": 0, "y": 0}]
+                    layout_items = [{
+                        "view": view_id,
+                        "id": arn,
+                        "x": 0,
+                        "y": 0
+                    }]
                     layout.set_node_layout(layout_items)
                 else:
                     print(f"node {arn} already on diagram id {view_id}")
@@ -89,21 +104,25 @@ def update_tiles():
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
         # very broad textual scan
-        response = ddb_table.scan(FilterExpression="contains(#data, :tagname)", ExpressionAttributeNames={"#data": "data"}, ExpressionAttributeValues={":tagname": "MSAM-Tile"})
+        response = ddb_table.scan(
+            FilterExpression=CONTAINS_FILTER,
+            ExpressionAttributeNames=ATTRIBUTE_NAMES,
+            ExpressionAttributeValues=TILE_ATTRIBUTE_VALUES)
         items = response["Items"]
         # check for paging
         while "LastEvaluatedKey" in response:
             # scan again with start key
             response = ddb_table.scan(
-                FilterExpression="contains(#data, :tagname)",
-                ExpressionAttributeNames={"#data": "data"},
-                ExpressionAttributeValues={":tagname": "MSAM-Tile"},
+                FilterExpression=CONTAINS_FILTER,
+                ExpressionAttributeNames=ATTRIBUTE_NAMES,
+                ExpressionAttributeValues=TILE_ATTRIBUTE_VALUES,
                 ExclusiveStartKey=response['LastEvaluatedKey'])
             items = items + response["Items"]
         # filter down the results
         for record in items:
             cloud_resource = json.loads(record["data"])
-            if ("Tags" in cloud_resource) and ("MSAM-Tile" in cloud_resource["Tags"]):
+            if ("Tags" in cloud_resource) and ("MSAM-Tile"
+                                               in cloud_resource["Tags"]):
                 arn = record["arn"]
                 tile_name = cloud_resource["Tags"]["MSAM-Tile"]
                 print(f"arn {arn} needed on tile {tile_name}")

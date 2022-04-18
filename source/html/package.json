@@ -10,7 +10,7 @@
     "lodash": "^4.17.21",
     "machina": "^4.0.2",
     "material-icons": "^1.10.5",
-    "moment": "2.24",
+    "moment": "^2.29.2",
     "object-hash": "^2.2.0",
     "renderjson": "^1.4.0",
     "showdown": "^2.0.3",

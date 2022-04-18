@@ -9,7 +9,7 @@ export const update = () => {
     const url = current[0];
     const api_key = current[1];
     const items = [];
-    return new Promise((resolve) => {
+    return new Promise((resolve) => {   // NOSONAR
         const endpoint = `${url}/cached/medialive-channel-multiplex`;
         server.get(endpoint, api_key).then((results) => {
             for (let connection of results) {
