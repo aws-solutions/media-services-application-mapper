@@ -202,9 +202,10 @@ const update_lock_state = () => {
     }
 };
 
-const create_lock_compartment = () => {
+const refresh_lock_compartment = () => {
     // do this relative to the diagram div
     const diagramDiv = $("#diagram");
+    const buttonDiv = $("#diagram-lock-button");
     // get the location and size of the diagram div
     const diagramPosition = diagramDiv.position();
     const width = diagramDiv.width();
@@ -213,8 +214,8 @@ const create_lock_compartment = () => {
     const v_offset = 2;
     const style = `position: absolute; top: ${diagramPosition.top + v_offset
         }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
-    const buttonDiv = `<div id="diagram-lock-button" style="${style}"><span title="Lock/Unlock Changes" id="diagram-lock-icon" class="material-icons">lock_open</span></div>`;
-    diagramDiv.before(buttonDiv);
+    const buttonContent = `<div id="diagram-lock-button" style="${style}"><span title="Lock/Unlock Changes" id="diagram-lock-icon" class="material-icons">lock_open</span></div>`;
+    buttonDiv.replaceWith(buttonContent);
     $("#diagram-lock-button").click(() => {
         const diagram = shown_diagram();
         diagram.isLocked().then((locked) => {
@@ -230,9 +231,17 @@ const create_lock_compartment = () => {
     update_lock_visibility();
 };
 
+// detect window resize events
+window.addEventListener('resize', function () {
+    console.log("resize");
+    // reposition absolute elements as needed
+    refresh_lock_compartment();
+    update_lock_state();
+});
+
 // this is the initialization code for the diagrams component
 load_diagrams().then(() => {
-    create_lock_compartment();
+    refresh_lock_compartment();
     $("#diagram-tab").on("shown.bs.tab", () => {
         update_lock_visibility();
         update_lock_state();
