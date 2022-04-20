@@ -185,15 +185,18 @@ const schedule_interval = function () {
     console.log("alarms: interval scheduled " + update_interval + "ms");
 };
 
-load_update_interval();
-
-setInterval(function () {
-    try {
-        all_alarms_for_region.cache.clear();
-    } catch (error) {
-        console.log(error);
-    }
-}, region_cache_clear_interval_ms);
+export const deferred_init = function () {
+    load_update_interval().then(function(){
+        schedule_interval();
+    });
+    setInterval(function () {
+        try {
+            all_alarms_for_region.cache.clear();
+        } catch (error) {
+            console.log(error);
+        }
+    }, region_cache_clear_interval_ms);
+}
 
 export function get_subscribers_with_alarms() {
     return {
@@ -206,7 +209,7 @@ export function add_callback(f) {
     if (!listeners.includes(f)) {
         listeners.push(f);
     }
-    if (!intervalID) {
+    if (!intervalID && update_interval) {
         schedule_interval();
     }
 }

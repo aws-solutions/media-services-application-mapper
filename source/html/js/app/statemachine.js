@@ -209,6 +209,11 @@ const toolStateMachine = new machina.Fsm({
                 await import("./ui/information_compartment.js");
                 await import("./ui/user_defined.js");
                 await import("./ui/help_menu.js");
+                // initialize modules with intervals
+                const alarms = await import("./alarms.js");
+                alarms.deferred_init();
+                const events = await import("./events.js");
+                events.deferred_init();
                 // show the tiles tab
                 $("#channel-tiles-tab").tab("show");
             },
