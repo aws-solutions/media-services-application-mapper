@@ -116,7 +116,11 @@ var schedule_interval = function () {
     console.log("events: interval scheduled " + update_interval + "ms");
 };
 
-load_update_interval();
+export function deferred_init() {
+    load_update_interval().then(function(){
+        schedule_interval()
+    });
+}
 
 export function get_cached_events() {
     return {
@@ -134,7 +138,7 @@ export function add_callback(f) {
         listeners.push(f);
     }
     // schedule the interval only when there's at least 1 listener
-    if (!intervalID) {
+    if (!intervalID && update_interval) {
         schedule_interval();
     }
 }
