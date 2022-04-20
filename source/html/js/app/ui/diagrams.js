@@ -233,8 +233,7 @@ const refresh_lock_compartment = () => {
 
 // detect window resize events
 window.addEventListener('resize', function () {
-    console.log("resize");
-    // reposition absolute elements as needed
+    // reposition absolute diagram elements if needed
     refresh_lock_compartment();
     update_lock_state();
 });
