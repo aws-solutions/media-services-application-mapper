@@ -68,13 +68,15 @@ def update_resource_notes(resource_arn, notes):
     result = {"message": "notes saved"}
     timestamp = int(time.time())
     arn = unquote(resource_arn)
+    index = arn.count("arn:")
+    type = ["Tile", "Node", "Edge"]
     try:
-        # print(notes.raw_body.decode("utf-8"))
         string_notes = notes.json_body
         item = {
                 "timestamp": timestamp,
                 "resource_arn": arn,
-                "notes": string_notes
+                "notes": string_notes,
+                "type": type[index]
             }
         NOTES_TABLE.put_item(Item=item)
     except ClientError as error:
