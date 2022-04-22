@@ -28,22 +28,26 @@ const notes_tabulator = new Tabulator(
             {
                 title: "ARN",
                 field: "resource_arn",
-                headerFilter: true
+                headerFilter: true,
+                width: 200
             },
             {
-                title: "UpdatedTime",
+                title: "Updated Time",
                 field: "timestamp",
-                headerFilter: true
+                headerFilter: true,
+                width: 200
             },
             {
                 title: "Notes",
                 field: "notes",
-                headerFilter: true
+                headerFilter: true,
+                formatter: "html"
             },
             {
                 title: "Resource Exists",
                 field: "exists",
-                headerFilter: true
+                headerFilter: true,
+                width: 175
             },
             {
                 tooltip: "Delete Note",
@@ -86,6 +90,9 @@ function set_notes_data() {
     });
     notes.get_all_resource_notes().then(function (all_notes) {
         for (let note of all_notes) {
+            let converter = new showdown.Converter();
+            let text = note.notes;
+            note.notes = converter.makeHtml(text);
             note.exists = "No";
             note.timestamp = new Date(note.timestamp*1000).toISOString();
             // does the resource associated with this note exist
@@ -94,6 +101,7 @@ function set_notes_data() {
                     if (local_lodash.includes(tiles_list, note.resource_arn)){
                         note.exists = "Yes";
                     }
+                    break;
                 case "Edge":
                     for (let edge of edges_list){
                         if (local_lodash.includes(edge, note.resource_arn)){
@@ -101,6 +109,7 @@ function set_notes_data() {
                             break;
                         }
                     }
+                    break;
                 case "Node":
                     for (let node of nodes_list){
                         if (local_lodash.includes(node, note.resource_arn)){
