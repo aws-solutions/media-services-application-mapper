@@ -413,6 +413,17 @@ $("#bulk-delete-all-alarm-subscriptions-button").click(async function () {
     );
 });
 
+$("#bulk-delete-all-notes-button").click(async function () {
+    $("#advanced_settings_modal").modal("hide");
+    confirmation.show(
+        "<p>This action will delete all notes associated with nodes, edges, and tiles. The browser will reload after completion. Continue?</p>",
+        async function () {
+            (await import("../notes.js")).delete_all_resource_notes();
+            window.location.reload();
+        }
+    );
+});
+
 $("#bulk-delete-all-button").click(async function () {
     $("#advanced_settings_modal").modal("hide");
     let channels = await settings.get("channels");
@@ -428,6 +439,7 @@ $("#bulk-delete-all-button").click(async function () {
                 (await import("./layout.js")).delete_all(),
                 (await import("../channels.js")).delete_all(),
                 (await import("../alarms.js")).delete_all_subscribers(),
+                (await import("../notes.js")).delete_resource_notes()
             ]);
             window.location.reload();
         }

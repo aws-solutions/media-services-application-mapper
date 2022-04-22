@@ -156,9 +156,7 @@ var show_elements = function (element_list) {
 };
 
 $("#" + edit_notes_button).click(() => {
-    console.log('edit notes button clicked');    
     let resource_info = resource_selected();
-    console.log("resource is " + resource_info.header + resource_info.id);
     // hide rendered notes
     hide_elements([rendered_notes_div_id]);
     // replace the resource's header
@@ -167,17 +165,16 @@ $("#" + edit_notes_button).click(() => {
     $("#" + notes_textarea_id).val('');
     notes.get_resource_notes(resource_info.id).then(function (this_note) {
         if(this_note?.length > 0) {
-            console.log("this note: " + this_note[0].notes);
-            $("#" + notes_textarea_id).val(this_note[0].notes);
+            let scrubbed_notes = filterXSS(this_note[0].notes);
+            $("#" + notes_textarea_id).val(scrubbed_notes);
         }
     });
     show_elements([editable_notes_div_id]);
 });
 
 $("#" + delete_notes_button).click(() => {
-    console.log('delete notes button clicked');
     let resource_info = resource_selected();
-    let html = "remove notes for realz?";
+    let html = "You are about to delete this note. Proceed?";
     confirmation.show(html, function () {
         notes.delete_resource_notes(resource_info.id).then(function(result) {
             console.log(result);
@@ -188,9 +185,8 @@ $("#" + delete_notes_button).click(() => {
 });
 
 $("#" + save_notes_button).click(() => {
-    console.log('save notes button clicked');
     let resource_info = resource_selected();
-    let notes_value = $("#" + notes_textarea_id).val();
+    let notes_value = filterXSS($("#" + notes_textarea_id).val());
     notes.update_resource_notes(resource_info.id, notes_value).then(function (response) {
         alert.show("Notes saved");
         console.log(response);
@@ -202,7 +198,6 @@ $("#" + save_notes_button).click(() => {
 });
 
 $("#" + cancel_notes_button).click(() => {
-    console.log('cancel notes button clicked');
     hide_elements([editable_notes_div_id]);
     let resource_info = resource_selected();
     render_html_notes(resource_info);
@@ -219,7 +214,6 @@ var resource_selected = function() {
         let selected = diagram.network.getSelectedNodes();
         if (selected.length > 0) {
             let node = model.nodes.get(selected[0]);
-            console.log(node.header);
             resource_info.header = node.header;
         }
         else {
@@ -227,10 +221,8 @@ var resource_selected = function() {
             let edge = model.edges.get(selected[0]);
             let toNode = model.nodes.get(edge.to);
             let fromNode = model.nodes.get(edge.from);
-            console.log(edge);
             resource_info.header = `Connection from ${fromNode.title} to ${toNode.title}`;
         }
-        console.log(selected);
         resource_info.id = selected[0];
     }
     else {

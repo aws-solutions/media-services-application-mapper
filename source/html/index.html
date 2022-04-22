@@ -182,6 +182,16 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                     </div>
                 </li>
                 <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="notes_dropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Notes
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="notes_dropdown">
+                        <a class="dropdown-item" href="#" data-toggle="modal" id="manage_notes_button">Manage
+                            Notes</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="help_dropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         Help
@@ -629,7 +639,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <!-- Generic confirmation dialog -->
     <!-- Modal -->
     <div class="modal fade" id="confirmation_dialog" tabindex="-1" role="dialog"
-        aria-labelledby="confirmation_dialog_title" aria-hidden="true">
+        aria-labelledby="confirmation_dialog_title" aria-hidden="true" style="z-index:2000;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -691,6 +701,20 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
         </div>
     </div>
 
+    <!-- Manage Notes -->
+    <div class="modal fade" id="manage_notes_modal" tabindex="-1" role="dialog"
+        aria-labelledby="manage_notes_modal_title" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-xlg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manage_notes_modal_title">Manage Notes</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="my-0 small" id="manage_notes_inventory"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Tool Output Dialog -->
     <div class="modal fade" id="tool_output_modal" tabindex="-1" role="dialog" aria-labelledby="tool_output_modal_title"
         aria-hidden="true">
@@ -791,8 +815,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             <button type="button" id="bulk-delete-all-alarm-subscriptions-button"
                                 class="btn btn-secondary my-2" title="Deletes all alarm subscriptions">Alarm
                                 Subscriptions</button>
+                            <button type="button" id="bulk-delete-all-notes-button"
+                                class="btn btn-secondary my-2" title="Deletes all notes ">Notes</button>                               
                             <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2"
-                                title="Deletes all diagrams, tiles and alarm subscriptions">All</button>
+                                title="Deletes all diagrams, tiles, alarm subscriptions, and notes">All</button>
                         </span>
                         <div class="input-group-append">
                             <span class="input-group-text">Use With Caution</span>

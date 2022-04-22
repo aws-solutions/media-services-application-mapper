@@ -68,13 +68,15 @@ def update_resource_notes(resource_arn, notes):
     result = {"message": "notes saved"}
     timestamp = int(time.time())
     arn = unquote(resource_arn)
+    index = arn.count("arn:")
+    resource_type = ["Tile", "Node", "Edge"]
     try:
-        # print(notes.raw_body.decode("utf-8"))
         string_notes = notes.json_body
         item = {
                 "timestamp": timestamp,
                 "resource_arn": arn,
-                "notes": string_notes
+                "notes": string_notes,
+                "type": resource_type[index]
             }
         NOTES_TABLE.put_item(Item=item)
     except ClientError as error:
@@ -100,9 +102,9 @@ def delete_all_notes_proxy():
     """
     API entry point to delete all notes.
     """
-    result = {}
+    result = {"message": "notes deletion started"}
     try:
-        result = LAMBDA_CLIENT.invoke(
+        LAMBDA_CLIENT.invoke(
             FunctionName=FUNCTION_NAME,
             InvocationType='Event'
         )

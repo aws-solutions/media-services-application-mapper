@@ -214,6 +214,7 @@ const toolStateMachine = new machina.Fsm({
                 alarms.deferred_init();
                 const events = await import("./events.js");
                 events.deferred_init();
+                await import("./ui/notes_menu.js")
                 // show the tiles tab
                 $("#channel-tiles-tab").tab("show");
             },
