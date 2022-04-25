@@ -16,7 +16,6 @@
     "showdown": "^2.0.3",
     "svg.js": "^2.6.6",
     "tabulator-tables": "^4.9.3",
-    "urijs": "^1.19.7",
     "vis-network": "^9.1.0",
     "xss": "^1.0.11"
   }
