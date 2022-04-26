@@ -142,12 +142,8 @@ if (connections.get_current() !== null) {
 $("#save_endpoint_connection").on("click", () => {
     try {
         // trim the string, normalize the link, remove any trailing slash
-        const endpoint = new URI($("#input_endpoint_url").val().trim())
-            .normalize()
-            .toString()
-            .replace(/\/+$/, "");
-        console.log("normalized to " + endpoint);
-        const apiKey = $("#input_endpoint_key").val().trim();
+        const endpoint = filterXSS($("#input_endpoint_url").val().trim()).replace(/\/+$/, "");
+        const apiKey = filterXSS($("#input_endpoint_key").val().trim());
         const store_locally = $("#connectionRemember").prop("checked");
         console.log("store locally = " + store_locally);
         // test the provided info before saving
