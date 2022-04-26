@@ -67,10 +67,6 @@ $("#manage_notes_button").on("click", function () {
     $("#manage_notes_modal").modal("show");
 });
 
-$("#close_notes_button").on("click", function () {
-    $("#manage_notes_modal").modal("hide");
-});
-
 function delete_note(row) {
     let html = "You are about to delete this note. Proceed?";
     confirmation.show(html, function () {
