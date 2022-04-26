@@ -12,3 +12,4 @@ requests
 stringcase
 testresources
 aws-requests-auth
+coverage

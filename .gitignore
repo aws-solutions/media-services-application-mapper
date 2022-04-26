@@ -17,3 +17,6 @@ deployment/test_venv
 **/error.txt
 
 node_modules/
+
+*.lcov
+.coverage

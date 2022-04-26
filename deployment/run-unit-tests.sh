@@ -34,4 +34,5 @@ fi
 
 # launch python unit tests
 cd $source_dir/msam
-python -m chalicelib.run_unit_tests
+coverage run -m chalicelib.run_unit_tests
+coverage lcov
