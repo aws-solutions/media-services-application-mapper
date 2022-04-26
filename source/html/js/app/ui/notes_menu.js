@@ -20,11 +20,10 @@ const notes_tabulator = new Tabulator(
         groupBy: ["type"],
         initialSort: [{ column: "timestamp" }],
         height: 400, 
-        layout: "fitColumns", //fit columns to width of table (optional)
+        layout: "fitColumns",
         selectable: true,
         selectableRangeMode: "click",
         columns: [
-            //Define Table Columns
             {
                 title: "ARN",
                 field: "resource_arn",
@@ -38,7 +37,7 @@ const notes_tabulator = new Tabulator(
                 width: 200
             },
             {
-                title: "Notes",
+                title: "Notes (truncated to 200 chars)",
                 field: "notes",
                 headerFilter: true,
                 formatter: "html"
@@ -68,6 +67,9 @@ $("#manage_notes_button").on("click", function () {
     $("#manage_notes_modal").modal("show");
 });
 
+$("#close_notes_button").on("click", function () {
+    $("#manage_notes_modal").modal("hide");
+});
 
 function delete_note(row) {
     let html = "You are about to delete this note. Proceed?";
@@ -91,7 +93,8 @@ function set_notes_data() {
     notes.get_all_resource_notes().then(function (all_notes) {
         for (let note of all_notes) {
             let converter = new showdown.Converter();
-            let text = note.notes;
+            // truncate notes to 200 characters
+            let text = note.notes.slice(0, 200);
             note.notes = converter.makeHtml(text);
             note.exists = "No";
             note.timestamp = new Date(note.timestamp*1000).toISOString();
@@ -119,7 +122,6 @@ function set_notes_data() {
                     }
             }
         }
-        // notes_tabulator.setData(all_notes);
         notes_tabulator.replaceData(all_notes);
     });
 }
