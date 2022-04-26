@@ -18,5 +18,6 @@ deployment/test_venv
 
 node_modules/
 
-*.lcov
+coverage.lcov
+coverage.xml
 .coverage

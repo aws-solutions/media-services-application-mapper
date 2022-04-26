@@ -35,4 +35,4 @@ fi
 # launch python unit tests
 cd $source_dir/msam
 coverage run -m chalicelib.run_unit_tests
-coverage lcov
+coverage xml
