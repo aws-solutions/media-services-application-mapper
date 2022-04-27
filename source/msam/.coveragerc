@@ -1,6 +1,6 @@
 [run]
 relative_files = True
-source = .
+source = chalicelib/
 omit = 
     chalicelib/test_*.py
     chalicelib/run_unit_tests.py
