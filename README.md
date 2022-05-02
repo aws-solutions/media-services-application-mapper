@@ -25,16 +25,16 @@ Note: If you want to use the solution without building from source, navigate to 
 * MSAM offers two different visualization options: Diagrams and Tiles. 
 * MSAM can be configured to automatically display AWS Media Services alerts from AWS Elemental MediaLive channels and multiplex and AWS Elemental MediaConnect.
 
-**Go [here](docs/FEATURES.md) for more information on MSAM's capabilities and features.**
+**Go [here](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html) for more information on MSAM's capabilities and features.**
 
 <a name="installation"></a>
 # Installation Guide
-Go [here](docs/INSTALL.md) for more information on installing MSAM into your AWS account.
+Go [here](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/automated-deployment.html) for more information on installing MSAM into your AWS account.
 
 <a name="architecture-diagram"></a>
 # Architecture Diagram
 [//]: # (Provide Architecture Diagram. Add few bullets to describe the architecture workflow)
-You'll find the various architectural views for MSAM [here](docs/ARCHITECTURE.md).
+You'll find the various architectural views for MSAM [here](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/architecture-overview.html).
 <a name="aws-solutions-constructs"></a><a name="customizing-the-solution"></a>
 # Customizing the Solution
 
@@ -162,7 +162,7 @@ See license [here](LICENSE.txt).
 <a name="metrics"></a>
 # Anonymous Metrics 
 
-This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution. For more information about this capability, please see the [Install Guide](docs/INSTALL.md#metrics) for details on the data sent, and how to enable and disable this capability.
+This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution. For more information about this capability, please see the [Install Guide](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/collection-of-operational-metrics.html) for details on the data sent, and how to enable and disable this capability.
 
 ## Navigate
-Navigate to [Architecture](docs/ARCHITECTURE.md) | [Workshop](docs/WORKSHOP.md) | [Install](docs/INSTALL.md) | [Usage](docs/USAGE.md) | [Uninstall](docs/UNINSTALL.md) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)
+Navigate to [Architecture](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/architecture-overview.html) | [Workshop](docs/WORKSHOP.md) | [Install](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/automated-deployment.html) | [Usage](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/using-the-browser-application.html) | [Uninstall](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/uninstall-the-solution.html) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)
