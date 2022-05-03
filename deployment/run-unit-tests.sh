@@ -35,4 +35,7 @@ fi
 # launch python unit tests
 cd $source_dir/msam
 coverage run -m chalicelib.run_unit_tests
-coverage xml
+
+# assemble report
+cd $source_dir
+coverage xml --data-file=$source_dir/msam/.coverage
