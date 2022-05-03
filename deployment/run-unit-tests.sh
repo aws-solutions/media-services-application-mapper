@@ -37,5 +37,5 @@ cd $source_dir/msam
 coverage run -m chalicelib.run_unit_tests
 
 # assemble report
-cd $source_dir
+cd $source_dir/..
 coverage xml --data-file=$source_dir/msam/.coverage
