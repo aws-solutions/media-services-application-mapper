@@ -58,6 +58,7 @@ _Note:_ You would have to create an S3 bucket with the prefix '_my-bucket-name-<
 [//]: # (Add commands to build lambda binaries from root of the project)
 To build the distributable and prepare the CloudFormation templates:
 ```
+cd deployment
 chmod +x ./build-s3-dist.sh
 ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
 ```
@@ -70,8 +71,15 @@ Lambda binaries will be written to deployment/regional-s3-assets.
 <a name="unit-test"></a>
 ## Unit Test
 [//]: # (Add commands to run unit tests from root of the project)
+Execute this solution's unit tests manually with the following commands:
+```
+cd deployment
+chmod +x run-unit-tests.sh
+./run-unit-tests.sh
+```
 
-TBD
+If no virtual environment is currently activate, this script will create and activate a temporary Python virtual environment capable of running the unit tests.
+
 
 <a name="deploy"></a>
 ## Deploy
