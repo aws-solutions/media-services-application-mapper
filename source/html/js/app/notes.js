@@ -80,7 +80,7 @@ const delete_all_resource_notes = function() {
     var current_connection = connections.get_current();
     var url = current_connection[0];
     var api_key = current_connection[1];
-    var current_endpoint = `${url}/notes`;    
+    var current_endpoint = `${url}/notes`;
     return new Promise(function (resolve, reject) {
         server
             .delete_method(current_endpoint, api_key)
