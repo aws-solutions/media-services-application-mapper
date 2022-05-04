@@ -96,7 +96,7 @@ var alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
             tooltip: "Navigate to Alarm",
             headerSort: false,
             formatter: consoleIcon,
-            width: 40,
+            width: 42,
             hozAlign: "center",
             cellClick: function (e, cell) {
                 navigate_to_alarm(cell.getRow()._row.data);
@@ -106,7 +106,7 @@ var alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
             tooltip: "Unsubscribe Alarm",
             headerSort: false,
             formatter: trashIcon,
-            width: 40,
+            width: 42,
             hozAlign: "center",
             cellClick: function (e, cell) {
                 unsubscribe_alarm(cell.getRow()._row.data);

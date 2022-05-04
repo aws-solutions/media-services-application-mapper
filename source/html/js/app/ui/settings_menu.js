@@ -276,6 +276,7 @@ $("#advanced_settings_button").on("click", async function () {
         const tiles_interval = (
             await import("./tile_view.js")
         ).get_update_interval();
+        const number_displayed_diagrams = await settings.get("max-number-displayed-diagrams");
         const inventory_regions = await get_inventory_regions();
         const module = await regions.refresh();
         // populate the dialog
@@ -299,6 +300,7 @@ $("#advanced_settings_button").on("click", async function () {
         $("#advanced-tiles-refresh-interval").val(
             Math.round(tiles_interval / 1000)
         );
+        $("#advanced-tiles-displayed-diagrams").val(number_displayed_diagrams);
         // get the layout method and update the choice
         const value = await settings.get("layout-method");
         $("#layout-method-select option[value='" + value.method + "']").prop(
@@ -322,6 +324,9 @@ $("#advanced_settings_modal_save").on("click", async function () {
     const tiles_interval = Number.parseInt(
         $("#advanced-tiles-refresh-interval").val()
     );
+    const number_displayed_diagrams = Number.parseInt(
+        $("#advanced-tiles-displayed-diagrams").val()
+    );
     const regions_array = _.map(
         $(
             "#advanced-inventory-regions input:checked,#advanced-inventory-global input:checked"
@@ -341,6 +346,10 @@ $("#advanced_settings_modal_save").on("click", async function () {
         setAdvancedSettingsAlert(
             "Please check the Refresh Tile Inventory Interval"
         );
+    } else if (Number.isNaN(number_displayed_diagrams)) {
+        setAdvancedSettingsAlert(
+            "Please check the Maximum Number of Diagrams to Display"
+        );
     } else if (!Array.isArray(regions_array)) {
         setAdvancedSettingsAlert("Please check the Inventory Regions input");
     } else {
@@ -351,6 +360,9 @@ $("#advanced_settings_modal_save").on("click", async function () {
         (await import("../events.js")).set_update_interval(event_interval);
         (await import("./tile_view.js")).set_update_interval(tiles_interval);
         set_inventory_regions(regions_array);
+        // number of diagrams to display
+        const number_diagrams = $("#advanced-tiles-displayed-diagrams").val();
+        settings.put("max-number-displayed-diagrams", number_diagrams);
         // save layout method
         const method = $("#layout-method-select").val();
         console.log("layout-method is " + method);
