@@ -5,6 +5,7 @@ export const show = function (html, on_proceed) {
     $("#confirmation_dialog_proceed").on("click", function (event) {
         console.log(event);
         on_proceed();
+        $("#confirmation_dialog").modal("hide");
     });
     $("#confirmation_dialog").on("hide.bs.modal", function (event) {
         console.log(event);

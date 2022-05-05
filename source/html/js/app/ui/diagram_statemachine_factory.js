@@ -21,7 +21,7 @@ export function create(diagram) {
                 "create-page-container": {
                     _onEnter: function () {
                         // create the html
-                        var tab = `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-toggle="tab" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons pl-1 small">image_aspect_ratio</i></a>`;
+                        var tab = `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-bs-toggle="tab" data-bs-target="#${my_diagram.diagram_id}" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons pl-1 small">image_aspect_ratio</i></a>`;
                         var diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
                         // add to containers
                         // skip Tiles tab

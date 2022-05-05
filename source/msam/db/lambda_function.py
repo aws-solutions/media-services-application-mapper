@@ -103,6 +103,16 @@ def make_default_settings(settings_table):
         print("added default app-tile-update-interval setting")
     except ClientError:
         print("app-tile-update-interval setting exists")
+    # default max-number-displayed-diagrams
+    try:
+        table.put_item(Item={
+            "id": "max-number-displayed-diagrams",
+            "value": 10
+        },
+                       ConditionExpression=NOT_EXISTS)
+        print("added default max-number-displayed-diagrams setting")
+    except ClientError:
+        print("max-number-displayed-diagrams setting exists")
     # default displayed regions
     try:
         table.put_item(Item={
