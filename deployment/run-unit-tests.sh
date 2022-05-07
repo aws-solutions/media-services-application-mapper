@@ -35,7 +35,6 @@ fi
 # launch python unit tests
 cd $source_dir/msam
 coverage run -m chalicelib.run_unit_tests
-
-# assemble report
-cd $source_dir
-coverage xml --data-file=$source_dir/msam/.coverage -o $source_dir/msam/coverage.xml
+coverage xml
+# fix the source file paths
+sed -i -- 's/filename\=\"/filename\=\"source\/msam\//g' coverage.xml
