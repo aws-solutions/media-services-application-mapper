@@ -61,28 +61,15 @@ var add_diagram = function (name, view_id, save) {
 // hides the tab of the diagram
 var hide_diagram = function (diagram, show_tile = true, decrement) {
     $("#" + diagram.tab_id).hide();
+    if (show_tile) {
+        $("#channel-tiles-tab").tab("show");
+    }
     if (decrement){
         let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
         window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown-1);
     }
     window.localStorage.setItem(diagram.name, 'HIDDEN');  
     alert.show(`${diagram.name} hidden`);
-};
-
-var show_diagram = function (name) {
-    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
-    let diagram = get_by_name(name);
-    $("#" + diagram.tab_id).show();
-    window.localStorage.setItem(diagram.name, Date.now());
-    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown+=1);
-    settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
-        if (diagrams_shown > max_number_diagrams) {
-            console.log("exceeded number of diagrams to show");
-            let diagram_to_hide = oldest_viewed_diagram();
-            hide_diagram(diagrams[diagram_to_hide.name], false, true);
-        }
-    });
-
 };
 
 var remove_diagram = function (name) {
@@ -194,16 +181,6 @@ function have_any(node_ids, match_sort = false) {
     else {
         return _.orderBy(results, ["diagram", function (item) { return `${item.percent}`.padStart(3, '0'); }], ['asc', 'desc']);
     }
-}
-
-function get_displayed_diagrams() {
-    let displayed_diagrams = []
-    for (let [key,value] of Object.entries(localStorage)) {
-        if (key != "DIAGRAMS_SHOWN" && value != "HIDDEN"){
-            displayed_diagrams.push(key);
-        }
-    }
-    return displayed_diagrams;
 }
 
 function get_hidden_diagrams() {
@@ -348,9 +325,8 @@ const hidden_diagrams_tabulator = new Tabulator(
                 headerFilter: true,
                 cellClick: function (e, cell) {
                     let name = cell.getRow()._row.data.hidden_diagram;
-                    // let this_diagram = add_diagram(name, _.snakeCase(name), false);
-                    // this_diagram.show();
-                    show_diagram(name);
+                    let this_diagram = add_diagram(name, _.snakeCase(name), false);
+                    this_diagram.show();
                     $("#hidden_diagrams").offcanvas("hide");
                 }
             }
