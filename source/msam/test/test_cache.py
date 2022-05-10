@@ -5,9 +5,7 @@ This module is provides unit tests for the cache.py module.
 # pylint: disable=C0415
 
 import unittest
-from unittest.mock import MagicMock, patch
-from unittest.mock import Mock
-from botocore.exceptions import ClientError
+from unittest.mock import patch
 
 SERVICE = 'medialive-channel'
 REGION = 'us-west-2'
