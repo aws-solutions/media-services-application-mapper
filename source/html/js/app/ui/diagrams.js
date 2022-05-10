@@ -3,7 +3,7 @@
 
 import * as settings from "../settings.js";
 import * as diagram_factory from "./diagram_factory.js";
-import * as nav_alert from "./alert.js";
+import * as alert from "./alert.js";
 
 var diagrams = {};
 
@@ -52,43 +52,37 @@ var add_diagram = function (name, view_id, save) {
         if (diagrams_shown > max_number_diagrams) {
             console.log("exceeded number of diagrams to show");
             let diagram_to_hide = oldest_viewed_diagram();
-            hide_diagram(diagram_to_hide.name, false);
-            window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown - 1);
+            hide_diagram(diagrams[diagram_to_hide.name], false, true);
         }
     });
     return new_diagram;
 };
 
-var show_diagram = function (name, view_id) {
-    const new_diagram = diagram_factory.create(name, view_id);
-    diagrams[name] = new_diagram;
-    new_diagram.add_singleclick_callback(function (diagram, event) {
-        for (let callback of selection_callbacks) {
-            try {
-                callback(diagram, event);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    });
-    return new_diagram;
-};
-
-var hide_diagram = function (name, show_tile = true) {
-    console.log(`hiding ${name}`);
-    const view_id = diagrams[name].view_id;
-    // remove page elements
-    diagrams[name].remove();
-    // remove the lock settings
-    const key = `diagram_lock_${view_id}`;
-    settings.remove(key);
-    if (show_tile){
-        $("#channel-tiles-tab").tab("show");
+// hides the tab of the diagram
+var hide_diagram = function (diagram, show_tile = true, decrement) {
+    $("#" + diagram.tab_id).hide();
+    if (decrement){
+        let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
+        window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown-1);
     }
+    window.localStorage.setItem(diagram.name, 'HIDDEN');  
+    alert.show(`${diagram.name} hidden`);
+};
+
+var show_diagram = function (name) {
     let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
-    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown-1);
-    window.localStorage.removeItem(name);
-    window.localStorage.setItem(name, 'HIDDEN');  
+    let diagram = get_by_name(name);
+    $("#" + diagram.tab_id).show();
+    window.localStorage.setItem(diagram.name, Date.now());
+    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown+=1);
+    settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
+        if (diagrams_shown > max_number_diagrams) {
+            console.log("exceeded number of diagrams to show");
+            let diagram_to_hide = oldest_viewed_diagram();
+            hide_diagram(diagrams[diagram_to_hide.name], false, true);
+        }
+    });
+
 };
 
 var remove_diagram = function (name) {
@@ -139,36 +133,25 @@ var load_diagrams = function () {
         if (!diagrams_shown) {  // first load of the app, and no diagrams are being tracked yet
             localStorage.setItem('DIAGRAMS_SHOWN', 0);
             // load diagram names from the cloud on initialization
-            settings.get("diagrams").then(function (all_diagrams) {
-                settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
-                    var diagrams_to_show = Math.min(max_number_diagrams, all_diagrams.length);
-                    console.log(
-                        "load user-defined diagrams: " + JSON.stringify(all_diagrams)
-                    );
-                    if (Array.isArray(all_diagrams) && all_diagrams.length > 0) {
-                            for (let i=0; i < diagrams_to_show; i++) {
-                                console.log(`loading ${all_diagrams[i].name}`);
-                                add_diagram(all_diagrams[i].name, all_diagrams[i].view_id, false);
-                            }
-                            for (let i=diagrams_to_show; i < all_diagrams.length; i++) {
-                                localStorage.setItem(all_diagrams[i].name, 'HIDDEN');
-                            }
-                    } else {
-                        // no diagrams, create default View from previous Global View
-                        console.log(
-                            "no used-defined diagrams, creating default diagram"
-                        );
-                        add_diagram("Default", "global", true);
-                    } 
-                });
-            }); 
+            settings.get("diagrams").then(function (diagrams) {
+                console.log("load user-defined diagrams: " + JSON.stringify(diagrams));
+                if (Array.isArray(diagrams) && diagrams.length > 0) {
+                    for (let diagram of diagrams) {
+                        add_diagram(diagram.name, diagram.view_id, false);
+                    }
+                } else {
+                    // no diagrams, create default View from previous Global View
+                    console.log("no used-defined diagrams, creating default diagram");
+                    add_diagram("Default", "global", true);
+                }
+            });
         }
         else {
             // if there's already diagrams shown saved in local storage, 
             // show those instead of the first MAX_NUM_DIAGRAMS
             console.log('restoring diagrams');
             restore_diagrams();
-        }        
+        }
         resolve();
     });
 };
@@ -223,14 +206,30 @@ function get_displayed_diagrams() {
     return displayed_diagrams;
 }
 
-async function restore_diagrams() {
-    const local_lodash = _;
-    let displayed_diagrams = get_displayed_diagrams();
-    let all_diagrams = await settings.get("diagrams");
-    for (let name of displayed_diagrams) {
-        let diagram = local_lodash.find(all_diagrams, { 'name': name });
-        show_diagram(name, diagram.view_id);
+function get_hidden_diagrams() {
+    let hidden_diagrams = []
+    for (let [key,value] of Object.entries(localStorage)) {
+        if (key != "DIAGRAMS_SHOWN" && value == "HIDDEN"){
+            hidden_diagrams.push({"hidden_diagram": key});
+        }
     }
+    return hidden_diagrams;
+}
+
+async function restore_diagrams() {
+    // zero out the number of diagrams shown and start the count over
+    localStorage.setItem('DIAGRAMS_SHOWN', 0);
+    let hidden_diagrams = get_hidden_diagrams();
+    settings.get("diagrams").then(function (diagrams) {
+        for (let diagram of diagrams) {
+            let this_diagram = add_diagram(diagram.name, diagram.view_id, false);
+            if(_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
+                hide_diagram(this_diagram, false, true);
+            }
+        }
+    });
+    //show tiles tab after restoring
+    $("#channel-tiles-tab").tab("show");
 }
 
 function oldest_viewed_diagram (){
@@ -251,7 +250,8 @@ const update_lock_visibility = () => {
     if (diagram) {
         // show the lock
         window.localStorage.setItem(diagram.name, Date.now());
-        $("#diagram-lock-button").removeClass("d-none");        
+        $("#diagram-lock-button").removeClass("d-none");
+        $("#diagram-list-button").removeClass("d-none");      
     } else {
         // hide the lock
         $("#diagram-lock-button").addClass("d-none");
@@ -313,7 +313,7 @@ const refresh_lock_compartment = () => {
     const width = diagramDiv.width();
     // create
     const h_offset = 30;
-    const v_offset = 2;
+    const v_offset = 30;
     const style = `position: absolute; top: ${diagramPosition.top + v_offset
         }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
     const buttonContent = `<div id="diagram-lock-button" style="${style}"><span title="Lock/Unlock Changes" id="diagram-lock-icon" class="material-icons">lock_open</span></div>`;
@@ -326,23 +326,72 @@ const refresh_lock_compartment = () => {
             diagram.lock(locked).then(() => {
                 update_lock_state();
                 const message = locked ? "Diagram locked" : "Diagram unlocked";
-                nav_alert.show(message);
+                alert.show(message);
             });
         });
     });
     update_lock_visibility();
 };
 
+const hidden_diagrams_tabulator = new Tabulator(
+    "#hidden_diagrams_content",
+    {
+        placeholder: "No hidden diagrams",
+        tooltips: true,
+        layout: "fitDataStretch",
+        selectable: true,
+        selectableRangeMode: "click",
+        columns: [
+            {
+                title: "Hidden Diagram",
+                field: "hidden_diagram",
+                headerFilter: true,
+                cellClick: function (e, cell) {
+                    let name = cell.getRow()._row.data.hidden_diagram;
+                    // let this_diagram = add_diagram(name, _.snakeCase(name), false);
+                    // this_diagram.show();
+                    show_diagram(name);
+                    $("#hidden_diagrams").offcanvas("hide");
+                }
+            }
+        ]
+    }
+);
+
+const load_hidden_diagrams_list = () => {
+    const diagramListDiv = $("#diagram-list-button");
+    // do this relative to the diagram div
+    const diagramDiv = $("#diagram");
+    // get the location and size of the diagram div
+    const diagramPosition = diagramDiv.position();
+    const width = diagramDiv.width();
+    // create
+    const h_offset = 30;
+    const v_offset = 2;
+    const listStyle = `position: absolute; top: ${diagramPosition.top + v_offset}px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
+    const diagramListButtonContent = `<div id="diagram-list-button" style="${listStyle}"><span title="Show List of Hidden Diagrams" id="diagram-list-icon" class="material-icons">list</span></div>`;
+    diagramListDiv.replaceWith(diagramListButtonContent);
+    $("#diagram-list-button").click(() => {
+        console.log("button clicked");
+        $("#hidden_diagrams_lg").empty();
+        // populate div inside the offcanvas with list of hidden diagrams
+        let hidden_diagrams_list = get_hidden_diagrams();
+        hidden_diagrams_tabulator.replaceData(hidden_diagrams_list);
+        $("#hidden_diagrams").offcanvas("show");
+    });
+};
 // detect window resize events
 window.addEventListener('resize', function () {
     // reposition absolute diagram elements if needed
     refresh_lock_compartment();
     update_lock_state();
+    load_hidden_diagrams_list();
 });
 
 // this is the initialization code for the diagrams component
 load_diagrams().then(() => {
     refresh_lock_compartment();
+    load_hidden_diagrams_list();
     $("#diagram-tab").on("shown.bs.tab", () => {
         update_lock_visibility();
         update_lock_state();
@@ -366,4 +415,5 @@ export {
     have_any,
     add_selection_callback,
     hide_diagram as hide,
+    get_hidden_diagrams
 };

@@ -268,6 +268,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
         </div>
     </nav>
     <div id="diagram-lock-button" class="d-none"></div>
+    <div id="diagram-list-button" class="d-none"></div>
+
     <div id="diagram" style="height: 60%; width: 100%;">
         <div class="tab-content" id="diagram-tab-content" style="height: 100%; width: 100%;">
             <div id="channel-tiles-outer" class="tab-pane d-none" role="tabpanel" aria-labelledby="channel-tiles-tab"
@@ -1048,6 +1050,19 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Hidden diagrams dialog -->
+    <!-- Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="hidden_diagrams" aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Click on a hidden diagram to display</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+         <div id="hidden_diagrams_content">
+         </div>
+      </div>
     </div>
 
 </body>

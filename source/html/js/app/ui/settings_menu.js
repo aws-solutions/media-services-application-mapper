@@ -389,9 +389,9 @@ $("#bulk-delete-all-diagrams-button").click(async function () {
         `< p > This action will delete ${count} diagram${count == 1 ? "" : "s"
         }. The browser will reload after completion.Continue ?</p > `,
         async function () {
-            const layout = await import("./layout.js");
-            layout.delete_all();
-            window.location.reload();
+            (await import("./layout.js")).delete_all().then(function() {
+                window.location.reload();
+            });
         }
     );
 });
@@ -404,8 +404,9 @@ $("#bulk-delete-all-tiles-button").click(async function () {
         `< p > This action will delete ${count} tile${count == 1 ? "" : "s"
         }. The browser will reload after completion.Continue ?</p > `,
         async function () {
-            (await import("../channels.js")).delete_all();
-            window.location.reload();
+            (await import("../channels.js")).delete_all().then(function() {
+                window.location.reload();
+            });
         }
     );
 });
@@ -415,8 +416,9 @@ $("#bulk-delete-all-alarm-subscriptions-button").click(async function () {
     confirmation.show(
         "<p>This action will delete all alarm subscriptions in the tool. The browser will reload after completion. Continue?</p>",
         async function () {
-            (await import("../alarms.js")).delete_all_subscribers();
-            window.location.reload();
+            (await import("../alarms.js")).delete_all_subscribers().then(function(){
+                window.location.reload();
+            });
         }
     );
 });
@@ -426,8 +428,9 @@ $("#bulk-delete-all-notes-button").click(async function () {
     confirmation.show(
         "<p>This action will delete all notes associated with nodes, edges, and tiles. The browser will reload after completion. Continue?</p>",
         async function () {
-            (await import("../notes.js")).delete_all_resource_notes();
+            (await import("../notes.js")).delete_all_resource_notes().then(function(){
             window.location.reload();
+            });
         }
     );
 });
