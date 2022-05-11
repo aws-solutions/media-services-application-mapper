@@ -10,6 +10,7 @@ import * as settings from "../settings.js";
 import * as diagrams from "./diagrams.js";
 import * as confirmation from "./confirmation.js";
 import * as channels_menu from "./channels_menu.js";
+import * as alert from "./alert.js"
 
 const tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
@@ -293,7 +294,7 @@ const filter_tiles = function () {
 const redraw_tiles = async function () {
     $("#" + tile_outer_div).addClass("d-none");
     $("#" + content_div).html(
-        `<div id="${tile_row_div_id}" data-tile-row="true" class="row ml-3">`
+        `<div id="${tile_row_div_id}" data-tile-row="true" class="row ms-3">`
     );
     const channel_list = await channels.channel_list();
     const cached_events = event_alerts.get_cached_events();
@@ -334,7 +335,7 @@ const redraw_tiles = async function () {
         const menu_id = channel_card_id + "_menu";
         const dropdown_id = channel_card_id + "_dropdown";
         const tile = `
-                        <div draggable="true" class="card ${border_class} ml-4 mb-4" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${channel_members.length}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
+                        <div draggable="true" class="card ${border_class} ms-4 mb-4 px-0" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${channel_members.length}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
                             <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${local_channel_name}
                             </div>
                             <div class="card-body text-info my-0 py-1">
@@ -346,7 +347,7 @@ const redraw_tiles = async function () {
                             <div class="btn-group btn-group-sm" aria-label="Tile Footer" style="height: 14%;">
                                 <div style="position: absolute; top: 0; left: ${tile_width_px - 32}px; cursor: pointer;">
                                     <div class="dropdown">
-                                        <button class="btn btn-sm p-0 m-0" type="button" id="${menu_id}" data-toggle="dropdown" style="color: grey;">
+                                        <button class="btn btn-sm p-0 m-0" type="button" id="${menu_id}" data-bs-toggle="dropdown" style="color: grey;">
                                             <span title="Matching diagrams" class="material-icons">image_aspect_ratio</span>
                                         </button>
                                         <div class="dropdown-menu m-0 p-0" aria-labelledby="${menu_id}" id="${dropdown_id}">
@@ -543,19 +544,13 @@ $("#tiles_edit_selected_tile_button").on("click", function () {
 $("#tiles_delete_selected_tile_button").on("click", function () {
     const tile_name = selected();
     if (shown() && tile_name && tile_name !== "") {
-        $("#confirmation_dialog_proceed").on("click", function () {
+        let html = `Delete the tile named ${tile_name}?`;
+        confirmation.show(html, function () {
             channels.delete_channel(tile_name).then(function () {
                 redraw_tiles();
+                alert.show("Tile deleted");
             });
         });
-        $("#confirmation_dialog").on("hide.bs.modal", function (event) {
-            console.log(event);
-            $("#confirmation_dialog_proceed").unbind("click");
-        });
-        $("#confirmation_dialog_body").html(
-            "<p>Delete the tile named " + tile_name + "?</p>"
-        );
-        $("#confirmation_dialog").modal("show");
     }
 });
 

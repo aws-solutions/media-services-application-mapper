@@ -31,6 +31,7 @@ var add_selection_callback = function (callback) {
 };
 
 var add_diagram = function (name, view_id, save) {
+    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
     const new_diagram = diagram_factory.create(name, view_id);
     diagrams[name] = new_diagram;
     if (save) {
@@ -45,7 +46,49 @@ var add_diagram = function (name, view_id, save) {
             }
         }
     });
+    window.localStorage.setItem(name, Date.now());
+    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown+=1);
+    settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
+        if (diagrams_shown > max_number_diagrams) {
+            console.log("exceeded number of diagrams to show");
+            let diagram_to_hide = oldest_viewed_diagram();
+            hide_diagram(diagram_to_hide.name, false);
+            window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown - 1);
+        }
+    });
     return new_diagram;
+};
+
+var show_diagram = function (name, view_id) {
+    const new_diagram = diagram_factory.create(name, view_id);
+    diagrams[name] = new_diagram;
+    new_diagram.add_singleclick_callback(function (diagram, event) {
+        for (let callback of selection_callbacks) {
+            try {
+                callback(diagram, event);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+    return new_diagram;
+};
+
+var hide_diagram = function (name, show_tile = true) {
+    console.log(`hiding ${name}`);
+    const view_id = diagrams[name].view_id;
+    // remove page elements
+    diagrams[name].remove();
+    // remove the lock settings
+    const key = `diagram_lock_${view_id}`;
+    settings.remove(key);
+    if (show_tile){
+        $("#channel-tiles-tab").tab("show");
+    }
+    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
+    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown-1);
+    window.localStorage.removeItem(name);
+    window.localStorage.setItem(name, 'HIDDEN');  
 };
 
 var remove_diagram = function (name) {
@@ -61,6 +104,12 @@ var remove_diagram = function (name) {
     settings.remove(key);
     // select the tile tab
     $("#channel-tiles-tab").tab("show");
+    // remove from local storage
+    window.localStorage.removeItem(name);
+    // decrement number of diagrams shown
+    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
+    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown-1);
+    window.localStorage.removeItem(name);
 };
 
 var get_by_name = function (name) {
@@ -86,24 +135,41 @@ var save_diagrams = function () {
 
 var load_diagrams = function () {
     return new Promise((resolve) => {
-        // load diagram names from the cloud on initialization
-        settings.get("diagrams").then(function (all_diagrams) {
-            console.log(
-                "load user-defined diagrams: " + JSON.stringify(all_diagrams)
-            );
-            if (Array.isArray(all_diagrams) && all_diagrams.length > 0) {
-                for (let diagram of all_diagrams) {
-                    add_diagram(diagram.name, diagram.view_id, false);
-                }
-            } else {
-                // no diagrams, create default View from previous Global View
-                console.log(
-                    "no used-defined diagrams, creating default diagram"
-                );
-                add_diagram("Default", "global", true);
-            }
-            resolve();
-        });
+        let diagrams_shown = localStorage.getItem('DIAGRAMS_SHOWN');
+        if (!diagrams_shown) {  // first load of the app, and no diagrams are being tracked yet
+            localStorage.setItem('DIAGRAMS_SHOWN', 0);
+            // load diagram names from the cloud on initialization
+            settings.get("diagrams").then(function (all_diagrams) {
+                settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
+                    var diagrams_to_show = Math.min(max_number_diagrams, all_diagrams.length);
+                    console.log(
+                        "load user-defined diagrams: " + JSON.stringify(all_diagrams)
+                    );
+                    if (Array.isArray(all_diagrams) && all_diagrams.length > 0) {
+                            for (let i=0; i < diagrams_to_show; i++) {
+                                console.log(`loading ${all_diagrams[i].name}`);
+                                add_diagram(all_diagrams[i].name, all_diagrams[i].view_id, false);
+                            }
+                            for (let i=diagrams_to_show; i < all_diagrams.length; i++) {
+                                localStorage.setItem(all_diagrams[i].name, 'HIDDEN');
+                            }
+                    } else {
+                        // no diagrams, create default View from previous Global View
+                        console.log(
+                            "no used-defined diagrams, creating default diagram"
+                        );
+                        add_diagram("Default", "global", true);
+                    } 
+                });
+            }); 
+        }
+        else {
+            // if there's already diagrams shown saved in local storage, 
+            // show those instead of the first MAX_NUM_DIAGRAMS
+            console.log('restoring diagrams');
+            restore_diagrams();
+        }        
+        resolve();
     });
 };
 
@@ -147,11 +213,45 @@ function have_any(node_ids, match_sort = false) {
     }
 }
 
+function get_displayed_diagrams() {
+    let displayed_diagrams = []
+    for (let [key,value] of Object.entries(localStorage)) {
+        if (key != "DIAGRAMS_SHOWN" && value != "HIDDEN"){
+            displayed_diagrams.push(key);
+        }
+    }
+    return displayed_diagrams;
+}
+
+async function restore_diagrams() {
+    const local_lodash = _;
+    let displayed_diagrams = get_displayed_diagrams();
+    let all_diagrams = await settings.get("diagrams");
+    for (let name of displayed_diagrams) {
+        let diagram = local_lodash.find(all_diagrams, { 'name': name });
+        show_diagram(name, diagram.view_id);
+    }
+}
+
+function oldest_viewed_diagram (){
+    let displayed_diagrams = [];
+    const local_lodash = _;
+    for (let [key, value] of Object.entries(localStorage)) {
+        if (key != "DIAGRAMS_SHOWN"){
+            displayed_diagrams.push({"name": key, "time": value});
+        }
+    }
+    let sorted_diagrams = local_lodash.sortBy(displayed_diagrams, ['time']);
+    return (sorted_diagrams.shift());
+}
+
 const update_lock_visibility = () => {
     // are we showing a diagram or tiles?
-    if (shown_diagram()) {
+    let diagram = shown_diagram();
+    if (diagram) {
         // show the lock
-        $("#diagram-lock-button").removeClass("d-none");
+        window.localStorage.setItem(diagram.name, Date.now());
+        $("#diagram-lock-button").removeClass("d-none");        
     } else {
         // hide the lock
         $("#diagram-lock-button").addClass("d-none");
@@ -175,6 +275,8 @@ const update_lock_state = () => {
     // only update if we're showing a diagram
     let diagram = shown_diagram();
     if (diagram) {
+        // update the date of the diagram
+        window.localStorage.setItem(diagram.name, Date.now());
         // get the lock state from settings
         diagram.isLocked().then((locked) => {
             console.log(
@@ -263,4 +365,5 @@ export {
     have_all,
     have_any,
     add_selection_callback,
+    hide_diagram as hide,
 };
