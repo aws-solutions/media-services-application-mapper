@@ -442,9 +442,10 @@ $("#bulk-delete-all-button").click(async function () {
     let diagrams = await settings.get("diagrams");
     let diagram_count = diagrams.length;
     confirmation.show(
-        `< p > This action will delete ${diagram_count} diagram${diagram_count == 1 ? "" : "s"
+        `<p> This action will delete ${diagram_count} diagram${diagram_count == 1 ? "" : "s"
         }, ${channel_count} tile${channel_count == 1 ? "" : "s"
-        }, and all alarm subscriptions in the tool.The browser will reload after completion.Continue ?</p > `,
+        }, all alarm subscriptions and notes associated with resources in the tool. 
+        The browser will reload after completion. Continue? </p >`,
         async function () {
             await Promise.all([
                 (await import("./layout.js")).delete_all(),

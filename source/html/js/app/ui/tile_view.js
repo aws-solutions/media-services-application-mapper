@@ -379,7 +379,11 @@ const redraw_tiles = async function () {
                         $(`#${dropdown_id}`).append(item);
                         (function () {
                             $(`#${menu_item_id}`).click(() => {
-                                const diagram = diagrams.get_by_name(match.diagram);
+                                let hidden_diagrams = diagrams.get_hidden_diagrams();
+                                var diagram = diagrams.get_by_name(match.diagram);
+                                if (_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
+                                    diagrams.add(diagram.name, diagram.view_id, false);
+                                } 
                                 diagram.network.once("afterDrawing", function () {
                                     diagram.network.fit({
                                         nodes: match.found,
@@ -387,15 +391,8 @@ const redraw_tiles = async function () {
                                     });
                                     diagram.blink(10, match.found);
                                 });
-                                let hidden_diagrams = diagrams.get_hidden_diagrams();
-                                if (_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
-                                    let this_diagram = diagrams.add(diagram.name, diagram.view_id, false);
-                                    this_diagram.blink(10, match.found);
-                                    this_diagram.show();
-                                }
-                                else {
-                                    diagram.show();
-                                }
+                                $("#view_tile_diagram_dialog").modal("hide");
+                                diagram.show();
                             });
                         })();
                     }
