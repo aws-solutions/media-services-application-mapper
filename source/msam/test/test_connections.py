@@ -4,7 +4,6 @@ This module is provides unit tests for the cloudwatch.py module.
 
 # pylint: disable=C0415,W0201
 
-from datetime import datetime
 import unittest
 from unittest.mock import patch
 
@@ -20,7 +19,7 @@ class TestConnections(unittest.TestCase):
     def test_connection_item(self, patched_env, patched_resource,
                              patched_client):
         """
-        Test the update_alarm_records function
+        Test the connection_item function
         """
         from chalicelib import connections
         item = connections.connection_item("arn", "from", "to", "service",
@@ -32,7 +31,7 @@ class TestConnections(unittest.TestCase):
     def test_connection_to_ddb_item(self, patched_env, patched_resource,
                                     patched_client):
         """
-        Test the update_alarm_records function
+        Test the connection_to_ddb_item function
         """
         from chalicelib import connections
         item = connections.connection_to_ddb_item("from", "to", "service", {
@@ -46,7 +45,7 @@ class TestConnections(unittest.TestCase):
     def test_connection_to_ddb_item_pl(self, patched_env, patched_resource,
                                        patched_client):
         """
-        Test the update_alarm_records function
+        Test the connection_to_ddb_item_pl function
         """
         from chalicelib import connections
         item = connections.connection_to_ddb_item_pl("from", "to", "service", {
@@ -60,7 +59,7 @@ class TestConnections(unittest.TestCase):
     def test_fetch_running_pipelines_count(self, patched_env, patched_resource,
                                            patched_client):
         """
-        Test the update_alarm_records function
+        Test the fetch_running_pipelines_count function
         """
         from chalicelib import connections
         count = connections.fetch_running_pipelines_count(
@@ -74,7 +73,7 @@ class TestConnections(unittest.TestCase):
     def test_update_connection_ddb_items(self, patched_env, patched_resource,
                                            patched_client, patched_cache):
         """
-        Test the update_alarm_records function
+        Test the update_connection_ddb_items function
         """
         from chalicelib import connections
         connections.update_connection_ddb_items()

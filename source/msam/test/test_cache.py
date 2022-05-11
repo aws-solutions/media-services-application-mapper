@@ -4,7 +4,6 @@ This module is provides unit tests for the cache.py module.
 
 # pylint: disable=C0415
 
-from ast import arg
 import unittest
 from unittest.mock import patch
 from botocore.exceptions import ClientError
@@ -17,11 +16,19 @@ TESTCASE_STATE = {"exception_raised": False}
 
 
 def boto_resource_error(*args, **kwargs):
+    """
+    This function is a replacement for boto3.session.Session.resource that
+    raises an exception on use
+    """
     TESTCASE_STATE['exception_raised'] = True
     raise ClientError({}, 'unittest')
 
 
 def internal_exception_raised():
+    """
+    This function is responsible for indicating if an
+    internal exception was raised within the function under test
+    """
     return TESTCASE_STATE['exception_raised']
 
 
