@@ -451,7 +451,7 @@ $("#bulk-delete-all-button").click(async function () {
                 (await import("./layout.js")).delete_all(),
                 (await import("../channels.js")).delete_all(),
                 (await import("../alarms.js")).delete_all_subscribers(),
-                (await import("../notes.js")).delete_resource_notes()
+                (await import("../notes.js")).delete_all_resource_notes()
             ]);
             window.location.reload();
         }
