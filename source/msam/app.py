@@ -75,7 +75,7 @@ def get_view_layout(view):
     """
     API entry point for retrieving all item positions in a view.
     """
-    return node_layout.get_view_layout(app.current_request, view)
+    return node_layout.get_view_layout(view)
 
 
 @app.route('/layout/nodes/{view}/{node_id}',
