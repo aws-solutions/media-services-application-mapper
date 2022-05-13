@@ -62,24 +62,9 @@ var add_diagram = function (name, view_id, save) {
     return new_diagram;
 };
 
-var show_diagram = function (name, view_id) {
-    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
-    window.localStorage.setItem(name, Date.now());
-    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown+=1);
-    settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
-        if (diagrams_shown > max_number_diagrams) {
-            console.log("exceeded number of diagrams to show");
-            let diagram_to_hide = oldest_viewed_diagram();
-            hide_diagram(diagrams[diagram_to_hide.name], false, true);
-        }
-    });
-};
-
-
 // hides the tab of the diagram
 var hide_diagram = function (diagram, show_tile = true, decrement) {
     $("#" + diagram.tab_id).hide();
-    // $("#" + diagram.tab_id).removeClass("active");
     if (show_tile) {
         $("#channel-tiles-tab").tab("show");
     }
@@ -409,6 +394,5 @@ export {
     have_any,
     add_selection_callback,
     hide_diagram as hide,
-    get_hidden_diagrams,
-    show_diagram as show
+    get_hidden_diagrams
 };
