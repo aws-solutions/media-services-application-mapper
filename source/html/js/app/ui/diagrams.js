@@ -32,20 +32,24 @@ var add_selection_callback = function (callback) {
 
 var add_diagram = function (name, view_id, save) {
     let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
-    const new_diagram = diagram_factory.create(name, view_id);
-    diagrams[name] = new_diagram;
+    var new_diagram = get_by_name(name);
+    if (!new_diagram){
+        new_diagram = diagram_factory.create(name, view_id);
+        diagrams[name] = new_diagram;
+
+        new_diagram.add_singleclick_callback(function (diagram, event) {
+            for (let callback of selection_callbacks) {
+                try {
+                    callback(diagram, event);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+    }
     if (save) {
         save_diagrams();
     }
-    new_diagram.add_singleclick_callback(function (diagram, event) {
-        for (let callback of selection_callbacks) {
-            try {
-                callback(diagram, event);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    });
     window.localStorage.setItem(name, Date.now());
     window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown+=1);
     settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
@@ -58,9 +62,24 @@ var add_diagram = function (name, view_id, save) {
     return new_diagram;
 };
 
+var show_diagram = function (name, view_id) {
+    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
+    window.localStorage.setItem(name, Date.now());
+    window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown+=1);
+    settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
+        if (diagrams_shown > max_number_diagrams) {
+            console.log("exceeded number of diagrams to show");
+            let diagram_to_hide = oldest_viewed_diagram();
+            hide_diagram(diagrams[diagram_to_hide.name], false, true);
+        }
+    });
+};
+
+
 // hides the tab of the diagram
 var hide_diagram = function (diagram, show_tile = true, decrement) {
     $("#" + diagram.tab_id).hide();
+    // $("#" + diagram.tab_id).removeClass("active");
     if (show_tile) {
         $("#channel-tiles-tab").tab("show");
     }
@@ -348,7 +367,6 @@ const load_hidden_diagrams_list = () => {
     const diagramListButtonContent = `<div id="diagram-list-button" style="${listStyle}"><span title="Show List of Hidden Diagrams" id="diagram-list-icon" class="material-icons">list</span></div>`;
     diagramListDiv.replaceWith(diagramListButtonContent);
     $("#diagram-list-button").click(() => {
-        console.log("button clicked");
         $("#hidden_diagrams_lg").empty();
         // populate div inside the offcanvas with list of hidden diagrams
         let hidden_diagrams_list = get_hidden_diagrams();
@@ -391,5 +409,6 @@ export {
     have_any,
     add_selection_callback,
     hide_diagram as hide,
-    get_hidden_diagrams
+    get_hidden_diagrams,
+    show_diagram as show
 };
