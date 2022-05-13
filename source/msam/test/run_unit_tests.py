@@ -12,6 +12,7 @@ from test.test_cloudwatch import *
 from test.test_connections import *
 from test.test_layout import *
 from test.test_nodes import *
+from test.test_tags import *
 
 if __name__ == '__main__':
     unittest.main(verbosity=3)
