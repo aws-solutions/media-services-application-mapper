@@ -268,6 +268,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
         </div>
     </nav>
     <div id="diagram-lock-button" class="d-none"></div>
+    <div id="diagram-list-button" class="d-none"></div>
+
     <div id="diagram" style="height: 60%; width: 100%;">
         <div class="tab-content" id="diagram-tab-content" style="height: 100%; width: 100%;">
             <div id="channel-tiles-outer" class="tab-pane d-none" role="tabpanel" aria-labelledby="channel-tiles-tab"
@@ -465,7 +467,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
                 <div id="notes-editable-markdown" class="d-none">
                     <h6 class="card-subtitle mb-2 text-muted" id="notes-editable-markdown-header">Header Placeholder</h6>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="notes-textarea">Edit Resource Notes - Markdown Supported</label>
                         <textarea class="form-control" id="notes-textarea" rows="3"></textarea>
                     </div>
@@ -512,20 +514,18 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <form>
-                            <div class="form-group row">
-                                <label for="input_endpoint_url" class="col-2 col-form-label">Endpoint URL</label>
-                                <div class="col-10">
-                                    <input type="text" class="form-control" id="input_endpoint_url" placeholder="">
-                                </div>
+                        <div class="row mb-3">
+                            <label for="input_endpoint_url" class="col-2 col-form-label">Endpoint URL</label>
+                            <div class="col-10">
+                                <input type="text" class="form-control" id="input_endpoint_url" placeholder="">
                             </div>
-                            <div class="form-group row">
-                                <label for="input_endpoint_key" class="col-2 col-form-label">API Key</label>
-                                <div class="col-10">
-                                    <input type="password" class="form-control" id="input_endpoint_key" placeholder="">
-                                </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_endpoint_key" class="col-2 col-form-label">API Key</label>
+                            <div class="col-10">
+                                <input type="password" class="form-control" id="input_endpoint_key" placeholder="">
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <!-- <div class="btn-group-toggle" data-bs-toggle="buttons"> -->
@@ -1048,6 +1048,19 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Hidden diagrams dialog -->
+    <!-- Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="hidden_diagrams" aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Click on a hidden diagram to display</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+         <div id="hidden_diagrams_content">
+         </div>
+      </div>
     </div>
 
 </body>

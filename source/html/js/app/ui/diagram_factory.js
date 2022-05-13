@@ -351,6 +351,7 @@ class Diagram {
     }
 
     show() {
+        $("#" + this.tab_id).show();
         $("#" + this.tab_id).tab("show");
     }
 

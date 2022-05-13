@@ -379,7 +379,11 @@ const redraw_tiles = async function () {
                         $(`#${dropdown_id}`).append(item);
                         (function () {
                             $(`#${menu_item_id}`).click(() => {
-                                const diagram = diagrams.get_by_name(match.diagram);
+                                let hidden_diagrams = diagrams.get_hidden_diagrams();
+                                var diagram = diagrams.get_by_name(match.diagram);
+                                if (_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
+                                    diagrams.add(diagram.name, diagram.view_id, false);
+                                } 
                                 diagram.network.once("afterDrawing", function () {
                                     diagram.network.fit({
                                         nodes: match.found,
@@ -387,6 +391,7 @@ const redraw_tiles = async function () {
                                     });
                                     diagram.blink(10, match.found);
                                 });
+                                $("#view_tile_diagram_dialog").modal("hide");
                                 diagram.show();
                             });
                         })();
@@ -404,6 +409,7 @@ const redraw_tiles = async function () {
                             const diagram = diagrams.add(
                                 local_channel_name,
                                 _.snakeCase(local_channel_name),
+                                true,
                                 true
                             );
                             const callback = function () {
@@ -483,7 +489,7 @@ $("#view_tile_diagram_generate_diagram_button").on("click", function () {
     const node_ids = JSON.parse(
         $("#view_tile_diagram_dialog").attr("data-node-ids")
     );
-    const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
+    const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true, true);
     // populate
     const nodes = _.compact(model.nodes.get(node_ids));
     diagram.nodes.update(nodes);

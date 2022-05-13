@@ -295,9 +295,7 @@ $("#remove-diagram-button,#diagram_remove_diagram").on("click", function () {
 $("#diagram_hide_diagram").on("click", function () {
     let diagram = diagrams.shown();
     if (diagram) {
-        diagrams.hide(diagram.name);
-        let message = `${diagram.name} hidden`;
-        alert.show(message);
+        diagrams.hide(diagram, true, true);
     }
 });
 
