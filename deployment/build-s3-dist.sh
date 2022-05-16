@@ -164,6 +164,13 @@ cd $source_dir/html
 rm -rf node_modules
 npm install
 
+# determine what we need to keep
+echo thinning browser application dependencies
+KEEPDEPS=$(mktemp /tmp/keepdeps.XXXXXX)
+grep -o -e 'node_modules/[^\"]*' index.html >$KEEPDEPS
+find node_modules -type f -print | grep -Fxvf $KEEPDEPS | xargs rm -f
+find node_modules -type d -empty -delete
+
 # add build stamp
 cd $source_dir/html
 echo "updating browser app build stamp"
