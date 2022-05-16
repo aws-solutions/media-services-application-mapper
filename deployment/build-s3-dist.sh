@@ -167,6 +167,7 @@ npm install
 # determine what we need to keep
 echo thinning browser application dependencies
 KEEPDEPS=$(mktemp /tmp/keepdeps.XXXXXX)
+# extract the JavaScript and CSS content in use
 grep -o -e 'node_modules/[^\"]*' index.html >$KEEPDEPS
 find node_modules -type f -print | grep -Fxvf $KEEPDEPS | xargs rm -f
 find node_modules -type d -empty -delete
@@ -176,7 +177,7 @@ cd $source_dir/html
 echo "updating browser app build stamp"
 cp -f js/app/build-tmp.js js/app/build.js
 sed -i -e "s/VERSION/$VERSION/g" js/app/build.js
-zip -q -r -9 $build_dist_dir/msam-web-$STAMP.zip *
+zip -q -r -9 $build_dist_dir/msam-web-$STAMP.zip * -x package.json package-lock.json
 rm -f js/app/build.js-e
 
 # create a digest for the web content
