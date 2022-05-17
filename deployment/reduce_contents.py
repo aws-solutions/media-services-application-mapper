@@ -8,8 +8,7 @@ import os
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Reduce a folder'
-                                     's contents to only those in a file list')
+    parser = argparse.ArgumentParser(description="""Reduce a folder's contents to only those in a file list""")
     parser.add_argument('--file',
                         required=True,
                         help='retain files and folders in this file')
