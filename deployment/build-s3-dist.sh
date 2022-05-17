@@ -164,12 +164,18 @@ cd $source_dir/html
 rm -rf node_modules
 npm install
 
-# determine what we need to keep
+# determine what we need to keep in node_modules
 echo thinning browser application dependencies
 KEEPDEPS=$(mktemp /tmp/keepdeps.XXXXXX)
-# extract the JavaScript and CSS content in use
-grep -o -e 'node_modules/[^\"]*' index.html >$KEEPDEPS
-find node_modules -type f -print | grep -Fxvf $KEEPDEPS | xargs rm -f
+echo dependencies to keep are stored in $KEEPDEPS
+# extract the JavaScript content in use
+grep -o -e 'node_modules/[^\"]*\.js' index.html >$KEEPDEPS
+# keep all the .css related files
+find node_modules -type f -name '*.css' -print >>$KEEPDEPS
+find node_modules -type f -name '*.woff*' -print >>$KEEPDEPS
+# remove everything else
+$template_dir/reduce_contents.py --file $KEEPDEPS --folder node_modules --execute
+# prune empty folders
 find node_modules -type d -empty -delete
 
 # add build stamp
