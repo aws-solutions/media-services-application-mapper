@@ -239,6 +239,16 @@ const update_lock_visibility = () => {
     }
 };
 
+const update_hide_visibility = () => {
+    // are we showing a diagram or tiles?
+    let diagram = shown_diagram();
+    if (diagram) {
+        $("#diagram-hide-button").removeClass("d-none");
+    } else {
+        $("#diagram-hide-button").addClass("d-none");
+    }
+};
+
 const update_lock_state = () => {
     const menu_ids = [
         "diagram_manage_contents",
@@ -283,6 +293,29 @@ const update_lock_state = () => {
             }
         });
     }
+};
+
+const refresh_hide_compartment = () => {
+    // do this relative to the diagram div
+    const diagramDiv = $("#diagram");
+    const buttonDiv = $("#diagram-hide-button");
+    // get the location and size of the diagram div
+    const diagramPosition = diagramDiv.position();
+    const width = diagramDiv.width();
+    // create
+    const h_offset = 30;
+    const v_offset = 58;
+    const style = `position: absolute; top: ${diagramPosition.top + v_offset
+        }px; left: ${width - h_offset}px; z-index: 500; cursor: pointer;`;
+    const buttonContent = `<div id="diagram-hide-button" style="${style}"><span title="Hide Diagram" id="diagram-hide-icon" class="material-icons">cancel_presentation</span></div>`;
+    buttonDiv.replaceWith(buttonContent);
+    $("#diagram-hide-button").click(() => {
+        let diagram = shown_diagram();
+        if (diagram) {
+            hide_diagram(diagram, true, true);
+        }
+    });
+    update_hide_visibility();
 };
 
 const refresh_lock_compartment = () => {
@@ -362,6 +395,7 @@ const load_hidden_diagrams_list = () => {
 // detect window resize events
 window.addEventListener('resize', function () {
     // reposition absolute diagram elements if needed
+    refresh_hide_compartment();
     refresh_lock_compartment();
     update_lock_state();
     load_hidden_diagrams_list();
@@ -369,11 +403,13 @@ window.addEventListener('resize', function () {
 
 // this is the initialization code for the diagrams component
 load_diagrams().then(() => {
+    refresh_hide_compartment();
     refresh_lock_compartment();
     load_hidden_diagrams_list();
     $("#diagram-tab").on("shown.bs.tab", () => {
         update_lock_visibility();
         update_lock_state();
+        update_hide_visibility();
     });
     var current_url = new URL(window.location);
     var override_diagram = current_url.searchParams.get("diagram");
