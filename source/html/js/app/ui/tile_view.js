@@ -409,7 +409,6 @@ const redraw_tiles = async function () {
                             const diagram = diagrams.add(
                                 local_channel_name,
                                 _.snakeCase(local_channel_name),
-                                true,
                                 true
                             );
                             const callback = function () {
@@ -489,7 +488,7 @@ $("#view_tile_diagram_generate_diagram_button").on("click", function () {
     const node_ids = JSON.parse(
         $("#view_tile_diagram_dialog").attr("data-node-ids")
     );
-    const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true, true);
+    const diagram = diagrams.add(tile_name, _.snakeCase(tile_name), true);
     // populate
     const nodes = _.compact(model.nodes.get(node_ids));
     diagram.nodes.update(nodes);
