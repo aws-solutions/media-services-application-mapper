@@ -25,6 +25,9 @@ const decorate_information = function (drawing, font_size, width, height, id) {
         if (node.data.Source.EntitlementArn) {
             source_type = "Entitlement";
         }
+        else if (node.data.VpcInterfaces) {
+            source_type = "VPC";            
+        } 
         tools.set_info_text(source_type, drawing, font_size, width);
     }
 };
