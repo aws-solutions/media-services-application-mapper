@@ -40,7 +40,8 @@ const notes_tabulator = new Tabulator(
                 title: "Notes (truncated to 200 chars)",
                 field: "notes",
                 headerFilter: true,
-                formatter: "html"
+                formatter: "html",
+                tooltip: false
             },
             {
                 title: "Resource Exists",
