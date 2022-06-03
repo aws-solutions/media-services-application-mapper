@@ -35,7 +35,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <script src="node_modules/showdown/dist/showdown.min.js"></script>
     <script src="node_modules/xss/dist/xss.min.js"></script>
     <script src="js/app/main.js" type="module"></script>
-    
+
     <style>
         .borderless td,
         .borderless th {
@@ -95,166 +95,172 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
         .btn-link {
             text-decoration: none;
         }
-        
+
         a {
             text-decoration: none;
         }
-
     </style>
 </head>
 
 <body style="height: 100%; width: 100%; position: absolute;">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-        <a class="navbar-brand my-0 py-0" href="#" style="font-size: small;">
-            <b>
-                <div class="my-0 py-0">Media Services</div>
-                <div class="my-0 py-0">Application Mapper</div>
-            </b>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="settings_dropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Settings
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="settings_dropdown">
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#endpoint_connection_modal">Connection
-                            Settings</a>
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal" 
-                            data-bs-target="#advanced_settings_modal" id="advanced_settings_button">Advanced
-                            Settings</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Tiles
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="channels_dropdown">
-                        <a class="dropdown-item" href="#" 
-                            id="tiles_add_new_tile_button">Add New Tile</a>
-                        <a class="dropdown-item" href="#" 
-                            id="tiles_add_to_tile_button">Add Selected Node to Tile</a>
-                        <a class="dropdown-item" href="#" 
-                            id="tiles_duplicate_selected_tile_button">Duplicate Selected Tile</a>
-                        <a class="dropdown-item" href="#" 
-                            id="tiles_edit_selected_tile_button">Show/Edit Contents of Selected Tile</a>
-                        <a class="dropdown-item" href="#"
-                            id="tiles_delete_selected_tile_button">Delete Selected Tile</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="diagram_dropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Diagram
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="diagram_dropdown">
-                        <a class="dropdown-item" href="#" id="diagram_add_diagram">Add New Diagram</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="diagram_manage_contents">Manage Diagram Contents</a>
-                        <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Downstream Connected Nodes</a>
-                        <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Upstream Connected Nodes</a>
-                        <a class="dropdown-item" href="#" id="diagram_add_all_nodes">Add All Connected Nodes</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="diagram_duplicate_diagram">Duplicate Current Diagram</a>
-                        <a class="dropdown-item" href="#" id="diagram_remove_diagram">Delete Current Diagram</a>
-                        <a class="dropdown-item" href="#" id="diagram_hide_diagram"> Hide Current Diagram</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="diagram_remove_selected">Remove Selected Nodes</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="nodes_select_downstream">Expand Selection Downstream</a>
-                        <a class="dropdown-item" href="#" id="nodes_select_upstream">Expand Selection Upstream</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="nodes_align_vertical">Align Selected Vertically</a>
-                        <a class="dropdown-item" href="#" id="nodes_align_horizontal">Align Selected Horizontally</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="nodes_layout_vertical">Layout Hierarchical Top-Bottom</a>
-                        <a class="dropdown-item" href="#" id="nodes_layout_horizontal">Layout Hierarchical
-                            Left-Right</a>                        
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" id="nodes_layout_isolated">Layout Isolated Nodes</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="alarms_dropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Alarms
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="alarms_dropdown">
-                        <a class="dropdown-item" href="#" id="alarms_subscribe_button">Subscribe
-                            Selected to
-                            Alarms</a>
-                    </div>
-                </li>
+            <a class="navbar-brand my-0 py-0" href="#" style="font-size: small;">
+                <b>
+                    <div class="my-0 py-0">Media Services</div>
+                    <div class="my-0 py-0">Application Mapper</div>
+                </b>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="settings_dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Settings
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="settings_dropdown">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#endpoint_connection_modal">Connection
+                                Settings</a>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#advanced_settings_modal" id="advanced_settings_button">Advanced
+                                Settings</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="channels_dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tiles
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="channels_dropdown">
+                            <a class="dropdown-item" href="#" id="tiles_add_new_tile_button">Add New Tile</a>
+                            <a class="dropdown-item" href="#" id="tiles_add_to_tile_button">Add Selected Node to
+                                Tile</a>
+                            <a class="dropdown-item" href="#" id="tiles_duplicate_selected_tile_button">Duplicate
+                                Selected Tile</a>
+                            <a class="dropdown-item" href="#" id="tiles_edit_selected_tile_button">Show/Edit Contents of
+                                Selected Tile</a>
+                            <a class="dropdown-item" href="#" id="tiles_delete_selected_tile_button">Delete Selected
+                                Tile</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="diagram_dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Diagram
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="diagram_dropdown">
+                            <a class="dropdown-item" href="#" id="diagram_add_diagram">Add New Diagram</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="diagram_manage_contents">Manage Diagram Contents</a>
+                            <a class="dropdown-item" href="#" id="diagram_add_downstream">Add Downstream Connected
+                                Nodes</a>
+                            <a class="dropdown-item" href="#" id="diagram_add_upstream">Add Upstream Connected Nodes</a>
+                            <a class="dropdown-item" href="#" id="diagram_add_all_nodes">Add All Connected Nodes</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="diagram_duplicate_diagram">Duplicate Current
+                                Diagram</a>
+                            <a class="dropdown-item" href="#" id="diagram_remove_diagram">Delete Current Diagram</a>
+                            <a class="dropdown-item" href="#" id="diagram_hide_diagram"> Hide Current Diagram</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="diagram_remove_selected">Remove Selected Nodes</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="nodes_select_downstream">Expand Selection
+                                Downstream</a>
+                            <a class="dropdown-item" href="#" id="nodes_select_upstream">Expand Selection Upstream</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="nodes_align_vertical">Align Selected Vertically</a>
+                            <a class="dropdown-item" href="#" id="nodes_align_horizontal">Align Selected
+                                Horizontally</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="nodes_layout_vertical">Layout Hierarchical
+                                Top-Bottom</a>
+                            <a class="dropdown-item" href="#" id="nodes_layout_horizontal">Layout Hierarchical
+                                Left-Right</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="nodes_layout_isolated">Layout Isolated Nodes</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="alarms_dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Alarms
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="alarms_dropdown">
+                            <a class="dropdown-item" href="#" id="alarms_subscribe_button">Subscribe
+                                Selected to
+                                Alarms</a>
+                        </div>
+                    </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="notes_dropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Notes
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="notes_dropdown">
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#manage_notes_modal" id="manage_notes_button">Manage
-                            Notes</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notes_dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Notes
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="notes_dropdown">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#manage_notes_modal" id="manage_notes_button">Manage
+                                Notes</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="help_dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Help
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="help_dropdown" id="help-dropdown-menu">
+                            <a class="dropdown-item"
+                                href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=bug&template=bug_report.md&title="
+                                target="_blank" id="bug-report-button">Bug Report</a>
+                            <a class="dropdown-item"
+                                href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=enhancement&template=feature_request.md&title="
+                                target="_blank" id="request-feature-button">Feature Request</a>
+                            <a class="dropdown-item"
+                                href="https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html"
+                                target="_blank" id="implementation-guide-button">Implementation Guide</a>
+                            <a class="dropdown-item"
+                                href="https://aws.amazon.com/solutions/implementations/media-services-application-mapper/"
+                                target="_blank" id="landing-page-button">Solution Landing Page</a>
+                            <a class="dropdown-item" data_toggle="" href="#" id="build-version-button">MSAM Version</a>
+                        </div>
+                    </li>
+                </ul>
+                <div id="alert_div" class="alert alert-dark my-0 py-1 px-4 mx-3" role="alert" style="display: none;">
+                    Something happened.
+                </div>
+                <!-- buttons for custom connections -->
+                <span class="px-4 my-2 my-lg-0">
+                    <button type="button" id="connect-nodes-button"
+                        class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Connect Nodes"><i
+                            class="material-icons">trending_flat</i></button>
+                    <button type="button" id="edit-connection-button"
+                        class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Edit Connection"><i
+                            class="material-icons">create</i></button>
+                    <button type="button" id="delete-connection-button"
+                        class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Delete Connection"><i
+                            class="material-icons">remove_circle_outline</i></button>
+                </span>
+
+                <span class="row g-2">
+                    <div class="col-auto">
+                        <input class="form-control mx-1" id="search_input" placeholder="Search Terms"
+                            title="Search Terms" onsubmit="() => { return false; }">
                     </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="help_dropdown" role="button" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Help
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="help_dropdown" id="help-dropdown-menu">
-                        <a class="dropdown-item"
-                            href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=bug&template=bug_report.md&title="
-                            target="_blank" id="bug-report-button">Bug Report</a>
-                        <a class="dropdown-item"
-                            href="https://github.com/aws-solutions/aws-media-services-application-mapper/issues/new?assignees=&labels=enhancement&template=feature_request.md&title="
-                            target="_blank" id="request-feature-button">Feature Request</a>
-                        <a class="dropdown-item"
-                            href="https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/welcome.html"
-                            target="_blank" id="implementation-guide-button">Implementation Guide</a>
-                        <a class="dropdown-item"
-                            href="https://aws.amazon.com/solutions/implementations/media-services-application-mapper/"
-                            target="_blank" id="landing-page-button">Solution Landing Page</a>
-                        <a class="dropdown-item" data_toggle="" href="#" id="build-version-button">MSAM Version</a>
+                    <div class="col-auto">
+                        <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now"
+                            id="search-now-button">
+                            <i class="material-icons">search</i>
+                        </a>
                     </div>
-                </li>
-            </ul>
-            <div id="alert_div" class="alert alert-dark my-0 py-1 px-4 mx-3" role="alert" style="display: none;">
-                Something happened.
+                </span>
             </div>
-            <!-- buttons for custom connections -->
-            <span class="px-4 my-2 my-lg-0">
-                <button type="button" id="connect-nodes-button"
-                    class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Connect Nodes"><i
-                        class="material-icons">trending_flat</i></button>
-                <button type="button" id="edit-connection-button"
-                    class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Edit Connection"><i
-                        class="material-icons">create</i></button>
-                <button type="button" id="delete-connection-button"
-                    class="btn btn-outline-info mx-1 p-1 pt-2 px-2 hidden-compartment" title="Delete Connection"><i
-                        class="material-icons">remove_circle_outline</i></button>
-            </span>
-                          
-            <span class="row g-2">
-                <div class="col-auto">
-                    <input class="form-control mx-1" id="search_input" placeholder="Search Terms" title="Search Terms"
-                        onsubmit="() => { return false; }">
-                </div>
-                <div class="col-auto">
-                    <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button">
-                        <i class="material-icons">search</i>
-                    </a>
-                </div>
-            </span>
         </div>
-    </div>
     </nav>
     <nav>
         <div draggable="false" class="nav nav-tabs" id="diagram-tab" role="tablist">
@@ -268,6 +274,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
         </div>
     </nav>
     <div id="diagram-lock-button" class="d-none"></div>
+    <div id="diagram-hide-button" class="d-none"></div>
     <div id="diagram-list-button" class="d-none"></div>
 
     <div id="diagram" style="height: 60%; width: 100%;">
@@ -332,22 +339,24 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div class="tab-pane  mt-3" id="nav-status" role="tabpanel" aria-labelledby="nav-status-tab">
             </div>
             <div class="tab-pane  mt-0 px-0" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab">
-                    <span class="row px-4 py-2 g-2 gx-1">
-                        <div class="col-auto">
-                            <input class="form-control" id="search_input_2" placeholder="Search Terms" title="Search Terms">
-                        </div>
-                        <div class="col-auto">
-                            <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now" id="search-now-button-2">
-                                <i class="material-icons">search</i>
-                            </a>
-                        </div>
-                    </span>
+                <span class="row px-4 py-2 g-2 gx-1">
+                    <div class="col-auto">
+                        <input class="form-control" id="search_input_2" placeholder="Search Terms" title="Search Terms">
+                    </div>
+                    <div class="col-auto">
+                        <a href="#" class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Search Now"
+                            id="search-now-button-2">
+                            <i class="material-icons">search</i>
+                        </a>
+                    </div>
+                </span>
                 <div id="accordion" class="m-0 p-0">
                     <div class="card">
                         <div class="card-header py-0 my-0" id="headingOne">
                             <h5 class="mb-0">
-                                <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#global-model-collapse"
-                                    aria-expanded="false" aria-controls="global-model-collapse">
+                                <button class="btn btn-link" data-bs-toggle="collapse"
+                                    data-bs-target="#global-model-collapse" aria-expanded="false"
+                                    aria-controls="global-model-collapse">
                                     Inventory (<span id="inventory-match-count">0</span> matches)
                                     <span id="global-model-search-text"></span>
                                 </button>
@@ -455,18 +464,17 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
             <div class="tab-pane  mt-3 px-3" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
                 <div id="notes-buttons-compartment">
                     <span class="px-4 my-2 my-lg-0 float-end">
-                        <button type="button" id="edit-notes"
-                            class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Edit Notes"><i
-                                class="material-icons">create</i></button>
-                        <button type="button" id="delete-notes"
-                            class="btn btn-outline-info mx-1 p-1 pt-2 px-2" title="Delete Notes"><i
-                                class="material-icons">remove_circle_outline</i></button>
+                        <button type="button" id="edit-notes" class="btn btn-outline-info mx-1 p-1 pt-2 px-2"
+                            title="Edit Notes"><i class="material-icons">create</i></button>
+                        <button type="button" id="delete-notes" class="btn btn-outline-info mx-1 p-1 pt-2 px-2"
+                            title="Delete Notes"><i class="material-icons">remove_circle_outline</i></button>
                     </span>
                 </div>
                 <div id="notes-rendered-markdown">
                 </div>
                 <div id="notes-editable-markdown" class="d-none">
-                    <h6 class="card-subtitle mb-2 text-muted" id="notes-editable-markdown-header">Header Placeholder</h6>
+                    <h6 class="card-subtitle mb-2 text-muted" id="notes-editable-markdown-header">Header Placeholder
+                    </h6>
                     <div class="mb-3">
                         <label for="notes-textarea">Edit Resource Notes - Markdown Supported</label>
                         <textarea class="form-control" id="notes-textarea" rows="3"></textarea>
@@ -539,13 +547,16 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                         <!-- </div> -->
                         <div class="dropdown">
                             <button class="btn btn-info dropdown-toggle" type="button" id="connectionHistoryMenuButton"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 42px; width: 110px;">History</button>
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                style="height: 42px; width: 110px;">History</button>
                             <div id="connectionHistoryDropdownMenu" class="dropdown-menu"
                                 aria-labelledby="dropdownMenuButton">
                             </div>
                         </div>
-                        <button type="button" id="save_endpoint_connection" class="btn btn-success" style="height: 42px; width: 110px;">Connect</button>
-                        <button type="button" id="cancel_endpoint_connection" class="btn btn-danger" style="height: 42px; width: 110px;">Cancel</button>
+                        <button type="button" id="save_endpoint_connection" class="btn btn-success"
+                            style="height: 42px; width: 110px;">Connect</button>
+                        <button type="button" id="cancel_endpoint_connection" class="btn btn-danger"
+                            style="height: 42px; width: 110px;">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -712,7 +723,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
             </div>
         </div>
     </div>
-      
+
     <!-- Manage Notes -->
     <div class="modal fade" id="manage_notes_modal" tabindex="-1" role="dialog"
         aria-labelledby="manage_notes_modal_title" aria-hidden="true">
@@ -813,8 +824,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
                             <button type="button" id="bulk-delete-all-alarm-subscriptions-button"
                                 class="btn btn-secondary my-2" title="Deletes all alarm subscriptions">Alarm
                                 Subscriptions</button>
-                            <button type="button" id="bulk-delete-all-notes-button"
-                                class="btn btn-secondary my-2" title="Deletes all notes ">Notes</button>                               
+                            <button type="button" id="bulk-delete-all-notes-button" class="btn btn-secondary my-2"
+                                title="Deletes all notes ">Notes</button>
                             <button type="button" id="bulk-delete-all-button" class="btn btn-secondary my-2"
                                 title="Deletes all diagrams, tiles, alarm subscriptions, and notes">All</button>
                         </span>
@@ -1053,14 +1064,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
     <!-- Hidden diagrams dialog -->
     <!-- Offcanvas -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="hidden_diagrams" aria-labelledby="offcanvasRightLabel">
-      <div class="offcanvas-header">
-        <h5 id="offcanvasRightLabel">Click on a hidden diagram to display</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-         <div id="hidden_diagrams_content">
-         </div>
-      </div>
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Click on a hidden diagram to display</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="hidden_diagrams_content">
+            </div>
+        </div>
     </div>
 
 </body>
