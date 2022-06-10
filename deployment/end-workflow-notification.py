@@ -7,6 +7,7 @@ and its associated artifacts.
 """
 
 import os
+import sys
 import requests
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
 from urllib.parse import urlparse
@@ -39,4 +40,4 @@ def main():
         return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
