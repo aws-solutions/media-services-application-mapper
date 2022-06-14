@@ -497,6 +497,10 @@ def mediaconnect_flows(region):
         for flow in flows:
             try:
                 flow_details = service.describe_flow(FlowArn=flow['FlowArn'])
+                if "VpcInterfaces" in flow_details["Flow"]:
+                    flow_details["Flow"]["VpcSubnet"]={}
+                    for interface in flow_details["Flow"]["VpcInterfaces"]:
+                        flow_details["Flow"]["VpcSubnet"][interface["Name"]]=interface["SubnetId"]
                 response = service.list_tags_for_resource(ResourceArn=flow["FlowArn"])
                 flow_details["Flow"]["Tags"] = response["Tags"]
             except ClientError as error:

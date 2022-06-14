@@ -802,6 +802,8 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
             "mediaconnect-flow")
         for outer_flow in mediaconnect_flows_cached:
             outer_flow_data = json.loads(outer_flow["data"])
+            outer_flow_egress_ip = outer_flow_data["EgressIp"]
+            outer_flow_vpc = {}
             # process each flow for entitlement
             try:
                 if outer_flow_data["Source"]["EntitlementArn"]:
@@ -819,15 +821,64 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
             except Exception: #nosec
                 # print(error)
                 pass
-            # also, process each flow against each of the same set of flows for regular IP push (standard)
-            outer_flow_egress_ip = outer_flow_data["EgressIp"]
+
+            if "VpcInterfaces" in outer_flow_data:
+                if outer_flow_data["Source"]["Transport"]["Protocol"] == "cdi":
+                    subnet = outer_flow_data["VpcSubnet"][outer_flow_data["Source"]["VpcInterfaceName"]]
+                    # source is ip, port, and subnet all concatenated into one string
+                    outer_flow_vpc["source"] = outer_flow_data["Source"]["IngestIp"]\
+                        + str(outer_flow_data["Source"]["IngestPort"])\
+                        + subnet
+                # if JPEGXS, keep track of two mediainput configurations
+                elif outer_flow_data["Source"]["Transport"]["Protocol"] == "st2110-jpegxs":
+                    # handle the two input configurations
+                    # save as source 1 and source 2?
+                    source_1 = outer_flow_data["Source"]["MediaStreamSourceConfigurations"][0]["InputConfigurations"][0]
+                    source_2 = outer_flow_data["Source"]["MediaStreamSourceConfigurations"][0]["InputConfigurations"][1]
+                    subnet_1 = outer_flow_data["VpcSubnet"][source_1["Interface"]["Name"]]
+                    subnet_2 = outer_flow_data["VpcSubnet"][source_2["Interface"]["Name"]]
+                    # source is ip, port, and subnet all concatenated into one string
+                    outer_flow_vpc["source_1"] = source_1["InputIp"] + str(source_1["InputPort"]) + subnet_1
+                    outer_flow_vpc["source_2"] = source_2["InputIp"] + str(source_2["InputPort"]) + subnet_2
+                else:
+                    print("WARNING: Unhandled MediaConnect VPC protocol type")
 
             # check this egress ip against all the output IPs of each of the flows
             for inner_flow in mediaconnect_flows_cached:
                 inner_flow_data = json.loads(inner_flow["data"])
                 for flow_output in inner_flow_data["Outputs"]:
+                    match = False
                     try:
-                        if flow_output["Destination"] == outer_flow_egress_ip:
+                        # if the outer flow is in a VPC, check each inner flow that's also in a VPC
+                        # outer flow and the inner flow's output's protocol must also match
+                        # before even checking if ip/port/subnet matches
+                        if outer_flow_vpc and ("VpcInterfaces" in inner_flow_data)\
+                            and (outer_flow_data["Source"]["Transport"]["Protocol"] == flow_output["Transport"]["Protocol"]):
+                            print("outer protocol " + outer_flow_data["Source"]["Transport"]["Protocol"])
+                            print("output protocol" + flow_output["Transport"]["Protocol"])
+                            if flow_output["Transport"]["Protocol"] == "cdi":
+                                # compare this output's ip/port/vpc info with that of the outer flow
+                                vpc_name = flow_output["VpcInterfaceAttachment"]["VpcInterfaceName"]
+                                subnet = inner_flow_data["VpcSubnet"][vpc_name]
+                                ip_port_subnet = flow_output["Destination"] + str(flow_output["Port"]) + subnet
+                                # print(ip_port_subnet)
+                                if outer_flow_vpc["source"] == ip_port_subnet:
+                                    match = True
+                            elif flow_output["Transport"]["Protocol"] == "st2110-jpegxs":
+                                # get the two output destinations and
+                                dest_1 = flow_output["MediaStreamOutputConfigurations"][0]["DestinationConfigurations"][0]
+                                dest_2 = flow_output["MediaStreamOutputConfigurations"][0]["DestinationConfigurations"][1]
+                                dest_1_subnet = inner_flow_data["VpcSubnet"][dest_1["Interface"]["Name"]]
+                                dest_2_subnet = inner_flow_data["VpcSubnet"][dest_2["Interface"]["Name"]]
+                                ip_port_subnet_1 = dest_1["DestinationIp"] + str(dest_1["DestinationPort"]) + dest_1_subnet
+                                ip_port_subnet_2 = dest_2["DestinationIp"] + str(dest_2["DestinationPort"]) + dest_2_subnet
+                                if (outer_flow_vpc["source_1"] == ip_port_subnet_1 or outer_flow_vpc["source_1"] == ip_port_subnet_2)\
+                                    and ( outer_flow_vpc["source_2"] == ip_port_subnet_1 or outer_flow_vpc["source_2"] == ip_port_subnet_2):
+                                    match = True
+                        # if not in VPC, process each flow against each of the same set of flows for regular IP push (standard)
+                        elif flow_output["Destination"] == outer_flow_egress_ip:
+                            match = True
+                        if match:
                             config = {
                                 "from":
                                 inner_flow_data["FlowArn"],
