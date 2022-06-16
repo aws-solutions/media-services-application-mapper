@@ -301,6 +301,7 @@ const redraw_tiles = async function () {
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
     for (let channel_name of channel_list) {
         const local_channel_name = channel_name;
+        let preferred_diagram = await settings.get(`${local_channel_name}-preferred-diagram`);
         let border_class = "border-success";
         const channel_members = await channels.retrieve_channel(
             local_channel_name
@@ -334,6 +335,7 @@ const redraw_tiles = async function () {
         const header_id = channel_card_id + "_header";
         const menu_id = channel_card_id + "_menu";
         const dropdown_id = channel_card_id + "_dropdown";
+        const preferred_diagram_div = channel_card_id + "_preferred";
         const tile = `
                         <div draggable="true" class="card ${border_class} ms-4 mb-4 px-0" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${channel_members.length}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
                             <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${local_channel_name}
@@ -372,10 +374,16 @@ const redraw_tiles = async function () {
                 console.log(matches);
                 $(`#${dropdown_id}`).empty();
                 if (matches.length) {
+                    $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Preferred diagram</h6>`);
+                    $(`#${dropdown_id}`).append(`<div id="${preferred_diagram_div}"></div>`);
+                    $(`#${dropdown_id}`).append(`<div class="dropdown-divider"></div>`);
                     $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Matching diagrams</h6>`);
                     for (let match of matches) {
                         const menu_item_id = ui_util.makeid();
-                        const item = `<a id="${menu_item_id}" class="dropdown-item" tabindex="-1" href="#">${match.diagram} (${match.percent}%)</a>`;
+                        const item = `<a id="${menu_item_id}" class="dropdown-item" tabindex="-1" href="#" style="cursor: pointer;" title="Click to Select, Right-click to set as preferred">${match.diagram} (${match.percent}%)</a>`;
+                        if(preferred_diagram != null && preferred_diagram.diagram == match.diagram){
+                            $(`#${preferred_diagram_div}`).append(item);
+                        }
                         $(`#${dropdown_id}`).append(item);
                         (function () {
                             $(`#${menu_item_id}`).click(() => {
@@ -393,6 +401,16 @@ const redraw_tiles = async function () {
                                 });
                                 $("#view_tile_diagram_dialog").modal("hide");
                                 diagram.show();
+                            });
+                        })();
+                        (function () {
+                            $(`#${menu_item_id}`).contextmenu(() => {
+                                let html = `Make ${match.diagram} the preferred diagram for ${channel_name}?`;
+                                confirmation.show(html, function () {
+                                    settings.put(`${channel_name}-preferred-diagram`, {"diagram": match.diagram});
+                                    preferred_diagram = {"diagram": match.diagram};
+                                    alert.show(`Preferred diagram set for ${channel_name}`);
+                                });
                             });
                         })();
                     }
