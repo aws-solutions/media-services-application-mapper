@@ -336,9 +336,11 @@ const redraw_tiles = async function () {
         const menu_id = channel_card_id + "_menu";
         const dropdown_id = channel_card_id + "_dropdown";
         const preferred_diagram_div = channel_card_id + "_preferred";
+        const abbrev_tile_header = (local_channel_name.length > 40) ? 
+                    `${local_channel_name.slice(0, 25)}...` : local_channel_name;
         const tile = `
                         <div draggable="true" class="card ${border_class} ms-4 mb-4 px-0" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${channel_members.length}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
-                            <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${local_channel_name}
+                            <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${abbrev_tile_header}
                             </div>
                             <div class="card-body text-info my-0 py-1">
                                 <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${alert_count === 1 ? "" : "s"}</h5>
