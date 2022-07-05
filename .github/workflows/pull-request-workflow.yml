@@ -179,7 +179,7 @@ jobs:
       - name: Check with Pa11y
         run: |
           cd source/html
-          find . -iname '*.html' | xargs -I '{}' pa11y {}
+          find . -iname '*.html' | xargs -I '{}' pa11y --config ../tools/pa11y.json {}
             
   cfn-lint-job:
     name: Run cfn-lint on templates
