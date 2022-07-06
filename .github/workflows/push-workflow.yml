@@ -107,11 +107,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
 
   build-job:
     name: Run build script
@@ -187,7 +187,7 @@ jobs:
       - name: Check with Pa11y
         run: |
           cd source/html
-          find . -iname '*.html' | xargs -I '{}' pa11y {}
+          find . -iname '*.html' | xargs -I '{}' pa11y --config ../tools/pa11y.json {}
 
   cfn-lint-job:
     name: Run cfn-lint on templates
