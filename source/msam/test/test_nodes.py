@@ -1,5 +1,5 @@
 """
-This module is provides unit tests for the cloudwatch.py module.
+This module provides unit tests for the nodes.py module.
 """
 
 # pylint: disable=C0415,W0201

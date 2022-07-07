@@ -13,6 +13,10 @@ from test.test_connections import *
 from test.test_layout import *
 from test.test_nodes import *
 from test.test_tags import *
+from test.test_content import *
+from test.test_notes import *
+from test.test_settings import *
+from test.test_periodic import *
 
 if __name__ == '__main__':
     unittest.main(verbosity=3)
