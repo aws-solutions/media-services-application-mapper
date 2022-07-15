@@ -71,7 +71,7 @@ def update_alarms():
             alarm_groups[region_name].append(alarm_name)
         print(alarm_groups)
         # update each grouped list for a region
-        for region_name, alarm_names in alarm_groups:
+        for region_name, alarm_names in alarm_groups.items():
             cloudwatch_data.update_alarms(region_name, alarm_names)
     except ClientError as error:
         print(error)
@@ -119,6 +119,7 @@ def update_nodes_generic(update_global_func, update_regional_func,
     Entry point for the CloudWatch scheduled task to discover and cache services.
     """
     try:
+        region_name = None
         inventory_regions_key = "inventory-regions"
         inventory_regions = msam_settings.get_setting(inventory_regions_key)
         if inventory_regions is None:
@@ -212,7 +213,9 @@ def ssm_run_command():      # NOSONAR
                 'Key': 'Owner',
                 'Values': ['Self']
             }])
+        print(document_list)
         document_ids = document_list['DocumentIdentifiers']
+        print(document_ids)
         while "NextToken" in document_list:
             document_list = ssm_client.list_documents(
                 Filters=[{
@@ -229,6 +232,7 @@ def ssm_run_command():      # NOSONAR
 
         document_names = {}
         for document in document_ids:
+            print("document")
             if "Tags" in document:
                 for tag in document["Tags"]:
                     if tag['Key'] == "MSAM-NodeType":
