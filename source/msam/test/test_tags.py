@@ -3,9 +3,6 @@ This module is provides unit tests for the tags.py module.
 """
 
 # pylint: disable=C0415,W0201
-
-import json
-from multiprocessing.connection import Client
 import unittest
 from unittest.mock import MagicMock, patch
 from botocore.exceptions import ClientError

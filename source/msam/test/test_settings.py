@@ -59,4 +59,4 @@ class TestSettings(unittest.TestCase):
         settings.application_settings(mocked_req, KEY)
         
         with patch.object(settings, 'get_setting', side_effect=CLIENT_ERROR):
-             settings.application_settings(mocked_req, KEY)
+            settings.application_settings(mocked_req, KEY)

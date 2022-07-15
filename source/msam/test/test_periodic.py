@@ -111,21 +111,19 @@ class TestPeriodic(unittest.TestCase):
         from chalicelib import periodic
         periodic.update_from_tags()
 
-    @patch('os.environ')
-    @patch('boto3.resource')
     @patch('boto3.client')
+    @patch('boto3.resource')
+    @patch('os.environ')
     def test_ssm_run_command(self, patched_env, patched_resource,
                                 patched_client):
         """
         Test the ssm_run_command function
         """
         from chalicelib import periodic
-        #periodic.ssm_run_command()
-        mocked_obj = MagicMock()
-        mocked_obj.query = MagicMock(return_value = {})
-        print(mocked_obj)
-        patched_resource.return_value = mocked_obj
+        patched_resource.return_value.Table.return_value.query.return_value.get.return_value = \
+            [{"data": "{\"Tags\": {\"MSAM-NodeType\": \"ElementalLive\"}, \"Id\": \"someid\"}"}]
         periodic.ssm_run_command()
+
 
     @patch('boto3.resource')
     @patch('boto3.client')
@@ -194,5 +192,3 @@ class TestPeriodic(unittest.TestCase):
         # with patch.object(settings, 'get_setting', return_value="1850ab37-92a6-4aef-877d-a82cc28a01b7"):
         #     with patch.dict(os.environ, {"SOLUTION_ID": "AwsSolution/SO0048/v1.0.0"}, clear=True):
         #         periodic.report_metrics("stack_name", 1)
-
-

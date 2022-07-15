@@ -184,4 +184,3 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         nodes.node_to_ddb_item("this-arn", "medialive", "us-east-1", {"data": "value"})
-

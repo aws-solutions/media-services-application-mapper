@@ -2,7 +2,7 @@
 This module is provides unit tests for the app.py module.
 """
 
-# pylint: disable=C0415,W0201
+# pylint: disable=C0415,W0201,R0904
 
 import unittest
 from unittest.mock import patch, MagicMock
@@ -209,13 +209,6 @@ class TestApp(unittest.TestCase):
         """
         import app
         app.get_cloudwatch_events_state_source("set", "source")
-
-    # def test_get_cloudwatch_events_state_groups(self, patched_env, patched_resource, patched_client):
-    #     """
-    #     Test the get_cloudwatch_events_state_groups function
-    #     """
-    #     import app
-    #     app.get_cloudwatch_events_state_groups("set")
 
     def test_get_cloudwatch_events_resource_arn(self, patched_env, patched_resource, patched_client):
         """

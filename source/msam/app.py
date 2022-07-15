@@ -55,8 +55,8 @@ CACHE_ITEM_TTL = int(os.environ["CACHE_ITEM_TTL"])
 STACKNAME = os.environ.get("STACKNAME", "")
 
 # DynamoDB
-# DYNAMO_CLIENT = boto3.client("dynamodb")
-# DYNAMO_RESOURCE = boto3.resource("dynamodb")
+DYNAMO_CLIENT = boto3.client("dynamodb")
+DYNAMO_RESOURCE = boto3.resource("dynamodb")
 
 SSM_EVENT_PATTERN = {
     "source": ["aws.ssm"],
@@ -360,17 +360,6 @@ def get_cloudwatch_events_state_source(state, source):
     API entry point to retrieve all alert events in a given state (set, clear) from a specific source.
     """
     return cloudwatch_data.get_cloudwatch_events_state_source(state, source)
-
-
-# @app.route('/cloudwatch/events/state/{state}/groups',
-#            cors=True,
-#            api_key_required=True,
-#            methods=['GET'])
-# def get_cloudwatch_events_state_groups(state):
-#     """
-#     API entry point to retrieve all pipeline events in a given state (set, clear) and grouped by pipeline state (down, degraded, running)
-#     """
-#     return cloudwatch_data.get_cloudwatch_events_state_groups(state)
 
 
 @app.route('/cloudwatch/events/all/{resource_arn}',
