@@ -250,7 +250,7 @@ $("#diagram-tab-content")[0].addEventListener(
 
 $("#diagram-tab-content")[0].addEventListener(
     "drop",
-    function (event) {
+    function (event) {  // NOSONAR
         var tile;
         event.preventDefault();
         if (drag_type === "node" && drag_id) {

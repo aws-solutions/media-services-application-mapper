@@ -9,7 +9,7 @@ var intervalID;
 // interval in millis to update the cache
 var update_interval = 5000;
 
-var update_overlay = function () {
+var update_overlay = function () {  // NOSONAR
     // console.log("info overlay update");
     // get all the overlays
     for (let ov of overlays.all) {

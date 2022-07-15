@@ -6,7 +6,7 @@ import * as layout from "./layout.js";
 import * as alert from "./alert.js";
 
 export function create(diagram) {
-    return (function () {
+    return (function () {   // NOSONAR
         var my_diagram = diagram;
         return new machina.Fsm({
             namespace: my_diagram.name,

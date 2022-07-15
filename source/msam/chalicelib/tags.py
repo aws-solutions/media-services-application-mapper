@@ -31,7 +31,7 @@ DIAGRAM_ATTRIBUTE_VALUES = {":tagname": "MSAM-Diagram"}
 TILE_ATTRIBUTE_VALUES = {":tagname": "MSAM-Tile"}
 
 
-def update_diagrams():
+def update_diagrams():      # NOSONAR
     """
     scan for data with tags with MSAM-Diagram name and include in those named diagrams
     """

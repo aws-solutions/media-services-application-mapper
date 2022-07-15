@@ -87,7 +87,7 @@ function set_notes_data() {
     tiles.channel_list().then(function (results) {
         tiles_list = results;
     });
-    notes.get_all_resource_notes().then(function (all_notes) {
+    notes.get_all_resource_notes().then(function (all_notes) {  // NOSONAR
         for (let note of all_notes) {
             let converter = new showdown.Converter();
             // truncate notes to 200 characters

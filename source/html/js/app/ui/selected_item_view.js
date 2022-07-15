@@ -21,7 +21,7 @@ var notes_tab_id = "nav-notes-tab";
 
 const blinks = 10;
 
-var display_selected_nodes = function (node_ids) {
+var display_selected_nodes = function (node_ids) {  // NOSONAR
     var node = model.nodes.get(node_ids[0]);
     var matches = diagrams.have_all(node.id);
     var diagram_links = "";

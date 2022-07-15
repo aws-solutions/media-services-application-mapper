@@ -135,7 +135,7 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
     });
 };
 
-const updateEventAlertState = (current_alerts, previous_alerts) => {
+const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSONAR
     /** iterate through current 'set' alerts */
     let alerting_nodes = new Set();
 

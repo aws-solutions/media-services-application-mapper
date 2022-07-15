@@ -120,7 +120,7 @@ def update_connection_ddb_items():
         print(error)
 
 
-def mediastore_container_medialive_input_ddb_items():
+def mediastore_container_medialive_input_ddb_items():   # NOSONAR
     """
     Identify and format MediaStore container to MediaLive input connections for cache storage.
     """
@@ -159,7 +159,7 @@ def mediastore_container_medialive_input_ddb_items():
     return items
 
 
-def medialive_channel_mediapackage_channel_ddb_items():
+def medialive_channel_mediapackage_channel_ddb_items():     # NOSONAR
     """
     Identify and format MediaLive to MediaPackage channel connections for cache storage.
     """
@@ -236,7 +236,7 @@ def medialive_channel_mediapackage_channel_ddb_items():
     return items
 
 
-def medialive_channel_mediastore_container_ddb_items():
+def medialive_channel_mediastore_container_ddb_items():     # NOSONAR
     """
     Identify and format MediaLive channel to MediaStore container connections for cache storage.
     """
@@ -278,7 +278,7 @@ def medialive_channel_mediastore_container_ddb_items():
     return items
 
 
-def medialive_channel_multiplex_ddb_items():
+def medialive_channel_multiplex_ddb_items():    # NOSONAR
     """
     Identify and format MediaLive channel to EML Multiplex connections for cache storage.
     """
@@ -321,7 +321,7 @@ def medialive_channel_multiplex_ddb_items():
     return items
 
 
-def medialive_input_medialive_channel_ddb_items():
+def medialive_input_medialive_channel_ddb_items():  # NOSONAR
     """
     Identify and format MediaLive input to MediaLive channel connections for cache storage.
     """
@@ -360,7 +360,7 @@ def medialive_input_medialive_channel_ddb_items():
     return items
 
 
-def mediapackage_channel_mediapackage_endpoint_ddb_items():
+def mediapackage_channel_mediapackage_endpoint_ddb_items():     # NOSONAR
     """
     Identify and format MediaPackage channel to MediaPackage endpoint connections for cache storage.
     """
@@ -449,7 +449,7 @@ def multiplex_mediaconnect_flow_ddb_items():
     return items
 
 
-def s3_bucket_cloudfront_distribution_ddb_items():
+def s3_bucket_cloudfront_distribution_ddb_items():      # NOSONAR
     """
     Identify and format S3 Bucket to CloudFront Distribution connections for cache storage.
     """
@@ -486,7 +486,7 @@ def s3_bucket_cloudfront_distribution_ddb_items():
     return items
 
 
-def s3_bucket_medialive_input_ddb_items():
+def s3_bucket_medialive_input_ddb_items():      # NOSONAR
     """
     Identify and format S3 Bucket to MediaLive Input connections for cache storage.
     """
@@ -538,7 +538,7 @@ def s3_bucket_medialive_input_ddb_items():
     return items
 
 
-def cloudfront_distribution_medialive_input_ddb_items():
+def cloudfront_distribution_medialive_input_ddb_items():    # NOSONAR
     """
     Identify and format CloudFront Distribution to MediaLive Input connections for cache storage.
     """
@@ -582,7 +582,7 @@ def cloudfront_distribution_medialive_input_ddb_items():
     return items
 
 
-def mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items():
+def mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items():   # NOSONAR
     """
     Identify and format MediaPackage origin endpoints to CloudFront Distributions by tags for cache storage.
     """
@@ -722,7 +722,7 @@ def mediapackage_endpoint_speke_keyserver_ddb_items():
     return items
 
 
-def mediaconnect_flow_medialive_input_ddb_items():
+def mediaconnect_flow_medialive_input_ddb_items():      # NOSONAR
     """
     Identify and format MediaConnect Flow to MediaLive Input connections for cache storage.
     """
@@ -790,7 +790,7 @@ def mediaconnect_flow_medialive_input_ddb_items():
     return items
 
 
-def mediaconnect_flow_mediaconnect_flow_ddb_items():
+def mediaconnect_flow_mediaconnect_flow_ddb_items():        # NOSONAR
     """
     Identify and format MediaConnect Flow to another MediaConnect Flow for cache storage.
     """
@@ -976,7 +976,7 @@ def mediastore_container_mediatailor_configuration_ddb_items():
     return items
 
 
-def s3_bucket_mediatailor_configuration_ddb_items():
+def s3_bucket_mediatailor_configuration_ddb_items():    # NOSONAR
     """
     Identify and format S3 buckets to a MediaTailor configuration for cache storage.
     """
@@ -1028,7 +1028,7 @@ def s3_bucket_mediatailor_configuration_ddb_items():
     return items
 
 
-def mediastore_container_cloudfront_distribution_ddb_items():
+def mediastore_container_cloudfront_distribution_ddb_items():       # NOSONAR
     """
     Identify and format MediaStore Container to CloudFront Distribution connections for cache storage.
     """
@@ -1067,7 +1067,7 @@ def mediastore_container_cloudfront_distribution_ddb_items():
     return items
 
 
-def medialive_channel_s3_bucket_ddb_items():
+def medialive_channel_s3_bucket_ddb_items():        # NOSONAR
     """
     Identify and format MediaLive channel to S3 bucket connections for cache storage.
     """
@@ -1142,7 +1142,7 @@ def link_device_medialive_input_ddb_items():
         print(error)
     return items
 
-def medialive_channel_medialive_input_ddb_items():
+def medialive_channel_medialive_input_ddb_items():      # NOSONAR
     """
     Identify and format MediaLive channel outputs to MediaLive input for cache storage.
     """
@@ -1185,7 +1185,7 @@ def medialive_channel_medialive_input_ddb_items():
         print(error)
     return items
 
-def medialive_channel_mediaconnect_flow_ddb_items():
+def medialive_channel_mediaconnect_flow_ddb_items():        # NOSONAR
     """
     Identify and format MediaLive channel outputs to MediaConnect flow for cache storage.
     """

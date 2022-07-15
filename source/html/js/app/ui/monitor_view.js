@@ -295,7 +295,7 @@ var display_selected_node = async function (node_id) {
     });
 };
 
-var display_selected_tile = function (name, members) {
+var display_selected_tile = function (name, members) {  // NOSONAR
     var alert_data = [];
     var alarm_data = [];
     var promises = [];
