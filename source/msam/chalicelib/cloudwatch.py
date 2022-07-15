@@ -267,7 +267,7 @@ def get_cloudwatch_events_state_source(state, source):
     return events
 
 
-def get_cloudwatch_events_state_groups(state):
+def get_cloudwatch_events_state_groups(state):  # NOSONAR
     """
     Group all events by down, degraded and running pipelines.
     Currently only applicable to aws.medialive source which includes MediaLive channel and multiplex.
@@ -356,7 +356,7 @@ def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0, limit
     return cw_events
 
 
-def incoming_cloudwatch_alarm(event, _):
+def incoming_cloudwatch_alarm(event, _):    # NOSONAR
     """
     Standard AWS Lambda entry point for receiving CloudWatch alarm notifications.
     """

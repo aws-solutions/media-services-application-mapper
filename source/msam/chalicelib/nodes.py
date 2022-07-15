@@ -480,7 +480,7 @@ def mediastore_containers(region):
     return items
 
 
-def mediaconnect_flows(region):
+def mediaconnect_flows(region):     # NOSONAR
     """
     Return the MediaConnect flows for the given region.
     Supports tags.
@@ -535,7 +535,7 @@ def mediatailor_configurations(region):
     return items
 
 
-def ssm_managed_instances(region):
+def ssm_managed_instances(region):      # NOSONAR
     """
     Retrieve resources like on-prem encoders stored in SSM with MSAM specific tags.
     """
@@ -573,7 +573,7 @@ def ssm_managed_instances(region):
     return items
 
 
-def ec2_instances(region):
+def ec2_instances(region):      # NOSONAR
     """
     Retrieve EC2 instances with MSAM specific tags.
     """

@@ -166,7 +166,7 @@ def update_from_tags():
     tags.update_tiles()
 
 
-def ssm_run_command():
+def ssm_run_command():      # NOSONAR
     """
     Runs all applicable SSM document commands on a given managed instance.
     """
@@ -264,7 +264,7 @@ def ssm_run_command():
         print(error)
 
 
-def process_ssm_run_command(event):
+def process_ssm_run_command(event):     # NOSONAR
     """
     Processes the results from running an SSM command on a managed instance.
     """

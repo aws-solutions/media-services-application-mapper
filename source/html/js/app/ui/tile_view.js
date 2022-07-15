@@ -175,7 +175,7 @@ const show_edit_dialog = function (name, members) {
     $("#channel_edit_modal").modal("show");
 };
 
-const update_tile_info = async function () {
+const update_tile_info = async function () {    // NOSONAR
     const cached_events = event_alerts.get_cached_events();
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
     const channel_list = await channels.channel_list();
@@ -291,7 +291,7 @@ const filter_tiles = function () {
     });
 };
 
-const redraw_tiles = async function () {
+const redraw_tiles = async function () {    // NOSONAR
     $("#" + tile_outer_div).addClass("d-none");
     $("#" + content_div).html(
         `<div id="${tile_row_div_id}" data-tile-row="true" class="row ms-3">`
