@@ -55,4 +55,4 @@ rm -rf node_modules
 npm install
 npm test
 # fix the source file paths
-sed -i -- 's/SF:/SF:source\/msam\//g' lcov.info
+sed -i -- 's/SF:/SF:source\/html\//g' lcov.info
