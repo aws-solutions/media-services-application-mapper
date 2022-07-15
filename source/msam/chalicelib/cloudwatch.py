@@ -266,56 +266,6 @@ def get_cloudwatch_events_state_source(state, source):
         events = response["Items"]
     return events
 
-
-def get_cloudwatch_events_state_groups(state):
-    """
-    Group all events by down, degraded and running pipelines.
-    Currently only applicable to aws.medialive source which includes MediaLive channel and multiplex.
-    """
-    group = {}
-    group["down"] = []
-    group["running"] = []
-    group["degraded"] = []
-    events = get_cloudwatch_events_state(state)
-    for event in events:
-        if "pipeline" in event["detail"]:
-            arn = event["resource_arn"]
-            pipeline = event["detail"]["pipeline"]
-
-            def is_same_arn(i):
-                return bool(i["resource_arn"] == arn)
-
-            def is_same_pl(i):
-                return bool("pipeline" in i["detail"]
-                            and i["detail"]["pipeline"] == pipeline)
-
-            def is_diff_pl(i):
-                return bool("pipeline" in i["detail"]
-                            and i["detail"]["pipeline"] != pipeline)
-
-            def is_pl_down(i):
-                return bool("pipeline_state" in i["detail"]
-                            and not i["detail"]["pipeline_state"])
-
-            same_arn_events = list(filter(is_same_arn, events))
-            all_down_pipelines = list(filter(is_pl_down, same_arn_events))
-            same_down_pipelines = list(filter(is_same_pl, all_down_pipelines))
-            diff_down_pipelines = list(filter(is_diff_pl, all_down_pipelines))
-            if (len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0) or (len(diff_down_pipelines) == 0 and len(same_down_pipelines) > 0):
-                event["detail"]["degraded"] = bool(True)
-                group["degraded"].append(event)
-            elif len(diff_down_pipelines) > 0 and len(same_down_pipelines) > 0:
-                event["detail"]["degraded"] = bool(False)
-                group["down"].append(event)
-            else:
-                event["detail"]["degraded"] = bool(False)
-                group["running"].append(event)
-        else:
-            event["detail"]["degraded"] = bool(False)
-            group["running"].append(event)
-    return group
-
-
 def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0, limit=100):
     """
     API entry point to retrieve all CloudWatch events related to a given resource.
@@ -452,6 +402,7 @@ def subscribed_with_state(alarm_state):
         response = ddb_table.query(
             IndexName='StateValueIndex',
             KeyConditionExpression=Key('StateValue').eq(alarm_state))
+        print(response)
         for item in response["Items"]:
             # store it
             if item["ResourceArn"] in resources:
