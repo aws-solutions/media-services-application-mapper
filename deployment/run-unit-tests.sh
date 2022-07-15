@@ -32,9 +32,27 @@ else
     echo 'using current virtual environment for tests'
 fi
 
+echo
+echo ---------------------------------
+echo BACK-END UNIT TESTS
+echo ---------------------------------
+
 # launch python unit tests
 cd $source_dir/msam
 coverage run -m test.run_unit_tests
 coverage xml
 # fix the source file paths
 sed -i -- 's/filename\=\"/filename\=\"source\/msam\//g' coverage.xml
+
+echo
+echo ---------------------------------
+echo  FRONT-END UNIT TESTS
+echo ---------------------------------
+
+# launch javascript unit tests for UI
+cd $source_dir/html
+rm -rf node_modules
+npm install
+npm test
+# fix the source file paths
+sed -i -- 's/SF:/SF:source\/html\//g' lcov.info

@@ -231,3 +231,7 @@ export function set_update_interval(seconds) {
 export function get_update_interval() {
     return update_interval;
 }
+
+export const exported_for_unit_tests = {
+    listeners
+}
