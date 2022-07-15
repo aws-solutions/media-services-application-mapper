@@ -12,7 +12,9 @@
     "rules": {},
     "globals": {
         "_": true,
+        "afterEach": true,
         "Cookies": true,
+        "expect": true,
         "Fuse": true,
         "filterXSS": true,
         "machina": true,
@@ -22,6 +24,7 @@
         "showdown": true,
         "SVG": true,
         "Tabulator": true,
+        "test": true,
         "URI": true,
         "vis": true
     }
