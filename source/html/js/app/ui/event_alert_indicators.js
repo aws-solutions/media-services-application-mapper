@@ -191,7 +191,7 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSON
                 node.degraded =
                     _.sum(node.running_pipelines) > 0 &&
                     _.sum(node.running_pipelines) <
-                        node.running_pipelines.length;
+                    node.running_pipelines.length;
             } else {
                 node.degraded = false;
             }
@@ -205,13 +205,7 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSON
     let uniq_cleared_alerts = _.differenceBy(
         previous_alerts,
         current_alerts,
-        (item) => {
-            if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
-                return `${item.resource_arn}:${item.detail.pipeline}`;
-            } else {
-                return `${item.resource_arn}`;
-            }
-        }
+        filter
     );
 
     console.log(`unique cleared alerts: ${uniq_cleared_alerts.length}`);
@@ -251,7 +245,7 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSON
                 node.degraded =
                     _.sum(node.running_pipelines) > 0 &&
                     _.sum(node.running_pipelines) <
-                        node.running_pipelines.length;
+                    node.running_pipelines.length;
             } else {
                 node.degraded = false;
             }

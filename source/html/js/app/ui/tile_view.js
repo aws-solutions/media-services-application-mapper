@@ -246,11 +246,11 @@ const sort_tiles = function () {
         let compB =
             Number.parseInt($(b).attr("data-alert-count")) +
             Number.parseInt($(b).attr("data-alarm-count"));
-        compare = compA < compB ? 1 : compA > compB ? -1 : 0;
+        compare = compA < compB ? 1 : compA > compB ? -1 : 0;   // NOSONAR
         if (compare === 0) {
             compA = $(a).attr("data-channel-name");
             compB = $(b).attr("data-channel-name");
-            compare = compA < compB ? -1 : compA > compB ? 1 : 0;
+            compare = compA < compB ? -1 : compA > compB ? 1 : 0;   // NOSONAR
         }
         return compare;
     });
