@@ -142,21 +142,16 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSON
     // we only need one unique alert per arn/pipeline
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
 
-    let uniq_current_alerts = _.uniqBy(current_alerts, (item) => {
+    let filter = (item) => {
         if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
             return `${item.resource_arn}:${item.detail.pipeline}`;
         } else {
             return `${item.resource_arn}`;
         }
-    });
+    };
 
-    let uniq_previous_alerts = _.uniqBy(previous_alerts, (item) => {
-        if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
-            return `${item.resource_arn}:${item.detail.pipeline}`;
-        } else {
-            return `${item.resource_arn}`;
-        }
-    });
+    let uniq_current_alerts = _.uniqBy(current_alerts, filter);
+    let uniq_previous_alerts = _.uniqBy(previous_alerts, filter);
 
     // use the filtered lists
     current_alerts = uniq_current_alerts;

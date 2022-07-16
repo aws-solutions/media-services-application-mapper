@@ -122,8 +122,9 @@ const set_inventory_regions = function (inventory_regions) {
             if (inventory_regions.length == 1 && inventory_regions[0].length == 0) {
                 remove_inventory_regions_setting(resolve);
             } else if (inventory_regions.length > 0) {
+                inventory_regions.sort();
                 settings
-                    .put("inventory-regions", inventory_regions.sort())
+                    .put("inventory-regions", inventory_regions)
                     .then(function () {
                         resolve();
                     });

@@ -202,41 +202,30 @@ $("body").on("dragstart", function (event) {
     }
 });
 
-$("#diagram-tab-content")[0].addEventListener(
-    "dragenter",
-    async function (event) {
-        const shown = diagrams.shown();
-        if (shown) {
-            if (await shown.isLocked()) {
-                event.dataTransfer.dropEffect = "none";
-            } else {
-                event.dataTransfer.dropEffect = "copy";
-                event.preventDefault();
-            }
+let handler = async function (event) {
+    const shown = diagrams.shown();
+    if (shown) {
+        if (await shown.isLocked()) {
+            event.dataTransfer.dropEffect = "none";
         } else {
             event.dataTransfer.dropEffect = "copy";
             event.preventDefault();
         }
-    },
+    } else {
+        event.dataTransfer.dropEffect = "copy";
+        event.preventDefault();
+    }
+};
+
+$("#diagram-tab-content")[0].addEventListener(
+    "dragenter",
+    handler,
     false
 );
 
 $("#diagram-tab-content")[0].addEventListener(
     "dragover",
-    async function (event) {
-        const shown = diagrams.shown();
-        if (shown) {
-            if (await shown.isLocked()) {
-                event.dataTransfer.dropEffect = "none";
-            } else {
-                event.dataTransfer.dropEffect = "copy";
-                event.preventDefault();
-            }
-        } else {
-            event.dataTransfer.dropEffect = "copy";
-            event.preventDefault();
-        }
-    },
+    handler,
     false
 );
 

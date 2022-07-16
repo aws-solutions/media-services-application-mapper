@@ -102,9 +102,10 @@ function add_downstream_nodes() {
                 ui_util.get_downstream(model.edges, node_id, connected);
             }
         }
+        connected.sort();
         // only add nodes not yet on the diagram
         var add_nodes = _.difference(
-            connected.sort(),
+            connected,
             shown.nodes.getIds().sort()
         );
         // use _.compact to remove nulls if id not found
@@ -140,8 +141,9 @@ function add_upstream_nodes() {
             }
         }
         // only add nodes not yet on the diagram
+        connected.sort();
         var add_nodes = _.difference(
-            connected.sort(),
+            connected,
             shown.nodes.getIds().sort()
         );
         // use _.compact to remove nulls if id not found
