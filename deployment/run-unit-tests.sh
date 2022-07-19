@@ -43,6 +43,7 @@ coverage run -m test.run_unit_tests
 coverage xml
 # fix the source file paths
 sed -i -- 's/filename\=\"/filename\=\"source\/msam\//g' coverage.xml
+echo coverage report is at $source_dir/msam/coverage.xml
 
 echo
 echo ---------------------------------
@@ -56,3 +57,4 @@ npm install
 npm test
 # fix the source file paths
 sed -i -- 's/SF:/SF:source\/html\//g' lcov.info
+echo coverage report is at $source_dir/html/lcov.info

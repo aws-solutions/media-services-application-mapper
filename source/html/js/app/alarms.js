@@ -233,5 +233,8 @@ export function get_update_interval() {
 }
 
 export const exported_for_unit_tests = {
-    listeners
+    listeners,
+    update_interval,
+    set_update_interval_setting,
+    schedule_interval
 }
