@@ -15,11 +15,6 @@ afterEach(() => {
     jest.restoreAllMocks();
 });
 
-
-// set_update_interval
-// get_update_interval
-
-
 test('get_subscribers_with_alarms', () => {
     expect(alarms.get_subscribers_with_alarms()).toMatchObject({
         current: [],
@@ -84,8 +79,5 @@ test('delete_all_subscribers', () => {
     expect(alarms.delete_all_subscribers()).resolves.toBeTruthy();
 });
 
-test('set_update_interval', () => {
-    settings.put = jest.fn(() => { return Promise.resolve(true); });
-
-});
-
+// set_update_interval
+// get_update_interval
