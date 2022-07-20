@@ -2,7 +2,7 @@
 This module is provides unit tests for the connections.py module.
 """
 
-# pylint: disable=C0415,W0201
+# pylint: disable=C0415,W0201,R0904
 
 import unittest
 from unittest.mock import patch
@@ -105,17 +105,17 @@ CACHED_CLOUDFRONT = [{"arn": "arn:aws:cloudfront::1234567890:distribution/E2EFYS
 CACHED_SPEKE = [{"arn": "arn:oss:speke:::714958406217327359", "data": "{\"arn\": \"arn:oss:speke:::714958406217327359\", \
     \"endpoint\": \"https://bze1m1xgh4.execute-api.us-east-1.amazonaws.com/live/speke/v1.0/copyProtection\", \"scheme\": \"https\"}"}]
 CACHED_MT_CONFIG = [{"data": "{\"AdDecisionServerUrl\": \"http://someadserver.com\", \"Name\": \"MyTestCampaign\", \
-    \"PlaybackConfigurationArn\": \"arn:aws:mediatailor:us-west-2:658937807431:playbackConfiguration/MyTestCampaign\", \"PlaybackEndpointPrefix\": \
+    \"PlaybackConfigurationArn\": \"arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign\", \"PlaybackEndpointPrefix\": \
     \"https://41f9edfcda1d4ad2916c50d575858b47.mediatailor.us-west-2.amazonaws.com\", \"SessionInitializationEndpointPrefix\": \
     \"https://41f9edfcda1d4ad2916c50d575858b47.mediatailor.us-west-2.amazonaws.com/v1/session/cf6421621b389b384c1fd22e51603ee95db76ae0/MyTestCampaign/\", \
     \"Tags\": {}, \"VideoContentSourceUrl\": \"https://3ae97e9482b0d011.mediapackage.us-west-2.amazonaws.com/out/v1/9d9f3e3bf04c44efb7e0fc806a546fc3/index.m3u8\"}"},
     {"data": "{\"AdDecisionServerUrl\": \"http://someadserver.com\", \"Name\": \"MyTestCampaign\", \
-    \"PlaybackConfigurationArn\": \"arn:aws:mediatailor:us-west-2:658937807431:playbackConfiguration/MyTestCampaign\", \"PlaybackEndpointPrefix\": \
+    \"PlaybackConfigurationArn\": \"arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign\", \"PlaybackEndpointPrefix\": \
     \"https://41f9edfcda1d4ad2916c50d575858b47.mediatailor.us-west-2.amazonaws.com\", \"SessionInitializationEndpointPrefix\": \
     \"https://41f9edfcda1d4ad2916c50d575858b47.mediatailor.us-west-2.amazonaws.com/v1/session/cf6421621b389b384c1fd22e51603ee95db76ae0/MyTestCampaign/\", \
     \"Tags\": {}, \"VideoContentSourceUrl\": \"https://s3-us-west-2.amazonaws.com/msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv/caminandes\"}"},
     {"data": "{\"AdDecisionServerUrl\": \"http://someadserver.com\", \"Name\": \"MyTestCampaign\", \
-    \"PlaybackConfigurationArn\": \"arn:aws:mediatailor:us-west-2:658937807431:playbackConfiguration/MyTestCampaign\", \"PlaybackEndpointPrefix\": \
+    \"PlaybackConfigurationArn\": \"arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign\", \"PlaybackEndpointPrefix\": \
     \"https://41f9edfcda1d4ad2916c50d575858b47.mediatailor.us-west-2.amazonaws.com\", \"SessionInitializationEndpointPrefix\": \
     \"https://41f9edfcda1d4ad2916c50d575858b47.mediatailor.us-west-2.amazonaws.com/v1/session/cf6421621b389b384c1fd22e51603ee95db76ae0/MyTestCampaign/\", \
     \"Tags\": {}, \"VideoContentSourceUrl\": \"https://oszgjooyyimoxd.data.mediastore.us-west-2.amazonaws.com\"}"}]

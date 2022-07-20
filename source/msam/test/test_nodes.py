@@ -2,7 +2,7 @@
 This module provides unit tests for the nodes.py module.
 """
 
-# pylint: disable=C0415,W0201
+# pylint: disable=C0415,W0201,R0904
 
 import unittest
 import boto3

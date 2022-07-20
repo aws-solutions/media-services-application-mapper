@@ -5,7 +5,7 @@ python -m test.run_unit_tests
 """
 import unittest
 
-# pylint: disable=W0611,E0611
+# pylint: disable=W0611,E0611,W0614
 from test.test_cloudwatch_alarm import *
 from test.test_media_events import *
 

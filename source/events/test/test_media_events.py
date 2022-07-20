@@ -70,4 +70,3 @@ class TestMediaEvents(unittest.TestCase):
         patched_client.return_value.describe_origin_endpoint.side_effect = CLIENT_ERROR
         media_events.lambda_handler(mocked_event, MagicMock())
         self.assertRaises(ClientError)
-

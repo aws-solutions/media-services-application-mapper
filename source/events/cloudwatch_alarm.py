@@ -68,7 +68,6 @@ def subscribers_to_alarm(region_alarm_name):
             IndexName=ddb_index_name,
             KeyConditionExpression=Key('RegionAlarmName').eq(
                 region_alarm_name))
-        print(response)
         for item in response["Items"]:
             subscribers.add(item["ResourceArn"])
         while "LastEvaluatedKey" in response:

@@ -65,4 +65,3 @@ class TestCloudWatchAlarm(unittest.TestCase):
         patched_resource.return_value.Alarm.side_effect = CLIENT_ERROR
         cloudwatch_alarm.lambda_handler(mocked_event, MagicMock())
         self.assertRaises(ClientError)
-
