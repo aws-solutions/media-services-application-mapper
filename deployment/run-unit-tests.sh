@@ -43,6 +43,14 @@ coverage run -m test.run_unit_tests
 coverage xml
 # fix the source file paths
 sed -i -- 's/filename\=\"/filename\=\"source\/msam\//g' coverage.xml
+echo coverage report is at $source_dir/msam/coverage.xml
+
+cd $source_dir/events
+coverage run -m test.run_unit_tests
+coverage xml
+# fix the source file paths
+sed -i -- 's/filename\=\"/filename\=\"source\/events\//g' coverage.xml
+echo coverage report is at $source_dir/events/coverage.xml
 
 echo
 echo ---------------------------------
