@@ -18,6 +18,7 @@ from test.test_notes import *
 from test.test_settings import *
 from test.test_periodic import *
 # from test.test_app import *
+from test.test_db import *
 
 if __name__ == '__main__':
     unittest.main(verbosity=3)

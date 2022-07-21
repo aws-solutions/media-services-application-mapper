@@ -4,10 +4,12 @@ This module is provides unit tests for the periodic.py module.
 
 # pylint: disable=C0415,W0201
 
+import requests
 import unittest
 from unittest.mock import patch, MagicMock
 from botocore.exceptions import ClientError
 
+CLIENT_ERROR = ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "ClientError")
 
 class TestPeriodic(unittest.TestCase):
     """
@@ -120,8 +122,18 @@ class TestPeriodic(unittest.TestCase):
         Test the ssm_run_command function
         """
         from chalicelib import periodic
+        
+        doc_ids = {"DocumentIdentifiers": [{"Name": "DocName", "Tags": [{"Key": "MSAM-NodeType", "Value": "stuff"}]}]}
+        patched_client.return_value.list_documents.return_value = doc_ids
+        patched_client.return_value.send_command.return_value = {}
         patched_resource.return_value.Table.return_value.query.return_value.get.return_value = \
             [{"data": "{\"Tags\": {\"MSAM-NodeType\": \"ElementalLive\"}, \"Id\": \"someid\"}"}]
+        periodic.ssm_run_command()
+        
+        patched_client.return_value.list_documents.side_effect = CLIENT_ERROR
+        periodic.ssm_run_command()
+
+        patched_client.return_value.send_command.side_effect = CLIENT_ERROR
         periodic.ssm_run_command()
 
 
@@ -162,6 +174,9 @@ class TestPeriodic(unittest.TestCase):
             print(item)
             mocked_event.to_dict.return_value = item
             periodic.process_ssm_run_command(mocked_event)
+    
+        mock_obj.get_log_events.side_effect = CLIENT_ERROR
+        periodic.process_ssm_run_command(mocked_event)
             
     @patch('os.environ')
     @patch('boto3.resource')
@@ -174,9 +189,9 @@ class TestPeriodic(unittest.TestCase):
         from chalicelib import periodic
         periodic.generate_metrics("stack_name")
 
-    @patch('os.environ')
-    @patch('boto3.resource')
     @patch('boto3.client')
+    @patch('boto3.resource')
+    @patch('os.environ')
     def test_report_metrics(self, patched_env, patched_resource,
                              patched_client):
         """
@@ -188,7 +203,10 @@ class TestPeriodic(unittest.TestCase):
         with patch.object(settings, 'get_setting', return_value="invalid-uuid"):
             periodic.report_metrics("stack_name", 1)
         
-        # # valid uuid
-        # with patch.object(settings, 'get_setting', return_value="1850ab37-92a6-4aef-877d-a82cc28a01b7"):
-        #     with patch.dict(os.environ, {"SOLUTION_ID": "AwsSolution/SO0048/v1.0.0"}, clear=True):
-        #         periodic.report_metrics("stack_name", 1)
+        # valid uuid
+        mock_req = MagicMock()
+        mock_req.post.return_value.status_code = '200'
+        with patch.object(settings, 'get_setting', return_value="1850ab37-92a6-4aef-877d-a82cc28a01b7"):
+            with patch.object(requests, 'post', return_value=mock_req):
+                periodic.SOLUTION_ID = "AwsSolution/SO0048/v1.0.0"
+                periodic.report_metrics("stack_name", 1)
