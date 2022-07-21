@@ -1,9 +1,9 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-import { jest } from '@jest/globals'
-
 /* eslint no-import-assign: "off" */
+
+import { jest } from '@jest/globals'
 import * as server from "../app/server.js";
 import * as api_check from "../app/api_check.js";
 
