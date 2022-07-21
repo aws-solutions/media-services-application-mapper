@@ -64,3 +64,4 @@ npm install
 npm test
 # fix the source file paths
 sed -i -- 's/SF:/SF:source\/html\//g' lcov.info
+echo coverage report is at $source_dir/html/lcov.info
