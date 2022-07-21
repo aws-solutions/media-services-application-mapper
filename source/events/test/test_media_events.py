@@ -1,5 +1,5 @@
 """
-This module is provides unit tests for the cloudwatch_alarm.py module.
+This module is provides unit tests for the media_events.py module.
 """
 
 # pylint: disable=C0415,W0201
@@ -9,23 +9,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from botocore.exceptions import ClientError
 
-ALARM = {
-    'AlarmArn': '1',
-    'AlarmName': '2',
-    'MetricName': '3',
-    'Namespace': '4',
-    'StateValue': '5',
-    'StateUpdatedTimestamp': datetime.now()
-}
 ARN = "arn:msam:user-defined-node:global:111122223333:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9"
-CHANNEL_NAME = "NO-CHANNEL"
-EVENT = {"Records": []}
-NODE_IDS = ["A", "B", "C", "Z"]
-REGION = 'us-west-2'
-SERVICE = 'medialive-channel'
-SOURCE = "aws.medialive"
-SUBSCRIBER = "arn:msam:user-defined-node:global:111122223333:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9"
-ITEMS = {"Items": [{"Region": "us-east-1", "AlarmName": "alarm_name", "RegionAlarmName": "region:alarm", "ResourceArn": "some-arn"}]}
 CLIENT_ERROR = ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "ClientError")
 
 @patch('boto3.client')
