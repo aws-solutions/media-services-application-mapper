@@ -4,7 +4,6 @@ This module is provides unit tests for the media_events.py module.
 
 # pylint: disable=C0415,W0201
 
-from datetime import datetime
 import unittest
 from unittest.mock import patch, MagicMock
 from botocore.exceptions import ClientError
