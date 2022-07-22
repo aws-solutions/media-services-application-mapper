@@ -20,18 +20,18 @@ test_venv_dir="$current_dir/$test_venv_name"
 rm -rf $test_venv_dir
 
 # check if we need a new testing venv
-# ./venv_check.py
-# if [ $? == 1 ]; then
-#     echo 'creating temporary virtual environment for testing'
-#     python3 -m venv $test_venv_name
-#     source $test_venv_name/bin/activate
-#     # configure the environment
-#     pip install --upgrade -r requirements.txt
-#     pip install --upgrade -r $source_dir/msam/requirements.txt
-#     pip install --upgrade -r $source_dir/events/requirements.txt
-# else
-#     echo 'using current virtual environment for tests'
-# fi
+./venv_check.py
+if [ $? == 1 ]; then
+    echo 'creating temporary virtual environment for testing'
+    python3 -m venv $test_venv_name
+    source $test_venv_name/bin/activate
+    # configure the environment
+    pip install --upgrade -r requirements.txt
+    pip install --upgrade -r $source_dir/msam/requirements.txt
+    pip install --upgrade -r $source_dir/events/requirements.txt
+else
+    echo 'using current virtual environment for tests'
+fi
 
 echo
 echo ---------------------------------

@@ -24,6 +24,7 @@ class TestCloudWatchAlarm(unittest.TestCase):
         Test the subscribers_to_alarm function
         """
         import cloudwatch_alarm
+        del patched_env['PATH']
         with patch.object(cloudwatch_alarm.ALARMS_TABLE, 'query', side_effect=[{"Items":[{"ResourceArn": ARN}], "LastEvaluatedKey": "token"},
             {"Items":[{"ResourceArn": ARN}]}]):
             cloudwatch_alarm.subscribers_to_alarm("RegionAlarmName")
@@ -39,6 +40,7 @@ class TestCloudWatchAlarm(unittest.TestCase):
         Test the lambda_handler function
         """
         import cloudwatch_alarm
+        del patched_env['PATH']
         mocked_event = {"region": "us-east-1", "detail": {"alarmName": "alarmName"}}
         patched_resource.return_value.Alarm.return_value.alarm_value = "set"
         with patch.object(cloudwatch_alarm, 'subscribers_to_alarm', return_value=[ARN]):
