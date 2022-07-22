@@ -28,6 +28,7 @@ if [ $? == 1 ]; then
     # configure the environment
     pip install --upgrade -r requirements.txt
     pip install --upgrade -r $source_dir/msam/requirements.txt
+    pip install --upgrade -r $source_dir/events/requirements.txt
 else
     echo 'using current virtual environment for tests'
 fi
