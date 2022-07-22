@@ -4,6 +4,7 @@ This module is provides unit tests for the media_events.py module.
 
 # pylint: disable=C0415,W0201
 
+import os
 import unittest
 from unittest.mock import patch, MagicMock
 from botocore.exceptions import ClientError
@@ -11,14 +12,20 @@ from botocore.exceptions import ClientError
 ARN = "arn:msam:user-defined-node:global:111122223333:10AA8D40-2B6F-44FA-AA67-6B909F8B1DB9"
 CLIENT_ERROR = ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "ClientError")
 
+os.environ["SOLUTION_ID"] = "SO0166"
+os.environ["EVENTS_TABLE_REGION"] = "us-east-1"
+os.environ["EVENTS_TABLE_NAME"] = "events_table"
+os.environ["CLOUDWATCH_EVENTS_TABLE_NAME"] = "cw_table"
+os.environ["CONTENT_TABLE_NAME"] = "content_table"
+os.environ["ITEM_TTL"] = "600"
+
 @patch('boto3.client')
 @patch('boto3.resource')
-@patch('os.environ')
 class TestMediaEvents(unittest.TestCase):
     """
     This class extends TestCase with testing functions
     """
-    def test_lambda_handler(self, patched_env, patched_resource,
+    def test_lambda_handler(self, patched_resource,
                                      patched_client):
         """
         Test the lambda_handler function
