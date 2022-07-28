@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - August 2022
+
+### New
+
+```
+#55 Attach freeform notes or links to any node
+#58 Need a UI mechanism to manage many diagrams
+#158 Tile behavior following ARN change
+#159 Request to tag a preferred tile diagram
+#236 Support for AWS Elemental MediaConnect JPEG XS/CDI
+#255 Update vis.js packages
+#267 Rework from RequireJS modules to native JavaScript modules
+#310 Update post pipeline workflow
+#315 Remove deprecated workflows
+#316 Add eslint to workflows during content scan steps build-and-deploy
+#328 Add CodeQL scan to PR workflow
+#339 Clean up push workflow 
+#343 Documentation for free form notes 
+#344 Upgrade to Bootstrap 5.x
+#349 Add a quick-hide button below the diagram lock 
+#350 Turn off some tooltips on Manage Notes dialog 
+#361 Review and update UI coloring from Bootstrap 4.x to 5.x 
+```
+
+### Fixed
+
+```
+#312 Update documentation links in README for IG
+#320 Getting recent cloudwatch events can timeout when there's a lot of records
+#323 Fix tile rendering with long names
+#336 overlays.js is loaded too early in the bootstrapping process
+#337 Diagram lock isn't repositioning after some window resize events
+#352 Adjust spacing on right-side tile/diagram tab icon 
+```
+
+
+### Contributors
+* @morjoan
+* @JimTharioAmazon
+
+
 
 ## [1.10.0] - February 2022
 
