@@ -87,4 +87,4 @@ The following image from CloudFront shows where it is used in the tags section.
 
 ## Navigate
 
-Navigate to [README](../README.md) | [Architecture](ARCHITECTURE.md) |  [Workshop](WORKSHOP.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](../CONTRIBUTING.md)
+Navigate to [README](../README.md) | [Architecture](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/architecture-overview.html) |  [Workshop](WORKSHOP.md) | [Install](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/automated-deployment.html) | [Usage](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/using-the-browser-application.html) | [Uninstall](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/uninstall-the-solution.html) | [Rest API](REST_API.md) | [Contributing](../CONTRIBUTING.md)

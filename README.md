@@ -131,17 +131,19 @@ AWS Media Services Application Mapper consists of:
 
 <pre>
 |- deployment
-|   |- assets                       [ Digest values for the templates and packaged code go to this folder and hosted on S3 by the project sponsors ]
 |   |- build-s3-dist.sh             [ Script for building distributables and preparing the CloudFormation templates ]
 |   |- deploy.sh                    [ Script for deploying distributables and CloudFormation templates to user's S3 bucket ]
 |   |- global-s3-assets             [ CloudFormation templates get written here during custom build ]
 |   |- regional-s3-assets           [ Packaged code for Lambda get written here during custom build ]
+|   |- run-unit-test.sh             [ Script for running unit tests ]
 |- docs
 |   |- ARCHITECTURE.md              [ 4+1 architectural views of MSAM ]
+|   |- DEV_PROCESS.md               [ Describes the MSAM team's development process and environment ]
 |   |- EXTENDING_MSAM.md            [ Instructions to extend MSAM with your own types ]
 |   |- FEATURES.md                  [ Overview of solution features ]
 |   |- INSTALL.md                   [ Installation guide for MSAM ]
 |   |- MANAGED_INSTANCES.md         [ Using AWS Systems Manager and on-premise hardware ]
+|   |- MEDIALIVE_WORKFLOW_WIZARD.md [ Monitoring worfklow created by MediaLive workflow wizard ]
 |   |- RESOURCE_TAGS.md             [ Tagging resources for tile and diagram creation ]
 |   |- REST_API.md                  [ Overview of the MSAM REST API and use ]
 |   |- UNINSTALL.md                 [ Steps to remove MSAM from your AWS account ]

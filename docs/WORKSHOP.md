@@ -92,4 +92,4 @@ When you are finished using MSAM and will no longer need it, proceed to the [Uni
 
 ## Navigate
 
-Navigate to [README](../README.md) | [Architecture](ARCHITECTURE.md) | [Install](INSTALL.md) | [Usage](USAGE.md) | [Uninstall](UNINSTALL.md) | [Rest API](REST_API.md) | [Contributing](../CONTRIBUTING.md)
+Navigate to [README](../README.md) | [Architecture](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/architecture-overview.html) | [Install](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/automated-deployment.html) | [Usage](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/using-the-browser-application.html) | [Uninstall](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/uninstall-the-solution.html) | [Rest API](REST_API.md) | [Contributing](../CONTRIBUTING.md)

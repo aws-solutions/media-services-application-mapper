@@ -43,4 +43,4 @@ See the [LICENSE](https://github.com/awslabs/aws-media-services-application-mapp
 
 We may ask you to sign a [Contributor License Agreement (CLA)](http://en.wikipedia.org/wiki/Contributor_License_Agreement) for larger changes.
 
-Navigate to [README](README.md) | [Architecture](docs/ARCHITECTURE.md) | [Workshop](docs/WORKSHOP.md) | [Install](docs/INSTALL.md) | [Usage](docs/USAGE.md) | [Uninstall](docs/UNINSTALL.md) | [Rest API](docs/REST_API.md)
+Navigate to [README](README.md) | [Architecture](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/architecture-overview.html) | [Workshop](docs/WORKSHOP.md) | [Install](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/automated-deployment.html) | [Usage](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/using-the-browser-application.html) | [Uninstall](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/uninstall-the-solution.html) | [Rest API](docs/REST_API.md)
