@@ -3,7 +3,7 @@ This module is the custom resource used by the MSAM's CloudFormation
 templates to populate the database with reasonable defaults.
 """
 
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
 import os
@@ -19,6 +19,7 @@ SOLUTION_ID = os.environ['SOLUTION_ID']
 USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
+NOT_EXISTS = "attribute_not_exists(id)"
 
 @helper.create
 @helper.update
@@ -78,7 +79,7 @@ def make_default_settings(settings_table):
             "id": "app-alarm-update-interval",
             "value": 10
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default app-alarm-update-interval setting")
     except ClientError:
         print("app-alarm-update-interval setting exists")
@@ -88,7 +89,7 @@ def make_default_settings(settings_table):
             "id": "app-event-update-interval",
             "value": 10
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default app-event-update-interval setting")
     except ClientError:
         print("app-event-update-interval setting exists")
@@ -98,17 +99,27 @@ def make_default_settings(settings_table):
             "id": "app-tile-update-interval",
             "value": 300
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default app-tile-update-interval setting")
     except ClientError:
         print("app-tile-update-interval setting exists")
+    # default max-number-displayed-diagrams
+    try:
+        table.put_item(Item={
+            "id": "max-number-displayed-diagrams",
+            "value": 10
+        },
+                       ConditionExpression=NOT_EXISTS)
+        print("added default max-number-displayed-diagrams setting")
+    except ClientError:
+        print("max-number-displayed-diagrams setting exists")
     # default displayed regions
     try:
         table.put_item(Item={
             "id": "regions",
             "value": [current_region]
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default regions setting")
     except ClientError:
         print("regions setting exists")
@@ -118,7 +129,7 @@ def make_default_settings(settings_table):
             "id": "inventory-regions",
             "value": inventory_regions
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default inventory-regions setting")
     except ClientError:
         print("inventory-regions setting exists")
@@ -130,7 +141,7 @@ def make_default_settings(settings_table):
                 "method": "directed"
             }
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default layout-method setting")
     except ClientError:
         print("layout-method setting exists")
@@ -144,7 +155,7 @@ def make_default_settings(settings_table):
                 "tile_filter_text": "Showing All Tiles"
             }
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added default tile-view setting")
     except ClientError:
         print("tile-view setting exists")
@@ -154,7 +165,7 @@ def make_default_settings(settings_table):
             "id": "uuid",
             "value": str(uuid.uuid4())
         },
-                       ConditionExpression="attribute_not_exists(id)")
+                       ConditionExpression=NOT_EXISTS)
         print("added random uuid setting")
     except ClientError:
         print("uuid setting exists")

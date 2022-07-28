@@ -1,7 +1,7 @@
 {
-    "esversion": 8,
+    "esversion": 11,
     "browser": true,
-    "loopfunc": false,
+    "loopfunc": true,
     "globals": {
         "console": true,
         "define": true,

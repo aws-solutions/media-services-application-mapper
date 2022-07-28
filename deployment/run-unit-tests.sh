@@ -28,10 +28,41 @@ if [ $? == 1 ]; then
     # configure the environment
     pip install --upgrade -r requirements.txt
     pip install --upgrade -r $source_dir/msam/requirements.txt
+    pip install --upgrade -r $source_dir/events/requirements.txt
 else
     echo 'using current virtual environment for tests'
 fi
 
+echo
+echo ---------------------------------
+echo BACK-END UNIT TESTS
+echo ---------------------------------
+
 # launch python unit tests
 cd $source_dir/msam
-python -m chalicelib.run_unit_tests
+coverage run -m test.run_unit_tests
+coverage xml
+# fix the source file paths
+sed -i -- 's/filename\=\"/filename\=\"source\/msam\//g' coverage.xml
+echo coverage report is at $source_dir/msam/coverage.xml
+
+cd $source_dir/events
+coverage run -m test.run_unit_tests
+coverage xml
+# fix the source file paths
+sed -i -- 's/filename\=\"/filename\=\"source\/events\//g' coverage.xml
+echo coverage report is at $source_dir/events/coverage.xml
+
+echo
+echo ---------------------------------
+echo  FRONT-END UNIT TESTS
+echo ---------------------------------
+
+# launch javascript unit tests for UI
+cd $source_dir/html
+rm -rf node_modules
+npm install
+npm test
+# fix the source file paths
+sed -i -- 's/SF:/SF:source\/html\//g' lcov.info
+echo coverage report is at $source_dir/html/lcov.info

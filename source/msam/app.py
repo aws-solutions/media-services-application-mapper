@@ -1,4 +1,4 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
 This file contains the REST API and CloudWatch entry-points for the MSAM backend.
@@ -15,6 +15,7 @@ import chalicelib.cloudwatch as cloudwatch_data
 import chalicelib.layout as node_layout
 import chalicelib.periodic as periodic_handlers
 import chalicelib.settings as msam_settings
+import chalicelib.notes as resource_notes
 
 app = Chalice(app_name='msam')
 
@@ -74,7 +75,7 @@ def get_view_layout(view):
     """
     API entry point for retrieving all item positions in a view.
     """
-    return node_layout.get_view_layout(app.current_request, view)
+    return node_layout.get_view_layout(view)
 
 
 @app.route('/layout/nodes/{view}/{node_id}',
@@ -361,17 +362,6 @@ def get_cloudwatch_events_state_source(state, source):
     return cloudwatch_data.get_cloudwatch_events_state_source(state, source)
 
 
-@app.route('/cloudwatch/events/state/{state}/groups',
-           cors=True,
-           api_key_required=True,
-           methods=['GET'])
-def get_cloudwatch_events_state_groups(state):
-    """
-    API entry point to retrieve all pipeline events in a given state (set, clear) and grouped by pipeline state (down, degraded, running)
-    """
-    return cloudwatch_data.get_cloudwatch_events_state_groups(state)
-
-
 @app.route('/cloudwatch/events/all/{resource_arn}',
            cors=True,
            api_key_required=True,
@@ -380,7 +370,12 @@ def get_cloudwatch_events_resource_arn(resource_arn):
     """
     API entry point to return all CloudWatch events related to a node.
     """
-    return cloudwatch_data.get_cloudwatch_events_resource(resource_arn)
+    limit = 100
+    if app.current_request.query_params is not None and app.current_request.query_params.get(
+            'limit') == 'true':
+        limit = app.current_request.query_params.get('limit')
+    return cloudwatch_data.get_cloudwatch_events_resource(
+        resource_arn=resource_arn, limit=limit)
 
 
 @app.route('/cloudwatch/events/{resource_arn}/{start_time}',
@@ -391,8 +386,11 @@ def get_cloudwatch_events_resource_arn_start(resource_arn, start_time):
     """
     API entry point to return all CloudWatch events related to a node from start_time to now.
     """
+    limit = 100
+    if app.current_request.query_params is not None and app.current_request.query_params.get('limit') == 'true':
+        limit = app.current_request.query_params.get('limit')
     return cloudwatch_data.get_cloudwatch_events_resource(
-        resource_arn, start_time)
+        resource_arn=resource_arn, start_time=start_time, limit=limit)
 
 
 @app.route('/cloudwatch/events/{resource_arn}/{start_time}/{end_time}',
@@ -404,8 +402,11 @@ def get_cloudwatch_events_resource_arn_start_end(resource_arn, start_time,
     """
     API entry point to return all CloudWatch events related to a node for a given time range.
     """
+    limit = 100
+    if app.current_request.query_params is not None and app.current_request.query_params.get('limit') == 'true':
+        limit = app.current_request.query_params.get('limit')
     return cloudwatch_data.get_cloudwatch_events_resource(
-        resource_arn, start_time, end_time)
+        resource_arn, start_time, end_time, limit)
 
 
 @app.route('/ping', cors=True, api_key_required=True, methods=['GET'])
@@ -482,3 +483,64 @@ def report_metrics(_):
     Entry point for the CloudWatch scheduled task to report anonymous resource metrics.
     """
     return periodic_handlers.report_metrics(STACKNAME, METRICS_REPORTING_RATE_HOURS)
+
+
+@app.route('/notes/{resource_arn}',
+           cors=True,
+           api_key_required=True,
+           methods=['GET'])
+def get_resource_notes(resource_arn):
+    """
+    API entry point to return notes for a given resource.
+    """
+    return resource_notes.get_resource_notes(resource_arn)
+
+
+@app.route('/notes',
+           cors=True,
+           api_key_required=True,
+           methods=['GET'])
+def all_notes():
+    """
+    API entry point to return notes for all resource.
+    """
+    return resource_notes.get_all_notes()
+
+
+@app.route('/notes/{resource_arn}',
+           cors=True,
+           api_key_required=True,
+           methods=['POST'],
+           content_types=['text/plain', 'application/json'])
+def update_resource_notes(resource_arn):
+    """
+    API entry point to update notes of a given resource.
+    """
+    return resource_notes.update_resource_notes(resource_arn, app.current_request)
+
+@app.route('/notes/{resource_arn}',
+           cors=True,
+           api_key_required=True,
+           methods=['DELETE'])
+def delete_resource_notes(resource_arn):
+    """
+    API entry point to return notes for a given resource.
+    """
+    return resource_notes.delete_resource_notes(resource_arn)
+
+@app.route('/notes',
+           cors=True,
+           api_key_required=True,
+           methods=['DELETE'])
+def delete_all_notes():
+    """
+    API entry point to return notes for a given resource.
+    """
+    return resource_notes.delete_all_notes_proxy()
+
+@app.lambda_function(name='DeleteAllResourceNotes')
+def delete_all_resource_notes(event, context):
+    """
+    Function that does actual deletion of all resource notes.
+    """
+    return resource_notes.delete_all_notes()

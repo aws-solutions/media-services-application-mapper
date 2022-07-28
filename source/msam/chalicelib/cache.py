@@ -1,4 +1,4 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
 This file contains helper functions for updating and querying the cache.
@@ -27,7 +27,6 @@ def cached_by_service(service):
     """
     try:
         ddb_table_name = CONTENT_TABLE_NAME
-        # ddb_index_name = "service-index"
         ddb_index_name = "ServiceRegionIndex"
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)

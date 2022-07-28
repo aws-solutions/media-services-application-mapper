@@ -1,23 +1,16 @@
-/*! Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-define(["jquery"], function($) {
-
-    var show = function(html, on_proceed) {
-        $("#confirmation_dialog_proceed").on("click", function(event) {
-            console.log(event);
-            on_proceed();
-        });
-        $("#confirmation_dialog").on("hide.bs.modal", function(event) {
-            console.log(event);
-            $("#confirmation_dialog_proceed").unbind("click");
-        });
-        $("#confirmation_dialog_body").html(html);
-        $("#confirmation_dialog").modal('show');
-    };
-
-    return {
-        "show": show
-    };
-
-});
+export const show = function (html, on_proceed) {
+    $("#confirmation_dialog_proceed").on("click", function (event) {
+        console.log(event);
+        on_proceed();
+        $("#confirmation_dialog").modal("hide");
+    });
+    $("#confirmation_dialog").on("hide.bs.modal", function (event) {
+        console.log(event);
+        $("#confirmation_dialog_proceed").unbind("click");
+    });
+    $("#confirmation_dialog_body").html(html);
+    $("#confirmation_dialog").modal("show");
+};

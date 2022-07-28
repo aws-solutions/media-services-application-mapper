@@ -1,0 +1,6 @@
+[run]
+relative_files = True
+source = ./
+omit = 
+    msam/chalicelib/test_*.py
+    msam/chalicelib/run_unit_tests.py

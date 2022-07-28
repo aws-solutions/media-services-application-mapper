@@ -27,6 +27,10 @@ PAYLOAD['pipeline_type'] = os.environ.get('PIPELINE_TYPE')
 PAYLOAD['notify_github_workflow_id'] = "post-pipeline-workflow.yml"
 
 def main():
+    """
+    Invokes notification endpoint to signal completion of workflow.
+    """
+
     parsed = urlparse(NOTIFICATION_ENDPOINT)
     auth = BotoAWSRequestsAuth(aws_host=parsed.netloc,
                                aws_region=API_REGION,
@@ -36,8 +40,6 @@ def main():
     print(response.json())
     if response.status_code != 200:
         return 1
-    else:
-        return 0
-
+    return 0
 if __name__ == "__main__":
     sys.exit(main())

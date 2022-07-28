@@ -1,4 +1,4 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
 This file contains helper functions related to CloudWatch alarms.
@@ -115,7 +115,6 @@ def alarms_for_subscriber(resource_arn):
     """
     API entry point to return all alarms subscribed to by a node.
     """
-    # split_items = []
     scanned_items = []
     try:
         resource_arn = unquote(resource_arn)
@@ -142,11 +141,8 @@ def alarms_for_subscriber(resource_arn):
             name = split_attr[1]
             item["Region"] = region
             item["AlarmName"] = name
-            # alarm = {"Region": region, "AlarmName": name}
-            # split_items.append(alarm)
     except ClientError as error:
         print(error)
-    # return [dict(t) for t in {tuple(d.items()) for d in split_items}]
     return scanned_items
 
 
@@ -271,64 +267,13 @@ def get_cloudwatch_events_state_source(state, source):
     return events
 
 
-def get_cloudwatch_events_state_groups(state):
-    """
-    Group all events by down, degraded and running pipelines.
-    Currently only applicable to aws.medialive source which includes MediaLive channel and multiplex.
-    """
-    group = {}
-    group["down"] = []
-    group["running"] = []
-    group["degraded"] = []
-    events = get_cloudwatch_events_state(state)
-    for event in events:
-        if "pipeline" in event["detail"]:
-            arn = event["resource_arn"]
-            pipeline = event["detail"]["pipeline"]
-
-            def is_same_arn(i):
-                return bool(i["resource_arn"] == arn)
-
-            def is_same_pl(i):
-                return bool("pipeline" in i["detail"]
-                            and i["detail"]["pipeline"] == pipeline)
-
-            def is_diff_pl(i):
-                return bool("pipeline" in i["detail"]
-                            and i["detail"]["pipeline"] != pipeline)
-
-            def is_pl_down(i):
-                return bool("pipeline_state" in i["detail"]
-                            and not i["detail"]["pipeline_state"])
-
-            same_arn_events = list(filter(is_same_arn, events))
-            all_down_pipelines = list(filter(is_pl_down, same_arn_events))
-            same_down_pipelines = list(filter(is_same_pl, all_down_pipelines))
-            diff_down_pipelines = list(filter(is_diff_pl, all_down_pipelines))
-            if len(diff_down_pipelines) > 0 and len(same_down_pipelines) == 0:
-                event["detail"]["degraded"] = bool(True)
-                group["degraded"].append(event)
-            elif len(
-                    diff_down_pipelines) == 0 and len(same_down_pipelines) > 0:
-                event["detail"]["degraded"] = bool(True)
-                group["degraded"].append(event)
-            elif len(diff_down_pipelines) > 0 and len(same_down_pipelines) > 0:
-                event["detail"]["degraded"] = bool(False)
-                group["down"].append(event)
-            else:
-                event["detail"]["degraded"] = bool(False)
-                group["running"].append(event)
-        else:
-            event["detail"]["degraded"] = bool(False)
-            group["running"].append(event)
-    return group
-
-
-def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0):
+def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0, limit=100):
     """
     API entry point to retrieve all CloudWatch events related to a given resource.
     """
     cw_events = []
+    # limit request cannot be more than 100 for now
+    limit = min(limit, 100)
     try:
         resource_arn = unquote(resource_arn)
         dynamodb = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
@@ -342,21 +287,27 @@ def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0):
                 start_time)
         else:
             key = Key('resource_arn').eq(resource_arn)
-        response = table.query(KeyConditionExpression=key)
+        response = table.query(KeyConditionExpression=key,
+            ScanIndexForward=False,
+            Limit=limit)
         if "Items" in response:
             cw_events = response["Items"]
-        while "LastEvaluatedKey" in response:
+        remaining_items = limit - len(cw_events)
+        while "LastEvaluatedKey" in response and remaining_items > 0:
             response = table.query(
                 KeyConditionExpression=key,
-                ExclusiveStartKey=response['LastEvaluatedKey'])
+                ExclusiveStartKey=response['LastEvaluatedKey'],
+                ScanIndexForward=False,
+                Limit=remaining_items)
             if "Items" in response:
                 cw_events = cw_events + response["Items"]
+                remaining_items = limit - len(cw_events)
     except ClientError as error:
         print(error)
     return cw_events
 
 
-def incoming_cloudwatch_alarm(event, _):
+def incoming_cloudwatch_alarm(event, _):    # NOSONAR
     """
     Standard AWS Lambda entry point for receiving CloudWatch alarm notifications.
     """
@@ -452,6 +403,7 @@ def subscribed_with_state(alarm_state):
         response = ddb_table.query(
             IndexName='StateValueIndex',
             KeyConditionExpression=Key('StateValue').eq(alarm_state))
+        print(response)
         for item in response["Items"]:
             # store it
             if item["ResourceArn"] in resources:

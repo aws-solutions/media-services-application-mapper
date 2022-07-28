@@ -1,4 +1,4 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
 This file contains helper functions related to layout.
@@ -26,7 +26,7 @@ MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 DYNAMO_RESOURCE = boto3.resource("dynamodb", config=MSAM_BOTO3_CONFIG)
 
 
-def get_view_layout(request, view):
+def get_view_layout(view):
     """
     API entry point for retrieving all item positions in a view.
     """
@@ -35,7 +35,6 @@ def get_view_layout(request, view):
     table_name = LAYOUT_TABLE_NAME
     try:
         table = DYNAMO_RESOURCE.Table(table_name)
-        print(request.method)
         try:
             # get the settings object
             response = table.query(KeyConditionExpression=Key('view').eq(view))

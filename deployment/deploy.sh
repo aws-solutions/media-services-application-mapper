@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
 set -euo pipefail
@@ -86,8 +86,8 @@ for R in $REGIONS; do
   if [ "$DEPLOY_TYPE" = "release" ]; then
      aws s3 sync $template_dist_dir/ s3://$BUCKET-$R/$SOLUTION_NAME/latest --exclude "*" --include "*release.template" --acl public-read  --storage-class INTELLIGENT_TIERING
       echo
-      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/latest/aws-media-services-application-mapper-release.template"
+      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3.amazonaws.com/$SOLUTION_NAME/latest/aws-media-services-application-mapper-release.template"
   else
-      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3-$R.amazonaws.com/$SOLUTION_NAME/$VERSION/aws-media-services-application-mapper-release.template"
+      echo "ROOT TEMPLATE WEB LOCATION: https://$BUCKET-$R.s3.amazonaws.com/$SOLUTION_NAME/$VERSION/aws-media-services-application-mapper-release.template"
   fi
 done

@@ -1,4 +1,4 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 """
 This file contains helper functions for building the node cache.
@@ -24,8 +24,14 @@ SOLUTION_ID = os.environ['SOLUTION_ID']
 USER_AGENT_EXTRA = {"user_agent_extra": SOLUTION_ID}
 MSAM_BOTO3_CONFIG = Config(**USER_AGENT_EXTRA)
 
+# common strings used in queries and scans
+CONTAINS_FILTER = "contains(#data, :tagname)"
+ATTRIBUTE_NAMES = {"#data": "data"}
+DIAGRAM_ATTRIBUTE_VALUES = {":tagname": "MSAM-Diagram"}
+TILE_ATTRIBUTE_VALUES = {":tagname": "MSAM-Tile"}
 
-def update_diagrams():
+
+def update_diagrams():      # NOSONAR
     """
     scan for data with tags with MSAM-Diagram name and include in those named diagrams
     """
@@ -34,49 +40,57 @@ def update_diagrams():
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
         # expensive textual scan
-        response = ddb_table.scan(FilterExpression="contains(#data, :tagname)", ExpressionAttributeNames={"#data": "data"}, ExpressionAttributeValues={":tagname": "MSAM-Diagram"})
+        response = ddb_table.scan(
+            FilterExpression=CONTAINS_FILTER,
+            ExpressionAttributeNames=ATTRIBUTE_NAMES,
+            ExpressionAttributeValues=DIAGRAM_ATTRIBUTE_VALUES)
         items = response["Items"]
         # check for paging
         while "LastEvaluatedKey" in response:
             # scan again with start key
             response = ddb_table.scan(
-                FilterExpression="contains(#data, :tagname)",
-                ExpressionAttributeNames={"#data": "data"},
-                ExpressionAttributeValues={":tagname": "MSAM-Diagram"},
+                FilterExpression=CONTAINS_FILTER,
+                ExpressionAttributeNames=ATTRIBUTE_NAMES,
+                ExpressionAttributeValues=DIAGRAM_ATTRIBUTE_VALUES,
                 ExclusiveStartKey=response['LastEvaluatedKey'])
             items = items + response["Items"]
         # filter down the results
         for record in items:
             cloud_resource = json.loads(record["data"])
-            if "Tags" in cloud_resource:
-                if "MSAM-Diagram" in cloud_resource["Tags"]:
-                    arn = record["arn"]
-                    diagram_name = cloud_resource["Tags"]["MSAM-Diagram"]
-                    print(f"arn {arn} needed on diagram {diagram_name}")
-                    diagrams = settings.get_setting("diagrams")
-                    if not diagrams:
-                        diagrams = []
-                    found_diagram = False
-                    view_id = None
-                    for diagram in diagrams:
-                        if diagram["name"] == diagram_name:
-                            view_id = diagram["view_id"]
-                            found_diagram = True
-                            print(f"found diagram id {view_id}")
-                    if not found_diagram:
-                        view_id = stringcase.snakecase(diagram_name)
-                        print(f"new diagram id {view_id}")
-                        diagrams.append({"name": diagram_name, "view_id": view_id})
-                        settings.put_setting("diagrams", diagrams)
-                        print("created diagram id {view_id}")
-                    # check if this node is already on the diagram layout
-                    if not layout.has_node(view_id, arn):
-                        print(f"adding node {arn} to diagram id {view_id}")
-                        # add the node arn to the layout
-                        layout_items = [{"view": view_id, "id": arn, "x": 0, "y": 0}]
-                        layout.set_node_layout(layout_items)
-                    else:
-                        print(f"node {arn} already on diagram id {view_id}")
+            if ("Tags" in cloud_resource) and ("MSAM-Diagram"
+                                               in cloud_resource["Tags"]):
+                arn = record["arn"]
+                diagram_name = cloud_resource["Tags"]["MSAM-Diagram"]
+                print(f"arn {arn} needed on diagram {diagram_name}")
+                diagrams = settings.get_setting("diagrams")
+                if not diagrams:
+                    diagrams = []
+                found_diagram = False
+                view_id = None
+                for diagram in diagrams:
+                    if diagram["name"] == diagram_name:
+                        view_id = diagram["view_id"]
+                        found_diagram = True
+                        print(f"found diagram id {view_id}")
+                if not found_diagram:
+                    view_id = stringcase.snakecase(diagram_name)
+                    print(f"new diagram id {view_id}")
+                    diagrams.append({"name": diagram_name, "view_id": view_id})
+                    settings.put_setting("diagrams", diagrams)
+                    print("created diagram id {view_id}")
+                # check if this node is already on the diagram layout
+                if not layout.has_node(view_id, arn):
+                    print(f"adding node {arn} to diagram id {view_id}")
+                    # add the node arn to the layout
+                    layout_items = [{
+                        "view": view_id,
+                        "id": arn,
+                        "x": 0,
+                        "y": 0
+                    }]
+                    layout.set_node_layout(layout_items)
+                else:
+                    print(f"node {arn} already on diagram id {view_id}")
     except ClientError as error:
         print(error)
 
@@ -90,34 +104,37 @@ def update_tiles():
         ddb_resource = boto3.resource('dynamodb', config=MSAM_BOTO3_CONFIG)
         ddb_table = ddb_resource.Table(ddb_table_name)
         # very broad textual scan
-        response = ddb_table.scan(FilterExpression="contains(#data, :tagname)", ExpressionAttributeNames={"#data": "data"}, ExpressionAttributeValues={":tagname": "MSAM-Tile"})
+        response = ddb_table.scan(
+            FilterExpression=CONTAINS_FILTER,
+            ExpressionAttributeNames=ATTRIBUTE_NAMES,
+            ExpressionAttributeValues=TILE_ATTRIBUTE_VALUES)
         items = response["Items"]
         # check for paging
         while "LastEvaluatedKey" in response:
             # scan again with start key
             response = ddb_table.scan(
-                FilterExpression="contains(#data, :tagname)",
-                ExpressionAttributeNames={"#data": "data"},
-                ExpressionAttributeValues={":tagname": "MSAM-Tile"},
+                FilterExpression=CONTAINS_FILTER,
+                ExpressionAttributeNames=ATTRIBUTE_NAMES,
+                ExpressionAttributeValues=TILE_ATTRIBUTE_VALUES,
                 ExclusiveStartKey=response['LastEvaluatedKey'])
             items = items + response["Items"]
         # filter down the results
         for record in items:
             cloud_resource = json.loads(record["data"])
-            if "Tags" in cloud_resource:
-                if "MSAM-Tile" in cloud_resource["Tags"]:
-                    arn = record["arn"]
-                    tile_name = cloud_resource["Tags"]["MSAM-Tile"]
-                    print(f"arn {arn} needed on tile {tile_name}")
-                    nodes = channels.get_channel_nodes(tile_name)
-                    ids = [item["id"] for item in nodes]
-                    print(f"existing tile contents: {json.dumps(ids)}")
-                    if arn not in ids:
-                        print(f"adding {arn} to tile {tile_name}")
-                        ids.append(arn)
-                        print(f"updated tile contents: {json.dumps(ids)}")
-                        channels.set_channel_nodes(tile_name, ids)
-                    else:
-                        print("already present on tile")
+            if ("Tags" in cloud_resource) and ("MSAM-Tile"
+                                               in cloud_resource["Tags"]):
+                arn = record["arn"]
+                tile_name = cloud_resource["Tags"]["MSAM-Tile"]
+                print(f"arn {arn} needed on tile {tile_name}")
+                nodes = channels.get_channel_nodes(tile_name)
+                ids = [item["id"] for item in nodes]
+                print(f"existing tile contents: {json.dumps(ids)}")
+                if arn not in ids:
+                    print(f"adding {arn} to tile {tile_name}")
+                    ids.append(arn)
+                    print(f"updated tile contents: {json.dumps(ids)}")
+                    channels.set_channel_nodes(tile_name, ids)
+                else:
+                    print("already present on tile")
     except ClientError as error:
         print(error)

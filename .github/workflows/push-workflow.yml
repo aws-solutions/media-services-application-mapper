@@ -4,10 +4,9 @@ name: Push Workflow
 env:
   REGION: us-east-1
   DIST_OUTPUT_BUCKET: solutions-features
-  REGIONS_TO_DEPLOY: "us-west-2 us-east-1"
   RELEASE_OUTPUT_BUCKET: solutions
   VERSION: ${{ secrets.VERSION }}
-  RELEASE_BRANCH: main # change this to main later
+  RELEASE_BRANCH: main
 
 on:
   push:
@@ -65,23 +64,6 @@ jobs:
           cd source
           ./tools/pylint.sh
 
-  pa11y-check-job:
-    runs-on: ubuntu-latest
-    needs:
-      [
-        build-job
-      ]
-    name: Check HTML code with Pa11y for accessibility
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install Pa11y
-        run: npm install pa11y
-      - name: Check with Pa11y
-        run: |
-          cd source/html
-          find . -iname '*.html' | xargs -I '{}' ../../node_modules/pa11y/bin/pa11y.js {}
-
   jshint-check-job:
     runs-on: ubuntu-latest
     name: Check source code with JShint
@@ -89,13 +71,47 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install JShint
-        run: npm install jshint
+        run: npm install -g jshint
       - name: Check with JShint
         run: |
           cd source/html
           find . -name '*.js' -type f -print | \
             grep --invert-match "/external/" | \
-            xargs ../../node_modules/jshint/bin/jshint
+            jshint
+
+  eslint-check-job:
+      runs-on: ubuntu-latest
+      name: Check source code with eslint
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Install eslint
+          run: npm install -g eslint
+        - name: Check with eslint
+          run: |
+            cd source/html
+            eslint js/app
+
+  codeql-check-job:
+    runs-on: ubuntu-latest
+    name: Check source code with CodeQL
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python' ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
 
   build-job:
     name: Run build script
@@ -106,7 +122,9 @@ jobs:
         trufflehog-scan-job,
         bandit-check-job,
         pylint-check-job,
-        jshint-check-job
+        jshint-check-job,
+        eslint-check-job,
+        codeql-check-job
       ]
     # use a specific environment for this build that has secrets defined 
     # and protection rules in place, if needed
@@ -153,7 +171,24 @@ jobs:
         run: |
           cd deployment
           ./run-unit-tests.sh
-      
+
+  pa11y-check-job:
+    runs-on: ubuntu-latest
+    needs:
+      [
+        build-job
+      ]
+    name: Check HTML code with Pa11y for accessibility
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Pa11y
+        run: npm install -g pa11y
+      - name: Check with Pa11y
+        run: |
+          cd source/html
+          find . -iname '*.html' | xargs -I '{}' pa11y --config ../tools/pa11y.json {}
+
   cfn-lint-job:
     name: Run cfn-lint on templates
     runs-on: ubuntu-latest
@@ -194,12 +229,13 @@ jobs:
         with:
           input_path: deployment/global-s3-assets
 
-  upload-and-store-job:
-    name: Upload and store regional and global assets
+  store-assets-job:
+    name: Store regional and global assets
     needs:
       [
         cfn-lint-job,
-        cfn-nag-job        
+        cfn-nag-job,
+        pa11y-check-job        
       ]
     runs-on: ubuntu-latest
     environment: push_env
@@ -218,24 +254,12 @@ jobs:
             cat error.txt
             exit 1
           fi
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@master
-        with:
-          role-to-assume: ${{ secrets.MSAM_ROLE_ARN }}
-          aws-region: ${{ env.REGION }}
-          role-duration-seconds: 900
       - name: Restore deployment directory from cache
         uses: actions/cache@v2
         id: cache-deployment
         with:
           path: deployment/
           key: ${{ github.sha }}
-      # - name: Upload to S3
-      #   # deploy to our test bucket if not doing a release
-      #   if: ${{github.ref_name != env.RELEASE_BRANCH}}
-      #   run: |
-      #     cd deployment
-      #     ./deploy.sh -b $DIST_OUTPUT_BUCKET -s ${{ github.event.repository.name }} -v $VERSION -r "$REGIONS_TO_DEPLOY" -a none -t dev
       - name: Zip up regional and global assets
         run: |
           cd deployment
