@@ -178,7 +178,7 @@ class TestApp(unittest.TestCase):
 
     def test_subscribers_to_alarm(self, patched_resource, patched_client):
         """
-        Test the get_cloudwatch_alarms_region function
+        Test the subscribers_to_alarm function
         """
         import app
         app.subscribers_to_alarm("alarm_name", "us-east-1")
