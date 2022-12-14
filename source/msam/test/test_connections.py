@@ -81,6 +81,23 @@ CACHED_MC_FLOWS = [{"data": "{\"AvailabilityZone\": \"us-east-1a\", \"EgressIp\"
     \"Sources\": [{\"EntitlementArn\": \"arn:aws:mediaconnect:us-east-1:1234567890:entitlement:1-CAVaVVRQUAMLAF0P-43e6ff4eb1d4:Multiplex-2911217-pipeline-0\", \
     \"Name\": \"i075dcd8225a\", \"SourceArn\": \"arn:aws:mediaconnect:us-east-1:1234567890:source:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:i075dcd8225a\"}], \
     \"Status\": \"STANDBY\", \"Tags\": {}}"}]
+CACHED_MC_FLOWS_2 = [{"data": "{\"AvailabilityZone\": \"eu-west-1a\", \"EgressIp\": \"54.145.77.151\", \"Entitlements\": [], \
+    \"FlowArn\": \"arn:aws:mediaconnect:eu-west-1:123456789012:flow:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:test\", \
+    \"MediaStreams\": [], \"Name\": \"test\", \"Outputs\": [{\"Description\": \"test\", \"ListenerAddress\": \"10.1.2.3\", \"Name\": \"test\", \
+    \"OutputArn\": \"arn:aws:mediaconnect:eu-west-1:123456789012:output:1-Cg8ABVcLBAQHA1BS-d8f6412277e1:test\", \"Port\": 1025, \
+    \"Transport\": {\"MinLatency\": 1000, \"Protocol\": \"srt-listener\"}, \"VpcInterfaceAttachment\": { \
+    \"VpcInterfaceName\": \"vpc_interface\"}}], \"Source\": {\"DataTransferSubscriberFeePercent\": 100, \"Decryption\": { \
+    \"Algorithm\": \"aes256\", \"KeyType\": \"static-key\", \"RoleArn\": \"arn:aws:iam::123456789012:role/secrets\", \
+    \"SecretArn\": \"arn:aws:secretsmanager:eu-west-1:123456789012:secret:mysecret-aBc123\"}, \
+    \"EntitlementArn\": \"arn:aws:mediaconnect:eu-west-1:234567890123:entitlement:1-CAVaVVRQUAMLAF0P-43e6ff4eb1d4:test\", \
+    \"Name\": \"test\", \"SourceArn\": \"arn:aws:mediaconnect:eu-west-1:123456789012:source:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:test\"}, \
+    \"Sources\": [{\"DataTransferSubscriberFeePercent\": 100, \"Decryption\": {\"Algorithm\": \"aes256\", \"KeyType\": \"static-key\", \
+    \"RoleArn\": \"arn:aws:iam::123456789012:role/role\", \"SecretArn\": \"arn:aws:secretsmanager:eu-west-1:123456789012:secret:mysecret-aBc123\"}, \
+    \"EntitlementArn\": \"arn:aws:mediaconnect:eu-west-1:234567890123:entitlement:1-CAVaVVRQUAMLAF0P-43e6ff4eb1d4:test\", \"Name\": \"test\", \
+    \"SourceArn\": \"arn:aws:mediaconnect:eu-west-1:123456789012:source:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:test\"}], \"Status\": \"STANDBY\", \
+    \"VpcInterfaces\": [{\"Name\": \"vpc_interface\", \"NetworkInterfaceIds\": [\"eni-01234456789012345\"], \"NetworkInterfaceType\": \"ena\", \
+    \"RoleArn\": \"arn:aws:iam::123456789012:role/role\", \"SecurityGroupIds\": [\"sg-01234456789012345\"], \
+    \"SubnetId\": \"subnet-01234456789012345\"}], \"VpcSubnet\": {\"vpc_interface\": \"subnet-01234456789012345\"}, \"Tags\": {}}"}]
 CACHED_S3 = [{"arn": "arn:aws:s3:::msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv",
     "data": "{\"Name\": \"msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv\", \"CreationDate\": \"2021-03-23 23:29:43+00:00\", \
     \"Tags\": {\"aws:cloudformation:stack-id\": \"arn:aws:cloudformation:us-east-1:1234567890:stack/MSAM-Upgrader-BrowserAppModuleStack-8HNMBO88Y67O/a13d6900-8c2f-11eb-98d8-12f3521c88a3\", \
@@ -380,8 +397,9 @@ class TestConnections(unittest.TestCase):
         Test the mediaconnect_flow_mediaconnect_flow_ddb_items function
         """
         from chalicelib import connections, cache
-        with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MC_FLOWS, CACHED_MC_FLOWS)):
-            connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
+        for se in [CACHED_MC_FLOWS, CACHED_MC_FLOWS_2]:
+            with patch.object(cache, 'cached_by_service', side_effect=(se, se)):
+                connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
             connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
