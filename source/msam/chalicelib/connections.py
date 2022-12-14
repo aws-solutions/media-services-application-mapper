@@ -817,6 +817,9 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():        # NOSONAR
                             outer_flow_data["Source"]["EntitlementArn"],
                             outer_flow_data["FlowArn"], connection_type,
                             config))
+                    # if the source is entitlement, there won't be any matching inner flows
+                    # and this Flow won't have a VPC source - bail early
+                    continue
             # More Info: https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
             except Exception: #nosec
                 # print(error)
