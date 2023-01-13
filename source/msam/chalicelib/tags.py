@@ -77,7 +77,7 @@ def update_diagrams():      # NOSONAR
                     print(f"new diagram id {view_id}")
                     diagrams.append({"name": diagram_name, "view_id": view_id})
                     settings.put_setting("diagrams", diagrams)
-                    print("created diagram id {view_id}")
+                    print(f"created diagram id {view_id}")
                 # check if this node is already on the diagram layout
                 if not layout.has_node(view_id, arn):
                     print(f"adding node {arn} to diagram id {view_id}")
