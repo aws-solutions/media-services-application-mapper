@@ -595,6 +595,8 @@ def ec2_instances(region):      # NOSONAR
                         #reformat the tags before appending to data
                         final_tags[tag["Key"]] = tag["Value"]
                         instance['Tags'] = final_tags
+                else:
+                    instance['Tags'] = {}
                 items.append(instance)
     else:
         print_no_region()
