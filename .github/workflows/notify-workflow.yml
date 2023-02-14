@@ -19,7 +19,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}    
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install required system packages
         run: |
           pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
