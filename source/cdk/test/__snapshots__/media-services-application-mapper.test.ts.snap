@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`media-services-application-mapper snapshot test 1`] = `
+{
+  "Description": "(SO0048) Media Services Application Mapper Root Stack %%VERSION%%",
+  "Outputs": {
+    "APIKeyID": {
+      "Description": "Link for retrieving API key needed by the MSAM browser application",
+      "Value": {
+        "Fn::GetAtt": [
+          "CoreModuleStack",
+          "Outputs.APIKeyID",
+        ],
+      },
+    },
+    "EndpointURL": {
+      "Description": "The endpoint needed by the MSAM browser application",
+      "Value": {
+        "Fn::GetAtt": [
+          "CoreModuleStack",
+          "Outputs.EndpointURL",
+        ],
+      },
+    },
+    "MSAMBrowserURL": {
+      "Description": "URL for the MSAM browser application",
+      "Value": {
+        "Fn::GetAtt": [
+          "BrowserAppModuleStack",
+          "Outputs.MSAMBrowserURL",
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "CacheItemTTL": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Default": "86400",
+      "Description": "This is the maximum time in seconds a cached item will remain if never updated (3600 = 1 hour, 86400 = 1 day, 604800 = 1 week).",
+      "MinLength": 1,
+      "Type": "String",
+    },
+  },
+  "Resources": {
+    "BrowserAppModuleStack": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Parameters": {
+          "WebIAMRoleARN": {
+            "Fn::GetAtt": [
+              "IAMModuleStack",
+              "Outputs.WebRoleARN",
+            ],
+          },
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://%%BUCKET_NAME%%-",
+              {
+                "Ref": "AWS::Region",
+              },
+              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release.template",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::Stack",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CoreModuleStack": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Parameters": {
+          "AlarmsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.AlarmsTable",
+            ],
+          },
+          "CacheItemTTL": {
+            "Ref": "CacheItemTTL",
+          },
+          "ChannelsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.ChannelsTable",
+            ],
+          },
+          "CloudWatchEventsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.CloudWatchEventsTable",
+            ],
+          },
+          "ContentTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.ContentTable",
+            ],
+          },
+          "CoreIAMRoleARN": {
+            "Fn::GetAtt": [
+              "IAMModuleStack",
+              "Outputs.CoreRoleARN",
+            ],
+          },
+          "EventsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.EventsTable",
+            ],
+          },
+          "LayoutTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.LayoutTable",
+            ],
+          },
+          "NotesTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.NotesTable",
+            ],
+          },
+          "RootStackName": {
+            "Ref": "AWS::StackName",
+          },
+          "SettingsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.SettingsTable",
+            ],
+          },
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://%%BUCKET_NAME%%-",
+              {
+                "Ref": "AWS::Region",
+              },
+              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release.template",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::Stack",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "DynamoDBModuleStack": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Parameters": {
+          "DynamoDBIAMRoleARN": {
+            "Fn::GetAtt": [
+              "IAMModuleStack",
+              "Outputs.DynamoDBRoleARN",
+            ],
+          },
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://%%BUCKET_NAME%%-",
+              {
+                "Ref": "AWS::Region",
+              },
+              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release.template",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::Stack",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "EventsModuleStack": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Parameters": {
+          "AlarmsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.AlarmsTable",
+            ],
+          },
+          "CloudWatchEventsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.CloudWatchEventsTable",
+            ],
+          },
+          "ContentTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.ContentTable",
+            ],
+          },
+          "EventsIAMRoleARN": {
+            "Fn::GetAtt": [
+              "IAMModuleStack",
+              "Outputs.EventsRoleARN",
+            ],
+          },
+          "EventsTableName": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStack",
+              "Outputs.EventsTable",
+            ],
+          },
+          "EventsTableRegion": {
+            "Ref": "AWS::Region",
+          },
+          "ItemTTL": {
+            "Ref": "CacheItemTTL",
+          },
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://%%BUCKET_NAME%%-",
+              {
+                "Ref": "AWS::Region",
+              },
+              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release.template",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::Stack",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "IAMModuleStack": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://%%BUCKET_NAME%%-",
+              {
+                "Ref": "AWS::Region",
+              },
+              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release.template",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::Stack",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

@@ -1,0 +1,543 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`msam-dynamodb snapshot test 1`] = `
+{
+  "Description": "Media Services Application Mapper DynamoDB Tables %%VERSION%%",
+  "Outputs": {
+    "AlarmsTable": {
+      "Description": "Alarms table resource name",
+      "Value": {
+        "Ref": "Alarms",
+      },
+    },
+    "ChannelsTable": {
+      "Description": "Channels table resource name",
+      "Value": {
+        "Ref": "Channels",
+      },
+    },
+    "CloudWatchEventsTable": {
+      "Description": "CloudWatchEvents table resource name",
+      "Value": {
+        "Ref": "CloudWatchEvents",
+      },
+    },
+    "ContentTable": {
+      "Description": "Content table resource name",
+      "Value": {
+        "Ref": "Content",
+      },
+    },
+    "EventsTable": {
+      "Description": "Events table resource name",
+      "Value": {
+        "Ref": "Events",
+      },
+    },
+    "LayoutTable": {
+      "Description": "Layout table resource name",
+      "Value": {
+        "Ref": "Layout",
+      },
+    },
+    "NotesTable": {
+      "Description": "Notes table resource name",
+      "Value": {
+        "Ref": "ResourceNotes",
+      },
+    },
+    "SettingsTable": {
+      "Description": "Settings table resource name",
+      "Value": {
+        "Ref": "Settings",
+      },
+    },
+  },
+  "Parameters": {
+    "DynamoDBIAMRoleARN": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the IAM Role ARN for the DynamoDB Lambda functions.",
+      "MinLength": 1,
+      "Type": "String",
+    },
+  },
+  "Resources": {
+    "Alarms": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "RegionAlarmName",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "ResourceArn",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "StateValue",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "StateValueIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "StateValue",
+                "KeyType": "HASH",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+          {
+            "IndexName": "RegionAlarmNameIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "RegionAlarmName",
+                "KeyType": "HASH",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+          {
+            "IndexName": "ResourceArnIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "ResourceArn",
+                "KeyType": "HASH",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "RegionAlarmName",
+            "KeyType": "HASH",
+          },
+          {
+            "AttributeName": "ResourceArn",
+            "KeyType": "RANGE",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Channels": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "channel",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "id",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "channel",
+            "KeyType": "HASH",
+          },
+          {
+            "AttributeName": "id",
+            "KeyType": "RANGE",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CloudWatchEvents": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "resource_arn",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "timestamp",
+            "AttributeType": "N",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "resource_arn",
+            "KeyType": "HASH",
+          },
+          {
+            "AttributeName": "timestamp",
+            "KeyType": "RANGE",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TimeToLiveSpecification": {
+          "AttributeName": "expires",
+          "Enabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Content": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "arn",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "service",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "region",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "ServiceRegionIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "service",
+                "KeyType": "HASH",
+              },
+              {
+                "AttributeName": "region",
+                "KeyType": "RANGE",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "arn",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TimeToLiveSpecification": {
+          "AttributeName": "expires",
+          "Enabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "DefaultSettings": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BUILD_STAMP": "DEV_0_0_0",
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "DefaultSettingsResource",
+            "Arn",
+          ],
+        },
+        "SettingsTable": {
+          "Ref": "Settings",
+        },
+        "StackName": {
+          "Ref": "AWS::StackName",
+        },
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "DefaultSettingsResource": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime version not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Join": [
+              "-",
+              [
+                "%%BUCKET_NAME%%",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/dynamodb_resource_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for adding defaults to the Settings table",
+        "Environment": {
+          "Variables": {
+            "BUILD_STAMP": "DEV_0_0_0",
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+          },
+        },
+        "Handler": "lambda_function.lambda_handler",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "DynamoDBIAMRoleARN",
+        },
+        "Runtime": "python3.8",
+        "Timeout": 300,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "Events": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "resource_arn",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "alarm_id",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "alarm_state",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "source",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "AlarmStateIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "alarm_state",
+                "KeyType": "HASH",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+          {
+            "IndexName": "ResourceAlarmStateIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "resource_arn",
+                "KeyType": "HASH",
+              },
+              {
+                "AttributeName": "alarm_state",
+                "KeyType": "RANGE",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+          {
+            "IndexName": "AlarmStateSourceIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "source",
+                "KeyType": "HASH",
+              },
+              {
+                "AttributeName": "alarm_state",
+                "KeyType": "RANGE",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "resource_arn",
+            "KeyType": "HASH",
+          },
+          {
+            "AttributeName": "alarm_id",
+            "KeyType": "RANGE",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TimeToLiveSpecification": {
+          "AttributeName": "expires",
+          "Enabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Layout": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "view",
+            "AttributeType": "S",
+          },
+          {
+            "AttributeName": "id",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "IdIndex",
+            "KeySchema": [
+              {
+                "AttributeName": "id",
+                "KeyType": "HASH",
+              },
+            ],
+            "Projection": {
+              "ProjectionType": "ALL",
+            },
+          },
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "view",
+            "KeyType": "HASH",
+          },
+          {
+            "AttributeName": "id",
+            "KeyType": "RANGE",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "ResourceNotes": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "resource_arn",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "resource_arn",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Settings": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+}
+`;

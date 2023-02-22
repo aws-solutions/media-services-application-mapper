@@ -985,8 +985,7 @@
                 ],
                 "Description": "MSAM default usage plan",
                 "UsagePlanName": "MSAM Usage Plan"
-            },
-            "DependsOn": "RestAPImsamStage"
+            }
         },
         "APIKey": {
             "Type": "AWS::ApiGateway::ApiKey",

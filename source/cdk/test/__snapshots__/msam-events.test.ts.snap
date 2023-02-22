@@ -1,0 +1,308 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`msam-events snapshot test 1`] = `
+{
+  "Description": "Media Services Application Mapper Event Capture %%VERSION%%",
+  "Mappings": {
+    "SolutionId": {
+      "UserAgent": {
+        "Extra": "AwsSolution/SO0048/%%VERSION%%",
+      },
+    },
+  },
+  "Parameters": {
+    "AlarmsTableName": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the DynamoDB table name that stores alarms for MSAM nodes.",
+      "MinLength": 1,
+      "Type": "String",
+    },
+    "CloudWatchEventsTableName": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the DynamoDB table name that collects all CloudWatch events for MSAM.",
+      "MinLength": 1,
+      "Type": "String",
+    },
+    "ContentTableName": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the DynamoDB table name that stores cached content for MSAM.",
+      "MinLength": 1,
+      "Type": "String",
+    },
+    "EventsIAMRoleARN": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the IAM Role ARN for the Events Lambda functions.",
+      "MinLength": 1,
+      "Type": "String",
+    },
+    "EventsTableName": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the DynamoDB table name that collects MediaLive alert events for MSAM.",
+      "MinLength": 1,
+      "Type": "String",
+    },
+    "EventsTableRegion": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Description": "This is the DynamoDB region where the MSAM events table is located (us-east-1, us-west-2, eu-west-1).",
+      "MinLength": 1,
+      "Type": "String",
+    },
+    "ItemTTL": {
+      "AllowedPattern": "\\S+",
+      "ConstraintDescription": "Please enter a value for this field.",
+      "Default": "604800",
+      "Description": "The number of seconds before a record in the MSAM events table automatically expires and is removed (3600 = 1 hour, 86400 = 1 day, 604800 = 1 week).",
+      "MinLength": 1,
+      "Type": "String",
+    },
+  },
+  "Resources": {
+    "AlarmUpdater": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime version not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Join": [
+              "-",
+              [
+                "%%BUCKET_NAME%%",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/events_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for handling CloudWatch alarm state change events.",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "AlarmsTableName",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "EVENTS_TABLE_REGION": {
+              "Ref": "EventsTableRegion",
+            },
+            "SOLUTION_ID": {
+              "Fn::FindInMap": [
+                "SolutionId",
+                "UserAgent",
+                "Extra",
+              ],
+            },
+          },
+        },
+        "Handler": "cloudwatch_alarm.lambda_handler",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "EventsIAMRoleARN",
+        },
+        "Runtime": "python3.8",
+        "Timeout": 60,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "AlarmUpdaterAlarmChangeStateEvents": {
+      "Properties": {
+        "EventPattern": {
+          "detail-type": [
+            "CloudWatch Alarm State Change",
+          ],
+          "source": [
+            "aws.cloudwatch",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "AlarmUpdater",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "AlarmUpdaterAlarmChangeStateEventsPermission": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "AlarmUpdater",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "AlarmUpdaterAlarmChangeStateEvents",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "Collector": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime version not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Join": [
+              "-",
+              [
+                "%%BUCKET_NAME%%",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/dynamodb_resource_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for handling CloudWatch event notifications",
+        "Environment": {
+          "Variables": {
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "CloudWatchEventsTableName",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "ContentTableName",
+            },
+            "EVENTS_TABLE_NAME": {
+              "Ref": "EventsTableName",
+            },
+            "EVENTS_TABLE_REGION": {
+              "Ref": "EventsTableRegion",
+            },
+            "ITEM_TTL": {
+              "Ref": "ItemTTL",
+            },
+            "SOLUTION_ID": {
+              "Fn::FindInMap": [
+                "SolutionId",
+                "UserAgent",
+                "Extra",
+              ],
+            },
+          },
+        },
+        "Handler": "media_events.lambda_handler",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "EventsIAMRoleARN",
+        },
+        "Runtime": "python3.8",
+        "Timeout": 60,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MediaEvents": {
+      "Properties": {
+        "EventPattern": {
+          "source": [
+            "aws.medialive",
+            "aws.mediapackage",
+            "aws.mediastore",
+            "aws.mediatailor",
+            "aws.mediaconnect",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "Collector",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "MediaEventsPermission": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "Collector",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "MediaEvents",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+  },
+}
+`;
