@@ -430,7 +430,7 @@ def report_metrics(stackname, hours):
         print(json.dumps(data, default=str, indent=4))
         if data["Data"]:
             # send it
-            response = requests.post(METRICS_ENDPOINT, json=data)
+            response = requests.post(METRICS_ENDPOINT, json=data, timeout=60)
             print(f"POST status code = {response.status_code}")
         else:
             print("skipping POST because of empty data")

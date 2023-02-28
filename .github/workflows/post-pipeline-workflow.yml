@@ -95,7 +95,7 @@ jobs:
             }
             return updated
       - name: Check Out Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Create or Update Version Tag
         id: create_tag
         # create a new tag if version tag wasn't found
@@ -136,7 +136,7 @@ jobs:
     if: ${{github.event.inputs.pipeline_status == 'Succeeded'}}
     steps:
       - name: Check Out Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install required system packages
         run: |
           pip install --upgrade --force-reinstall -r deployment/requirements.txt 2> error.txt
