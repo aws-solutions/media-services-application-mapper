@@ -4,66 +4,54 @@ exports[`msam-dynamodb snapshot test 1`] = `
 {
   "Description": "Media Services Application Mapper DynamoDB Tables %%VERSION%%",
   "Outputs": {
-    "AlarmsTable": {
-      "Description": "Alarms table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref": {
       "Value": {
-        "Ref": "Alarms",
+        "Ref": "Alarms04B5A0BF",
       },
     },
-    "ChannelsTable": {
-      "Description": "Channels table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef": {
       "Value": {
-        "Ref": "Channels",
+        "Ref": "Channels23F59B6D",
       },
     },
-    "CloudWatchEventsTable": {
-      "Description": "CloudWatchEvents table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef": {
       "Value": {
-        "Ref": "CloudWatchEvents",
+        "Ref": "CloudWatchEventsFF49B1A7",
       },
     },
-    "ContentTable": {
-      "Description": "Content table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref": {
       "Value": {
-        "Ref": "Content",
+        "Ref": "Content88381566",
       },
     },
-    "EventsTable": {
-      "Description": "Events table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref": {
       "Value": {
-        "Ref": "Events",
+        "Ref": "EventsD32975C2",
       },
     },
-    "LayoutTable": {
-      "Description": "Layout table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref": {
       "Value": {
-        "Ref": "Layout",
+        "Ref": "LayoutE0C03CD7",
       },
     },
-    "NotesTable": {
-      "Description": "Notes table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef": {
       "Value": {
-        "Ref": "ResourceNotes",
+        "Ref": "ResourceNotesF0CA7C8E",
       },
     },
-    "SettingsTable": {
-      "Description": "Settings table resource name",
+    "MediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef": {
       "Value": {
-        "Ref": "Settings",
+        "Ref": "Settings1CCB6159",
       },
     },
   },
   "Parameters": {
-    "DynamoDBIAMRoleARN": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the IAM Role ARN for the DynamoDB Lambda functions.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackDynamoDBRole0562A431Arn": {
       "Type": "String",
     },
   },
   "Resources": {
-    "Alarms": {
+    "Alarms04B5A0BF": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -139,7 +127,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "Channels": {
+    "Channels23F59B6D": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -173,7 +161,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "CloudWatchEvents": {
+    "CloudWatchEventsFF49B1A7": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -211,7 +199,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "Content": {
+    "Content88381566": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -273,12 +261,12 @@ exports[`msam-dynamodb snapshot test 1`] = `
         "BUILD_STAMP": "DEV_0_0_0",
         "ServiceToken": {
           "Fn::GetAtt": [
-            "DefaultSettingsResource",
+            "DefaultSettingsResource66AC9BCF",
             "Arn",
           ],
         },
         "SettingsTable": {
-          "Ref": "Settings",
+          "Ref": "Settings1CCB6159",
         },
         "StackName": {
           "Ref": "AWS::StackName",
@@ -287,7 +275,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::CloudFormation::CustomResource",
       "UpdateReplacePolicy": "Delete",
     },
-    "DefaultSettingsResource": {
+    "DefaultSettingsResource66AC9BCF": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -339,14 +327,14 @@ exports[`msam-dynamodb snapshot test 1`] = `
         "Handler": "lambda_function.lambda_handler",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "DynamoDBIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackDynamoDBRole0562A431Arn",
         },
         "Runtime": "python3.8",
         "Timeout": 300,
       },
       "Type": "AWS::Lambda::Function",
     },
-    "Events": {
+    "EventsD32975C2": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -438,7 +426,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "Layout": {
+    "LayoutE0C03CD7": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -486,7 +474,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "ResourceNotes": {
+    "ResourceNotesF0CA7C8E": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -512,7 +500,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "Settings": {
+    "Settings1CCB6159": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [

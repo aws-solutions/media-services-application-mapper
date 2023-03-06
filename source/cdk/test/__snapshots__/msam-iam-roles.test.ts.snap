@@ -4,64 +4,41 @@ exports[`msam-iam-roles snapshot test 1`] = `
 {
   "Description": "Media Services Application Mapper IAM Roles %%VERSION%%",
   "Outputs": {
-    "CoreRoleARN": {
-      "Description": "IAM Role ARN for the Core module Lambda functions",
+    "MediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn": {
       "Value": {
         "Fn::GetAtt": [
-          "CoreRole",
+          "CoreRoleDEAD5A5F",
           "Arn",
         ],
       },
     },
-    "DynamoDBRoleARN": {
-      "Description": "IAM Role ARN for the DynamoDB module Lambda functions",
+    "MediaServicesApplicationMapperIAMModuleStackDynamoDBRole0562A431Arn": {
       "Value": {
         "Fn::GetAtt": [
-          "DynamoDBRole",
+          "DynamoDBRoleF375A6C0",
           "Arn",
         ],
       },
     },
-    "EventsRoleARN": {
-      "Description": "IAM Role ARN for the Events module Lambda functions",
+    "MediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn": {
       "Value": {
         "Fn::GetAtt": [
-          "EventsRole",
+          "EventsRoleE25E4B25",
           "Arn",
         ],
       },
     },
-    "InstallationGroupLink": {
-      "Description": "Link to IAM to view and assign users to the installation group",
-      "Value": {
-        "Fn::Join": [
-          "",
-          [
-            "https://console.aws.amazon.com/iam/home?#/groups/",
-            {
-              "Ref": "InstallationGroup",
-            },
-          ],
-        ],
-      },
-    },
-    "InstallationManagedPolicy": {
-      "Value": {
-        "Ref": "InstallationManagedPolicyDefinition",
-      },
-    },
-    "WebRoleARN": {
-      "Description": "IAM Role ARN for the Web app module Lambda functions",
+    "MediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn": {
       "Value": {
         "Fn::GetAtt": [
-          "WebRole",
+          "WebRoleCD6F4B98",
           "Arn",
         ],
       },
     },
   },
   "Resources": {
-    "CoreRole": {
+    "CoreRoleDEAD5A5F": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -169,7 +146,7 @@ exports[`msam-iam-roles snapshot test 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "DynamoDBRole": {
+    "DynamoDBRoleF375A6C0": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -231,7 +208,7 @@ exports[`msam-iam-roles snapshot test 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "EventsRole": {
+    "EventsRoleE25E4B25": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -296,10 +273,10 @@ exports[`msam-iam-roles snapshot test 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "InstallationGroup": {
+    "InstallationGroup24D9ABEE": {
       "Type": "AWS::IAM::Group",
     },
-    "InstallationManagedPolicyDefinition": {
+    "InstallationManagedPolicyDefinition92555B09": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -353,7 +330,7 @@ exports[`msam-iam-roles snapshot test 1`] = `
       },
       "Type": "AWS::IAM::ManagedPolicy",
     },
-    "InstallationPolicy": {
+    "InstallationPolicy2BCFA67F": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -387,7 +364,7 @@ exports[`msam-iam-roles snapshot test 1`] = `
       "Properties": {
         "Groups": [
           {
-            "Ref": "InstallationGroup",
+            "Ref": "InstallationGroup24D9ABEE",
           },
         ],
         "PolicyDocument": {
@@ -416,7 +393,7 @@ exports[`msam-iam-roles snapshot test 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "WebRole": {
+    "WebRoleCD6F4B98": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [

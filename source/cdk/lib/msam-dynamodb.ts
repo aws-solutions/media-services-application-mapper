@@ -7,8 +7,6 @@ import {
     aws_iam as iam,
     aws_s3 as s3,
     Aws,
-    CfnElement,
-    CfnParameter,
     CustomResource,
     CustomResourceProps,
     Duration,
@@ -20,8 +18,55 @@ import {
 import { Construct } from 'constructs';
 import * as utils from './utils';
 
+interface MsamDynamoDBProps extends NestedStackProps {
+    /**
+     * This is the IAM Role ARN for the DynamoDB Lambda functions.
+     */
+    readonly DynamoDBIAMRole: iam.Role;
+}
+
 export class MsamDynamoDB extends NestedStack {
-    constructor(scope: Construct, id: string, props?: NestedStackProps) {
+    /**
+     * Alarms table resource name
+     */
+    readonly AlarmsTable: string;
+
+    /**
+     * Channels table resource name
+     */
+    readonly ChannelsTable: string;
+
+    /**
+     * Content table resource name
+     */
+    readonly ContentTable: string;
+
+    /**
+     * Events table resource name
+     */
+    readonly EventsTable: string;
+
+    /**
+     * Layout table resource name
+     */
+    readonly LayoutTable: string;
+
+    /**
+     * Settings table resource name
+     */
+    readonly SettingsTable: string;
+
+    /**
+     * CloudWatchEvents table resource name
+     */
+    readonly CloudWatchEventsTable: string;
+
+    /**
+     * Notes table resource name
+     */
+    readonly NotesTable: string;
+
+    constructor(scope: Construct, id: string, props: MsamDynamoDBProps) {
         super(
             scope,
             id,
@@ -30,17 +75,6 @@ export class MsamDynamoDB extends NestedStack {
                 description: 'Media Services Application Mapper DynamoDB Tables %%VERSION%%',
             }
         );
-
-        /**
-         * CFN Parameters
-         */
-        const dynamoDBIAMRoleARN = new CfnParameter(this, 'DynamoDBIAMRoleARN', {
-            description: 'This is the IAM Role ARN for the DynamoDB Lambda functions.',
-            type: 'String',
-            allowedPattern: '\\S+',
-            minLength: 1,
-            constraintDescription: 'Please enter a value for this field.'
-        });
 
         /**
          * Lambda Functions
@@ -61,10 +95,11 @@ export class MsamDynamoDB extends NestedStack {
                 BUILD_STAMP: 'DEV_0_0_0',
                 SOLUTION_ID: 'AwsSolution/SO0048/%%VERSION%%',
             },
-            role: iam.Role.fromRoleArn(this, 'DynamoDBIAMRole', dynamoDBIAMRoleARN.valueAsString),
+            role: props.DynamoDBIAMRole,
             runtime: lambda.Runtime.PYTHON_3_8,
             timeout: Duration.seconds(300),
         });
+
         utils.setNagSuppressRules(defaultSettingsResourceFunction,
             {
                 id: 'W58',
@@ -100,6 +135,8 @@ export class MsamDynamoDB extends NestedStack {
             },
         });
 
+        this.ChannelsTable = channelsTable.tableName;
+
         // Events DynamoDB Table
         const eventsTable = this.createDynamoDB('Events', {
             partitionKey: {
@@ -112,6 +149,9 @@ export class MsamDynamoDB extends NestedStack {
             },
             timeToLiveAttribute: 'expires',
         });
+
+        this.EventsTable = eventsTable.tableName;
+
         eventsTable.addGlobalSecondaryIndex({
             indexName: 'AlarmStateIndex',
             partitionKey: {
@@ -120,6 +160,7 @@ export class MsamDynamoDB extends NestedStack {
             },
             projectionType: dynamodb.ProjectionType.ALL,
         });
+
         eventsTable.addGlobalSecondaryIndex({
             indexName: 'ResourceAlarmStateIndex',
             partitionKey: {
@@ -132,6 +173,7 @@ export class MsamDynamoDB extends NestedStack {
             },
             projectionType: dynamodb.ProjectionType.ALL,
         });
+
         eventsTable.addGlobalSecondaryIndex({
             indexName: 'AlarmStateSourceIndex',
             partitionKey: {
@@ -156,6 +198,8 @@ export class MsamDynamoDB extends NestedStack {
                 type: dynamodb.AttributeType.STRING,
             },
         });
+
+        this.LayoutTable = layoutTable.tableName;
         layoutTable.addGlobalSecondaryIndex({
             indexName: 'IdIndex',
             partitionKey: {
@@ -173,6 +217,8 @@ export class MsamDynamoDB extends NestedStack {
             },
         });
 
+        this.SettingsTable = settingsTable.tableName;
+
         // Content DynamoDB Table
         const contentTable = this.createDynamoDB('Content', {
             partitionKey: {
@@ -181,6 +227,9 @@ export class MsamDynamoDB extends NestedStack {
             },
             timeToLiveAttribute: 'expires',
         });
+
+        this.ContentTable = contentTable.tableName;
+
         contentTable.addGlobalSecondaryIndex({
             indexName: 'ServiceRegionIndex',
             partitionKey: {
@@ -205,6 +254,9 @@ export class MsamDynamoDB extends NestedStack {
                 type: dynamodb.AttributeType.STRING,
             },
         });
+
+        this.AlarmsTable = alarmTable.tableName;
+
         alarmTable.addGlobalSecondaryIndex({
             indexName: 'StateValueIndex',
             partitionKey: {
@@ -213,6 +265,7 @@ export class MsamDynamoDB extends NestedStack {
             },
             projectionType: dynamodb.ProjectionType.ALL,
         });
+
         alarmTable.addGlobalSecondaryIndex({
             indexName: 'RegionAlarmNameIndex',
             partitionKey: {
@@ -221,6 +274,7 @@ export class MsamDynamoDB extends NestedStack {
             },
             projectionType: dynamodb.ProjectionType.ALL,
         });
+
         alarmTable.addGlobalSecondaryIndex({
             indexName: 'ResourceArnIndex',
             partitionKey: {
@@ -243,6 +297,8 @@ export class MsamDynamoDB extends NestedStack {
             timeToLiveAttribute: 'expires',
         });
 
+        this.CloudWatchEventsTable = cloudWatchEventsTable.tableName;
+
         // ResourceNotes DynamoDB Table
         const resourceNotesTable = this.createDynamoDB('ResourceNotes', {
             partitionKey: {
@@ -250,6 +306,8 @@ export class MsamDynamoDB extends NestedStack {
                 type: dynamodb.AttributeType.STRING,
             },
         });
+
+        this.NotesTable = resourceNotesTable.tableName;
 
         /**
          * Custom Resources
@@ -263,49 +321,6 @@ export class MsamDynamoDB extends NestedStack {
                 BUILD_STAMP: 'DEV_0_0_0',
                 StackName: Aws.STACK_NAME,
             },
-        });
-        
-        /**
-         * CfnOutputs
-         */
-        utils.createCfnOutput(this, 'AlarmsTable', {
-            description: 'Alarms table resource name',
-            value: alarmTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'ChannelsTable', {
-            description: 'Channels table resource name',
-            value: channelsTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'ContentTable', {
-            description: 'Content table resource name',
-            value: contentTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'EventsTable', {
-            description: 'Events table resource name',
-            value: eventsTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'LayoutTable', {
-            description: 'Layout table resource name',
-            value: layoutTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'SettingsTable', {
-            description: 'Settings table resource name',
-            value: settingsTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'CloudWatchEventsTable', {
-            description: 'CloudWatchEvents table resource name',
-            value: cloudWatchEventsTable.tableName,
-        });
-
-        utils.createCfnOutput(this, 'NotesTable', {
-            description: 'Notes table resource name',
-            value: resourceNotesTable.tableName,
         });
     }
 
@@ -321,9 +336,5 @@ export class MsamDynamoDB extends NestedStack {
 
     createCustomResource(id: string, props: CustomResourceProps): CustomResource{
         return new CustomResource(this, id, props);
-    }
-
-    getLogicalId(element: CfnElement): string {
-        return utils.cleanUpLogicalId(super.getLogicalId(element));
     }
 }

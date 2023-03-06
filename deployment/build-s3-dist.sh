@@ -70,6 +70,7 @@ template_dir="$PWD" # /deployment
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
 source_dir="$template_dir/../source"
+msam_core_dist_dir="$source_dir/cdk/dist"
 
 echo "------------------------------------------------------------------------------"
 echo "[Init] Clean old dist, node_modules and bower_components folders"
@@ -88,10 +89,10 @@ echo "mkdir -p $build_dist_dir"
 mkdir -p $build_dist_dir
 
 # <root_dir>/source/cdk/dist
-echo "rm -rf $source_dir/cdk/dist"
-rm -rf "$source_dir/cdk/dist"
-echo "mkdir -p $source_dir/cdk/dist"
-mkdir -p "$source_dir/cdk/dist"
+echo "rm -rf $msam_core_dist_dir"
+rm -rf "$msam_core_dist_dir"
+echo "mkdir -p $msam_core_dist_dir"
+mkdir -p "$msam_core_dist_dir"
 
 # date stamp for this build
 STAMP=`date +%s`
@@ -107,12 +108,12 @@ echo ------------------------------------
 echo
 
 cd msam
-chalice package --merge-template merge_template.json ../cdk/dist/
+chalice package $msam_core_dist_dir
 if [ $? -ne 0 ]; then
   echo "ERROR: running chalice package"
   exit 1
 fi
-cd $source_dir/cdk/dist
+cd $msam_core_dist_dir
 # mv zip file to regional asset dir
 mv deployment.zip $build_dist_dir/core_$STAMP.zip
 # rename sam.json
@@ -214,17 +215,9 @@ echo
 
 # install npm package dependencies
 cd $source_dir/cdk
-echo "npm install"
-npm install
-# build javascript source files from typescript
-echo "npm run build"
-npm run build
 
-# clear context and synthesize cdk project
-echo "clear cdk context"
-npx cdk context --clear
 echo "cdk synth"
-npx cdk synth -q
+npm run synth
 
 # remove all output except cfn template files
 echo "removing unnecessary cdk output files..."

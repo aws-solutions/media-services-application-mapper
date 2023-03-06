@@ -6,7 +6,7 @@ npm install
 
 echo "building core template via chalice..."
 cd $msam_dir
-chalice package --merge-template merge_template.json ../cdk/dist
+chalice package ../cdk/dist
 
 cd $cdk_dir
 

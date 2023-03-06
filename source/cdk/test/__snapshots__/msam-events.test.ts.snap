@@ -11,59 +11,27 @@ exports[`msam-events snapshot test 1`] = `
     },
   },
   "Parameters": {
-    "AlarmsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores alarms for MSAM nodes.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
       "Type": "String",
     },
-    "CloudWatchEventsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that collects all CloudWatch events for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref": {
       "Type": "String",
     },
-    "ContentTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores cached content for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef": {
       "Type": "String",
     },
-    "EventsIAMRoleARN": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the IAM Role ARN for the Events Lambda functions.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref": {
       "Type": "String",
     },
-    "EventsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that collects MediaLive alert events for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref": {
       "Type": "String",
     },
-    "EventsTableRegion": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB region where the MSAM events table is located (us-east-1, us-west-2, eu-west-1).",
-      "MinLength": 1,
-      "Type": "String",
-    },
-    "ItemTTL": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Default": "604800",
-      "Description": "The number of seconds before a record in the MSAM events table automatically expires and is removed (3600 = 1 hour, 86400 = 1 day, 604800 = 1 week).",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn": {
       "Type": "String",
     },
   },
   "Resources": {
-    "AlarmUpdater": {
+    "AlarmUpdater6FDC3F1D": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -109,11 +77,11 @@ exports[`msam-events snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "EVENTS_TABLE_REGION": {
-              "Ref": "EventsTableRegion",
+              "Ref": "AWS::Region",
             },
             "SOLUTION_ID": {
               "Fn::FindInMap": [
@@ -127,14 +95,14 @@ exports[`msam-events snapshot test 1`] = `
         "Handler": "cloudwatch_alarm.lambda_handler",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "EventsIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn",
         },
         "Runtime": "python3.8",
         "Timeout": 60,
       },
       "Type": "AWS::Lambda::Function",
     },
-    "AlarmUpdaterAlarmChangeStateEvents": {
+    "AlarmUpdaterAlarmChangeStateEventsA22ABD95": {
       "Properties": {
         "EventPattern": {
           "detail-type": [
@@ -149,7 +117,7 @@ exports[`msam-events snapshot test 1`] = `
           {
             "Arn": {
               "Fn::GetAtt": [
-                "AlarmUpdater",
+                "AlarmUpdater6FDC3F1D",
                 "Arn",
               ],
             },
@@ -159,26 +127,26 @@ exports[`msam-events snapshot test 1`] = `
       },
       "Type": "AWS::Events::Rule",
     },
-    "AlarmUpdaterAlarmChangeStateEventsPermission": {
+    "AlarmUpdaterAlarmChangeStateEventsAllowEventRuleMediaServicesApplicationMapperEventsModuleStackAlarmUpdater706835E134F56820": {
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "AlarmUpdater",
+            "AlarmUpdater6FDC3F1D",
             "Arn",
           ],
         },
         "Principal": "events.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "AlarmUpdaterAlarmChangeStateEvents",
+            "AlarmUpdaterAlarmChangeStateEventsA22ABD95",
             "Arn",
           ],
         },
       },
       "Type": "AWS::Lambda::Permission",
     },
-    "Collector": {
+    "Collector9EBA7CF5": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -225,19 +193,19 @@ exports[`msam-events snapshot test 1`] = `
           "Variables": {
             "BUILD_STAMP": "DEV_0_0_0",
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "EVENTS_TABLE_REGION": {
-              "Ref": "EventsTableRegion",
+              "Ref": "AWS::Region",
             },
             "ITEM_TTL": {
-              "Ref": "ItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "SOLUTION_ID": {
               "Fn::FindInMap": [
@@ -251,14 +219,14 @@ exports[`msam-events snapshot test 1`] = `
         "Handler": "media_events.lambda_handler",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "EventsIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn",
         },
         "Runtime": "python3.8",
         "Timeout": 60,
       },
       "Type": "AWS::Lambda::Function",
     },
-    "MediaEvents": {
+    "MediaEvents346D729A": {
       "Properties": {
         "EventPattern": {
           "source": [
@@ -274,7 +242,7 @@ exports[`msam-events snapshot test 1`] = `
           {
             "Arn": {
               "Fn::GetAtt": [
-                "Collector",
+                "Collector9EBA7CF5",
                 "Arn",
               ],
             },
@@ -284,19 +252,19 @@ exports[`msam-events snapshot test 1`] = `
       },
       "Type": "AWS::Events::Rule",
     },
-    "MediaEventsPermission": {
+    "MediaEventsAllowEventRuleMediaServicesApplicationMapperEventsModuleStackCollector0814B3F9E4AA863F": {
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "Collector",
+            "Collector9EBA7CF5",
             "Arn",
           ],
         },
         "Principal": "events.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "MediaEvents",
+            "MediaEvents346D729A",
             "Arn",
           ],
         },

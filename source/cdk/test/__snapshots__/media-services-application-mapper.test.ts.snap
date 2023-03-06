@@ -7,27 +7,68 @@ exports[`media-services-application-mapper snapshot test 1`] = `
     "APIKeyID": {
       "Description": "Link for retrieving API key needed by the MSAM browser application",
       "Value": {
-        "Fn::GetAtt": [
-          "CoreModuleStack",
-          "Outputs.APIKeyID",
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".console.aws.amazon.com/apigateway/home?region=",
+            {
+              "Ref": "AWS::Region",
+            },
+            "#/api-keys/",
+            {
+              "Fn::GetAtt": [
+                "CoreModuleStackNestedStackCoreModuleStackNestedStackResource2A4BEE47",
+                "Outputs.MediaServicesApplicationMapperCoreModuleStackAPIKey9BCD1F3FRef",
+              ],
+            },
+          ],
         ],
       },
     },
     "EndpointURL": {
       "Description": "The endpoint needed by the MSAM browser application",
       "Value": {
-        "Fn::GetAtt": [
-          "CoreModuleStack",
-          "Outputs.EndpointURL",
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": [
+                "CoreModuleStackNestedStackCoreModuleStackNestedStackResource2A4BEE47",
+                "Outputs.MediaServicesApplicationMapperCoreModuleStackRestAPI418838E7Ref",
+              ],
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/msam/",
+          ],
         ],
       },
     },
     "MSAMBrowserURL": {
       "Description": "URL for the MSAM browser application",
       "Value": {
-        "Fn::GetAtt": [
-          "BrowserAppModuleStack",
-          "Outputs.MSAMBrowserURL",
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": [
+                "BrowserAppModuleStackNestedStackBrowserAppModuleStackNestedStackResource6F2C1DA7",
+                "Outputs.MediaServicesApplicationMapperBrowserAppModuleStackMSAMAppBucketCloudFrontDistributionA6217434DomainName",
+              ],
+            },
+          ],
         ],
       },
     },
@@ -48,14 +89,17 @@ exports[`media-services-application-mapper snapshot test 1`] = `
     },
   },
   "Resources": {
-    "BrowserAppModuleStack": {
+    "BrowserAppModuleStackNestedStackBrowserAppModuleStackNestedStackResource6F2C1DA7": {
       "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+      ],
       "Properties": {
         "Parameters": {
-          "WebIAMRoleARN": {
+          "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn": {
             "Fn::GetAtt": [
-              "IAMModuleStack",
-              "Outputs.WebRoleARN",
+              "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+              "Outputs.MediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn",
             ],
           },
         },
@@ -67,7 +111,11 @@ exports[`media-services-application-mapper snapshot test 1`] = `
               {
                 "Ref": "AWS::Region",
               },
-              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release.template",
+              ".s3.",
+              {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release.template",
             ],
           ],
         },
@@ -75,68 +123,65 @@ exports[`media-services-application-mapper snapshot test 1`] = `
       "Type": "AWS::CloudFormation::Stack",
       "UpdateReplacePolicy": "Delete",
     },
-    "CoreModuleStack": {
+    "CoreModuleStackNestedStackCoreModuleStackNestedStackResource2A4BEE47": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "Parameters": {
-          "AlarmsTableName": {
-            "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.AlarmsTable",
-            ],
-          },
-          "CacheItemTTL": {
+          "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
             "Ref": "CacheItemTTL",
           },
-          "ChannelsTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.ChannelsTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             ],
           },
-          "CloudWatchEventsTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.CloudWatchEventsTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             ],
           },
-          "ContentTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.ContentTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             ],
           },
-          "CoreIAMRoleARN": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref": {
             "Fn::GetAtt": [
-              "IAMModuleStack",
-              "Outputs.CoreRoleARN",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             ],
           },
-          "EventsTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.EventsTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             ],
           },
-          "LayoutTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.LayoutTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             ],
           },
-          "NotesTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.NotesTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef",
             ],
           },
-          "RootStackName": {
-            "Ref": "AWS::StackName",
-          },
-          "SettingsTableName": {
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef": {
             "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.SettingsTable",
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            ],
+          },
+          "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn": {
+            "Fn::GetAtt": [
+              "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+              "Outputs.MediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
             ],
           },
         },
@@ -148,7 +193,11 @@ exports[`media-services-application-mapper snapshot test 1`] = `
               {
                 "Ref": "AWS::Region",
               },
-              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release.template",
+              ".s3.",
+              {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release.template",
             ],
           ],
         },
@@ -156,14 +205,17 @@ exports[`media-services-application-mapper snapshot test 1`] = `
       "Type": "AWS::CloudFormation::Stack",
       "UpdateReplacePolicy": "Delete",
     },
-    "DynamoDBModuleStack": {
+    "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2": {
       "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+      ],
       "Properties": {
         "Parameters": {
-          "DynamoDBIAMRoleARN": {
+          "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackDynamoDBRole0562A431Arn": {
             "Fn::GetAtt": [
-              "IAMModuleStack",
-              "Outputs.DynamoDBRoleARN",
+              "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+              "Outputs.MediaServicesApplicationMapperIAMModuleStackDynamoDBRole0562A431Arn",
             ],
           },
         },
@@ -175,7 +227,11 @@ exports[`media-services-application-mapper snapshot test 1`] = `
               {
                 "Ref": "AWS::Region",
               },
-              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release.template",
+              ".s3.",
+              {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release.template",
             ],
           ],
         },
@@ -183,46 +239,46 @@ exports[`media-services-application-mapper snapshot test 1`] = `
       "Type": "AWS::CloudFormation::Stack",
       "UpdateReplacePolicy": "Delete",
     },
-    "EventsModuleStack": {
+    "EventsModuleStackNestedStackEventsModuleStackNestedStackResourceB2BBE329": {
       "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+      ],
       "Properties": {
         "Parameters": {
-          "AlarmsTableName": {
-            "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.AlarmsTable",
-            ],
-          },
-          "CloudWatchEventsTableName": {
-            "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.CloudWatchEventsTable",
-            ],
-          },
-          "ContentTableName": {
-            "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.ContentTable",
-            ],
-          },
-          "EventsIAMRoleARN": {
-            "Fn::GetAtt": [
-              "IAMModuleStack",
-              "Outputs.EventsRoleARN",
-            ],
-          },
-          "EventsTableName": {
-            "Fn::GetAtt": [
-              "DynamoDBModuleStack",
-              "Outputs.EventsTable",
-            ],
-          },
-          "EventsTableRegion": {
-            "Ref": "AWS::Region",
-          },
-          "ItemTTL": {
+          "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
             "Ref": "CacheItemTTL",
           },
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            ],
+          },
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            ],
+          },
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            ],
+          },
+          "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref": {
+            "Fn::GetAtt": [
+              "DynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResourceB4888FC2",
+              "Outputs.MediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            ],
+          },
+          "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn": {
+            "Fn::GetAtt": [
+              "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E",
+              "Outputs.MediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn",
+            ],
+          },
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -232,7 +288,11 @@ exports[`media-services-application-mapper snapshot test 1`] = `
               {
                 "Ref": "AWS::Region",
               },
-              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release.template",
+              ".s3.",
+              {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release.template",
             ],
           ],
         },
@@ -240,7 +300,7 @@ exports[`media-services-application-mapper snapshot test 1`] = `
       "Type": "AWS::CloudFormation::Stack",
       "UpdateReplacePolicy": "Delete",
     },
-    "IAMModuleStack": {
+    "IAMModuleStackNestedStackIAMModuleStackNestedStackResource8BA6A78E": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "TemplateURL": {
@@ -251,7 +311,11 @@ exports[`media-services-application-mapper snapshot test 1`] = `
               {
                 "Ref": "AWS::Region",
               },
-              ".s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release.template",
+              ".s3.",
+              {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release.template",
             ],
           ],
         },

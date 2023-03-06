@@ -4,48 +4,17 @@ exports[`msam-browser-app snapshot test 1`] = `
 {
   "Description": "Media Services Application Mapper Browser Application %%VERSION%%",
   "Outputs": {
-    "MSAMBrowserAppBucket": {
-      "Description": "MSAM browser application bucket",
+    "MediaServicesApplicationMapperBrowserAppModuleStackMSAMAppBucketCloudFrontDistributionA6217434DomainName": {
       "Value": {
-        "Fn::Join": [
-          "",
-          [
-            "https://s3.console.aws.amazon.com/s3/buckets/",
-            {
-              "Ref": "MSAMBrowserAppBucketResource",
-            },
-            "/?region=",
-            {
-              "Ref": "AWS::Region",
-            },
-          ],
-        ],
-      },
-    },
-    "MSAMBrowserURL": {
-      "Description": "URL for the MSAM browser application via CloudFront",
-      "Value": {
-        "Fn::Join": [
-          "",
-          [
-            "https://",
-            {
-              "Fn::GetAtt": [
-                "MSAMAppBucketCloudFrontDistribution",
-                "DomainName",
-              ],
-            },
-          ],
+        "Fn::GetAtt": [
+          "MSAMAppBucketCloudFrontDistribution",
+          "DomainName",
         ],
       },
     },
   },
   "Parameters": {
-    "WebIAMRoleARN": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the IAM Role ARN for the Web app Lambda functions.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn": {
       "Type": "String",
     },
   },
@@ -85,7 +54,7 @@ exports[`msam-browser-app snapshot test 1`] = `
               [
                 "CDN for ",
                 {
-                  "Ref": "MSAMBrowserAppBucketResource",
+                  "Ref": "MSAMBrowserAppBucketB112E0BD",
                 },
               ],
             ],
@@ -117,7 +86,7 @@ exports[`msam-browser-app snapshot test 1`] = `
             "MaxTTL": 86400,
             "MinTTL": 3600,
             "TargetOriginId": {
-              "Ref": "MSAMBrowserAppBucketResource",
+              "Ref": "MSAMBrowserAppBucketB112E0BD",
             },
             "ViewerProtocolPolicy": "https-only",
           },
@@ -125,18 +94,9 @@ exports[`msam-browser-app snapshot test 1`] = `
           "Enabled": true,
           "Logging": {
             "Bucket": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Ref": "MSAMBrowserAppLoggingBucket",
-                  },
-                  ".s3.",
-                  {
-                    "Ref": "AWS::Region",
-                  },
-                  ".amazonaws.com",
-                ],
+              "Fn::GetAtt": [
+                "MSAMBrowserAppLoggingBucket898E5B4B",
+                "RegionalDomainName",
               ],
             },
             "Prefix": "cloudfront/",
@@ -144,22 +104,13 @@ exports[`msam-browser-app snapshot test 1`] = `
           "Origins": [
             {
               "DomainName": {
-                "Fn::Join": [
-                  "",
-                  [
-                    {
-                      "Ref": "MSAMBrowserAppBucketResource",
-                    },
-                    ".s3.",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ".amazonaws.com",
-                  ],
+                "Fn::GetAtt": [
+                  "MSAMBrowserAppBucketB112E0BD",
+                  "RegionalDomainName",
                 ],
               },
               "Id": {
-                "Ref": "MSAMBrowserAppBucketResource",
+                "Ref": "MSAMBrowserAppBucketB112E0BD",
               },
               "S3OriginConfig": {
                 "OriginAccessIdentity": {
@@ -168,7 +119,7 @@ exports[`msam-browser-app snapshot test 1`] = `
                     [
                       "origin-access-identity/cloudfront/",
                       {
-                        "Ref": "MSAMAppBucketOriginAccessIdentity",
+                        "Ref": "MSAMAppBucketOriginAccessIdentity73947A70",
                       },
                     ],
                   ],
@@ -191,7 +142,7 @@ exports[`msam-browser-app snapshot test 1`] = `
       },
       "Type": "AWS::CloudFront::Distribution",
     },
-    "MSAMAppBucketOriginAccessIdentity": {
+    "MSAMAppBucketOriginAccessIdentity73947A70": {
       "Properties": {
         "CloudFrontOriginAccessIdentityConfig": {
           "Comment": {
@@ -200,7 +151,7 @@ exports[`msam-browser-app snapshot test 1`] = `
               [
                 "Origin Access Identity for ",
                 {
-                  "Ref": "MSAMBrowserAppBucketResource",
+                  "Ref": "MSAMBrowserAppBucketB112E0BD",
                 },
               ],
             ],
@@ -209,56 +160,7 @@ exports[`msam-browser-app snapshot test 1`] = `
       },
       "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
     },
-    "MSAMBrowserAppBucketPolicy": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-S10",
-              "reason": "HTTPS requirement not supported at this time.",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "Bucket": {
-          "Ref": "MSAMBrowserAppBucketResource",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:GetObject",
-              "Effect": "Allow",
-              "Principal": {
-                "CanonicalUser": {
-                  "Fn::GetAtt": [
-                    "MSAMAppBucketOriginAccessIdentity",
-                    "S3CanonicalUserId",
-                  ],
-                },
-              },
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    {
-                      "Fn::GetAtt": [
-                        "MSAMBrowserAppBucketResource",
-                        "Arn",
-                      ],
-                    },
-                    "/*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
-    "MSAMBrowserAppBucketResource": {
+    "MSAMBrowserAppBucketB112E0BD": {
       "DeletionPolicy": "Retain",
       "Metadata": {
         "cdk_nag": {
@@ -309,7 +211,7 @@ exports[`msam-browser-app snapshot test 1`] = `
         },
         "LoggingConfiguration": {
           "DestinationBucketName": {
-            "Ref": "MSAMBrowserAppLoggingBucket",
+            "Ref": "MSAMBrowserAppLoggingBucket898E5B4B",
           },
           "LogFilePrefix": "app-bucket/",
         },
@@ -317,7 +219,56 @@ exports[`msam-browser-app snapshot test 1`] = `
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "MSAMBrowserAppLoggingBucket": {
+    "MSAMBrowserAppBucketPolicy": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-S10",
+              "reason": "HTTPS requirement not supported at this time.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Bucket": {
+          "Ref": "MSAMBrowserAppBucketB112E0BD",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "CanonicalUser": {
+                  "Fn::GetAtt": [
+                    "MSAMAppBucketOriginAccessIdentity73947A70",
+                    "S3CanonicalUserId",
+                  ],
+                },
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "MSAMBrowserAppBucketB112E0BD",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "MSAMBrowserAppLoggingBucket898E5B4B": {
       "DeletionPolicy": "Retain",
       "Metadata": {
         "cdk_nag": {
@@ -384,11 +335,11 @@ exports[`msam-browser-app snapshot test 1`] = `
       "Properties": {
         "BUILD_STAMP": "DEV_0_0_0",
         "BucketName": {
-          "Ref": "MSAMBrowserAppBucketResource",
+          "Ref": "MSAMBrowserAppBucketB112E0BD",
         },
         "ServiceToken": {
           "Fn::GetAtt": [
-            "MSAMWebContentResource",
+            "MSAMWebContentResourceBB737197",
             "Arn",
           ],
         },
@@ -400,7 +351,7 @@ exports[`msam-browser-app snapshot test 1`] = `
       "Type": "AWS::CloudFormation::CustomResource",
       "UpdateReplacePolicy": "Delete",
     },
-    "MSAMWebContentResource": {
+    "MSAMWebContentResourceBB737197": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -453,14 +404,14 @@ exports[`msam-browser-app snapshot test 1`] = `
         "Handler": "cfn_bucket_loader.handler",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "WebIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn",
         },
         "Runtime": "python3.8",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
     },
-    "MSAMWebInvalidationResource": {
+    "MSAMWebInvalidationResource94603649": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -513,7 +464,7 @@ exports[`msam-browser-app snapshot test 1`] = `
         "Handler": "cfn_invalidate_resource.handler",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "WebIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn",
         },
         "Runtime": "python3.8",
         "Timeout": 300,
@@ -525,7 +476,7 @@ exports[`msam-browser-app snapshot test 1`] = `
       "Properties": {
         "BUILD_STAMP": "DEV_0_0_0",
         "BucketName": {
-          "Ref": "MSAMBrowserAppBucketResource",
+          "Ref": "MSAMBrowserAppBucketB112E0BD",
         },
         "DistributionId": {
           "Fn::GetAtt": [
@@ -535,7 +486,7 @@ exports[`msam-browser-app snapshot test 1`] = `
         },
         "ServiceToken": {
           "Fn::GetAtt": [
-            "MSAMWebInvalidationResource",
+            "MSAMWebInvalidationResource94603649",
             "Arn",
           ],
         },

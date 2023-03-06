@@ -7,8 +7,6 @@ import {
     aws_iam as iam,
     aws_lambda as lambda,
     aws_s3 as s3,
-    CfnElement,
-    CfnParameter,
     CustomResource,
     CustomResourceProps,
     Duration,
@@ -19,8 +17,25 @@ import {
 import { Construct } from 'constructs';
 import * as utils from './utils';
 
+interface MsamBrowserAppProps extends NestedStackProps {
+    /**
+     * This is the IAM Role ARN for the Web app Lambda functions.
+     */
+    readonly WebIAMRole: iam.Role;
+}
+
 export class MsamBrowserApp extends NestedStack {
-    constructor(scope: Construct, id: string, props?: NestedStackProps) {
+    /**
+     * URL for the MSAM browser application via CloudFront
+     */
+    readonly MSAMBrowserURL: string;
+
+    /**
+     * MSAM browser application bucket
+     */
+    readonly MSAMBrowserAppBucket: string;
+
+    constructor(scope: Construct, id: string, props: MsamBrowserAppProps) {
         super(
             scope,
             id,
@@ -29,17 +44,6 @@ export class MsamBrowserApp extends NestedStack {
                 description: 'Media Services Application Mapper Browser Application %%VERSION%%',
             }
         );
-
-        /**
-         * Parameters
-         */
-        const webIamRoleArn = new CfnParameter(this, 'WebIAMRoleARN', {
-            description: 'This is the IAM Role ARN for the Web app Lambda functions.',
-            type: 'String',
-            allowedPattern: '\\S+',
-            minLength: 1,
-            constraintDescription: 'Please enter a value for this field.',
-        });
 
         /**
          * Resources
@@ -79,7 +83,7 @@ export class MsamBrowserApp extends NestedStack {
         );
 
         // Browser App S3 Bucket
-        const s3BucketBrowserApp = new s3.Bucket(this, 'MSAMBrowserAppBucketResource', {
+        const s3BucketBrowserApp = new s3.Bucket(this, 'MSAMBrowserAppBucket', {
             cors: [
                 {
                     allowedHeaders: ['*'],
@@ -89,6 +93,13 @@ export class MsamBrowserApp extends NestedStack {
             ],
             encryption: s3.BucketEncryption.S3_MANAGED,
         });
+
+        this.MSAMBrowserAppBucket = Fn.join('', [
+            'https://s3.console.aws.amazon.com/s3/buckets/',
+            s3BucketBrowserApp.bucketName,
+            '/?region=',
+            Aws.REGION,
+        ]);
 
         utils.setNagSuppressRules(s3BucketBrowserApp,
             {
@@ -146,6 +157,11 @@ export class MsamBrowserApp extends NestedStack {
         )
 
         // CloudFront Distribution
+        /**
+         * Distribution L2 construct is available for use
+         * The solution, however, requires many cloudfront propeties not supported in L2 construct's native props
+         * Thus, the L1 CfnCloudfront is used instead.
+         */
         const cloudfrontDistribution = new cloudfront.CfnDistribution(this, 'MSAMAppBucketCloudFrontDistribution', {
             distributionConfig: {
                 comment: Fn.join('', [
@@ -184,12 +200,7 @@ export class MsamBrowserApp extends NestedStack {
                 defaultRootObject: 'index.html',
                 enabled: true,
                 origins: [{
-                    domainName: Fn.join('', [
-                        s3BucketBrowserApp.bucketName,
-                        '.s3.',
-                        Aws.REGION,
-                        '.amazonaws.com',
-                    ]),
+                    domainName: s3BucketBrowserApp.bucketRegionalDomainName,
                     id: s3BucketBrowserApp.bucketName,
                     s3OriginConfig: {
                         originAccessIdentity: Fn.join('', [
@@ -210,16 +221,15 @@ export class MsamBrowserApp extends NestedStack {
                     minimumProtocolVersion: 'TLSv1.2_2019',
                 },
                 logging: {
-                    bucket: Fn.join('', [
-                        s3BucketbrowserAppLogs.bucketName,
-                        '.s3.',
-                        Aws.REGION,
-                        '.amazonaws.com',
-                    ]),
+                    bucket: s3BucketbrowserAppLogs.bucketRegionalDomainName,
                     prefix: 'cloudfront/',
                 },
             }
         });
+        this.MSAMBrowserURL = Fn.join('', [
+            'https://',
+            cloudfrontDistribution.attrDomainName,
+        ]);
         utils.setNagSuppressRules(cloudfrontDistribution,
             {
                 id: 'W70',
@@ -254,7 +264,7 @@ export class MsamBrowserApp extends NestedStack {
             handler: 'cfn_bucket_loader.handler',
             description: 'MSAM Lambda for custom CloudFormation resource for loading web application',
             memorySize: 2560,
-            role: iam.Role.fromRoleArn(this, 'WebContentIAMRoleARN', webIamRoleArn.valueAsString),
+            role: props.WebIAMRole,
             runtime: lambda.Runtime.PYTHON_3_8,
             timeout: Duration.seconds(900),
         });
@@ -306,7 +316,7 @@ export class MsamBrowserApp extends NestedStack {
             handler: 'cfn_invalidate_resource.handler',
             description: 'MSAM Lambda for custom resource for invalidating CloudFront after update',
             memorySize: 2560,
-            role: iam.Role.fromRoleArn(this, 'WebInvalidationIAMRoleARN', webIamRoleArn.valueAsString),
+            role: props.WebIAMRole,
             runtime: lambda.Runtime.PYTHON_3_8,
             timeout: Duration.seconds(300),
         });
@@ -340,25 +350,6 @@ export class MsamBrowserApp extends NestedStack {
                 DistributionId: cloudfrontDistribution.attrId,
             },
         });
-
-        // Outputs
-        utils.createCfnOutput(this, 'MSAMBrowserURL', {
-            description: 'URL for the MSAM browser application via CloudFront',
-            value: Fn.join('', [
-                'https://',
-                cloudfrontDistribution.attrDomainName,
-            ])
-        });
-
-        utils.createCfnOutput(this, 'MSAMBrowserAppBucket', {
-            description: 'MSAM browser application bucket',
-            value: Fn.join('', [
-                'https://s3.console.aws.amazon.com/s3/buckets/',
-                s3BucketBrowserApp.bucketName,
-                '/?region=',
-                Aws.REGION,
-            ])
-        });
     }
 
     createCustomResource(id: string, props: CustomResourceProps) {
@@ -367,9 +358,5 @@ export class MsamBrowserApp extends NestedStack {
 
     createS3BucketPolicy(id: string, props: s3.CfnBucketPolicyProps) {
         return new s3.CfnBucketPolicy(this, id, props);
-    }
-
-    getLogicalId(element: CfnElement): string {
-        return utils.cleanUpLogicalId(super.getLogicalId(element));
     }
 }

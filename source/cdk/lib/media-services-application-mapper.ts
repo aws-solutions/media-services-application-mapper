@@ -3,7 +3,6 @@
 
 import {
     Aws,
-    CfnElement,
     Fn,
     Stack,
     StackProps,
@@ -51,83 +50,85 @@ export class MediaServicesApplicationMapper extends Stack {
             Fn.join('', [
                 'https://%%BUCKET_NAME%%-',
                 Aws.REGION,
-                '.s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release.template',
+                '.s3.',
+                Aws.URL_SUFFIX,
+                '/%%SOLUTION_NAME%%/%%VERSION%%/msam-iam-roles-release.template',
             ]),
         );
 
         // DynamoDB Module Stack
         const dynamoDBModuleStack = new MsamDynamoDB(this, 'DynamoDBModuleStack', {
-            parameters: {
-                DynamoDBIAMRoleARN: `${iamModuleStack.nestedStackResource?.getAtt('Outputs.DynamoDBRoleARN')}`,
-            }
+            DynamoDBIAMRole: iamModuleStack.DynamoDBRole,
         });
         utils.addTemplateUrl(
             dynamoDBModuleStack,
             Fn.join('', [
                 'https://%%BUCKET_NAME%%-',
                 Aws.REGION,
-                '.s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release.template',
+                '.s3.',
+                Aws.URL_SUFFIX,
+                '/%%SOLUTION_NAME%%/%%VERSION%%/msam-dynamodb-release.template',
             ]),
         );
 
         // Core Module Stack
         const coreModuleStack = new MsamCore(this, 'CoreModuleStack', {
-            parameters: {
-                AlarmsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.AlarmsTable')}`,
-                ChannelsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.ChannelsTable')}`,
-                ContentTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.ContentTable')}`,
-                EventsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.EventsTable')}`,
-                LayoutTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.LayoutTable')}`,
-                SettingsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.SettingsTable')}`,
-                CloudWatchEventsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.CloudWatchEventsTable')}`,
-                NotesTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.NotesTable')}`,
-                CacheItemTTL: cacheItemTTL.valueAsString,
-                CoreIAMRoleARN: `${iamModuleStack.nestedStackResource?.getAtt('Outputs.CoreRoleARN')}`,
-                RootStackName: Aws.STACK_NAME,
-            }
+            CoreIAMRole: iamModuleStack.CoreRole,
+            AlarmsTableName: dynamoDBModuleStack.AlarmsTable,
+            ChannelsTableName: dynamoDBModuleStack.ChannelsTable,
+            ContentTableName: dynamoDBModuleStack.ContentTable,
+            EventsTableName: dynamoDBModuleStack.EventsTable,
+            LayoutTableName: dynamoDBModuleStack.LayoutTable,
+            SettingsTableName: dynamoDBModuleStack.SettingsTable,
+            CloudWatchEventsTableName: dynamoDBModuleStack.CloudWatchEventsTable,
+            NotesTableName: dynamoDBModuleStack.NotesTable,
+            CacheItemTTL: cacheItemTTL.valueAsString,
+            RootStackName: Aws.STACK_NAME,
         });
         utils.addTemplateUrl(
             coreModuleStack,
             Fn.join('', [
                 'https://%%BUCKET_NAME%%-',
                 Aws.REGION,
-                '.s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release.template',
+                '.s3.',
+                Aws.URL_SUFFIX,
+                '/%%SOLUTION_NAME%%/%%VERSION%%/msam-core-release.template',
             ]),
         );
 
         // Events Module Stack
         const eventsModuleStack = new MsamEvents(this, 'EventsModuleStack', {
-            parameters: {
-                AlarmsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.AlarmsTable')}`,
-                EventsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.EventsTable')}`,
-                ContentTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.ContentTable')}`,
-                CloudWatchEventsTableName: `${dynamoDBModuleStack.nestedStackResource?.getAtt('Outputs.CloudWatchEventsTable')}`,
-                ItemTTL: cacheItemTTL.valueAsString,
-                EventsTableRegion: Aws.REGION,
-                EventsIAMRoleARN: `${iamModuleStack.nestedStackResource?.getAtt('Outputs.EventsRoleARN')}`,
-            }
+            AlarmsTableName: dynamoDBModuleStack.AlarmsTable,
+            EventsTableName: dynamoDBModuleStack.EventsTable,
+            ContentTableName: dynamoDBModuleStack.ContentTable,
+            CloudWatchEventsTableName: dynamoDBModuleStack.CloudWatchEventsTable,
+            ItemTTL: cacheItemTTL.valueAsString,
+            EventsTableRegion: Aws.REGION,
+            EventsIAMRole: iamModuleStack.EventsRole,
         });
         utils.addTemplateUrl(
             eventsModuleStack,
             Fn.join('', [
                 'https://%%BUCKET_NAME%%-',
                 Aws.REGION,
-                '.s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release.template',
+                '.s3.',
+                Aws.URL_SUFFIX,
+                '/%%SOLUTION_NAME%%/%%VERSION%%/msam-events-release.template',
             ])
         );
 
         // Browser App Module Stack
         const browserAppModuleStack = new MsamBrowserApp(this, 'BrowserAppModuleStack', {
-            parameters: {
-                WebIAMRoleARN: `${iamModuleStack.nestedStackResource?.getAtt('Outputs.WebRoleARN')}`,
-            },
+            WebIAMRole: iamModuleStack.WebRole,
         });
         utils.addTemplateUrl(
             browserAppModuleStack,
             Fn.join('', [
                 'https://%%BUCKET_NAME%%-',
                 Aws.REGION,
-                '.s3.amazonaws.com/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release.template',
+                '.s3.',
+                Aws.URL_SUFFIX,
+                '/%%SOLUTION_NAME%%/%%VERSION%%/msam-browser-app-release.template',
             ]),
         );
 
@@ -136,21 +137,17 @@ export class MediaServicesApplicationMapper extends Stack {
          */
         utils.createCfnOutput(this, 'MSAMBrowserURL', {
             description: 'URL for the MSAM browser application',
-            value: `${browserAppModuleStack.nestedStackResource?.getAtt('Outputs.MSAMBrowserURL')}`,
+            value: browserAppModuleStack.MSAMBrowserURL,
         });
 
         utils.createCfnOutput(this, 'EndpointURL', {
             description: 'The endpoint needed by the MSAM browser application',
-            value: `${coreModuleStack.nestedStackResource?.getAtt('Outputs.EndpointURL')}`,
+            value: coreModuleStack.EndpointURL,
         });
 
         utils.createCfnOutput(this, 'APIKeyID', {
             description: 'Link for retrieving API key needed by the MSAM browser application',
-            value: `${coreModuleStack.nestedStackResource?.getAtt('Outputs.APIKeyID')}`,
+            value: coreModuleStack.APIKeyID,
         });
-    }
-
-    getLogicalId(element: CfnElement): string {
-        return utils.cleanUpLogicalId(super.getLogicalId(element));
     }
 }

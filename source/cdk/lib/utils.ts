@@ -115,18 +115,6 @@ export const createCfnOutput = (scope: Construct, id: string, props: CfnOutputPr
 }
 
 /**
- * Cleans up the logical ID by removing excessive customizations made by CDK.
- * 
- * @param string logicalId 
- * @returns string
- */
-export const cleanUpLogicalId = (logicalId: string): string => {
-    return logicalId
-        .replace(/NestedStack.*NestedStackResource/, '')
-        .replace(/[A-F0-9]{8}([A-Z][a-z][a-z])?$/, (_, m1) => (m1 || '').replace(/^Ref$/, ''));
-}
-
-/**
  * Replace the default Template URL with the specified url value
  * 
  * @param nestedStack 

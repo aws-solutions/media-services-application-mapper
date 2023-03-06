@@ -3,7 +3,6 @@
 
 import {
     aws_iam as iam,
-    CfnElement,
     Fn,
     NestedStack,
     NestedStackProps,
@@ -12,6 +11,36 @@ import { Construct } from 'constructs';
 import * as utils from './utils';
 
 export class MsamIamRoles extends NestedStack {
+    /**
+     * Installation Managed Policy
+     */
+    readonly InstallationManagedPolicy: string;
+    
+    /**
+     * Link to IAM to view and assign users to the installation group
+     */
+    readonly InstallationGroupLink: string;
+    
+    /**
+     * IAM Role ARN for the Events module Lambda functions
+     */
+    readonly EventsRole: iam.Role;
+    
+    /**
+     * IAM Role ARN for the DynamoDB module Lambda functions
+     */
+    readonly DynamoDBRole: iam.Role;
+    
+    /**
+     * IAM Role ARN for the Core module Lambda functions
+     */
+    readonly CoreRole: iam.Role;
+    
+    /**
+     * IAM Role ARN for the Web app module Lambda functions
+     */
+    readonly WebRole: iam.Role;
+
     constructor(scope: Construct, id: string, props?: NestedStackProps) {
         super(
             scope,
@@ -54,6 +83,9 @@ export class MsamIamRoles extends NestedStack {
                 }),
             }
         });
+
+        this.EventsRole = eventsRole;
+
         utils.setNagSuppressRules(eventsRole, 
             {
                 id: 'W11',
@@ -94,6 +126,9 @@ export class MsamIamRoles extends NestedStack {
                 }),
             },
         });
+
+        this.DynamoDBRole = dynamoDBRole;
+
         utils.setNagSuppressRules(dynamoDBRole,
             {
                 id: 'W11',
@@ -180,6 +215,9 @@ export class MsamIamRoles extends NestedStack {
                 }),
             }
         });
+
+        this.CoreRole = coreRole;
+
         utils.setNagSuppressRules(coreRole,
             {
                 id: 'W11',
@@ -221,6 +259,9 @@ export class MsamIamRoles extends NestedStack {
                 }),
             },
         });
+
+        this.WebRole = webRole;
+
         utils.setNagSuppressRules(webRole,
             {
                 id: 'W11',
@@ -242,6 +283,11 @@ export class MsamIamRoles extends NestedStack {
 
         // Installation Group
         const installationGroup = new iam.Group(this, 'InstallationGroup', {});
+
+        this.InstallationGroupLink = Fn.join('', [
+            'https://console.aws.amazon.com/iam/home?#/groups/',
+            installationGroup.groupName,
+        ]);
 
         // Installation Policy
         const installationPolicy = new iam.Policy(this, 'InstallationPolicy', {
@@ -313,6 +359,9 @@ export class MsamIamRoles extends NestedStack {
                 ],
             }),
         });
+
+        this.InstallationManagedPolicy = installationManagedPolicy.managedPolicyArn;
+
         utils.setNagSuppressRules(installationManagedPolicy,
             {
                 id: 'W13',
@@ -328,51 +377,5 @@ export class MsamIamRoles extends NestedStack {
                 reason: 'This policy is used by compartmentalized teams to install the solution.'
             }
         );
-
-        /**
-         * Outputs
-         */
-
-        // Installation Managed Policy Output
-        utils.createCfnOutput(this, 'InstallationManagedPolicy', {
-            value: installationManagedPolicy.managedPolicyArn,
-        });
-
-        // Installation Group Link Output
-        utils.createCfnOutput(this, 'InstallationGroupLink', {
-            description: 'Link to IAM to view and assign users to the installation group',
-            value: Fn.join('', [
-                'https://console.aws.amazon.com/iam/home?#/groups/',
-                installationGroup.groupName,
-            ]),
-        });
-
-        // Event Role ARN
-        utils.createCfnOutput(this, 'EventsRoleARN', {
-            description: 'IAM Role ARN for the Events module Lambda functions',
-            value: eventsRole.roleArn,
-        });
-
-        // DynamoDB Role ARN
-        utils.createCfnOutput(this, 'DynamoDBRoleARN', {
-            description: 'IAM Role ARN for the DynamoDB module Lambda functions',
-            value: dynamoDBRole.roleArn,
-        });
-
-        // Core Role ARN
-        utils.createCfnOutput(this, 'CoreRoleARN', {
-            description: 'IAM Role ARN for the Core module Lambda functions',
-            value: coreRole.roleArn,
-        });
-
-        // Web Role ARN
-        utils.createCfnOutput(this, 'WebRoleARN', {
-            description: 'IAM Role ARN for the Web app module Lambda functions',
-            value: webRole.roleArn,
-        });
-    }
-
-    getLogicalId(element: CfnElement): string {
-        return utils.cleanUpLogicalId(super.getLogicalId(element));
     }
 }

@@ -25,15 +25,7 @@ fs.readdirSync(global_s3_assets).forEach((file) => {
     let template = JSON.parse(raw_template);
     const resources = template.Resources ? template.Resources : {};
 
-    if (file === 'msam-core-release.template') {
-        // Manually add the API Gateway Stage dependency
-        //    The API Gateway Stage is generated dynamically in SAM templates,
-        //    therefore the stage is not visible toCDK when synthesizing the template
-        //    and throws an exception.
-        resources.UsagePlan.DependsOn = 'RestAPImsamStage';
-    }
-
-    // Remove unnecessary CDK metadata
+    // helper function to remove properties from an object
     const removeProperty = function removeProperty(obj, ...keys) {
         const key = keys.shift();
         if (obj.hasOwnProperty(key)) {
@@ -51,6 +43,22 @@ fs.readdirSync(global_s3_assets).forEach((file) => {
         return false;
     };
 
+    if (file === 'msam-core-release.template') {
+        // Manually add the API Gateway Stage dependency
+        //    The API Gateway Stage is generated dynamically in SAM templates,
+        //    therefore the stage is not visible toCDK when synthesizing the template
+        //    and throws an exception.
+        const [usagePlanKey] = Object.keys(resources).filter(key => /UsagePlan[A-Z\d]{8}/.test(key));
+        resources[usagePlanKey].DependsOn = 'RestAPImsamStage';
+        resources[usagePlanKey].Properties.ApiStages = [{
+            ApiId: {
+                Ref: 'RestAPI',
+            },
+            Stage: 'msam',
+        }];
+    }
+
+    // Remove unnecessary CDK metadata
     const cdkMetadata = Object.values(resources).filter(
         (value) => Object.keys(value.Metadata || {}).some(
             (key) => key.startsWith("aws:")

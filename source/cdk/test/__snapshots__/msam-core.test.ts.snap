@@ -3,28 +3,7 @@
 exports[`msam-core snapshot test 1`] = `
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Conditions": {
-    "ReportAnonymousMetrics": {
-      "Fn::Equals": [
-        {
-          "Fn::FindInMap": [
-            "Send",
-            "AnonymousUsage",
-            "Data",
-          ],
-        },
-        "Yes",
-      ],
-    },
-  },
   "Description": "Media Services Application Mapper REST API and Tasks %%VERSION%%",
-  "Mappings": {
-    "Send": {
-      "AnonymousUsage": {
-        "Data": "Yes",
-      },
-    },
-  },
   "Outputs": {
     "APIHandlerArn": {
       "Value": {
@@ -39,24 +18,19 @@ exports[`msam-core snapshot test 1`] = `
         "Ref": "APIHandler",
       },
     },
-    "APIKeyID": {
-      "Value": {
-        "Fn::Join": [
-          "",
-          [
-            {
-              "Fn::Sub": "https://\${AWS::Region}.console.aws.amazon.com/apigateway/home?region=\${AWS::Region}#/api-keys/",
-            },
-            {
-              "Ref": "APIKey",
-            },
-          ],
-        ],
-      },
-    },
     "EndpointURL": {
       "Value": {
-        "Fn::Sub": "https://\${RestAPI}.execute-api.\${AWS::Region}.amazonaws.com/msam/",
+        "Fn::Sub": "https://\${RestAPI}.execute-api.\${AWS::Region}.\${AWS::URLSuffix}/msam/",
+      },
+    },
+    "MediaServicesApplicationMapperCoreModuleStackAPIKey9BCD1F3FRef": {
+      "Value": {
+        "Ref": "APIKeyF5CDB6B6",
+      },
+    },
+    "MediaServicesApplicationMapperCoreModuleStackRestAPI418838E7Ref": {
+      "Value": {
+        "Ref": "RestAPI",
       },
     },
     "RestAPIId": {
@@ -66,82 +40,34 @@ exports[`msam-core snapshot test 1`] = `
     },
   },
   "Parameters": {
-    "AlarmsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores alarm states for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
       "Type": "String",
     },
-    "CacheItemTTL": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Default": "7200",
-      "Description": "This is the maximum time in seconds a cached item will remain if never updated.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref": {
       "Type": "String",
     },
-    "ChannelsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores channel definitions for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef": {
       "Type": "String",
     },
-    "CloudWatchEventsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores CloudWatch events for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef": {
       "Type": "String",
     },
-    "ContentTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores cached content for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref": {
       "Type": "String",
     },
-    "CoreIAMRoleARN": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the IAM Role ARN for the Core Lambda functions.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref": {
       "Type": "String",
     },
-    "EventsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that collects events for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref": {
       "Type": "String",
     },
-    "LayoutTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores diagram layout for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef": {
       "Type": "String",
     },
-    "NotesTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores resource notes.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef": {
       "Type": "String",
     },
-    "RootStackName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the root stack name used as a namespace for CloudWatch metrics.",
-      "MinLength": 1,
-      "Type": "String",
-    },
-    "SettingsTableName": {
-      "AllowedPattern": "\\S+",
-      "ConstraintDescription": "Please enter a value for this field.",
-      "Description": "This is the DynamoDB table name that stores configuration settings for MSAM.",
-      "MinLength": 1,
+    "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn": {
       "Type": "String",
     },
   },
@@ -155,12 +81,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -169,9 +95,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -180,39 +106,39 @@ exports[`msam-core snapshot test 1`] = `
           },
           "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
         },
-        "Description": "MSAM Lambda for handling requests from clients",
+        "Description": "MSAM Lambda for handling API requests",
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": {
               "Ref": "DeleteAllResourceNotes",
             },
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": {
-              "Ref": "NotesTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef",
             },
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -221,7 +147,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.app",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -252,7 +178,7 @@ exports[`msam-core snapshot test 1`] = `
       },
       "Type": "AWS::Lambda::Permission",
     },
-    "APIKey": {
+    "APIKeyF5CDB6B6": {
       "Properties": {
         "Description": "MSAM default API key",
         "Enabled": true,
@@ -282,9 +208,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -297,37 +223,37 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": {
-              "Ref": "NotesTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef",
             },
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "STACKNAME": {
-              "Ref": "RootStackName",
+              "Ref": "AWS::StackName",
             },
             "VERSION": "%%VERSION%%",
           },
@@ -335,7 +261,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.delete_all_resource_notes",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -355,12 +281,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -369,9 +295,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -384,35 +310,35 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "STACKNAME": {
-              "Ref": "RootStackName",
+              "Ref": "AWS::StackName",
             },
             "VERSION": "%%VERSION%%",
           },
@@ -428,7 +354,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.generate_metrics",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -462,9 +388,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -477,31 +403,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -510,7 +436,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.incoming_cloudwatch_alarm",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -605,7 +531,7 @@ exports[`msam-core snapshot test 1`] = `
     "MSAMElementalLiveRunningEvents": {
       "Properties": {
         "Content": {
-          "description": "How many Elemental Live events are running?",
+          "description": "How many Elemental Live events have been running?",
           "runtimeConfig": {
             "aws:runShellScript": {
               "properties": [
@@ -677,7 +603,7 @@ exports[`msam-core snapshot test 1`] = `
         "Tags": [
           {
             "Key": "MSAM-NodeType",
-            "Value": "ElementalLive",
+            "Value": "SsmSystem",
           },
         ],
       },
@@ -692,12 +618,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -706,9 +632,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -721,31 +647,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -776,7 +702,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.process_ssm_run_command",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -788,7 +714,6 @@ exports[`msam-core snapshot test 1`] = `
       "Type": "AWS::Serverless::Function",
     },
     "ReportMetrics": {
-      "Condition": "ReportAnonymousMetrics",
       "Metadata": {
         "cfn_nag": {
           "rules_to_suppress": [
@@ -797,12 +722,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -811,9 +736,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -826,35 +751,35 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "STACKNAME": {
-              "Ref": "RootStackName",
+              "Ref": "AWS::StackName",
             },
             "VERSION": "%%VERSION%%",
           },
@@ -870,7 +795,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.report_metrics",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -4088,9 +4013,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -4103,31 +4028,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -4144,7 +4069,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.ssm_run_command",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -4164,12 +4089,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -4178,9 +4103,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -4193,31 +4118,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -4234,7 +4159,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.update_connections",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -4254,12 +4179,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -4268,9 +4193,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -4283,31 +4208,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -4324,7 +4249,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.update_from_tags",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -4344,12 +4269,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -4358,9 +4283,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -4373,31 +4298,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -4414,7 +4339,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.update_nodes",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -4434,12 +4359,12 @@ exports[`msam-core snapshot test 1`] = `
               "reason": "Role with CloudWatch Logs permissions defined in different template.",
             },
             {
-              "id": "W92",
-              "reason": "Lambda does not need ReservedConcurrentExecutions.",
-            },
-            {
               "id": "W89",
               "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
             },
           ],
         },
@@ -4448,9 +4373,9 @@ exports[`msam-core snapshot test 1`] = `
         "CodeUri": {
           "Bucket": {
             "Fn::Join": [
-              "-",
+              "",
               [
-                "%%BUCKET_NAME%%",
+                "%%BUCKET_NAME%%-",
                 {
                   "Ref": "AWS::Region",
                 },
@@ -4463,31 +4388,31 @@ exports[`msam-core snapshot test 1`] = `
         "Environment": {
           "Variables": {
             "ALARMS_TABLE_NAME": {
-              "Ref": "AlarmsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
             },
             "BUILD_STAMP": "DEV_0_0_0",
             "CACHE_ITEM_TTL": {
-              "Ref": "CacheItemTTL",
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
             },
             "CHANNELS_TABLE_NAME": {
-              "Ref": "ChannelsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
             },
             "CLOUDWATCH_EVENTS_TABLE_NAME": {
-              "Ref": "CloudWatchEventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
             },
             "CONTENT_TABLE_NAME": {
-              "Ref": "ContentTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
             },
             "DELETE_NOTES_FUNCTION": "delete_notes_function",
             "EVENTS_TABLE_NAME": {
-              "Ref": "EventsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
             },
             "LAYOUT_TABLE_NAME": {
-              "Ref": "LayoutTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
             },
             "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
             "SETTINGS_TABLE_NAME": {
-              "Ref": "SettingsTableName",
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
             },
             "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
             "VERSION": "%%VERSION%%",
@@ -4504,7 +4429,7 @@ exports[`msam-core snapshot test 1`] = `
         "Handler": "app.update_ssm_nodes",
         "MemorySize": 2560,
         "Role": {
-          "Ref": "CoreIAMRoleARN",
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
         "Runtime": "python3.9",
         "Tags": {
@@ -4515,16 +4440,8 @@ exports[`msam-core snapshot test 1`] = `
       },
       "Type": "AWS::Serverless::Function",
     },
-    "UsagePlan": {
+    "UsagePlanC18B28F1": {
       "Properties": {
-        "ApiStages": [
-          {
-            "ApiId": {
-              "Ref": "RestAPI",
-            },
-            "Stage": "msam",
-          },
-        ],
         "Description": "MSAM default usage plan",
         "UsagePlanName": "MSAM Usage Plan",
       },
@@ -4533,11 +4450,11 @@ exports[`msam-core snapshot test 1`] = `
     "UsagePlanKeyAssociation": {
       "Properties": {
         "KeyId": {
-          "Ref": "APIKey",
+          "Ref": "APIKeyF5CDB6B6",
         },
         "KeyType": "API_KEY",
         "UsagePlanId": {
-          "Ref": "UsagePlan",
+          "Ref": "UsagePlanC18B28F1",
         },
       },
       "Type": "AWS::ApiGateway::UsagePlanKey",

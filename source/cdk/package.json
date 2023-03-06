@@ -1,8 +1,14 @@
 {
   "name": "cdk",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Synthesize templates for Media Services Application Mapper using AWS Cloud Development Kit (CDK).",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Amazon Web Services",
+    "url": "https://aws.amazon.com/solutions"
+  },
   "bin": {
-    "cdk": "bin/cdk.js"
+    "cdk": "bin/media-services-application-mapper.js"
   },
   "scripts": {
     "cleanup": "tsc --build ./ --clean && cdk context --clear && rm -rf dist cdk.out && rm -f package-lock.json",
