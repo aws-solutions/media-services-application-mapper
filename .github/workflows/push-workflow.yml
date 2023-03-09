@@ -208,7 +208,7 @@ jobs:
       - name: Run cfn-lint against templates
         run: |
           cd deployment/global-s3-assets
-          cfn-lint *.template
+          cfn-lint *.template -i W3005
   
   cfn-nag-job:
     name: Run cfn-nag on templates

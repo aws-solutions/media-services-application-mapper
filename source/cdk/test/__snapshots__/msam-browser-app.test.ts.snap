@@ -1,0 +1,503 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`msam-browser-app snapshot test 1`] = `
+{
+  "Description": "Media Services Application Mapper Browser Application %%VERSION%%",
+  "Outputs": {
+    "MediaServicesApplicationMapperBrowserAppModuleStackMSAMAppBucketCloudFrontDistributionA6217434DomainName": {
+      "Value": {
+        "Fn::GetAtt": [
+          "MSAMAppBucketCloudFrontDistribution",
+          "DomainName",
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn": {
+      "Type": "String",
+    },
+  },
+  "Resources": {
+    "MSAMAppBucketCloudFrontDistribution": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-CFR4",
+              "reason": "If the distribution uses the CloudFront domain name such as d111111abcdef8.cloudfront.net (you set CloudFrontDefaultCertificate to true), CloudFront automatically sets the security policy to TLSv1 regardless of the value that you set here.",
+            },
+            {
+              "id": "AwsSolutions-CFR1",
+              "reason": "Geo restriction not supported at this time.",
+            },
+            {
+              "id": "AwsSolutions-CFR2",
+              "reason": "AWS WAF integration not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W70",
+              "reason": "If the distribution uses the CloudFront domain name such as d111111abcdef8.cloudfront.net (you set CloudFrontDefaultCertificate to true), CloudFront automatically sets the security policy to TLSv1 regardless of the value that you set here.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "DistributionConfig": {
+          "Comment": {
+            "Fn::Join": [
+              "",
+              [
+                "CDN for ",
+                {
+                  "Ref": "MSAMBrowserAppBucketB112E0BD",
+                },
+              ],
+            ],
+          },
+          "DefaultCacheBehavior": {
+            "AllowedMethods": [
+              "HEAD",
+              "GET",
+              "OPTIONS",
+            ],
+            "CachedMethods": [
+              "HEAD",
+              "GET",
+              "OPTIONS",
+            ],
+            "Compress": true,
+            "DefaultTTL": 7200,
+            "ForwardedValues": {
+              "Cookies": {
+                "Forward": "none",
+              },
+              "Headers": [
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers",
+              ],
+              "QueryString": false,
+            },
+            "MaxTTL": 86400,
+            "MinTTL": 3600,
+            "TargetOriginId": {
+              "Ref": "MSAMBrowserAppBucketB112E0BD",
+            },
+            "ViewerProtocolPolicy": "https-only",
+          },
+          "DefaultRootObject": "index.html",
+          "Enabled": true,
+          "Logging": {
+            "Bucket": {
+              "Fn::GetAtt": [
+                "MSAMBrowserAppLoggingBucket898E5B4B",
+                "RegionalDomainName",
+              ],
+            },
+            "Prefix": "cloudfront/",
+          },
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "MSAMBrowserAppBucketB112E0BD",
+                  "RegionalDomainName",
+                ],
+              },
+              "Id": {
+                "Ref": "MSAMBrowserAppBucketB112E0BD",
+              },
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "origin-access-identity/cloudfront/",
+                      {
+                        "Ref": "MSAMAppBucketOriginAccessIdentity73947A70",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "PriceClass": "PriceClass_All",
+          "Restrictions": {
+            "GeoRestriction": {
+              "Locations": [],
+              "RestrictionType": "none",
+            },
+          },
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": true,
+            "MinimumProtocolVersion": "TLSv1.2_2019",
+          },
+        },
+      },
+      "Type": "AWS::CloudFront::Distribution",
+    },
+    "MSAMAppBucketOriginAccessIdentity73947A70": {
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": {
+            "Fn::Join": [
+              "",
+              [
+                "Origin Access Identity for ",
+                {
+                  "Ref": "MSAMBrowserAppBucketB112E0BD",
+                },
+              ],
+            ],
+          },
+        },
+      },
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+    },
+    "MSAMBrowserAppBucketB112E0BD": {
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-S2",
+              "reason": "Public access blocked by default",
+            },
+            {
+              "id": "AwsSolutions-S10",
+              "reason": "HTTPS requirement not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W51",
+              "reason": "This is the logging bucket. No bucket policy needed.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "CorsConfiguration": {
+          "CorsRules": [
+            {
+              "AllowedHeaders": [
+                "*",
+              ],
+              "AllowedMethods": [
+                "GET",
+              ],
+              "AllowedOrigins": [
+                "*",
+              ],
+            },
+          ],
+        },
+        "LoggingConfiguration": {
+          "DestinationBucketName": {
+            "Ref": "MSAMBrowserAppLoggingBucket898E5B4B",
+          },
+          "LogFilePrefix": "app-bucket/",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "MSAMBrowserAppBucketPolicy": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-S10",
+              "reason": "HTTPS requirement not supported at this time.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Bucket": {
+          "Ref": "MSAMBrowserAppBucketB112E0BD",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "CanonicalUser": {
+                  "Fn::GetAtt": [
+                    "MSAMAppBucketOriginAccessIdentity73947A70",
+                    "S3CanonicalUserId",
+                  ],
+                },
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "MSAMBrowserAppBucketB112E0BD",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "MSAMBrowserAppLoggingBucket898E5B4B": {
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "This is the logging bucket. No access logging needed.",
+            },
+            {
+              "id": "AwsSolutions-S2",
+              "reason": "Public access blocked by default",
+            },
+            {
+              "id": "AwsSolutions-S10",
+              "reason": "HTTPS requirement not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W35",
+              "reason": "This is the logging bucket. No access logging needed.",
+            },
+            {
+              "id": "W51",
+              "reason": "This is the logging bucket.  No bucket policy needed.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AccessControl": "LogDeliveryWrite",
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "AbortIncompleteMultipartUpload": {
+                "DaysAfterInitiation": 5,
+              },
+              "ExpirationInDays": 365,
+              "Id": "Expire Objects After 1 Year",
+              "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 365,
+              },
+              "Status": "Enabled",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "MSAMWebContent": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BUILD_STAMP": "DEV_0_0_0",
+        "BucketName": {
+          "Ref": "MSAMBrowserAppBucketB112E0BD",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "MSAMWebContentResourceBB737197",
+            "Arn",
+          ],
+        },
+        "StackName": {
+          "Ref": "AWS::StackName",
+        },
+        "ZIP_DIGEST": "ZIP_DIGEST_VALUE",
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "MSAMWebContentResourceBB737197": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime version not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with AWSLambdaBasicExecutionRole defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Join": [
+              "-",
+              [
+                "%%BUCKET_NAME%%",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/CUSTOM_RESOURCE_FILE",
+        },
+        "Description": "MSAM Lambda for custom CloudFormation resource for loading web application",
+        "Environment": {
+          "Variables": {
+            "BUCKET_BASENAME": "%%BUCKET_NAME%%",
+            "BUILD_STAMP": "DEV_0_0_0",
+            "ZIP_DIGEST": "ZIP_DIGEST_VALUE",
+          },
+        },
+        "Handler": "cfn_bucket_loader.handler",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn",
+        },
+        "Runtime": "python3.8",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MSAMWebInvalidationResource94603649": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Latest runtime version not supported at this time.",
+            },
+          ],
+        },
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with AWSLambdaBasicExecutionRole defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Join": [
+              "-",
+              [
+                "%%BUCKET_NAME%%",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/CUSTOM_RESOURCE_FILE",
+        },
+        "Description": "MSAM Lambda for custom resource for invalidating CloudFront after update",
+        "Environment": {
+          "Variables": {
+            "BUCKET_BASENAME": "%%BUCKET_NAME%%",
+            "BUILD_STAMP": "DEV_0_0_0",
+            "ZIP_DIGEST": "ZIP_DIGEST_VALUE",
+          },
+        },
+        "Handler": "cfn_invalidate_resource.handler",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackWebRole1122C569Arn",
+        },
+        "Runtime": "python3.8",
+        "Timeout": 300,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "MSAMWebInvalidator": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BUILD_STAMP": "DEV_0_0_0",
+        "BucketName": {
+          "Ref": "MSAMBrowserAppBucketB112E0BD",
+        },
+        "DistributionId": {
+          "Fn::GetAtt": [
+            "MSAMAppBucketCloudFrontDistribution",
+            "Id",
+          ],
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "MSAMWebInvalidationResource94603649",
+            "Arn",
+          ],
+        },
+        "StackName": {
+          "Ref": "AWS::StackName",
+        },
+        "ZIP_DIGEST": "ZIP_DIGEST_VALUE",
+      },
+      "Type": "AWS::CloudFormation::CustomResource",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+}
+`;
