@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * Integrated CDK into the solution to build CloudFormation templates
+* Integrated Service Catalog AppRegistry Application into the solution
 
 ### Changed
 
@@ -19,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Removed existing CloudFormation templates from source/msam/build, source/events, and source/web-cloudformation directories
 
 ### Contributors
-@dch90
+
+* @dch90
 
 ## [1.11.0] - August 2022
 

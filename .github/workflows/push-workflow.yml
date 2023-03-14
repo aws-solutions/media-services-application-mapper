@@ -266,7 +266,7 @@ jobs:
           zip regional-s3-assets.zip regional-s3-assets/*
           zip global-s3-assets.zip global-s3-assets/*
       - name: Store zipped global and regional assets
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: zipped-regional-global-assets
           path: deployment/*.zip
