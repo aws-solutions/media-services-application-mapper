@@ -2,12 +2,17 @@
        SPDX-License-Identifier: Apache-2.0 */
 
 import {
+    Aws,
+    aws_servicecatalogappregistry as appRegistry,
+    CfnMapping,
     CfnResource,
     CfnOutput,
     CfnOutputProps,
     CfnStack,
     IResource,
+    Fn,
     Stack,
+    NestedStack,
 } from 'aws-cdk-lib';
 import { Construct, IConstruct } from 'constructs';
 import { NagSuppressions } from 'cdk-nag';
@@ -123,3 +128,92 @@ export const createCfnOutput = (scope: Construct, id: string, props: CfnOutputPr
 export const addTemplateUrl = (nestedStack: Stack, templateUrl: string): void => {
     (nestedStack.node.defaultChild as CfnStack).templateUrl = templateUrl;
 };
+
+/**
+ * Nested Stack with stack name interface
+ */
+export interface NamedNestedStack {
+    stackName: string,
+    stack: NestedStack,
+};
+
+/**
+ * Creates AppRegistry Application and Attribute Groups then associate to main and nested stacks
+ * 
+ * @param Stack main application stack
+ * @param NestedStack[] Nested stacks
+ */
+export function applyAppRegistry(stack: Stack, nestedStacks: NamedNestedStack[]) {
+    const map = new CfnMapping(stack, "Solution");
+    map.setValue("Data", "ID", "SO0048");
+    map.setValue("Data", "Version", "%%VERSION%%");
+    map.setValue("Data", "AppRegistryApplicationName", "media-services-application-mapper");
+    map.setValue("Data", "SolutionName", "Media Services Application Mapper");
+    map.setValue("Data", "ApplicationType", "AWS-Solutions");
+
+    // Main AppRegistry Application
+    const application = new appRegistry.CfnApplication(stack, "AppRegistryApplication", {
+        name: Fn.join("-", [
+            map.findInMap("Data", "AppRegistryApplicationName"),
+            Aws.REGION,
+            Aws.ACCOUNT_ID,
+            Aws.STACK_NAME,
+        ]),
+        description: `Service Catalog application to track and manage all your resources for the solution Media Services Application Mapper`,
+        tags: {
+            'Solutions:SolutionID': map.findInMap("Data", "ID"),
+            'Solutions:SolutionName': map.findInMap("Data", "SolutionName"),
+            'Solutions:SolutionVersion': map.findInMap("Data", "Version"),
+            'Solutions:ApplicationType': map.findInMap("Data", "ApplicationType"),
+        },
+    });
+
+    // Associate Application to Stack
+    createCfnResourceAssociation(stack, 'AppRegistryApplicationStackAssociation', {
+        application: application.attrId,
+        resource: Aws.STACK_ID,
+        resourceType: 'CFN_STACK',
+    });
+
+    // Associate all nested stacks to main application
+    for (const nestedStack of nestedStacks) {
+        createCfnResourceAssociation(stack, `AppRegistryApplicationNestedStackAssociation${nestedStack.stackName}`, {
+            application: application.attrId,
+            resource: nestedStack.stack.stackId,
+            resourceType: 'CFN_STACK',
+        });
+    }
+
+    // Default attribute group for application
+    const attributeGroup = new appRegistry.CfnAttributeGroup(
+        stack,
+        "DefaultApplicationAttributes",
+        {
+            name: Fn.join("-", [
+                Aws.REGION,
+                Aws.STACK_NAME 
+            ]),
+            description: "Attribute group for solution information",
+            attributes: {
+                applicationType: map.findInMap("Data", "ApplicationType"),
+                version: map.findInMap("Data", "Version"),
+                solutionID: map.findInMap("Data", "ID"),
+                solutionName: map.findInMap("Data", "SolutionName"),
+            },
+        }
+    );
+
+    // Attribute group association
+    createCfnAttributeGroupAssociation(stack, 'AppRegistryApplicationAttributeAssociation', {
+        application: application.attrId,
+        attributeGroup: attributeGroup.attrId,
+    });
+}
+
+function createCfnResourceAssociation(scope: Construct, id: string, props: appRegistry.CfnResourceAssociationProps) {
+    return new appRegistry.CfnResourceAssociation(scope, id, props);
+}
+
+function createCfnAttributeGroupAssociation(scope: Construct, id: string, props: appRegistry.CfnAttributeGroupAssociationProps) {
+    return new appRegistry.CfnAttributeGroupAssociation(scope, id, props);
+}

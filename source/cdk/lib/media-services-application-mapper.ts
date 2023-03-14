@@ -132,6 +132,30 @@ export class MediaServicesApplicationMapper extends Stack {
             ]),
         );
 
+        // Service Catalog - App Registry
+        utils.applyAppRegistry(this, [
+            {
+                stackName: 'DynamoDB',
+                stack: dynamoDBModuleStack,
+            },
+            {
+                stackName: 'IAM',
+                stack: iamModuleStack,
+            },
+            {
+                stackName: 'Events',
+                stack: eventsModuleStack,
+            },
+            {
+                stackName: 'Browser',
+                stack: browserAppModuleStack,
+            },
+            {
+                stackName: 'Core',
+                stack: coreModuleStack,
+            },
+        ]);
+
         /**
          * Outputs
          */

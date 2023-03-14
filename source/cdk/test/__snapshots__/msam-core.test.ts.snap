@@ -151,7 +151,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -265,7 +265,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -358,7 +358,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -440,7 +440,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -706,7 +706,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -799,7 +799,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4073,7 +4073,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4163,7 +4163,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4253,7 +4253,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4343,7 +4343,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4433,7 +4433,7 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Runtime": "python3.9",
         "Tags": {
-          "aws-chalice": "version=1.27.3:stage=dev:app=msam",
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
