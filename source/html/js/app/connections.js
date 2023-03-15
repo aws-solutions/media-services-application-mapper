@@ -11,11 +11,11 @@ const cookie_name_current = "MSAM_CURRENT",
 
 // return the stored connection objects
 const get_remembered = _.memoize(function () {
-    var history = [],
+    let history = [],
         cookies = Cookies.get();
     for (let name of Object.keys(cookies)) {
         if (name.startsWith(cookie_name_prefix)) {
-            var payload = cookies[name],
+            let payload = cookies[name],
                 content = JSON.parse(window.atob(payload));
             history.push(content);
         }
@@ -25,19 +25,19 @@ const get_remembered = _.memoize(function () {
 
 // return the session copy or the cookie copy, or null
 const get_current = _.memoize(function () {
-    var current = null;
-    var encoded = window.sessionStorage.getItem(session_current);
+    let current = null;
+    let encoded = window.sessionStorage.getItem(session_current);
     if (encoded) {
         current = JSON.parse(window.atob(encoded));
     }
     // get the cookie and refresh the expiration
-    var payload = Cookies.get(cookie_name_current);
+    let payload = Cookies.get(cookie_name_current);
     if (payload) {
         // set the cookie again for expiration
         Cookies.set(cookie_name_current, payload, {
             expires: max_age,
         });
-        var name = payload;
+        let name = payload;
         payload = Cookies.get(name);
         // something?
         if (payload) {
@@ -58,13 +58,13 @@ const get_current = _.memoize(function () {
 // update the history with another connection
 const set_current = function (url, api_key, store = true) {
     clear_function_cache();
-    var current = [url, api_key];
+    let current = [url, api_key];
     window.sessionStorage.setItem(
         session_current,
         window.btoa(JSON.stringify(current))
     );
-    var cookie_name = cookie_name_prefix + objectHash.sha1(url);
-    var encoded = window.btoa(JSON.stringify(current));
+    let cookie_name = cookie_name_prefix + objectHash.sha1(url);
+    let encoded = window.btoa(JSON.stringify(current));
     if (store) {
         // add or update MSAM_ENDPOINT_<ID> cookie
         Cookies.set(cookie_name, encoded, {
@@ -86,9 +86,9 @@ const clear_function_cache = function () {
 };
 
 // is there a connection override on the URL parameters?
-var current_url = new URL(window.location);
-var endpoint = current_url.searchParams.get("endpoint");
-var key = current_url.searchParams.get("key");
+let current_url = new URL(window.location);
+let endpoint = current_url.searchParams.get("endpoint");
+let key = current_url.searchParams.get("key");
 
 if (endpoint && key) {
     // strip any trailing slashes

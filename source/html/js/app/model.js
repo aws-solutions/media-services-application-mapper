@@ -15,7 +15,7 @@ const reset = function () {
 
 const map = function (callback) {
     new Promise(function (resolve) {
-        var promises = [];
+        let promises = [];
         for (let mapper of mappers.nodes) {
             console.log(mapper.module_name);
             promises.push(mapper.update());
@@ -28,7 +28,7 @@ const map = function (callback) {
         }
     })
         .then(function () {
-            var promises = [];
+            let promises = [];
             for (let mapper of mappers.connections) {
                 console.log(mapper.module_name);
                 promises.push(mapper.update());
@@ -53,10 +53,10 @@ const map = function (callback) {
 };
 
 const put_records = function (record) {
-    var current = connections.get_current();
-    var url = current[0];
-    var api_key = current[1];
-    var current_endpoint = `${url}/cached`;
+    let current = connections.get_current();
+    let url = current[0];
+    let api_key = current[1];
+    let current_endpoint = `${url}/cached`;
     if (record && !Array.isArray(record)) {
         record = [record];
     }
@@ -75,10 +75,10 @@ const put_records = function (record) {
 };
 
 const delete_record = function (arn) {
-    var current = connections.get_current();
-    var url = current[0];
-    var api_key = current[1];
-    var current_endpoint = `${url}/cached/arn/${encodeURIComponent(arn)}`;
+    let current = connections.get_current();
+    let url = current[0];
+    let api_key = current[1];
+    let current_endpoint = `${url}/cached/arn/${encodeURIComponent(arn)}`;
     return new Promise(function (resolve, reject) {
         server
             .delete_method(current_endpoint, api_key)

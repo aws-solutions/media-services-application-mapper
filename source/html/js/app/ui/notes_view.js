@@ -10,28 +10,28 @@ import * as confirmation from "./confirmation.js";
 import * as alert from "./alert.js";
 
 
-var data_div_id = "nav-data";
-var alerts_div_id = "nav-alerts";
-var alarms_div_id = "nav-alarms";
-var events_div_id = "nav-events";
-var notes_div_id = "nav-notes";
+let data_div_id = "nav-data";
+let alerts_div_id = "nav-alerts";
+let alarms_div_id = "nav-alarms";
+let events_div_id = "nav-events";
+let notes_div_id = "nav-notes";
 
-var data_tab_id = "nav-data-tab";
-var alerts_tab_id = "nav-alerts-tab";
-var alarms_tab_id = "nav-alarms-tab";
-var events_tab_id = "nav-events-tab";
-var notes_tab_id = "nav-notes-tab";
+let data_tab_id = "nav-data-tab";
+let alerts_tab_id = "nav-alerts-tab";
+let alarms_tab_id = "nav-alarms-tab";
+let events_tab_id = "nav-events-tab";
+let notes_tab_id = "nav-notes-tab";
 
-var delete_notes_button = "delete-notes";
-var edit_notes_button = "edit-notes";
-var save_notes_button = "save-notes";
-var cancel_notes_button = "cancel-notes";
+let delete_notes_button = "delete-notes";
+let edit_notes_button = "edit-notes";
+let save_notes_button = "save-notes";
+let cancel_notes_button = "cancel-notes";
 
-var rendered_notes_div_id = "notes-rendered-markdown";
-var editable_notes_div_id = "notes-editable-markdown";
-var notes_textarea_id = "notes-textarea";
+let rendered_notes_div_id = "notes-rendered-markdown";
+let editable_notes_div_id = "notes-editable-markdown";
+let notes_textarea_id = "notes-textarea";
 
-var display_selected_nodes = function (diagram, node_ids) {
+let display_selected_nodes = function (diagram, node_ids) {
     let resource_info = resource_selected();
     render_html_notes(resource_info);
 
@@ -89,7 +89,7 @@ var display_selected_nodes = function (diagram, node_ids) {
     }
 };
 
-var display_selected_edges = function () {
+let display_selected_edges = function () {
     let resource_info = resource_selected();
     render_html_notes(resource_info);
     show_elements([data_div_id, 
@@ -108,7 +108,7 @@ var display_selected_edges = function () {
     ]);
 };
 
-var display_selected_tile = function () {
+let display_selected_tile = function () {
     let resource_info = resource_selected();
     render_html_notes(resource_info);
     show_elements([
@@ -125,7 +125,7 @@ var display_selected_tile = function () {
     hide_elements([events_tab_id, events_div_id, editable_notes_div_id]);
 };
 
-var display_no_selection = function () {
+let display_no_selection = function () {
     hide_elements([
         data_tab_id,
         alarms_tab_id,
@@ -141,14 +141,14 @@ var display_no_selection = function () {
 };
 
 // accepts a list of element IDs to hide
-var hide_elements = function (element_list) {
+let hide_elements = function (element_list) {
     for (let id in element_list) {
         $("#" + element_list[id]).addClass("d-none");
     }
 };
 
 // accepts a list of element IDs to show
-var show_elements = function (element_list) {
+let show_elements = function (element_list) {
     // iterate through tabs to show
     for (let id in element_list) {
         $("#" + element_list[id]).removeClass("d-none");
@@ -206,9 +206,9 @@ $("#" + cancel_notes_button).click(() => {
 
 // figure out what has been selected: node, edge, or tile
 // return id and type/name
-var resource_selected = function() {
-    var diagram = diagrams.shown();
-    var resource_info = {};
+let resource_selected = function() {
+    let diagram = diagrams.shown();
+    let resource_info = {};
     if (diagram != null) {
         // either node or edge is selected
         let selected = diagram.network.getSelectedNodes();
@@ -232,10 +232,10 @@ var resource_selected = function() {
     return resource_info;
 };
 
-var render_html_notes = function (resource) {
-    var html;
+let render_html_notes = function (resource) {
+    let html;
     $("#" + rendered_notes_div_id).empty();
-    var header = `<h6 class="card-subtitle mb-2 text-muted">${resource.header}</h6><br/>`;
+    let header = `<h6 class="card-subtitle mb-2 text-muted">${resource.header}</h6><br/>`;
 
     $("#" + rendered_notes_div_id).append(header);
     notes.get_resource_notes(resource.id).then(function (this_note) {
@@ -251,8 +251,8 @@ var render_html_notes = function (resource) {
     });
 };
 
-var tile_view_listener = function (name) {
-    var selected = tile_view.selected();
+let tile_view_listener = function (name) {
+    let selected = tile_view.selected();
     if (selected === name) {
         display_selected_tile();
     } else if (selected) {

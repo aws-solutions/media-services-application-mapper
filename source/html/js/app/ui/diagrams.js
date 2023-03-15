@@ -5,12 +5,12 @@ import * as settings from "../settings.js";
 import * as diagram_factory from "./diagram_factory.js";
 import * as alert from "./alert.js";
 
-var diagrams = {};
+let diagrams = {};
 
-var selection_callbacks = [];
+let selection_callbacks = [];
 
-var shown_diagram = function () {
-    var shown = null;
+let shown_diagram = function () {
+    let shown = null;
     for (let d of Object.values(diagrams)) {
         if (d.shown()) {
             shown = d;
@@ -20,19 +20,19 @@ var shown_diagram = function () {
     return shown;
 };
 
-var get_all = function () {
+let get_all = function () {
     return diagrams;
 };
 
-var add_selection_callback = function (callback) {
+let add_selection_callback = function (callback) {
     if (!selection_callbacks.includes(callback)) {
         selection_callbacks.push(callback);
     }
 };
 
-var add_diagram = function (name, view_id, save) {
+let add_diagram = function (name, view_id, save) {
     let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
-    var new_diagram = get_by_name(name);
+    let new_diagram = get_by_name(name);
     if (!new_diagram) {
         new_diagram = diagram_factory.create(name, view_id);
         diagrams[name] = new_diagram;
@@ -64,7 +64,7 @@ var add_diagram = function (name, view_id, save) {
 };
 
 // hides the tab of the diagram
-var hide_diagram = function (diagram, show_tile, decrement) {
+let hide_diagram = function (diagram, show_tile, decrement) {
     $("#" + diagram.tab_id).hide();
     if (show_tile) {
         $("#channel-tiles-tab").tab("show");
@@ -77,7 +77,7 @@ var hide_diagram = function (diagram, show_tile, decrement) {
     alert.show(`${diagram.name} hidden`);
 };
 
-var remove_diagram = function (name) {
+let remove_diagram = function (name) {
     const view_id = diagrams[name].view_id;
     // remove page elements
     diagrams[name].remove();
@@ -98,12 +98,12 @@ var remove_diagram = function (name) {
     window.localStorage.removeItem(name);
 };
 
-var get_by_name = function (name) {
+let get_by_name = function (name) {
     return diagrams[name];
 };
 
-var save_diagrams = function () {
-    var diagram_map = _.map(Object.values(diagrams), function (item) {
+let save_diagrams = function () {
+    let diagram_map = _.map(Object.values(diagrams), function (item) {
         return {
             name: item.name,
             view_id: item.view_id,
@@ -119,7 +119,7 @@ var save_diagrams = function () {
         });
 };
 
-var load_diagrams = function () {
+let load_diagrams = function () {
     return new Promise((resolve) => {
         let diagrams_shown = localStorage.getItem('DIAGRAMS_SHOWN');
         if (!diagrams_shown) {  // first load of the app, and no diagrams are being tracked yet
@@ -149,13 +149,13 @@ var load_diagrams = function () {
 };
 
 function have_all(node_ids) {
-    var results = [];
+    let results = [];
     if (!Array.isArray(node_ids)) {
         node_ids = [node_ids];
     }
     for (let name in diagrams) {
-        var diagram = diagrams[name];
-        var found = _.compact(diagram.nodes.get(node_ids));
+        let diagram = diagrams[name];
+        let found = _.compact(diagram.nodes.get(node_ids));
         if (found.length === node_ids.length) {
             results.push(diagram);
         }
@@ -164,14 +164,14 @@ function have_all(node_ids) {
 }
 
 function have_any(node_ids, match_sort = false) {
-    var results = [];
+    let results = [];
     node_ids = node_ids || [];
     if (!Array.isArray(node_ids)) {
         node_ids = [node_ids];
     }
     node_ids = node_ids.sort();
     for (let diagram of Object.values(diagrams)) {
-        var intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids);
+        let intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids);
         if (intersect.length > 0) {
             results.push({
                 diagram: diagram.name,
@@ -412,11 +412,11 @@ load_diagrams().then(() => {
         update_lock_state();
         update_hide_visibility();
     });
-    var current_url = new URL(window.location);
-    var override_diagram = current_url.searchParams.get("diagram");
+    let current_url = new URL(window.location);
+    let override_diagram = current_url.searchParams.get("diagram");
     if (override_diagram) {
         console.log("Show diagram " + override_diagram + " on start");
-        var diagram = get_by_name(override_diagram);
+        let diagram = get_by_name(override_diagram);
         diagram.show();
     }
 });

@@ -5,32 +5,32 @@ import * as server from "./server.js";
 import * as connections from "./connections.js";
 import * as settings from "./settings.js";
 
-var listeners = [];
+let listeners = [];
 
 // cache events in 'set' state
 // several modules use this at the same time
 
-var current_set_events = []; // superset of all alert events
-var previous_set_events = [];
-var current_mediaconnect_events = [];
-var previous_mediaconnect_events = [];
-var current_medialive_events = [];
-var previous_medialive_events = [];
+let current_set_events = []; // superset of all alert events
+let previous_set_events = [];
+let current_mediaconnect_events = [];
+let previous_mediaconnect_events = [];
+let current_medialive_events = [];
+let previous_medialive_events = [];
 
 // interval in millis to update the cache
 
-var update_interval;
+let update_interval;
 
-var intervalID;
+let intervalID;
 
-var settings_key = "app-event-update-interval";
+let settings_key = "app-event-update-interval";
 
 // or does this have to be union of eml and emx sets??
-var retrieve_for_state = function (state) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/cloudwatch/events/state/${state}`;
+let retrieve_for_state = function (state) {
+let current_connection = connections.get_current();
+let url = current_connection[0];
+let api_key = current_connection[1];
+let current_endpoint = `${url}/cloudwatch/events/state/${state}`;
     return new Promise(function (resolve, reject) {
         server
             .get(current_endpoint, api_key)
@@ -42,7 +42,7 @@ var retrieve_for_state = function (state) {
     });
 };
 
-var cache_update = function () {
+let cache_update = function () {
     retrieve_for_state("set")
         .then(function (response) {
             previous_set_events = current_set_events;
@@ -71,12 +71,12 @@ var cache_update = function () {
                     return i.source == "aws.mediaconnect";
                 }
             );
-            var added = _.differenceBy(
+            let added = _.differenceBy(
                 current_set_events,
                 previous_set_events,
                 "alarm_id"
             );
-            var removed = _.differenceBy(
+            let removed = _.differenceBy(
                 previous_set_events,
                 current_set_events,
                 "alarm_id"
@@ -92,7 +92,7 @@ var cache_update = function () {
         });
 };
 
-var load_update_interval = function () {
+let load_update_interval = function () {
     return new Promise(function (resolve) {
         settings.get(settings_key).then(function (value) {
             let seconds = Number.parseInt(value);
@@ -102,13 +102,13 @@ var load_update_interval = function () {
     });
 };
 
-var set_update_interval_setting = function (seconds) {
+let set_update_interval_setting = function (seconds) {
     // create a default
     update_interval = seconds * 1000;
     return settings.put(settings_key, seconds);
 };
 
-var schedule_interval = function () {
+let schedule_interval = function () {
     if (intervalID) {
         clearInterval(intervalID);
     }

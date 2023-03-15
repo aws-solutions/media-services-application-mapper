@@ -1,9 +1,9 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
        SPDX-License-Identifier: Apache-2.0 */
 
-export var makeid = function (id_len = 10) {
-    var text = "";
-    var possible =
+export let makeid = function (id_len = 10) {
+    let text = "";
+    let possible =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i = 0; i < id_len; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -21,8 +21,8 @@ export function vary(value, limit) {
     );
 }
 
-export var get_downstream = function (edges, node_id, connected_nodes) {
-    var downstream_edges = edges.get({
+export let get_downstream = function (edges, node_id, connected_nodes) {
+    let downstream_edges = edges.get({
         filter: function (item) {
             return item.from === node_id;
         },
@@ -35,8 +35,8 @@ export var get_downstream = function (edges, node_id, connected_nodes) {
     }
 };
 
-export var get_upstream = function (edges, node_id, connected_nodes) {
-    var upstream_edges = edges.get({
+export let get_upstream = function (edges, node_id, connected_nodes) {
+    let upstream_edges = edges.get({
         filter: function (item) {
             return item.to === node_id;
         },

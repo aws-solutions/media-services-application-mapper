@@ -67,7 +67,7 @@ const search_tiles = function (text) {
 
 function search(text) {
     const local_lodash = _;
-    return new Promise(function (outer_resolve) {   // NOSONAR
+    return new Promise(function (outer_resolve) {
         const local_outer_resolve = outer_resolve;
         fuse_model = new Fuse(model.nodes.get(), model_options);
         const results = {
@@ -88,9 +88,7 @@ function search(text) {
         // find diagram name matches
         for (let name of Object.keys(diagrams.get_all())) {
             const includes = name.toLowerCase().includes(text.toLowerCase());
-            if (includes) {
-                results.diagram_names.push(name);
-            }
+            includes && results.diagram_names.push(name);
         }
         // find tiles with any of these nodes
         channels.have_any(node_ids).then(function (matches) {

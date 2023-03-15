@@ -7,31 +7,31 @@ import * as alert from "./alert.js";
 import * as diagrams from "./diagrams.js";
 
 $("#nodes_layout_vertical").on("click", function () {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
         shown.layout_vertical(true);
     }
 });
 
 $("#nodes_layout_horizontal").on("click", function () {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
         shown.layout_horizontal(true);
     }
 });
 
 $("#nodes_layout_isolated").on("click", function () {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
         shown.layout_isolated(true);
     }
 });
 
 $("#nodes_select_downstream").on("click", function () {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
-        var selected = shown.network.getSelectedNodes();
-        var connected = [];
+        let selected = shown.network.getSelectedNodes();
+        let connected = [];
         for (let node_id of selected) {
             if (!connected.includes(node_id)) {
                 connected.push(node_id);
@@ -45,10 +45,10 @@ $("#nodes_select_downstream").on("click", function () {
 });
 
 $("#nodes_select_upstream").on("click", function () {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
-        var selected = shown.network.getSelectedNodes();
-        var connected = [];
+        let selected = shown.network.getSelectedNodes();
+        let connected = [];
         for (let node_id of selected) {
             if (!connected.includes(node_id)) {
                 connected.push(node_id);
@@ -62,11 +62,11 @@ $("#nodes_select_upstream").on("click", function () {
 });
 
 $("#nodes_align_vertical").on("click", function () {
-    var diagram = diagrams.shown();
+    let diagram = diagrams.shown();
     if (diagram) {
-        var selected = diagram.network.getSelectedNodes();
-        var positions = diagram.network.getPositions(selected);
-        var average_x = 0;
+        let selected = diagram.network.getSelectedNodes();
+        let positions = diagram.network.getPositions(selected);
+        let average_x = 0;
         for (let node_id of Object.keys(positions)) {
             average_x += positions[node_id].x;
         }
@@ -80,11 +80,11 @@ $("#nodes_align_vertical").on("click", function () {
 });
 
 $("#nodes_align_horizontal").on("click", function () {
-    var diagram = diagrams.shown();
+    let diagram = diagrams.shown();
     if (diagram) {
-        var selected = diagram.network.getSelectedNodes();
-        var positions = diagram.network.getPositions(selected);
-        var average_y = 0;
+        let selected = diagram.network.getSelectedNodes();
+        let positions = diagram.network.getPositions(selected);
+        let average_y = 0;
         for (let node_id of Object.keys(positions)) {
             average_y += positions[node_id].y;
         }

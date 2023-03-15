@@ -18,30 +18,54 @@ import * as connections from "../../connections.js";
 // 1.0 is a semicircle
 const curvature_increment = 0.15;
 
+function getOptionSmoothType(index, previous_from, connection) {
+    // alternating counter-clockwise and clockwise curve
+    if (index % 2 == 0) {
+        // first of the pair uses clockwise
+        return "curvedCW";
+    } else {
+        // second of the pair might change direction
+        if (
+            previous_from &&
+            connection.from === previous_from
+        ) {
+            // same direction, use counterclockwise
+            return "curvedCCW";
+        } else {
+            // opposite direction, use clockwise
+            return "curvedCW";
+        }
+    }
+}
+
+function groupEdgeNodes(results) {
+    return _.reduce(
+        results,
+        function (result, connection) {
+            let id;
+            if (connection.to > connection.from) {
+                id = `${connection.from}:${connection.to}`;
+            } else {
+                id = `${connection.to}:${connection.from}`;
+            }
+            (result[id] || (result[id] = [])).push(connection);
+            return result;
+        },
+        {}
+    );
+}
+
 export const update = function () {
     const current = connections.get_current();
     const url = current[0];
     const api_key = current[1];
     const items = [];
-    return new Promise((resolve) => {   // NOSONAR
+    return new Promise((resolve) => {
         server
             .get(url + "/cached/user-defined-connection", api_key)
             .then((results) => {
                 // group edges between nodes regardless of direction
-                let edge_groups = _.reduce(
-                    results,
-                    function (result, connection) {
-                        let id;
-                        if (connection.to > connection.from) {
-                            id = `${connection.from}:${connection.to}`;
-                        } else {
-                            id = `${connection.to}:${connection.from}`;
-                        }
-                        (result[id] || (result[id] = [])).push(connection);
-                        return result;
-                    },
-                    {}
-                );
+                let edge_groups = groupEdgeNodes(results);
                 // iterate through each grouping to create the correct curvature and prevent overlap
                 _.forEach(edge_groups, function (value) {
                     // order the grouped connections by to, from and label
@@ -71,23 +95,7 @@ export const update = function () {
                         // more than one connection needs curving, otherwise defaults to straight
                         if (ordered_connections.length > 1) {
                             options.smooth = { enabled: true };
-                            // alternating counter-clockwise and clockwise curve
-                            if (index % 2 == 0) {
-                                // first of the pair uses clockwise
-                                options.smooth.type = "curvedCW";
-                            } else {
-                                // second of the pair might change direction
-                                if (
-                                    previous_from &&
-                                    connection.from === previous_from
-                                ) {
-                                    // same direction, use counterclockwise
-                                    options.smooth.type = "curvedCCW";
-                                } else {
-                                    // opposite direction, use clockwise
-                                    options.smooth.type = "curvedCW";
-                                }
-                            }
+                            options.smooth.type = getOptionSmoothType(index, previous_from, connection);
                             // determine the curvature needed, expands every 2
                             options.smooth.roundness =
                                 Math.floor(index / 2) * curvature_increment +

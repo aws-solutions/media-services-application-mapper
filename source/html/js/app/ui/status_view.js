@@ -4,44 +4,44 @@
 import * as model from "../model.js";
 import * as statemachine from "../statemachine.js";
 
-var current_tab = "";
-var progressTimer;
+let current_tab = "";
+let progressTimer;
 
-var calculate_progress = function (fsm) {
+let calculate_progress = function (fsm) {
     // get the total number of states for this FSM
-    var states = Object.keys(fsm.states);
+    let states = Object.keys(fsm.states);
     // get our current position within the states
-    var index = states.indexOf(fsm.state);
+    let index = states.indexOf(fsm.state);
     // calculate the current state position as a percentage
     return Number.parseInt(((index + 1) / states.length) * 100);
 };
 
-var show = function () {
+let show = function () {
     if (typeof progressTimer === "undefined") {
         progressTimer = setTimeout(update, 500);
     }
 };
 
-var update = function () {
-    var id = "#nav-status";
-    var tab = id + "-tab";
+let update = function () {
+    let id = "#nav-status";
+    let tab = id + "-tab";
     if (current_tab !== tab) {
         $(tab).tab("show");
     }
-    var configuration_percent = calculate_progress(
+    let configuration_percent = calculate_progress(
         statemachine.getConfigurationStateMachine()
     );
-    var model_data_percent = calculate_progress(
+    let model_data_percent = calculate_progress(
         statemachine.getModelDataStateMachine()
     );
-    var configuration_class =
+    let configuration_class =
         configuration_percent < 100 ? "progress-bar-striped progress-bar-animated bg-warning" : "bg-success";
-    var model_data_class =
+    let model_data_class =
         model_data_percent < 100 ? "progress-bar-striped progress-bar-animated bg-warning" : "bg-success";
-    var configuration_stats =
+    let configuration_stats =
         configuration_percent < 100 ? configuration_percent + "%" : "Ready";
-    var model_stats = `${model.nodes.length} Nodes, ${model.edges.length} Connections`;
-    var html = `
+    let model_stats = `${model.nodes.length} Nodes, ${model.edges.length} Connections`;
+    let html = `
         <table class="table table-sm borderless">
             <tbody>
                 <tr>

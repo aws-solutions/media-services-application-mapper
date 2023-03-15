@@ -192,7 +192,7 @@ $("#quick_new_tile_dialog_proceed").on("click", function () {
         // get the name
         const channel_name = $("#quick_new_tile_dialog_name").val();
         // check it
-        const valid_name = new RegExp("^\\w+");
+        const valid_name = /^\w+/;
         if (valid_name.test(channel_name)) {
             const node_ids = JSON.parse(
                 $("#quick_new_tile_dialog").attr("node_ids")

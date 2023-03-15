@@ -8,9 +8,9 @@ import * as alert from "./alert.js";
 import * as diagrams from "./diagrams.js";
 import * as confirmation from "./confirmation.js";
 
-var vary_multiplier = 8;
+let vary_multiplier = 8;
 
-var inventory_tabulator = new Tabulator("#diagram_contents_inventory", {
+let inventory_tabulator = new Tabulator("#diagram_contents_inventory", {
     placeholder: "No Inventory",
     selectable: true,
     selectableRangeMode: "click",
@@ -39,7 +39,7 @@ var inventory_tabulator = new Tabulator("#diagram_contents_inventory", {
     ],
 });
 
-var diagram_tabulator = new Tabulator("#diagram_contents_diagram", {
+let diagram_tabulator = new Tabulator("#diagram_contents_diagram", {
     placeholder: "No Diagram Contents",
     selectable: true,
     selectableRangeMode: "click",
@@ -69,16 +69,16 @@ var diagram_tabulator = new Tabulator("#diagram_contents_diagram", {
 });
 
 $("#diagram_remove_selected").on("click", function () {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
-        var selected = shown.network.getSelectedNodes();
+        let selected = shown.network.getSelectedNodes();
         if (Array.isArray(selected) && selected.length > 0) {
-            var html = `Remove ${selected.length} node${
+            let html = `Remove ${selected.length} node${
                 selected.length == 1 ? "" : "s"
             } from the diagram?`;
             confirmation.show(html, function () {
                 shown.nodes.remove(selected);
-                var message = `${selected.length} node${
+                let message = `${selected.length} node${
                     selected.length == 1 ? "" : "s"
                 } removed`;
                 alert.show(message);
@@ -92,10 +92,10 @@ $("#diagram_add_downstream").on("click", function () {
 });
 
 function add_downstream_nodes() {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
-        var selected = shown.network.getSelectedNodes();
-        var connected = [];
+        let selected = shown.network.getSelectedNodes();
+        let connected = [];
         for (let node_id of selected) {
             if (!connected.includes(node_id)) {
                 connected.push(node_id);
@@ -104,13 +104,13 @@ function add_downstream_nodes() {
         }
         connected.sort();
         // only add nodes not yet on the diagram
-        var add_nodes = _.difference(
+        let add_nodes = _.difference(
             connected,
             shown.nodes.getIds().sort()
         );
         // use _.compact to remove nulls if id not found
-        var nodes = _.compact(model.nodes.get(add_nodes));
-        var view = shown.network.getViewPosition();
+        let nodes = _.compact(model.nodes.get(add_nodes));
+        let view = shown.network.getViewPosition();
         shown.nodes.update(nodes);
         for (let node of nodes) {
             shown.network.moveNode(
@@ -119,7 +119,7 @@ function add_downstream_nodes() {
                 ui_util.vary(view.y, node.size * vary_multiplier)
             );
         }
-        var node_ids = _.map(nodes, "id");
+        let node_ids = _.map(nodes, "id");
         layout.save_layout(shown, node_ids);
         shown.network.fit();
     }
@@ -130,10 +130,10 @@ $("#diagram_add_upstream").on("click", function () {
 });
 
 function add_upstream_nodes() {
-    var shown = diagrams.shown();
+    let shown = diagrams.shown();
     if (shown) {
-        var selected = shown.network.getSelectedNodes();
-        var connected = [];
+        let selected = shown.network.getSelectedNodes();
+        let connected = [];
         for (let node_id of selected) {
             if (!connected.includes(node_id)) {
                 connected.push(node_id);
@@ -142,13 +142,13 @@ function add_upstream_nodes() {
         }
         // only add nodes not yet on the diagram
         connected.sort();
-        var add_nodes = _.difference(
+        let add_nodes = _.difference(
             connected,
             shown.nodes.getIds().sort()
         );
         // use _.compact to remove nulls if id not found
-        var nodes = _.compact(model.nodes.get(add_nodes));
-        var view = shown.network.getViewPosition();
+        let nodes = _.compact(model.nodes.get(add_nodes));
+        let view = shown.network.getViewPosition();
         shown.nodes.update(nodes);
         for (let node of nodes) {
             shown.network.moveNode(
@@ -157,7 +157,7 @@ function add_upstream_nodes() {
                 ui_util.vary(view.y, node.size * vary_multiplier)
             );
         }
-        var node_ids = _.map(nodes, "id");
+        let node_ids = _.map(nodes, "id");
         layout.save_layout(shown, node_ids);
         shown.network.fit();
     }
@@ -168,13 +168,13 @@ $("#diagram_add_all_nodes").on("click", function () {
     add_upstream_nodes();
 });
 
-var set_create_diagram_alert = function (message) {
-    var html = `<div id="create_diagram_dialog_alert" class="alert alert-danger" role="alert">${message}</div>`;
+let set_create_diagram_alert = function (message) {
+    let html = `<div id="create_diagram_dialog_alert" class="alert alert-danger" role="alert">${message}</div>`;
     $("#create_diagram_dialog_alert").replaceWith(html);
 };
 
-var clear_create_diagram_alert = function () {
-    var html = `<div id="create_diagram_dialog_alert"></div>`;
+let clear_create_diagram_alert = function () {
+    let html = `<div id="create_diagram_dialog_alert"></div>`;
     $("#create_diagram_dialog_alert").replaceWith(html);
 };
 
@@ -187,12 +187,12 @@ $("#create_diagram_dialog").on("shown.bs.modal", function () {
 $("#create_diagram_dialog_proceed").on("click", function () {
     try {
         // get the name
-        var name = filterXSS($("#create_diagram_dialog_name").val());
+        let name = filterXSS($("#create_diagram_dialog_name").val());
         // check it
-        var valid_name = new RegExp("^\\w+");
+        let valid_name = /^\w+/;
         if (valid_name.test(name)) {
             // create a new diagram
-            var d = diagrams.add(name, _.snakeCase(name), true);
+            let d = diagrams.add(name, _.snakeCase(name), true);
             alert.show("Diagram created");
             // hide the dialog
             $("#create_diagram_dialog").modal("hide");
@@ -211,13 +211,13 @@ $("#create_diagram_dialog_proceed").on("click", function () {
     }
 });
 
-var set_dupe_diagram_alert = function (message) {
-    var html = `<div id="dupe_diagram_dialog_alert" class="alert alert-danger" role="alert">${message}</div>`;
+let set_dupe_diagram_alert = function (message) {
+    let html = `<div id="dupe_diagram_dialog_alert" class="alert alert-danger" role="alert">${message}</div>`;
     $("#dupe_diagram_dialog_alert").replaceWith(html);
 };
 
-var clear_dupe_diagram_alert = function () {
-    var html = `<div id="dupe_diagram_dialog_alert"></div>`;
+let clear_dupe_diagram_alert = function () {
+    let html = `<div id="dupe_diagram_dialog_alert"></div>`;
     $("#dupe_diagram_dialog_alert").replaceWith(html);
 };
 
@@ -228,18 +228,18 @@ $("#dupe_diagram_dialog").on("shown.bs.modal", function () {
 });
 
 $("#dupe_diagram_dialog_proceed").on("click", function () {
-    var current_diagram = diagrams.shown();
+    let current_diagram = diagrams.shown();
     if (current_diagram) {
         try {
             // get the name
-            var name = filterXSS($("#dupe_diagram_dialog_name").val());
+            let name = filterXSS($("#dupe_diagram_dialog_name").val());
             // check it
-            var valid_name = new RegExp("^\\w+");
+            let valid_name = /^\w+/;
             if (valid_name.test(name)) {
                 // create a new diagram
-                var new_diagram = diagrams.add(name, _.snakeCase(name), true);
+                let new_diagram = diagrams.add(name, _.snakeCase(name), true);
                 new_diagram.nodes.update(current_diagram.nodes.get());
-                var positions = current_diagram.network.getPositions();
+                let positions = current_diagram.network.getPositions();
                 for (let key of Object.keys(positions)) {
                     new_diagram.network.moveNode(
                         key,
@@ -274,7 +274,7 @@ $("#add-diagram-button,#diagram_add_diagram").on("click", function () {
 $("#duplicate-diagram-button,#diagram_duplicate_diagram").on(
     "click",
     function () {
-        var diagram = diagrams.shown();
+        let diagram = diagrams.shown();
         if (diagram) {
             $("#dupe_diagram_dialog").modal("show");
         }
@@ -282,13 +282,13 @@ $("#duplicate-diagram-button,#diagram_duplicate_diagram").on(
 );
 
 $("#remove-diagram-button,#diagram_remove_diagram").on("click", function () {
-    var diagram = diagrams.shown();
+    let diagram = diagrams.shown();
     if (diagram) {
-        var html = `Permanently remove ${diagram.name} diagram?`;
+        let html = `Permanently remove ${diagram.name} diagram?`;
         confirmation.show(html, function () {
             diagram.nodes.remove(diagram.nodes.getIds());
             diagrams.remove(diagram.name);
-            var message = `${diagram.name} removed`;
+            let message = `${diagram.name} removed`;
             alert.show(message);
         });
     }
@@ -303,7 +303,7 @@ $("#diagram_hide_diagram").on("click", function () {
 
 $("#diagram_contents_modal").on("shown.bs.modal", function () {
     inventory_tabulator.setData(model.nodes.get());
-    var current = diagrams.shown();
+    let current = diagrams.shown();
     diagram_tabulator.setData(current.nodes.get());
 });
 
@@ -317,12 +317,12 @@ $("#manage-diagram-contents-button,#diagram_manage_contents").on(
 );
 
 $("#add-selected-to-diagram").on("click", function () {
-    var inv_selected = inventory_tabulator.getSelectedData();
+    let inv_selected = inventory_tabulator.getSelectedData();
     diagram_tabulator.updateOrAddData(inv_selected);
 });
 
 $("#remove-selected-from-diagram").on("click", function () {
-    var selectedRows = diagram_tabulator.getSelectedRows();
+    let selectedRows = diagram_tabulator.getSelectedRows();
     for (let row of selectedRows) {
         row.delete();
     }
@@ -337,12 +337,12 @@ $("#remove-all-from-diagram").on("click", function () {
 });
 
 $("#diagram_contents_save").on("click", function () {
-    var diagram = diagrams.shown();
-    var tabulator_node_ids = _.map(diagram_tabulator.getData(), "id").sort();
-    var diagram_node_ids = diagram.nodes.getIds().sort();
-    var add_ids = _.difference(tabulator_node_ids, diagram_node_ids);
-    var remove_ids = _.difference(diagram_node_ids, tabulator_node_ids);
-    var nodes = _.compact(model.nodes.get(add_ids));
+    let diagram = diagrams.shown();
+    let tabulator_node_ids = _.map(diagram_tabulator.getData(), "id").sort();
+    let diagram_node_ids = diagram.nodes.getIds().sort();
+    let add_ids = _.difference(tabulator_node_ids, diagram_node_ids);
+    let remove_ids = _.difference(diagram_node_ids, tabulator_node_ids);
+    let nodes = _.compact(model.nodes.get(add_ids));
     diagram.network.once("afterDrawing", function () {
         diagram.network.fit();
     });

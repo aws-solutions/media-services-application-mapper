@@ -8,7 +8,7 @@ import * as confirmation from "./confirmation.js";
 import * as alert from "./alert.js";
 
 
-var trashIcon = function () {
+let trashIcon = function () {
     return `<i class='fa fa-trash'></i>`;
 };
 
@@ -81,13 +81,13 @@ function delete_note(row) {
 
 function set_notes_data() {
     const local_lodash = _;
-    var tiles_list;
-    var nodes_list = model.nodes.get();
-    var edges_list = model.edges.get();
+    let tiles_list;
+    let nodes_list = model.nodes.get();
+    let edges_list = model.edges.get();
     tiles.channel_list().then(function (results) {
         tiles_list = results;
     });
-    notes.get_all_resource_notes().then(function (all_notes) {  // NOSONAR
+    notes.get_all_resource_notes().then(function (all_notes) {
         for (let note of all_notes) {
             let converter = new showdown.Converter();
             // truncate notes to 200 characters
@@ -98,25 +98,13 @@ function set_notes_data() {
             // does the resource associated with this note exist
             switch (note.type) {
                 case "Tile":
-                    if (local_lodash.includes(tiles_list, note.resource_arn)){
-                        note.exists = "Yes";
-                    }
+                    note.exists = local_lodash.includes(tiles_list, note.resource_arn) ? "Yes" : undefined;
                     break;
                 case "Edge":
-                    for (let edge of edges_list){
-                        if (local_lodash.includes(edge, note.resource_arn)){
-                            note.exists = "Yes";
-                            break;
-                        }
-                    }
+                    note.exists = edges_list.any(edge => local_lodash.includes(edge, note.resource_arn)) ? "Yes" : undefined;
                     break;
                 case "Node":
-                    for (let node of nodes_list){
-                        if (local_lodash.includes(node, note.resource_arn)){
-                            note.exists = "Yes";
-                            break;
-                        }
-                    }
+                    note.exists = nodes_list.any(node => local_lodash.includes(node, note.resource_arn)) ? "Yes" : undefined;
             }
         }
         notes_tabulator.replaceData(all_notes);

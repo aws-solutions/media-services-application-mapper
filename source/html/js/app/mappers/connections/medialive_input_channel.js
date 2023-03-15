@@ -3,13 +3,14 @@
 
 import * as server from "../../server.js";
 import * as connections from "../../connections.js";
+import { checkAdditionalConnections } from "./helper.js";
 
 export const update = function () {
     const current = connections.get_current();
     const url = current[0];
     const api_key = current[1];
     const items = [];
-    return new Promise((resolve) => {   // NOSONAR
+    return new Promise((resolve) => {
         server
             .get(url + "/cached/medialive-input-medialive-channel", api_key)
             .then((results) => {
@@ -24,24 +25,7 @@ export const update = function () {
                         arrows: "to",
                         color: { color: "black" },
                     };
-                    const hasMoreConnections = _.filter(
-                        results,
-                        (function (local_connection) {
-                            return function (o) {
-                                if (
-                                    o.from === local_connection.from &&
-                                    o.to === local_connection.to
-                                ) {
-                                    let shouldEndWith = "0";
-                                    if (local_connection.arn.endsWith("0"))
-                                        shouldEndWith = "1";
-                                    if (o.arn.endsWith(shouldEndWith))
-                                        return true;
-                                }
-                                return false;
-                            };
-                        })(connection)
-                    );
+                    const hasMoreConnections = checkAdditionalConnections(results, connection);
 
                     if (hasMoreConnections.length) {
                         /** curve it */

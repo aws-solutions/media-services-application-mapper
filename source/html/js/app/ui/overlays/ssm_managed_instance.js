@@ -7,8 +7,8 @@ import * as model from "../../model.js";
 
 export const match_type = "SSM Managed Instance";
 
-var decorate_alarms = function (drawing, font_size, width, height, id) {
-    var alarm_count = 0;
+let decorate_alarms = function (drawing, font_size, width, height, id) {
+    let alarm_count = 0;
     for (let item of alarms.get_subscribers_with_alarms().current) {
         if (item.ResourceArn == id) {
             alarm_count += item.AlarmCount;
@@ -17,8 +17,8 @@ var decorate_alarms = function (drawing, font_size, width, height, id) {
     tools.set_alarm_text(alarm_count, drawing, font_size, width);
 };
 
-var decorate_information = function (drawing, font_size, width, height, id) {
-    var node = model.nodes.get(id);
+let decorate_information = function (drawing, font_size, width, height, id) {
+    let node = model.nodes.get(id);
     if (node) {
         if (node.data.Data["AWS:InstanceInformation"].Content[0].ComputerName) {
             let computer_name =

@@ -4,6 +4,6 @@
 import * as server from "./server.js";
 
 export function ping(url, api_key) {
-    var current_endpoint = `${url}/ping`;
+    let current_endpoint = `${url}/ping`;
     return server.get(current_endpoint, api_key);
 }

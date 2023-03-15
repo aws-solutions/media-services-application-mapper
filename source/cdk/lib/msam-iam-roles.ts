@@ -209,7 +209,7 @@ export class MsamIamRoles extends NestedStack {
                                 'ssm:List*',
                                 'ssm:SendCommand',
                             ],
-                            resources: ['*'],
+                            resources: ['*'], // NOSONAR -- This role is used by a scanner requiring access to all resources within these services.
                         }),
                     ],
                 }),
