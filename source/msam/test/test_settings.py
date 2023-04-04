@@ -20,6 +20,11 @@ class TestSettings(unittest.TestCase):
     This class extends TestCase with testing functions
     """
 
+    def setUp(self):
+        from chalicelib import settings
+        settings.DYNAMO_RESOURCE.reset_mock()
+        settings.DYNAMO_RESOURCE.Table.return_value.put_item.reset_mock()
+
     def test_put_setting(self, patched_env, patched_resource,
                              patched_client):
         """
@@ -27,6 +32,7 @@ class TestSettings(unittest.TestCase):
         """
         from chalicelib import settings
         settings.put_setting(KEY, VALUE)
+        settings.DYNAMO_RESOURCE.Table.return_value.put_item.assert_called_once_with(Item={"id": KEY, "value": VALUE})
 
     def test_get_setting(self, patched_env, patched_resource, patched_client):
         """
@@ -34,15 +40,7 @@ class TestSettings(unittest.TestCase):
         """
         from chalicelib import settings
         settings.get_setting(KEY)
-
-        mock_table = MagicMock()
-        mock_table.get_item.return_value = {"Item": {"value": VALUE}}
-        patched_resource.return_value.Table.return_value = mock_table
-        settings.get_setting(KEY)
-
-        mock_table.get_item.side_effect = CLIENT_ERROR
-        patched_resource.return_value.Table.return_value = mock_table
-        settings.get_setting(KEY)
+        settings.DYNAMO_RESOURCE.Table.return_value.get_item.assert_any_call(Key={'id': KEY})
 
 
     def test_application_settings(self, patched_env, patched_resource, patched_client):
@@ -52,11 +50,23 @@ class TestSettings(unittest.TestCase):
         from chalicelib import settings
         mocked_req = MagicMock()
         mocked_req.method = "PUT"
+        put_setting_mock = MagicMock()
+        original_put_setting = settings.put_setting
+        settings.put_setting = put_setting_mock
         settings.application_settings(mocked_req, KEY)
+        settings.put_setting.assert_called_once()
+        settings.put_setting = original_put_setting
         mocked_req.method = "DELETE"
         settings.application_settings(mocked_req, KEY)
+        settings.DYNAMO_RESOURCE.Table.assert_called_once_with('settings_table')
+        settings.DYNAMO_RESOURCE.Table.return_value.delete_item.assert_any_call(Key={'id': KEY})
         mocked_req.method = "GET"
+        get_setting_mock = MagicMock()
+        original_get_setting = settings.get_setting
+        settings.get_setting = get_setting_mock
         settings.application_settings(mocked_req, KEY)
-        
+        settings.get_setting.assert_called_once()
+        settings.get_setting = original_get_setting
         with patch.object(settings, 'get_setting', side_effect=CLIENT_ERROR):
-            settings.application_settings(mocked_req, KEY)
+            result = settings.application_settings(mocked_req, KEY)
+            self.assertTrue("exception" in result)

@@ -55,7 +55,8 @@ class TestMediaEvents(unittest.TestCase):
         with patch.object(media_events.EVENTS_TABLE, 'put_item', return_value={}):
             with patch.object(media_events.CLOUDWATCH_EVENTS_TABLE, 'put_item', return_value={}):
                 for event in mocked_events:
-                    media_events.lambda_handler(event, MagicMock())
+                    result = media_events.lambda_handler(event, MagicMock())
+                    self.assertTrue(result)
         
         patched_client.return_value.describe_origin_endpoint.side_effect = CLIENT_ERROR
         media_events.lambda_handler(mocked_event, MagicMock())
