@@ -206,10 +206,16 @@ class TestConnections(unittest.TestCase):
         from chalicelib import connections, cache
         # first side effect is the return for eml input, second is for ems
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_INPUTS, CACHED_MS_CONTAINERS)):
-            connections.mediastore_container_medialive_input_ddb_items()
+            items = connections.mediastore_container_medialive_input_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediastore:us-west-2:1234567890:container/mytestcontainer:arn:aws:medialive:us-west-2:1234567890:input:1183363')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediastore:us-west-2:1234567890:container/mytestcontainer')
+            self.assertEqual(items[0]['to'], 'arn:aws:medialive:us-west-2:1234567890:input:1183363')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediastore_container_medialive_input_ddb_items()
+            items = connections.mediastore_container_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_medialive_channel_mediapackage_channel_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -218,12 +224,19 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_MP_CHANNELS)):
-            connections.medialive_channel_mediapackage_channel_ddb_items()
+            items = connections.medialive_channel_mediapackage_channel_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:medialive:us-west-2:1234567890:channel:7678336:arn:aws:mediapackage:us-west-2:1234567890:channels/286eb42a8bf44695a44bdb48e4fb6f3f:0')
+            self.assertEqual(items[0]['from'], 'arn:aws:medialive:us-west-2:1234567890:channel:7678336')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediapackage:us-west-2:1234567890:channels/286eb42a8bf44695a44bdb48e4fb6f3f')
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS_2, CACHED_MP_CHANNELS)):
-            connections.medialive_channel_mediapackage_channel_ddb_items()
+            items = connections.medialive_channel_mediapackage_channel_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_channel_mediapackage_channel_ddb_items()
+            items = connections.medialive_channel_mediapackage_channel_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_medialive_channel_mediastore_container_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -232,10 +245,15 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_MS_CONTAINERS)):
-            connections.medialive_channel_mediastore_container_ddb_items()
+            items = connections.medialive_channel_mediastore_container_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:medialive:us-west-2:1234567890:channel:7678336:arn:aws:mediastore:us-west-2:1234567890:container/mytestcontainer')
+            self.assertEqual(items[0]['from'], 'arn:aws:medialive:us-west-2:1234567890:channel:7678336')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediastore:us-west-2:1234567890:container/mytestcontainer')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_channel_mediastore_container_ddb_items()
+            items = connections.medialive_channel_mediastore_container_ddb_items()
+            self.assertEqual(len(items), 0)
 
 
     def test_medialive_channel_multiplex_ddb_items(self, patched_env, patched_resource,
@@ -245,10 +263,15 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_MULTIPLEX)):
-            connections.medialive_channel_multiplex_ddb_items()
+            items = connections.medialive_channel_multiplex_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:medialive:us-west-2:1234567890:channel:7678336:arn:aws:medialive:us-east-1:1234567890:multiplex:2911217:0')
+            self.assertEqual(items[0]['from'], 'arn:aws:medialive:us-west-2:1234567890:channel:7678336')
+            self.assertEqual(items[0]['to'], 'arn:aws:medialive:us-east-1:1234567890:multiplex:2911217')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_channel_multiplex_ddb_items()
+            items = connections.medialive_channel_multiplex_ddb_items()
+            self.assertEqual(len(items), 0)
 
 
     def test_medialive_input_medialive_channel_ddb_items(self, patched_env, patched_resource,
@@ -258,10 +281,12 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_ML_INPUTS)):
-            connections.medialive_input_medialive_channel_ddb_items()
+            items = connections.medialive_input_medialive_channel_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_input_medialive_channel_ddb_items()
+            items = connections.medialive_input_medialive_channel_ddb_items()
+            self.assertEqual(len(items), 0)
 
 
     def test_mediapackage_channel_mediapackage_endpoint_ddb_items(self, patched_env, patched_resource,
@@ -271,10 +296,16 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MP_CHANNELS, CACHED_MP_ENDPOINTS)):
-            connections.mediapackage_channel_mediapackage_endpoint_ddb_items()
+            items = connections.mediapackage_channel_mediapackage_endpoint_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediapackage:us-west-2:1234567890:channels/286eb42a8bf44695a44bdb48e4fb6f3f:arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediapackage:us-west-2:1234567890:channels/286eb42a8bf44695a44bdb48e4fb6f3f')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediapackage_channel_mediapackage_endpoint_ddb_items()
+            items = connections.mediapackage_channel_mediapackage_endpoint_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_multiplex_mediaconnect_flow_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -283,10 +314,15 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MULTIPLEX, CACHED_MC_FLOWS)):
-            connections.multiplex_mediaconnect_flow_ddb_items()
+            items = connections.multiplex_mediaconnect_flow_ddb_items()
+            self.assertEqual(items[0]['arn'], 'arn:aws:medialive:us-east-1:1234567890:multiplex:2911217:arn:aws:mediaconnect:us-east-1:1234567890:flow:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:Plex-Test-Out-0')
+            self.assertEqual(items[0]['from'], 'arn:aws:medialive:us-east-1:1234567890:multiplex:2911217')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediaconnect:us-east-1:1234567890:flow:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:Plex-Test-Out-0')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.multiplex_mediaconnect_flow_ddb_items()
+            items = connections.multiplex_mediaconnect_flow_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_s3_bucket_cloudfront_distribution_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -295,10 +331,15 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_S3, CACHED_CLOUDFRONT)):
-            connections.s3_bucket_cloudfront_distribution_ddb_items()
+            items = connections.s3_bucket_cloudfront_distribution_ddb_items()
+            self.assertEqual(items[0]['arn'], 'arn:aws:s3:::msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv:arn:aws:cloudfront::1234567890:distribution/E2EFYSTWYTFJBN')
+            self.assertEqual(items[0]['from'], 'arn:aws:s3:::msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv')
+            self.assertEqual(items[0]['to'], 'arn:aws:cloudfront::1234567890:distribution/E2EFYSTWYTFJBN')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.s3_bucket_cloudfront_distribution_ddb_items()
+            items = connections.s3_bucket_cloudfront_distribution_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_s3_bucket_medialive_input_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -307,10 +348,13 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_S3, CACHED_ML_INPUTS)):
-            connections.s3_bucket_medialive_input_ddb_items()
+            items = connections.s3_bucket_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.s3_bucket_medialive_input_ddb_items()
+            items = connections.s3_bucket_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_cloudfront_distribution_medialive_input_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -319,10 +363,13 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_CLOUDFRONT, CACHED_ML_INPUTS)):
-            connections.cloudfront_distribution_medialive_input_ddb_items()
+            items = connections.cloudfront_distribution_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.cloudfront_distribution_medialive_input_ddb_items()
+            items = connections.cloudfront_distribution_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -331,10 +378,15 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_CLOUDFRONT, CACHED_MP_CHANNELS, CACHED_MP_ENDPOINTS)):
-            connections.mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items()
+            items = connections.mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items()
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3:arn:aws:cloudfront::1234567890:distribution/E2EFYSTWYTFJBN')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3')
+            self.assertEqual(items[0]['to'], 'arn:aws:cloudfront::1234567890:distribution/E2EFYSTWYTFJBN')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items()
+            items = connections.mediapackage_endpoint_cloudfront_distribution_by_tag_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -343,10 +395,12 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_CLOUDFRONT, CACHED_MP_ENDPOINTS)):
-            connections.mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items()
+            items = connections.mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items()
+            items = connections.mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items()
+            self.assertEqual(len(items), 0)
 
 
     def test_mediapackage_endpoint_speke_keyserver_ddb_items(self, patched_env, patched_resource,
@@ -356,10 +410,14 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_SPEKE, CACHED_MP_ENDPOINTS)):
-            connections.mediapackage_endpoint_speke_keyserver_ddb_items()
+            items = connections.mediapackage_endpoint_speke_keyserver_ddb_items()
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3:arn:oss:speke:::714958406217327359')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3')
+            self.assertEqual(items[0]['to'], 'arn:oss:speke:::714958406217327359')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediapackage_endpoint_speke_keyserver_ddb_items()
+            items = connections.mediapackage_endpoint_speke_keyserver_ddb_items()
+            self.assertEqual(len(items), 0)
 
 
     def test_mediaconnect_flow_medialive_input_ddb_items(self, patched_env, patched_resource,
@@ -369,10 +427,13 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MC_FLOWS, CACHED_ML_INPUTS)):
-            connections.mediaconnect_flow_medialive_input_ddb_items()
+            items = connections.mediaconnect_flow_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediaconnect_flow_medialive_input_ddb_items()
+            items = connections.mediaconnect_flow_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_mediaconnect_flow_mediaconnect_flow_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -381,10 +442,16 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MC_FLOWS, CACHED_MC_FLOWS)):
-            connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
+            items = connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediaconnect:us-east-1:1234567890:entitlement:1-CAVaVVRQUAMLAF0P-43e6ff4eb1d4:Multiplex-2911217-pipeline-0:arn:aws:mediaconnect:us-east-1:1234567890:flow:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:Plex-Test-Out-0')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediaconnect:us-east-1:1234567890:entitlement:1-CAVaVVRQUAMLAF0P-43e6ff4eb1d4:Multiplex-2911217-pipeline-0')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediaconnect:us-east-1:1234567890:flow:1-WVZVV1IMAQhXBVEI-c67d3528bbe6:Plex-Test-Out-0')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
+            items = connections.mediaconnect_flow_mediaconnect_flow_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_mediapackage_endpoint_mediatailor_configuration_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -393,10 +460,16 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MP_ENDPOINTS, CACHED_MT_CONFIG)):
-            connections.mediapackage_endpoint_mediatailor_configuration_ddb_items()
+            items = connections.mediapackage_endpoint_mediatailor_configuration_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3:arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediapackage:us-west-2:1234567890:origin_endpoints/9d9f3e3bf04c44efb7e0fc806a546fc3')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediapackage_endpoint_mediatailor_configuration_ddb_items()
+            items = connections.mediapackage_endpoint_mediatailor_configuration_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_mediastore_container_mediatailor_configuration_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -405,10 +478,16 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_MT_CONFIG, CACHED_MS_CONTAINERS)):
-            connections.mediastore_container_mediatailor_configuration_ddb_items()
+            items = connections.mediastore_container_mediatailor_configuration_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:mediastore:us-west-2:1234567890:container/mytestcontainer:arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign')
+            self.assertEqual(items[0]['from'], 'arn:aws:mediastore:us-west-2:1234567890:container/mytestcontainer')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediastore_container_mediatailor_configuration_ddb_items()
+            items = connections.mediastore_container_mediatailor_configuration_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_s3_bucket_mediatailor_configuration_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -417,10 +496,16 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_S3, CACHED_MT_CONFIG)):
-            connections.s3_bucket_mediatailor_configuration_ddb_items()
+            items = connections.s3_bucket_mediatailor_configuration_ddb_items()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0]['arn'], 'arn:aws:s3:::msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv:arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign')
+            self.assertEqual(items[0]['from'], 'arn:aws:s3:::msam-upgrader-browserappmodu-msambrowserappbucket-1f8ur1bq93ntv')
+            self.assertEqual(items[0]['to'], 'arn:aws:mediatailor:us-west-2:1234567890:playbackConfiguration/MyTestCampaign')
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.s3_bucket_mediatailor_configuration_ddb_items()
+            items = connections.s3_bucket_mediatailor_configuration_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_mediastore_container_cloudfront_distribution_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -429,10 +514,13 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_CLOUDFRONT, CACHED_MS_CONTAINERS)):
-            connections.mediastore_container_cloudfront_distribution_ddb_items()
+            items = connections.mediastore_container_cloudfront_distribution_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.mediastore_container_cloudfront_distribution_ddb_items()
+            items = connections.mediastore_container_cloudfront_distribution_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_medialive_channel_s3_bucket_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -441,22 +529,12 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_S3)):
-            connections.medialive_channel_s3_bucket_ddb_items()
+            items = connections.medialive_channel_s3_bucket_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_channel_s3_bucket_ddb_items()
-
-    # def test_link_device_medialive_input_ddb_items(self, patched_env, patched_resource,
-    #                                        patched_client):
-    #     """
-    #     Test the link_device_medialive_input_ddb_items function
-    #     """
-    #     from chalicelib import connections, cache
-    #     with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_S3)):
-    #         connections.link_device_medialive_input_ddb_items()
-    #     # exception
-    #     with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-    #         connections.link_device_medialive_input_ddb_items()
+            items = connections.medialive_channel_s3_bucket_ddb_items()
+            self.assertEqual(len(items), 0)
 
     def test_medialive_channel_medialive_input_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -465,10 +543,13 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_ML_INPUTS)):
-            connections.medialive_channel_medialive_input_ddb_items()
+            items = connections.medialive_channel_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_channel_medialive_input_ddb_items()
+            items = connections.medialive_channel_medialive_input_ddb_items()
+            self.assertEqual(len(items), 0)
+
 
     def test_medialive_channel_mediaconnect_flow_ddb_items(self, patched_env, patched_resource,
                                            patched_client):
@@ -477,7 +558,9 @@ class TestConnections(unittest.TestCase):
         """
         from chalicelib import connections, cache
         with patch.object(cache, 'cached_by_service', side_effect=(CACHED_ML_CHANNELS, CACHED_MC_FLOWS)):
-            connections.medialive_channel_mediaconnect_flow_ddb_items()
+            items = connections.medialive_channel_mediaconnect_flow_ddb_items()
+            self.assertEqual(len(items), 0)
         # exception
         with patch.object(cache, 'cached_by_service', side_effect=CLIENT_ERROR):
-            connections.medialive_channel_mediaconnect_flow_ddb_items()
+            items = connections.medialive_channel_mediaconnect_flow_ddb_items()
+            self.assertEqual(len(items), 0)
