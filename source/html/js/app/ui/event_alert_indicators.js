@@ -65,7 +65,7 @@ const updateUIHandler = (node, alertState = true, dataSet = "nodes") => {
         matches = diagrams.have_all([node.from, node.to]);
     }
 
-    for (let diagram of matches) {
+    for (const diagram of matches) {
         // update the diagrams state
         diagram[dataSet].update(node);
         diagram.alert(alertState);
@@ -154,7 +154,7 @@ function updateAlertHelper(node, item, is_running) {
         ) {
             node.running_pipelines = new Array(2);
         } else if (_.has(node.data, "PipelinesRunningCount")) {
-            let count = Number.parseInt(
+            const count = Number.parseInt(
                 node.data.PipelinesRunningCount
             );
             node.running_pipelines = new Array(count);
@@ -163,7 +163,7 @@ function updateAlertHelper(node, item, is_running) {
         }
         node.running_pipelines.fill(1);
     }
-    let index = Number.parseInt(item.detail.pipeline);
+    const index = Number.parseInt(item.detail.pipeline);
     node.running_pipelines[index] = is_running ? 1 : 0;
     node.degraded =
         _.sum(node.running_pipelines) > 0 &&
@@ -174,12 +174,12 @@ function updateAlertHelper(node, item, is_running) {
 
 const updateEventAlertState = (current_alerts, previous_alerts) => {
     /** iterate through current 'set' alerts */
-    let alerting_nodes = new Set();
+    const alerting_nodes = new Set();
 
     // we only need one unique alert per arn/pipeline
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
 
-    let filter = (item) => {
+    const filter = (item) => {
         if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
             return `${item.resource_arn}:${item.detail.pipeline}`;
         } else {
@@ -187,14 +187,14 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
         }
     };
 
-    let uniq_current_alerts = _.uniqBy(current_alerts, filter);
-    let uniq_previous_alerts = _.uniqBy(previous_alerts, filter);
+    const uniq_current_alerts = _.uniqBy(current_alerts, filter);
+    const uniq_previous_alerts = _.uniqBy(previous_alerts, filter);
 
     // use the filtered lists
     current_alerts = uniq_current_alerts;
     previous_alerts = uniq_previous_alerts;
 
-    for (let item of current_alerts) {
+    for (const item of current_alerts) {
         const node = model.nodes.get(item.resource_arn);
         if (!node) {
             continue;
@@ -208,7 +208,7 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
     // cleared alerts are present in the previous list and not in the current list
 
-    let uniq_cleared_alerts = _.differenceBy(
+    const uniq_cleared_alerts = _.differenceBy(
         previous_alerts,
         current_alerts,
         filter
@@ -216,8 +216,8 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {
 
     console.log(`unique cleared alerts: ${uniq_cleared_alerts.length}`);
 
-    for (let cleared of uniq_cleared_alerts) {
-        let node = model.nodes.get(cleared.resource_arn);
+    for (const cleared of uniq_cleared_alerts) {
+        const node = model.nodes.get(cleared.resource_arn);
         if (!node) {
             continue;
         }

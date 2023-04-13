@@ -13,7 +13,7 @@ export const update = () => {
     return new Promise((resolve) => {
         const endpoint = `${url}/cached/medialive-channel-multiplex`;
         server.get(endpoint, api_key).then((results) => {
-            for (let connection of results) {
+            for (const connection of results) {
                 const data = JSON.parse(connection.data);
                 const options = {
                     id: connection.arn,

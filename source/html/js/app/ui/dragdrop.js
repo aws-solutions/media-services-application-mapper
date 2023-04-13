@@ -14,7 +14,7 @@ let drag_id;
 let drag_type;
 
 function drop_node_to_diagram(event) {
-    let diagram = diagrams.shown();
+    const diagram = diagrams.shown();
     let node;
     let canvas;
     if (diagram) {
@@ -35,8 +35,8 @@ function drop_node_to_diagram(event) {
 
 function drop_node_to_tile(tile) {
     // get node
-    let node = model.nodes.get(drag_id);
-    let name = filterXSS(tile.attr("data-channel-name"));
+    const node = model.nodes.get(drag_id);
+    const name = filterXSS(tile.attr("data-channel-name"));
     let html;
     if (node) {
         html = `Add ${node.header} to tile ${name}?`;
@@ -51,8 +51,8 @@ function drop_node_to_tile(tile) {
 }
 
 function drop_diagram_to_diagram() {
-    let source_diagram = diagrams.get_by_name(drag_id);
-    let target_diagram = diagrams.shown();
+    const source_diagram = diagrams.get_by_name(drag_id);
+    const target_diagram = diagrams.shown();
     let nodes;
     let node_ids;
     if (source_diagram && target_diagram) {
@@ -71,8 +71,8 @@ function drop_diagram_to_diagram() {
 }
 
 function drop_diagram_to_tile(tile) {
-    let name = filterXSS(tile.attr("data-channel-name"));
-    let source_diagram = diagrams.get_by_name(drag_id);
+    const name = filterXSS(tile.attr("data-channel-name"));
+    const source_diagram = diagrams.get_by_name(drag_id);
     let node_ids;
     let html;
     if (source_diagram) {
@@ -94,8 +94,8 @@ function drop_diagram_to_tile(tile) {
 }
 
 function drop_tile_to_diagram() {
-    let tile_name = drag_id;
-    let target_diagram = diagrams.shown();
+    const tile_name = drag_id;
+    const target_diagram = diagrams.shown();
     if (target_diagram) {
         console.log(
             "add tile contents from " +
@@ -104,9 +104,9 @@ function drop_tile_to_diagram() {
                 target_diagram.name
         );
         channels.retrieve_channel(tile_name).then(function (contents) {
-            let channel_node_ids = _.map(contents, "id").sort();
+            const channel_node_ids = _.map(contents, "id").sort();
             // vis returns null for each id it can't find, therefore _.compact
-            let nodes = _.compact(model.nodes.get(channel_node_ids));
+            const nodes = _.compact(model.nodes.get(channel_node_ids));
             let node_ids;
             target_diagram.nodes.update(nodes);
             node_ids = _.map(Array.from(nodes), "id");
@@ -117,8 +117,8 @@ function drop_tile_to_diagram() {
 }
 
 function drop_tile_to_tile(tile) {
-    let source_tile_name = drag_id;
-    let target_tile_name = filterXSS(tile.attr("data-channel-name"));
+    const source_tile_name = drag_id;
+    const target_tile_name = filterXSS(tile.attr("data-channel-name"));
     let html;
     if (source_tile_name !== target_tile_name) {
         html = `Add contents from tile ${source_tile_name} to tile ${target_tile_name}?`;
@@ -142,7 +142,7 @@ function drop_tile_to_tile(tile) {
 }
 
 function drop_node_to_tile_canvas() {
-    let node = model.nodes.get(drag_id);
+    const node = model.nodes.get(drag_id);
     let html;
     if (node) {
         html = `Create a new tile with ${node.header}?`;
@@ -154,12 +154,12 @@ function drop_node_to_tile_canvas() {
 }
 
 function drop_diagram_to_tile_canvas() {
-    let diagram = diagrams.get_by_name(drag_id);
+    const diagram = diagrams.get_by_name(drag_id);
     let html;
     if (diagram) {
         html = `Create a new tile from diagram ${diagram.name} contents?`;
         confirmation.show(html, function () {
-            let node_ids = diagram.nodes.getIds();
+            const node_ids = diagram.nodes.getIds();
             // confirm add node to tile
             channels_menu.show_quick_new_tile(node_ids);
         });
@@ -167,8 +167,8 @@ function drop_diagram_to_tile_canvas() {
 }
 
 function drop_tile_to_tile_canvas() {
-    let source_tile_name = drag_id;
-    let html = `Create a new tile from tile ${source_tile_name} contents?`;
+    const source_tile_name = drag_id;
+    const html = `Create a new tile from tile ${source_tile_name} contents?`;
     confirmation.show(html, function () {
         let source_node_ids;
         channels
@@ -202,7 +202,7 @@ $("body").on("dragstart", function (event) {
     }
 });
 
-let handler = async function (event) {
+const handler = async function (event) {
     const shown = diagrams.shown();
     if (shown) {
         if (await shown.isLocked()) {

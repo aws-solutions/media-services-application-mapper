@@ -7,7 +7,7 @@ import * as diagrams from "./diagrams.js";
 
 let intervalID;
 // interval in millis to update the cache
-let update_interval = 5000;
+const update_interval = 5000;
 
 function handle_node(node) {
     let selected = node.render.normal_selected();
@@ -32,16 +32,16 @@ function handle_node(node) {
 
         const matches = diagrams.have_all([node.id]);
 
-        for (let diagram of matches) {
+        for (const diagram of matches) {
             diagram.nodes.update(node);
         }
     }
 }
 
-let update_overlay = function () {
+const update_overlay = function () {
     // console.log("info overlay update");
     // get all the overlays
-    for (let ov of overlays.all) {
+    for (const ov of overlays.all) {
         if (!ov.informational) {
             continue;
         }
@@ -53,13 +53,13 @@ let update_overlay = function () {
             },
         });
 
-        for (let node of nodes) {
+        for (const node of nodes) {
             handle_node(node)
         }
     }
 };
 
-let schedule_interval = function () {
+const schedule_interval = function () {
     if (intervalID) {
         clearInterval(intervalID);
     }

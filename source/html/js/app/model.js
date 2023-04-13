@@ -15,12 +15,12 @@ const reset = function () {
 
 const map = function (callback) {
     new Promise(function (resolve) {
-        let promises = [];
-        for (let mapper of mappers.nodes) {
+        const promises = [];
+        for (const mapper of mappers.nodes) {
             console.log(mapper.module_name);
             promises.push(mapper.update());
             Promise.all(promises).then(function (resolved_values) {
-                for (let items of resolved_values) {
+                for (const items of resolved_values) {
                     nodes.update(items);
                 }
                 resolve();
@@ -28,16 +28,16 @@ const map = function (callback) {
         }
     })
         .then(function () {
-            let promises = [];
-            for (let mapper of mappers.connections) {
+            const promises = [];
+            for (const mapper of mappers.connections) {
                 console.log(mapper.module_name);
                 promises.push(mapper.update());
             }
             Promise.all(promises).then(function (resolved_values) {
-                for (let items of resolved_values) {
+                for (const items of resolved_values) {
                     edges.update(items);
                 }
-                for (let node of nodes.get()) {
+                for (const node of nodes.get()) {
                     // add stringified tags to the node, will be used during search
                     node.stringtags = JSON.stringify(node.data.Tags);
                     nodes.update(node);
@@ -53,10 +53,10 @@ const map = function (callback) {
 };
 
 const put_records = function (record) {
-    let current = connections.get_current();
-    let url = current[0];
-    let api_key = current[1];
-    let current_endpoint = `${url}/cached`;
+    const current = connections.get_current();
+    const url = current[0];
+    const api_key = current[1];
+    const current_endpoint = `${url}/cached`;
     if (record && !Array.isArray(record)) {
         record = [record];
     }
@@ -75,10 +75,10 @@ const put_records = function (record) {
 };
 
 const delete_record = function (arn) {
-    let current = connections.get_current();
-    let url = current[0];
-    let api_key = current[1];
-    let current_endpoint = `${url}/cached/arn/${encodeURIComponent(arn)}`;
+    const current = connections.get_current();
+    const url = current[0];
+    const api_key = current[1];
+    const current_endpoint = `${url}/cached/arn/${encodeURIComponent(arn)}`;
     return new Promise(function (resolve, reject) {
         server
             .delete_method(current_endpoint, api_key)

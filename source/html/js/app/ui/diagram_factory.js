@@ -66,8 +66,8 @@ class Diagram {
     layout_vertical(save) {
         const my_diagram = this;
         settings.get("layout-method").then(function (response) {
-            let method = response.method;
-            let options = vis_options.vertical_layout;
+            const method = response.method;
+            const options = vis_options.vertical_layout;
             options.layout.hierarchical.sortMethod = method;
             my_diagram.network.once(
                 "afterDrawing",
@@ -91,10 +91,10 @@ class Diagram {
     }
 
     layout_horizontal(save) {
-        let my_diagram = this;
+        const my_diagram = this;
         settings.get("layout-method").then(function (response) {
-            let method = response.method;
-            let options = vis_options.horizontal_layout;
+            const method = response.method;
+            const options = vis_options.horizontal_layout;
             options.layout.hierarchical.sortMethod = method;
             my_diagram.network.once(
                 "afterDrawing",
@@ -118,12 +118,12 @@ class Diagram {
     }
 
     layout_isolated(save) {
-        let isolated = new Map();
-        let diagram = this;
-        for (let node_id of this.nodes.getIds()) {
-            let connected = diagram.network.getConnectedNodes(node_id);
+        const isolated = new Map();
+        const diagram = this;
+        for (const node_id of this.nodes.getIds()) {
+            const connected = diagram.network.getConnectedNodes(node_id);
             if (connected.length === 0) {
-                let node = diagram.nodes.get(node_id);
+                const node = diagram.nodes.get(node_id);
                 let group = isolated.get(node.title);
                 if (!group) {
                     group = [node_id];
@@ -133,19 +133,19 @@ class Diagram {
                 isolated.set(node.title, group);
             }
         }
-        let dimensions = diagram.node_dimensions();
-        let pad_x = Math.ceil(dimensions.max_width * 1.25);
-        let pad_y = Math.ceil(dimensions.max_height * 1.25);
-        for (let value of isolated.values()) {
-            let node_ids = value;
-            let bounds = diagram.bounds();
+        const dimensions = diagram.node_dimensions();
+        const pad_x = Math.ceil(dimensions.max_width * 1.25);
+        const pad_y = Math.ceil(dimensions.max_height * 1.25);
+        for (const value of isolated.values()) {
+            const node_ids = value;
+            const bounds = diagram.bounds();
             // extra padding at the start
-            let start_x = bounds.max_x + pad_x * 2;
+            const start_x = bounds.max_x + pad_x * 2;
             let current_x = start_x;
             let current_y = bounds.min_y + pad_y;
-            let nodes_per_row = Math.ceil(Math.sqrt(node_ids.length));
+            const nodes_per_row = Math.ceil(Math.sqrt(node_ids.length));
             let current_row_nodes = 0;
-            for (let id of node_ids) {
+            for (const id of node_ids) {
                 diagram.network.moveNode(id, current_x, current_y);
                 current_row_nodes += 1;
                 if (current_row_nodes < nodes_per_row) {
@@ -166,10 +166,10 @@ class Diagram {
         let max_width = 0;
         let max_height = 0;
         try {
-            let node_id = _.head(this.nodes.getIds());
-            let box = this.network.getBoundingBox(node_id);
-            let height = Math.abs(box.bottom - box.top);
-            let width = Math.abs(box.right - box.left);
+            const node_id = _.head(this.nodes.getIds());
+            const box = this.network.getBoundingBox(node_id);
+            const height = Math.abs(box.bottom - box.top);
+            const width = Math.abs(box.right - box.left);
             if (height > max_height) {
                 max_height = height;
             }
@@ -193,8 +193,8 @@ class Diagram {
         let max_x = Number.MIN_SAFE_INTEGER;
         let min_y = Number.MAX_SAFE_INTEGER;
         let max_y = Number.MIN_SAFE_INTEGER;
-        let positions = this.network.getPositions();
-        for (let pos_value of Object.values(positions)) {
+        const positions = this.network.getPositions();
+        for (const pos_value of Object.values(positions)) {
             if (pos_value.x > max_x) {
                 max_x = pos_value.x;
             }
@@ -217,13 +217,13 @@ class Diagram {
     }
 
     restore_nodes() {
-        let diagram = this;
+        const diagram = this;
         return new Promise(function (resolve, reject) {
             layout
                 .retrieve_layout(diagram)
                 .then(function (layout_items) {
-                    let node_ids = _.map(layout_items, "id");
-                    let nodes = _.compact(model.nodes.get(node_ids));
+                    const node_ids = _.map(layout_items, "id");
+                    const nodes = _.compact(model.nodes.get(node_ids));
                     diagram.nodes.update(nodes);
                     resolve(layout_items);
                 })
@@ -235,7 +235,7 @@ class Diagram {
     }
 
     restore_layout(diagram_contents) {
-        let diagram = this;
+        const diagram = this;
         return new Promise(function (resolve, reject) {
             let inner_promise;
             if (!diagram_contents) {
@@ -245,8 +245,8 @@ class Diagram {
             }
             inner_promise
                 .then(function (layout_items) {
-                    for (let item of layout_items) {
-                        let node = diagram.nodes.get(item.id);
+                    for (const item of layout_items) {
+                        const node = diagram.nodes.get(item.id);
                         if (node) {
                             diagram.network.moveNode(item.id, item.x, item.y);
                         }
@@ -261,9 +261,9 @@ class Diagram {
     }
 
     restore_edges() {
-        for (let node_id of this.nodes.getIds()) {
+        for (const node_id of this.nodes.getIds()) {
             // find all edges connected to this node
-            let matches = model.edges.get({
+            const matches = model.edges.get({
                 filter: (function (local_node_id) {
                     return function (edge) {
                         return (
@@ -274,10 +274,10 @@ class Diagram {
                 })(node_id),
             });
             // add each edge if both nodes are present
-            for (let edge of matches) {
+            for (const edge of matches) {
                 if (this.edges.get(edge.id) == null) {
                     // compact nulls, do we have both ends?
-                    let ends = _.compact(this.nodes.get([edge.to, edge.from]));
+                    const ends = _.compact(this.nodes.get([edge.to, edge.from]));
                     if (ends.length == 2) {
                         // yes, add the edge between the endpoints
                         this.edges.update(edge);
@@ -288,9 +288,9 @@ class Diagram {
     }
 
     synchronize_edges(event, node_ids) {
-        let diagram = this;
-        for (let id of node_ids) {
-            let filteredEdges = _.filter(
+        const diagram = this;
+        for (const id of node_ids) {
+            const filteredEdges = _.filter(
                 model.edges.get(),
                 (edge) => (edge.to == id || edge.from == id),
             );
@@ -313,7 +313,7 @@ class Diagram {
     }
 
     synchronize_content(event, node_ids) {
-        let diagram = this;
+        const diagram = this;
         if (event == "add") {
             layout.save_layout(diagram, node_ids);
         } else if (event == "remove") {
@@ -349,14 +349,14 @@ class Diagram {
 
     fit_to_nearest(x, y) {
         // get the vis canvas location of the doubletap
-        let click_x = x;
-        let click_y = y;
-        let network = this.network;
+        const click_x = x;
+        const click_y = y;
+        const network = this.network;
         let closest = null;
         // get all the node locations
-        let positions = network.getPositions();
+        const positions = network.getPositions();
         // find the node closest to the doubletap
-        for (let p of Object.entries(positions)) {
+        for (const p of Object.entries(positions)) {
             if (closest == null) {
                 closest = {
                     id: p[0],
@@ -364,8 +364,8 @@ class Diagram {
                     dy: Math.abs(click_y - p[1].y),
                 };
             } else {
-                let dx = Math.abs(click_x - p[1].x);
-                let dy = Math.abs(click_y - p[1].y);
+                const dx = Math.abs(click_x - p[1].x);
+                const dy = Math.abs(click_y - p[1].y);
                 // update the closest node if better one is found
                 if (dx + dy < closest.dx + closest.dy) {
                     closest = {
@@ -399,19 +399,19 @@ class Diagram {
     }
 
     select_nodes_from_highlight() {
-        let nodesIdInDrawing = [];
-        let xRange = this.get_start_to_end(
+        const nodesIdInDrawing = [];
+        const xRange = this.get_start_to_end(
             this.drag_rect.startX,
             this.drag_rect.w
         );
-        let yRange = this.get_start_to_end(
+        const yRange = this.get_start_to_end(
             this.drag_rect.startY,
             this.drag_rect.h
         );
 
-        for (let curNode of this.nodes.get()) {
-            let nodePosition = this.network.getPositions([curNode.id]);
-            let nodeXY = this.network.canvasToDOM({
+        for (const curNode of this.nodes.get()) {
+            const nodePosition = this.network.getPositions([curNode.id]);
+            const nodeXY = this.network.canvasToDOM({
                 x: nodePosition[curNode.id].x,
                 y: nodePosition[curNode.id].y,
             });
@@ -475,9 +475,9 @@ class Diagram {
     }
 
     blink(blinks, ids) {
-        let interval_ms = 500;
+        const interval_ms = 500;
         ids = Array.isArray(ids) ? ids : [ids];
-        let diagram = this;
+        const diagram = this;
         if (blinks > 0) {
             setTimeout(function () {
                 if (blinks % 2 == 0) {

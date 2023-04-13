@@ -57,7 +57,7 @@ const search_nodes = function (text) {
 
 const search_tiles = function (text) {
     const matches = [];
-    for (let name of cached_tile_names) {
+    for (const name of cached_tile_names) {
         if (name.toLowerCase().includes(text.toLowerCase())) {
             matches.push(name);
         }
@@ -86,7 +86,7 @@ function search(text) {
         const contained_by = diagrams.have_any(node_ids);
         results.diagram_contents = contained_by;
         // find diagram name matches
-        for (let name of Object.keys(diagrams.get_all())) {
+        for (const name of Object.keys(diagrams.get_all())) {
             const includes = name.toLowerCase().includes(text.toLowerCase());
             includes && results.diagram_names.push(name);
         }
@@ -98,7 +98,7 @@ function search(text) {
         const status = { processed: 0 };
         channels.channel_list().then(function (channel_names) {
             const local_channel_names = channel_names;
-            for (let channel_name of local_channel_names) {
+            for (const channel_name of local_channel_names) {
                 const local_channel_name = channel_name;
                 // check for a name partial match
                 const includes = local_channel_name

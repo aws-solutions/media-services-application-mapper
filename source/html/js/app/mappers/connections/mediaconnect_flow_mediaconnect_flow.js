@@ -13,7 +13,7 @@ export const update = function () {
         server
             .get(url + "/cached/mediaconnect-flow-mediaconnect-flow", api_key)
             .then((results) => {
-                for (let connection of results) {
+                for (const connection of results) {
                     const data = JSON.parse(connection.data);
                     const human_type = data.scheme.replace("-", " ");
                     items.push({

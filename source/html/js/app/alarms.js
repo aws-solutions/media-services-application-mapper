@@ -68,7 +68,7 @@ const server_post = (endpoint, api_key, resource_arns) => {
         server
             .post(endpoint, api_key, resource_arns)
             .then(function (response) {
-                for (let arn of resource_arns) {
+                for (const arn of resource_arns) {
                     clear_alarms_for_subscriber_cache(arn);
                 }
                 resolve(response);
@@ -119,7 +119,7 @@ const delete_all_subscribers = function () {
 
 const clear_alarms_for_subscriber_cache = function (subscribers) {
     if (Array.isArray(subscribers)) {
-        for (let subscriber of subscribers) {
+        for (const subscriber of subscribers) {
             alarms_for_subscriber.cache.delete(subscriber.ResourceArn);
         }
     } else if (typeof subscribers == "string") {
@@ -147,7 +147,7 @@ const cache_update = function () {
             if (added.length || removed.length) {
                 clear_alarms_for_subscriber_cache(added);
                 clear_alarms_for_subscriber_cache(removed);
-                for (let f of listeners) {
+                for (const f of listeners) {
                     f(
                         current_subscribers_with_alarms,
                         previous_subscribers_with_alarms
@@ -164,7 +164,7 @@ const cache_update = function () {
 const load_update_interval = function () {
     return new Promise(function (resolve) {
         settings.get(settings_key).then(function (value) {
-            let seconds = Number.parseInt(value);
+            const seconds = Number.parseInt(value);
             update_interval = seconds * 1000;
             resolve();
         });

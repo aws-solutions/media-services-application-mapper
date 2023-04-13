@@ -16,7 +16,7 @@ const update_channels = function (items) {
         server
             .get(url + "/cached/mediapackage-channel", api_key)
             .then((channels) => {
-                for (let cache_entry of channels) {
+                for (const cache_entry of channels) {
                     const channel = JSON.parse(cache_entry.data);
                     const name = channel.Id;
                     const id = channel.Arn;
@@ -131,7 +131,7 @@ const update_endpoints = function (items) {
         server
             .get(url + "/cached/mediapackage-origin-endpoint", api_key)
             .then((origin_endpoints) => {
-                for (let cache_entry of origin_endpoints) {
+                for (const cache_entry of origin_endpoints) {
                     const endpoint = JSON.parse(cache_entry.data);
                     const name = endpoint.Id;
                     const id = endpoint.Arn;

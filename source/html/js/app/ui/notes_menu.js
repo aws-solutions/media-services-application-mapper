@@ -8,7 +8,7 @@ import * as confirmation from "./confirmation.js";
 import * as alert from "./alert.js";
 
 
-let trashIcon = function () {
+const trashIcon = function () {
     return `<i class='fa fa-trash'></i>`;
 };
 
@@ -69,7 +69,7 @@ $("#manage_notes_button").on("click", function () {
 });
 
 function delete_note(row) {
-    let html = "You are about to delete this note. Proceed?";
+    const html = "You are about to delete this note. Proceed?";
     confirmation.show(html, function () {
         notes.delete_resource_notes(row.resource_arn).then(function(result) {
             console.log(result);
@@ -82,16 +82,16 @@ function delete_note(row) {
 function set_notes_data() {
     const local_lodash = _;
     let tiles_list;
-    let nodes_list = model.nodes.get();
-    let edges_list = model.edges.get();
+    const nodes_list = model.nodes.get();
+    const edges_list = model.edges.get();
     tiles.channel_list().then(function (results) {
         tiles_list = results;
     });
     notes.get_all_resource_notes().then(function (all_notes) {
-        for (let note of all_notes) {
-            let converter = new showdown.Converter();
+        for (const note of all_notes) {
+            const converter = new showdown.Converter();
             // truncate notes to 200 characters
-            let text = note.notes.slice(0, 200);
+            const text = note.notes.slice(0, 200);
             note.notes = converter.makeHtml(text);
             note.exists = "No";
             note.timestamp = new Date(note.timestamp*1000).toISOString();

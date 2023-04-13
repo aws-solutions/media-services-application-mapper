@@ -5,7 +5,7 @@ import * as server from "./server.js";
 import * as connections from "./connections.js";
 import * as settings from "./settings.js";
 
-let listeners = [];
+const listeners = [];
 
 // cache events in 'set' state
 // several modules use this at the same time
@@ -23,14 +23,14 @@ let update_interval;
 
 let intervalID;
 
-let settings_key = "app-event-update-interval";
+const settings_key = "app-event-update-interval";
 
 // or does this have to be union of eml and emx sets??
-let retrieve_for_state = function (state) {
-let current_connection = connections.get_current();
-let url = current_connection[0];
-let api_key = current_connection[1];
-let current_endpoint = `${url}/cloudwatch/events/state/${state}`;
+const retrieve_for_state = function (state) {
+const current_connection = connections.get_current();
+const url = current_connection[0];
+const api_key = current_connection[1];
+const current_endpoint = `${url}/cloudwatch/events/state/${state}`;
     return new Promise(function (resolve, reject) {
         server
             .get(current_endpoint, api_key)
@@ -42,7 +42,7 @@ let current_endpoint = `${url}/cloudwatch/events/state/${state}`;
     });
 };
 
-let cache_update = function () {
+const cache_update = function () {
     retrieve_for_state("set")
         .then(function (response) {
             previous_set_events = current_set_events;
@@ -71,18 +71,18 @@ let cache_update = function () {
                     return i.source == "aws.mediaconnect";
                 }
             );
-            let added = _.differenceBy(
+            const added = _.differenceBy(
                 current_set_events,
                 previous_set_events,
                 "alarm_id"
             );
-            let removed = _.differenceBy(
+            const removed = _.differenceBy(
                 previous_set_events,
                 current_set_events,
                 "alarm_id"
             );
             if (added.length || removed.length) {
-                for (let f of listeners) {
+                for (const f of listeners) {
                     f(current_set_events, previous_set_events);
                 }
             }
@@ -92,23 +92,23 @@ let cache_update = function () {
         });
 };
 
-let load_update_interval = function () {
+const load_update_interval = function () {
     return new Promise(function (resolve) {
         settings.get(settings_key).then(function (value) {
-            let seconds = Number.parseInt(value);
+            const seconds = Number.parseInt(value);
             update_interval = seconds * 1000;
             resolve();
         });
     });
 };
 
-let set_update_interval_setting = function (seconds) {
+const set_update_interval_setting = function (seconds) {
     // create a default
     update_interval = seconds * 1000;
     return settings.put(settings_key, seconds);
 };
 
-let schedule_interval = function () {
+const schedule_interval = function () {
     if (intervalID) {
         clearInterval(intervalID);
     }

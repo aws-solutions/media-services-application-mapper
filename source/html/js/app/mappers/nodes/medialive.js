@@ -29,7 +29,7 @@ const update_channels = function (items) {
         server
             .get(`${url}/cached/medialive-channel`, api_key)
             .then(function (channels) {
-                for (let cache_entry of channels) {
+                for (const cache_entry of channels) {
                     map_channel(cache_entry, items);
                 }
                 resolve();
@@ -49,7 +49,7 @@ const update_inputs = function (items) {
         server
             .get(`${url}/cached/medialive-input`, api_key)
             .then((inputs) => {
-                for (let cache_entry of inputs) {
+                for (const cache_entry of inputs) {
                     map_input(cache_entry, items);
                 }
                 resolve();
@@ -69,7 +69,7 @@ const update_multiplexes = function (items) {
         server
             .get(`${url}/cached/medialive-multiplex`, api_key)
             .then((inputs) => {
-                for (let cache_entry of inputs) {
+                for (const cache_entry of inputs) {
                     map_multiplex(cache_entry, items);
                 }
                 resolve();
@@ -89,7 +89,7 @@ const update_link_devices = function (items) {
         server
             .get(`${url}/cached/link-device`, api_key)
             .then((devices) => {
-                for (let cache_entry of devices) {
+                for (const cache_entry of devices) {
                     map_device(cache_entry, items);
                 }
                 resolve();
@@ -108,7 +108,7 @@ const map_channel = function (cache_entry, items) {
     const rgb = "#1E8900";
     const degraded_rgb = svg_node.getDegradedRgb();
     const node_type = "MediaLive Channel";
-    let node_data = {
+    const node_data = {
         cache_update: cache_entry.updated,
         id: id,
         region: cache_entry.region,
@@ -198,7 +198,7 @@ const map_input = function (cache_entry, items) {
     const node_type = "MediaLive Input";
     const rgb = "#6AAF35";
     const degraded_rgb = svg_node.getDegradedRgb();
-    let node_data = {
+    const node_data = {
         cache_update: cache_entry.updated,
         id: input.Arn,
         region: cache_entry.region,
@@ -279,7 +279,7 @@ const map_multiplex = function (cache_entry, items) {
     const node_type = "MediaLive Multiplex";
     const rgb = "#6a8258";
     const degraded_rgb = svg_node.getDegradedRgb();
-    let node_data = {
+    const node_data = {
         cache_update: cache_entry.updated,
         id: input.Arn,
         region: cache_entry.region,
@@ -366,7 +366,7 @@ const map_device = function (cache_entry, items) {
     const id = cache_entry.arn;
     const rgb = "#D5DBDB";
     const node_type = "Elemental Link";
-    let node_data = {
+    const node_data = {
         overlay: "informational",
         cache_update: cache_entry.updated,
         id: id,

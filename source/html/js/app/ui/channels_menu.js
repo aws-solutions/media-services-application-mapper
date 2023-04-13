@@ -66,7 +66,7 @@ $("#channel_definition_modal").on("show.bs.modal", function () {
     let channel_content = "";
     const diagram = diagrams.shown();
     let index = 0;
-    for (let id of diagram.network.getSelectedNodes()) {
+    for (const id of diagram.network.getSelectedNodes()) {
         const node = model.nodes.get(id);
         channel_content += `<tr><th scope="row">${++index}</th><td>${
             node.title
@@ -96,7 +96,7 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
     let selected_content = "";
     const diagram = diagrams.shown();
     let selected_index = 0;
-    for (let id of diagram.network.getSelectedNodes()) {
+    for (const id of diagram.network.getSelectedNodes()) {
         const node = model.nodes.get(id);
         selected_content += `<tr><th scope="row">${++selected_index}</th><td>${
             node.title
@@ -121,7 +121,7 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
     channels.channel_list().then(function (channel_list) {
         let channel_content = "";
         let channel_index = 0;
-        for (let member of channel_list.sort()) {
+        for (const member of channel_list.sort()) {
             const checkbox_id = ui_util.makeid();
             channel_content += `
                     <tr><th scope="row">${++channel_index}</th>
@@ -153,14 +153,14 @@ $("#channel_add_node_modal").on("show.bs.modal", function () {
 $("#save_channel_add_node").on("click", function () {
     const members = $("#channel_add_node_modal_items td[data-node-id]");
     const node_ids = [];
-    for (let item of members) {
+    for (const item of members) {
         node_ids.push($(item).attr("data-node-id"));
     }
     const channel_checks = $(
         "#channel_add_node_modal_channels input[type='checkbox']"
     );
     const promises = [];
-    for (let item of channel_checks) {
+    for (const item of channel_checks) {
         if ($(item).prop("checked")) {
             promises.push(channels.update_channel($(item).val(), node_ids));
         }

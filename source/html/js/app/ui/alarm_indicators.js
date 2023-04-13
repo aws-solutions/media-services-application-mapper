@@ -7,8 +7,8 @@ import * as diagrams from "./diagrams.js";
 
 function get_alarming_nodes(current_alarming_subscribers) {
     const alarming_nodes = [];
-    for (let subscriber of current_alarming_subscribers) {
-        let node = model.nodes.get(subscriber.ResourceArn);
+    for (const subscriber of current_alarming_subscribers) {
+        const node = model.nodes.get(subscriber.ResourceArn);
         if (!node) {
             continue;
         }
@@ -16,8 +16,8 @@ function get_alarming_nodes(current_alarming_subscribers) {
         // track which nodes are signaling an alert
         if (!alarming_nodes.includes(subscriber.ResourceArn)) {
             alarming_nodes.push(subscriber.ResourceArn);
-            let selected = node.render.alert_selected();
-            let unselected = node.render.alert_unselected();
+            const selected = node.render.alert_selected();
+            const unselected = node.render.alert_unselected();
             // only update the node if the SVG changes
             if (
                 selected != node.image.selected ||
@@ -26,8 +26,8 @@ function get_alarming_nodes(current_alarming_subscribers) {
                 node.image.selected = selected;
                 node.image.unselected = unselected;
                 model.nodes.update(node);
-                let matches = diagrams.have_all([node.id]);
-                for (let diagram of matches) {
+                const matches = diagrams.have_all([node.id]);
+                for (const diagram of matches) {
                     diagram.nodes.update(node);
                     diagram.alert(true);
                 }
@@ -39,9 +39,9 @@ function get_alarming_nodes(current_alarming_subscribers) {
 
 function get_inactive_nodes(previous_alarming_subscribers, alarming_nodes) {
     const inactive_nodes = [];
-    for (let subscriber of previous_alarming_subscribers) {
+    for (const subscriber of previous_alarming_subscribers) {
         let found = false;
-        for (let node_id of alarming_nodes) {
+        for (const node_id of alarming_nodes) {
             found = found || node_id == subscriber.ResourceArn;
         }
         if (!found) {
@@ -62,13 +62,13 @@ const updateAlarmState = function (
     const inactive_nodes = get_inactive_nodes(previous_alarming_subscribers, alarming_nodes);
 
     // 'unalert' the nodes that are no longer alerting
-    for (let node_id of inactive_nodes) {
-        let node = model.nodes.get(node_id);
+    for (const node_id of inactive_nodes) {
+        const node = model.nodes.get(node_id);
         if (node) {
             node.alarming = false;
             // only switch the node render if the node is neither alarming nor alerting
-            let selected = node.render.normal_selected();
-            let unselected = node.render.normal_unselected();
+            const selected = node.render.normal_selected();
+            const unselected = node.render.normal_unselected();
             if (
                 selected != node.image.selected ||
                 unselected != node.image.unselected
@@ -76,8 +76,8 @@ const updateAlarmState = function (
                 node.image.selected = selected;
                 node.image.unselected = unselected;
                 model.nodes.update(node);
-                let matches = diagrams.have_all([node.id]);
-                for (let diagram of matches) {
+                const matches = diagrams.have_all([node.id]);
+                for (const diagram of matches) {
                     diagram.nodes.update(node);
                     diagram.alert(false);
                 }

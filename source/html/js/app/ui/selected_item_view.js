@@ -7,28 +7,28 @@ import * as tile_view from "./tile_view.js";
 import * as ui_util from "./util.js";
 import * as diagrams from "./diagrams.js";
 
-let data_div_id = "nav-data";
-let alerts_div_id = "nav-alerts";
-let alarms_div_id = "nav-alarms";
-let events_div_id = "nav-events";
-let notes_div_id = "nav-notes";
+const data_div_id = "nav-data";
+const alerts_div_id = "nav-alerts";
+const alarms_div_id = "nav-alarms";
+const events_div_id = "nav-events";
+const notes_div_id = "nav-notes";
 
-let data_tab_id = "nav-data-tab";
-let alerts_tab_id = "nav-alerts-tab";
-let alarms_tab_id = "nav-alarms-tab";
-let events_tab_id = "nav-events-tab";
-let notes_tab_id = "nav-notes-tab";
+const data_tab_id = "nav-data-tab";
+const alerts_tab_id = "nav-alerts-tab";
+const alarms_tab_id = "nav-alarms-tab";
+const events_tab_id = "nav-events-tab";
+const notes_tab_id = "nav-notes-tab";
 
 const blinks = 10;
 
 function handle_arn_to_channels(tile_names, node, diagram_links, diagram_link_ids) {
-    let channel_tile_link_ids = [];
-    let diagram_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Diagrams:</b>&nbsp;&nbsp;${diagram_links}</p>`;
+    const channel_tile_link_ids = [];
+    const diagram_html = `<p class="card-text small text-muted mb-0 pb-0"><b>Diagrams:</b>&nbsp;&nbsp;${diagram_links}</p>`;
     let tile_html = "";
     if (tile_names.length > 0) {
         let tile_links = "";
-        for (let name of tile_names) {
-            let tile_id = ui_util.makeid();
+        for (const name of tile_names) {
+            const tile_id = ui_util.makeid();
             channel_tile_link_ids.push({
                 id: tile_id,
                 name: name,
@@ -39,11 +39,11 @@ function handle_arn_to_channels(tile_names, node, diagram_links, diagram_link_id
     }
     let cache_html = "";
     if (node.cache_update != 0) {
-        let updated = new Date();
+        const updated = new Date();
         updated.setTime(Number.parseInt(node.cache_update) * 1000);
         cache_html = `<p class="card-text small text-muted mt-0 pt-0"><b>Updated:</b> ${updated.toString()}</p>`;
     }
-    let data = node.data;
+    const data = node.data;
     renderjson.set_icons("+", "-");
     renderjson.set_show_to_level(1);
     $("#" + data_div_id).empty();
@@ -55,19 +55,19 @@ function handle_arn_to_channels(tile_names, node, diagram_links, diagram_link_id
                                 ${cache_html}
                                 <p class="card-text small" id="${data_div_id}-text"></p>
                                 `);
-    let json = renderjson(data);
+    const json = renderjson(data);
     $("#" + data_div_id + "-text")[0].appendChild(json);
     // attach click handlers to tile links
-    for (let link of channel_tile_link_ids) {
-        let eventClosure = (function (
+    for (const link of channel_tile_link_ids) {
+        const eventClosure = (function (
             local_tile_view,
             local_link,
             local_jq
         ) {
-            let local_view = local_tile_view;
-            let local_name = local_link.name;
+            const local_view = local_tile_view;
+            const local_name = local_link.name;
             return function () {
-                let tab = local_jq("#channel-tiles-tab");
+                const tab = local_jq("#channel-tiles-tab");
                 if (tab.attr("aria-selected") == "false") {
                     local_jq("#channel-tiles-tab").tab("show");
                 }
@@ -77,11 +77,11 @@ function handle_arn_to_channels(tile_names, node, diagram_links, diagram_link_id
         $("#" + link.id).on("click", eventClosure);
     }
     // attach click handlers to diagram links
-    for (let item of diagram_link_ids) {
-        let eventClosure = (function (local_item) {
-            let local_diagram = local_item.diagram;
-            let local_node_id = local_item.node_id;
-            let local_blinks = blinks;
+    for (const item of diagram_link_ids) {
+        const eventClosure = (function (local_item) {
+            const local_diagram = local_item.diagram;
+            const local_node_id = local_item.node_id;
+            const local_blinks = blinks;
             return function () {
                 local_diagram.network.once(
                     "afterDrawing",
@@ -105,13 +105,13 @@ function handle_arn_to_channels(tile_names, node, diagram_links, diagram_link_id
     }
 }
 
-let display_selected_nodes = function (node_ids) {
-    let node = model.nodes.get(node_ids[0]);
-    let matches = diagrams.have_all(node.id);
+const display_selected_nodes = function (node_ids) {
+    const node = model.nodes.get(node_ids[0]);
+    const matches = diagrams.have_all(node.id);
     let diagram_links = "";
-    let diagram_link_ids = [];
-    for (let diagram of matches) {
-        let id = ui_util.makeid();
+    const diagram_link_ids = [];
+    for (const diagram of matches) {
+        const id = ui_util.makeid();
         diagram_link_ids.push({
             id: id,
             node_id: node.id,
@@ -165,14 +165,14 @@ let display_selected_nodes = function (node_ids) {
     }
 };
 
-let display_selected_edges = function (diagram, edges) {
-    let edge = model.edges.get(edges[0]);
-    let toNode = model.nodes.get(edge.to);
-    let fromNode = model.nodes.get(edge.from);
+const display_selected_edges = function (diagram, edges) {
+    const edge = model.edges.get(edges[0]);
+    const toNode = model.nodes.get(edge.to);
+    const fromNode = model.nodes.get(edge.from);
     $("#" + data_div_id).empty();
     renderjson.set_icons("+", "-");
     renderjson.set_show_to_level(1);
-    let html = `
+    const html = `
                 <h6 class="card-subtitle mb-2 text-muted">Connection from ${fromNode.title} to ${toNode.title}</h6>
                 <p class="card-text small" id="${data_div_id}-data"></p>
                 <h6 class="card-subtitle mb-2 text-muted">From</h6>
@@ -195,13 +195,13 @@ let display_selected_edges = function (diagram, edges) {
     ]);
 };
 
-let display_selected_tile = function (name, members) {
+const display_selected_tile = function (name, members) {
     renderjson.set_icons("+", "-");
     renderjson.set_show_to_level(3);
-    let data = [];
-    let missing = [];
-    for (let member_value of members) {
-        let node = model.nodes.get(member_value.id);
+    const data = [];
+    const missing = [];
+    for (const member_value of members) {
+        const node = model.nodes.get(member_value.id);
         if (node) {
             data.push(node.data);
         } else {
@@ -211,7 +211,7 @@ let display_selected_tile = function (name, members) {
     if (missing.length) {
         data.unshift({ "Missing-Tile-Resources": missing });
     }
-    let html = `
+    const html = `
             <h6 class="card-subtitle mb-2 text-muted" id="${data_div_id}-subtitle">Tile: ${name}</h6>
             <p class="card-text small" id="${data_div_id}-text"></p>
             `;
@@ -229,7 +229,7 @@ let display_selected_tile = function (name, members) {
     hide_elements([events_tab_id, events_div_id]);
 };
 
-let display_no_selection = function () {
+const display_no_selection = function () {
     hide_elements([
         data_tab_id,
         alarms_tab_id,
@@ -245,22 +245,22 @@ let display_no_selection = function () {
 };
 
 // accepts a list of element IDs to hide
-let hide_elements = function (element_list) {
-    for (let id in element_list) {
+const hide_elements = function (element_list) {
+    for (const id in element_list) {
         $("#" + element_list[id]).addClass("d-none");
     }
 };
 
 // accepts a list of element IDs to show
-let show_elements = function (element_list) {
+const show_elements = function (element_list) {
     // iterate through tabs to show
-    for (let id in element_list) {
+    for (const id in element_list) {
         $("#" + element_list[id]).removeClass("d-none");
     }
 };
 
-let tile_view_listener = function (name, members) {
-    let selected = tile_view.selected();
+const tile_view_listener = function (name, members) {
+    const selected = tile_view.selected();
     if (selected === name) {
         display_selected_tile(name, members);
     } else if (selected) {

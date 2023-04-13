@@ -4,7 +4,7 @@
 import * as server from "./server.js";
 import * as connections from "./connections.js";
 
-let promise_get_closure = (endpoint, api_key) => {
+const promise_get_closure = (endpoint, api_key) => {
     return function (resolve, reject) {
         server
             .get(endpoint, api_key)
@@ -19,26 +19,26 @@ let promise_get_closure = (endpoint, api_key) => {
 };
 
 const get_resource_notes = function (arn) {
-    let current_connection = connections.get_current();
-    let url = current_connection[0];
-    let api_key = current_connection[1];
-    let current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
     return new Promise(promise_get_closure(current_endpoint, api_key));
 };
 
 const get_all_resource_notes = function () {
-    let current_connection = connections.get_current();
-    let url = current_connection[0];
-    let api_key = current_connection[1];
-    let current_endpoint = `${url}/notes`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/notes`;
     return new Promise(promise_get_closure(current_endpoint, api_key));
 };
 
 const update_resource_notes = function (arn, notes) {
-    let current_connection = connections.get_current();
-    let url = current_connection[0];
-    let api_key = current_connection[1];
-    let current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
     return new Promise(function (resolve, reject) {
         server
             .post(current_endpoint, api_key, notes)
@@ -52,7 +52,7 @@ const update_resource_notes = function (arn, notes) {
     });
 };
 
-let promise_delete_closure = (endpoint, api_key) => {
+const promise_delete_closure = (endpoint, api_key) => {
     return function (resolve, reject) {
         server
             .delete_method(endpoint, api_key)
@@ -67,18 +67,18 @@ let promise_delete_closure = (endpoint, api_key) => {
 };
 
 const delete_resource_notes = function (arn) {
-    let current_connection = connections.get_current();
-    let url = current_connection[0];
-    let api_key = current_connection[1];
-    let current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/notes/${encodeURIComponent(arn)}`;
     return new Promise(promise_delete_closure(current_endpoint, api_key));
 };
 
 const delete_all_resource_notes = function () {
-    let current_connection = connections.get_current();
-    let url = current_connection[0];
-    let api_key = current_connection[1];
-    let current_endpoint = `${url}/notes`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/notes`;
     return new Promise(promise_delete_closure(current_endpoint, api_key));
 };
 

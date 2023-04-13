@@ -13,7 +13,7 @@ export const update = function () {
         server
             .get(url + "/cached/medialive-channel-s3-bucket", api_key)
             .then((results) => {
-                for (let connection of results) {
+                for (const connection of results) {
                     const data = JSON.parse(connection.data);
                     items.push({
                         id: connection.arn,

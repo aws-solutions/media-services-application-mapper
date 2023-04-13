@@ -5,17 +5,17 @@ import * as diagrams from "./diagrams.js";
 import * as model from "../model.js";
 import * as alert from "./alert.js";
 
-let add_connection_compartment = "connect-nodes-button";
-let remove_connection_compartment = "delete-connection-button";
-let add_connection_button = "connect-nodes-button";
-let remove_connection_button = "delete-connection-button";
-let label_edit_compartment = "edit-connection-button";
-let label_edit_button = "edit-connection-button";
+const add_connection_compartment = "connect-nodes-button";
+const remove_connection_compartment = "delete-connection-button";
+const add_connection_button = "connect-nodes-button";
+const remove_connection_button = "delete-connection-button";
+const label_edit_compartment = "edit-connection-button";
+const label_edit_button = "edit-connection-button";
 
-let create_connection_record = function (options) {
-    let updated = moment(new Date());
-    let expires = moment(updated).add(1, "y");
-    let data = {
+const create_connection_record = function (options) {
+    const updated = moment(new Date());
+    const expires = moment(updated).add(1, "y");
+    const data = {
         "user-defined": true,
         from: `${options.from}`,
         to: `${options.to}`,
@@ -34,7 +34,7 @@ let create_connection_record = function (options) {
     };
 };
 
-let show_add_connection = (visible) => {
+const show_add_connection = (visible) => {
     if (visible) {
         $("#" + add_connection_compartment).removeClass("hidden-compartment");
     } else {
@@ -42,7 +42,7 @@ let show_add_connection = (visible) => {
     }
 };
 
-let show_remove_connection = (visible) => {
+const show_remove_connection = (visible) => {
     if (visible) {
         $("#" + remove_connection_compartment).removeClass(
             "hidden-compartment"
@@ -52,7 +52,7 @@ let show_remove_connection = (visible) => {
     }
 };
 
-let show_edit_connection = (visible) => {
+const show_edit_connection = (visible) => {
     if (visible) {
         $("#" + label_edit_compartment).removeClass("hidden-compartment");
     } else {
@@ -63,12 +63,12 @@ let show_edit_connection = (visible) => {
 $("#" + add_connection_button).click(() => {
     // add a connection to the model
     show_add_connection(false);
-    let diagram = diagrams.shown();
+    const diagram = diagrams.shown();
     console.log(`diagram is ${diagram.name}`);
-    let selected = diagram.network.getSelectedNodes();
+    const selected = diagram.network.getSelectedNodes();
     if (selected.length == 2) {
         // add the new connection to the REST API
-        let record = create_connection_record({
+        const record = create_connection_record({
             from: selected[0],
             to: selected[1],
         });
@@ -95,8 +95,8 @@ $("#" + add_connection_button).click(() => {
             },
         });
         // refresh each diagram containing to and from nodes
-        let matches = diagrams.have_all([record.to, record.from]);
-        for (let match of matches) {
+        const matches = diagrams.have_all([record.to, record.from]);
+        for (const match of matches) {
             // we only need to sync one side of the connection
             match.synchronize_edges("add", [record.from]);
         }
@@ -109,11 +109,11 @@ $("#" + add_connection_button).click(() => {
 $("#" + remove_connection_button).click(() => {
     show_remove_connection(false);
     show_edit_connection(false);
-    let diagram = diagrams.shown();
+    const diagram = diagrams.shown();
     console.log(`diagram is ${diagram.name}`);
-    let selected = diagram.network.getSelectedEdges();
+    const selected = diagram.network.getSelectedEdges();
     if (selected.length == 1) {
-        let edge = model.edges.get(selected[0]);
+        const edge = model.edges.get(selected[0]);
         // delete the connection from the REST API
         model
             .delete_record(edge.id)
@@ -127,8 +127,8 @@ $("#" + remove_connection_button).click(() => {
         // refresh the diagrams
         model.edges.remove(edge.id);
         // refresh each diagram containing to and from nodes
-        let matches = diagrams.have_all([edge.to, edge.from]);
-        for (let match of matches) {
+        const matches = diagrams.have_all([edge.to, edge.from]);
+        for (const match of matches) {
             // we only need to sync one side of the connection
             match.edges.remove(edge.id);
         }
@@ -146,15 +146,15 @@ $("#" + label_edit_button).click(() => {
     });
     $("#edit_connection_dialog").modal("show");
     // update the dialog fields
-    let diagram = diagrams.shown();
+    const diagram = diagrams.shown();
     console.log(`diagram is ${diagram.name}`);
-    let selected = diagram.network.getSelectedEdges();
+    const selected = diagram.network.getSelectedEdges();
     if (selected.length == 1) {
-        let edge = model.edges.get(selected[0]);
+        const edge = model.edges.get(selected[0]);
         $("#edit_connection_dialog_label").val(edge.label);
-        let expires = new Date();
+        const expires = new Date();
         expires.setTime(edge.data.expires * 1000);
-        let initial = `${expires.getFullYear()}/${
+        const initial = `${expires.getFullYear()}/${
             expires.getMonth() + 1
         }/${expires.getDate()}`;
         $("#edit_connection_dialog_expiration").datepicker("update", initial);
@@ -163,18 +163,18 @@ $("#" + label_edit_button).click(() => {
 
 $("#edit_connection_dialog_proceed").click(() => {
     $("#edit_connection_dialog").modal("hide");
-    let expires_seconds = moment(
+    const expires_seconds = moment(
         $("#edit_connection_dialog_expiration").val()
     ).format("X");
-    let diagram = diagrams.shown();
+    const diagram = diagrams.shown();
     console.log(`diagram is ${diagram.name}`);
-    let selected = diagram.network.getSelectedEdges();
+    const selected = diagram.network.getSelectedEdges();
     if (selected.length == 1) {
-        let edge = model.edges.get(selected[0]);
-        let new_expires = Number.parseInt(expires_seconds);
-        let new_label = $("#edit_connection_dialog_label").val();
+        const edge = model.edges.get(selected[0]);
+        const new_expires = Number.parseInt(expires_seconds);
+        const new_label = $("#edit_connection_dialog_label").val();
         // add the new connection to the REST API
-        let record = create_connection_record({
+        const record = create_connection_record({
             from: edge.from,
             to: edge.to,
             label: new_label,
@@ -192,7 +192,7 @@ $("#edit_connection_dialog_proceed").click(() => {
                 alert.show("Error saving changes");
             });
         // refresh the diagrams
-        let updated_edge = {
+        const updated_edge = {
             id: edge.id,
             to: edge.to,
             from: edge.from,
@@ -206,8 +206,8 @@ $("#edit_connection_dialog_proceed").click(() => {
         // update in-memory model
         model.edges.update(updated_edge);
         // refresh each diagram containing to and from nodes
-        let matches = diagrams.have_all([edge.to, edge.from]);
-        for (let match of matches) {
+        const matches = diagrams.have_all([edge.to, edge.from]);
+        for (const match of matches) {
             match.edges.update(updated_edge);
         }
     } else {
@@ -218,7 +218,7 @@ $("#edit_connection_dialog_proceed").click(() => {
 diagrams.add_selection_callback(function (diagram, event) {
     if (event.nodes.length == 2) {
         diagram = diagrams.shown();
-        let connected = diagram.network.getConnectedNodes(event.nodes[0]);
+        const connected = diagram.network.getConnectedNodes(event.nodes[0]);
         if (!connected.includes(event.nodes[1])) {
             show_add_connection(true);
         }
@@ -227,7 +227,7 @@ diagrams.add_selection_callback(function (diagram, event) {
     }
     if (event.edges.length == 1 && event.nodes.length == 0) {
         diagram = diagrams.shown();
-        let edge = diagram.edges.get(event.edges[0]);
+        const edge = diagram.edges.get(event.edges[0]);
         show_remove_connection(edge.data["user-defined"]);
         show_edit_connection(edge.data["user-defined"]);
     } else {

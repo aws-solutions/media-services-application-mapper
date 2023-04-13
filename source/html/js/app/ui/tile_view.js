@@ -14,7 +14,7 @@ import * as alert from "./alert.js"
 
 const tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
-let click_listeners = [];
+const click_listeners = [];
 
 const tile_outer_div = "channel-tiles-outer";
 
@@ -131,7 +131,7 @@ const show_edit_dialog = function (name, members) {
     $("#channel_edit_modal_items").empty();
     let channel_content = "";
     let index = 0;
-    for (let member of members) {
+    for (const member of members) {
         const node = model.nodes.get(member.id);
         const checkbox_id = ui_util.makeid();
         if (node) {
@@ -176,11 +176,11 @@ const show_edit_dialog = function (name, members) {
 };
 
 function getCount(cached_events, cached_alarming_subscribers, channel_members) {
-    let resource_count = channel_members.length;
+    const resource_count = channel_members.length;
     let missing_count = 0;
     let alert_count = 0;
     let alarm_count = 0;
-    for (let member of channel_members) {
+    for (const member of channel_members) {
         if(!model.nodes.get(member.id)){
             missing_count++;
         }
@@ -206,7 +206,7 @@ const update_tile_info = async function () {
     const cached_events = event_alerts.get_cached_events();
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
     const channel_list = await channels.channel_list();
-    for (let channel_name of channel_list) {
+    for (const channel_name of channel_list) {
         const channel_members = await channels.retrieve_channel(channel_name);
         if (!channel_members) {
             continue;
@@ -266,18 +266,18 @@ const sort_tiles = function () {
         }
         return compare;
     });
-    for (let tile of tiles) {
+    for (const tile of tiles) {
         $("[data-tile-row]").append(tile);
     }
 };
 
 const filter_tiles = function () {
-    let tiles = $("[data-channel-name]");
+    const tiles = $("[data-channel-name]");
     load_tile_view().then(function (tile_settings) {
         update_filter_mode(tile_settings.tile_filter_text);
         const show_alarm_tiles = tile_settings.show_alarm_tiles;
         const show_normal_tiles = tile_settings.show_normal_tiles;
-        for (let tile of tiles) {
+        for (const tile of tiles) {
             const total =
                 Number.parseInt($(tile).attr("data-alert-count")) +
                 Number.parseInt($(tile).attr("data-alarm-count"));
@@ -312,7 +312,7 @@ function header_click_closure(
     return function () {
         selection_listener(hc_name);
         $("#nav-data-tab").tab("show");
-        for (let listener of hc_click_listeners) {
+        for (const listener of hc_click_listeners) {
             const local_listener = listener;
             try {
                 local_listener(hc_name, hc_channel_members);
@@ -337,7 +337,7 @@ function capture_state(channel_members, channel_card_id, channel_name, { header_
             $(`#${dropdown_id}`).append(`<div id="${preferred_diagram_div}"></div>`);
             $(`#${dropdown_id}`).append(`<div class="dropdown-divider"></div>`);
             $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Matching diagrams</h6>`);
-            for (let match of matches) {
+            for (const match of matches) {
                 const menu_item_id = ui_util.makeid();
                 const item = `<a id="${menu_item_id}" class="dropdown-item" tabindex="-1" href="#" style="cursor: pointer;" title="Click to Select, Right-click to set as preferred">${match.diagram} (${match.percent}%)</a>`;
                 if(preferred_diagram != null && preferred_diagram.diagram == match.diagram){
@@ -346,8 +346,8 @@ function capture_state(channel_members, channel_card_id, channel_name, { header_
                 $(`#${dropdown_id}`).append(item);
                 (function () {
                     $(`#${menu_item_id}`).click(() => {
-                        let hidden_diagrams = diagrams.get_hidden_diagrams();
-                        let diagram = diagrams.get_by_name(match.diagram);
+                        const hidden_diagrams = diagrams.get_hidden_diagrams();
+                        const diagram = diagrams.get_by_name(match.diagram);
                         if (_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
                             diagrams.add(diagram.name, diagram.view_id, false);
                         } 
@@ -364,7 +364,7 @@ function capture_state(channel_members, channel_card_id, channel_name, { header_
                 })();
                 (function () {
                     $(`#${menu_item_id}`).contextmenu(() => {
-                        let html = `Make ${match.diagram} the preferred diagram for ${channel_name}?`;
+                        const html = `Make ${match.diagram} the preferred diagram for ${channel_name}?`;
                         confirmation.show(html, function () {
                             settings.put(`${channel_name}-preferred-diagram`, {"diagram": match.diagram});
                             preferred_diagram = {"diagram": match.diagram};
@@ -436,13 +436,13 @@ const redraw_tiles = async function () {
     const channel_list = await channels.channel_list();
     const cached_events = event_alerts.get_cached_events();
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-    for (let channel_name of channel_list) {
+    for (const channel_name of channel_list) {
         const local_channel_name = channel_name;
-        let preferred_diagram = await settings.get(`${local_channel_name}-preferred-diagram`);
+        const preferred_diagram = await settings.get(`${local_channel_name}-preferred-diagram`);
         const channel_members = await channels.retrieve_channel(
             local_channel_name
         );
-        let {
+        const {
             alert_count,
             alarm_count,
             missing_count,
@@ -549,7 +549,7 @@ $("#save_channel_edit").on("click", function () {
         .then(function () {
             console.log("removed channel members");
             const members = [];
-            for (let item of member_checkboxes) {
+            for (const item of member_checkboxes) {
                 if (item.checked === false) {
                     members.push(item.value);
                 }
@@ -590,7 +590,7 @@ $("#tiles_edit_selected_tile_button").on("click", function () {
 $("#tiles_delete_selected_tile_button").on("click", function () {
     const tile_name = selected();
     if (shown() && tile_name && tile_name !== "") {
-        let html = `Delete the tile named ${tile_name}?`;
+        const html = `Delete the tile named ${tile_name}?`;
         confirmation.show(html, function () {
             channels.delete_channel(tile_name).then(function () {
                 redraw_tiles();

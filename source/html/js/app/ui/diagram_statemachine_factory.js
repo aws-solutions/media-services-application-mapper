@@ -11,14 +11,14 @@ function nodesOnHook(my_diagram) {
         (function () {
             return function (event, properties, senderId) {
                 // take a copy of the one-shots in case more get added during event handling
-                let one_time = Array.from(
+                const one_time = Array.from(
                     my_diagram.node_dataset_callbacks_once
                 );
                 my_diagram.node_dataset_callbacks_once = [];
-                for (let callback of one_time) {
+                for (const callback of one_time) {
                     callback(event, properties, senderId);
                 }
-                for (let callback of my_diagram.node_dataset_callbacks) {
+                for (const callback of my_diagram.node_dataset_callbacks) {
                     callback(event, properties, senderId);
                 }
             };
@@ -37,14 +37,14 @@ function networkOnHook(my_diagram) {
                     );
                 }
                 // take a copy of the one-shots in case more get added during event handling
-                let one_time = Array.from(
+                const one_time = Array.from(
                     my_diagram.click_callbacks_once
                 );
                 my_diagram.click_callbacks_once = [];
-                for (let callback of one_time) {
+                for (const callback of one_time) {
                     callback(my_diagram, event);
                 }
-                for (let callback of my_diagram.click_callbacks) {
+                for (const callback of my_diagram.click_callbacks) {
                     callback(my_diagram, event);
                 }
             };
@@ -58,14 +58,14 @@ function networkOnHook(my_diagram) {
                     my_diagram.name + " diagram doubleClick"
                 );
                 // take a copy of the one-shots in case more get added during event handling
-                let one_time = Array.from(
+                const one_time = Array.from(
                     my_diagram.doubleclick_callbacks_once
                 );
                 my_diagram.doubleclick_callbacks_once = [];
-                for (let callback of one_time) {
+                for (const callback of one_time) {
                     callback(my_diagram, event);
                 }
-                for (let callback of my_diagram.doubleclick_callbacks) {
+                for (const callback of my_diagram.doubleclick_callbacks) {
                     callback(my_diagram, event);
                 }
                 // zoom
@@ -75,8 +75,8 @@ function networkOnHook(my_diagram) {
                     event.nodes.length == 0 &&
                     event.edges.length == 0
                 ) {
-                    let click_x = event.pointer.canvas.x;
-                    let click_y = event.pointer.canvas.y;
+                    const click_x = event.pointer.canvas.x;
+                    const click_y = event.pointer.canvas.y;
                     my_diagram.fit_to_nearest(
                         click_x,
                         click_y
@@ -179,7 +179,7 @@ function connectEventHandlerOnEnter(my_diagram) {
 
 export function create(diagram) {
     return (function () {
-        let my_diagram = diagram;
+        const my_diagram = diagram;
         return new machina.Fsm({
             namespace: my_diagram.name,
             initialState: "uninitialized",
@@ -193,22 +193,22 @@ export function create(diagram) {
                 "create-page-container": {
                     _onEnter: function () {
                         // create the html
-                        let tab = `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-bs-toggle="tab" data-bs-target="#${my_diagram.diagram_id}" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons ps-1 small">image_aspect_ratio</i></a>`;
-                        let diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
+                        const tab = `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-bs-toggle="tab" data-bs-target="#${my_diagram.diagram_id}" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons ps-1 small">image_aspect_ratio</i></a>`;
+                        const diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
                         // add to containers
                         // skip Tiles tab
-                        let existing_tabs = $(
+                        const existing_tabs = $(
                             "#" +
                                 my_diagram.tab_container_id +
                                 " a[data-diagram-name]"
                         );
                         let added = false;
-                        for (let item of existing_tabs) {
+                        for (const item of existing_tabs) {
                             if (
                                 $(item).attr("data-diagram-name") >
                                 my_diagram.name
                             ) {
-                                let id = filterXSS($(item).attr("id"));
+                                const id = filterXSS($(item).attr("id"));
                                 $("#" + id).before(tab);
                                 added = true;
                                 break;

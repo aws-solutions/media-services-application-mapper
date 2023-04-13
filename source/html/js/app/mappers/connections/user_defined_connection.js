@@ -65,14 +65,14 @@ export const update = function () {
             .get(url + "/cached/user-defined-connection", api_key)
             .then((results) => {
                 // group edges between nodes regardless of direction
-                let edge_groups = groupEdgeNodes(results);
+                const edge_groups = groupEdgeNodes(results);
                 // iterate through each grouping to create the correct curvature and prevent overlap
                 _.forEach(edge_groups, function (value) {
                     // order the grouped connections by to, from and label
-                    let ordered_connections = _.orderBy(value, ["from", "to", "label"]);
+                    const ordered_connections = _.orderBy(value, ["from", "to", "label"]);
                     let previous_from;
-                    for (let index in ordered_connections) {
-                        let connection = ordered_connections[index];
+                    for (const index in ordered_connections) {
+                        const connection = ordered_connections[index];
                         let data;
                         // data attribute is not required on custom connections
                         if (typeof connection.data == "undefined") {

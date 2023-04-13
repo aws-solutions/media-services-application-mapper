@@ -20,16 +20,16 @@ const configurationStateMachine = new machina.Fsm({
         },
         "get-saved-connection": {
             _onEnter: function () {
-                let current_connection = connections.get_current();
+                const current_connection = connections.get_current();
                 if (null === current_connection) {
                     console.log("no connection history");
                     this.noSavedConnection();
                 } else {
                     console.log("testing last connection used");
                     // test current connection with api-ping
-                    let endpoint = current_connection[0];
-                    let api_key = current_connection[1];
-                    let instance = this;
+                    const endpoint = current_connection[0];
+                    const api_key = current_connection[1];
+                    const instance = this;
                     api_check
                         .ping(endpoint, api_key)
                         .then(function (response) {
@@ -125,9 +125,9 @@ const modelDataStateMachine = new machina.Fsm({
         },
         "get-model-data": {
             _onEnter: async function () {
-                let ref = this;
+                const ref = this;
                 // create a closed callback
-                let f = (function () {
+                const f = (function () {
                     return function () {
                         ref.handle("modelDataReady");
                     };

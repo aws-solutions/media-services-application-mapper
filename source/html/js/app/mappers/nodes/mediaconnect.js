@@ -14,7 +14,7 @@ export const update = function () {
         server
             .get(url + "/cached/mediaconnect-flow", api_key)
             .then(function (flows) {
-                for (let cache_entry of flows) {
+                for (const cache_entry of flows) {
                     map_flow(cache_entry, items);
                 }
                 resolve(items);

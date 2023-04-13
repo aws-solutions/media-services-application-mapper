@@ -20,7 +20,7 @@ const have_any = _.memoize(function (node_ids) {
     return new Promise(function (outer_resolve) {
         const promises = [];
         channel_list().then(function (channel_names) {
-            for (let name of channel_names) {
+            for (const name of channel_names) {
                 const local_name = name;
                 promises.push(
                     new Promise(function (resolve) {
@@ -121,14 +121,14 @@ const arn_to_channels = _.memoize(function (arn) {
             .then(function (channels) {
                 const matches = [];
                 const promises = [];
-                for (let channel_name of channels) {
+                for (const channel_name of channels) {
                     const local_channel_name = channel_name;
                     promises.push(
                         new Promise(function (resolve) {
                             retrieve_channel(local_channel_name).then(function (
                                 members
                             ) {
-                                for (let member_value of members) {
+                                for (const member_value of members) {
                                     if (member_value.id === local_arn) {
                                         matches.push(local_channel_name);
                                         break;
@@ -170,7 +170,7 @@ const delete_all_channels = function () {
 
 async function prewarm() {
     const channels = await channel_list();
-    for (let name of channels) {
+    for (const name of channels) {
         retrieve_channel(name);
     }
 }

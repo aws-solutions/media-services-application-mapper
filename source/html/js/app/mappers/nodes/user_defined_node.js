@@ -24,7 +24,7 @@ export const update = function () {
         server
             .get(url + "/cached/user-defined-node", api_key)
             .then((cache_entries) => {
-                for (let cache_entry of cache_entries) {
+                for (const cache_entry of cache_entries) {
                     let color = "#D5DBDB";
                     const item = JSON.parse(cache_entry.data);
                     const name = item.Id;
