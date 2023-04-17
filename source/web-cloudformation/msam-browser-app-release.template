@@ -205,6 +205,11 @@
             "UpdateReplacePolicy": "Retain",
             "Properties": {
                 "AccessControl": "LogDeliveryWrite",
+                "OwnershipControls": {
+                    "Rules": [{
+                        "ObjectOwnership": "ObjectWriter"
+                    }]
+                },
                 "BucketEncryption": {
                     "ServerSideEncryptionConfiguration": [{
                         "ServerSideEncryptionByDefault": {
