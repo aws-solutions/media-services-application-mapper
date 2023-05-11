@@ -21,4 +21,8 @@ class TestContent(unittest.TestCase):
         Test the put_ddb_item function
         """
         from chalicelib import content
-        content.put_ddb_items("us-east-1")
+        content.put_ddb_items(["us-east-1"])
+        content.boto3.resource.assert_called_once()
+        content.boto3.resource.return_value.Table.assert_called_once_with('content_table')
+        content.boto3.resource.return_value.Table.return_value.put_item.assert_called_once_with(Item='us-east-1')
+        print()

@@ -57,7 +57,7 @@ const search_nodes = function (text) {
 
 const search_tiles = function (text) {
     const matches = [];
-    for (let name of cached_tile_names) {
+    for (const name of cached_tile_names) {
         if (name.toLowerCase().includes(text.toLowerCase())) {
             matches.push(name);
         }
@@ -67,7 +67,7 @@ const search_tiles = function (text) {
 
 function search(text) {
     const local_lodash = _;
-    return new Promise(function (outer_resolve) {   // NOSONAR
+    return new Promise(function (outer_resolve) {
         const local_outer_resolve = outer_resolve;
         fuse_model = new Fuse(model.nodes.get(), model_options);
         const results = {
@@ -86,12 +86,12 @@ function search(text) {
         const contained_by = diagrams.have_any(node_ids);
         results.diagram_contents = contained_by;
         // find diagram name matches
-        for (let name of Object.keys(diagrams.get_all())) {
+        Object.keys(diagrams.get_all()).forEach(name => {
             const includes = name.toLowerCase().includes(text.toLowerCase());
             if (includes) {
                 results.diagram_names.push(name);
             }
-        }
+        });
         // find tiles with any of these nodes
         channels.have_any(node_ids).then(function (matches) {
             results.tile_contents = matches;
@@ -100,7 +100,7 @@ function search(text) {
         const status = { processed: 0 };
         channels.channel_list().then(function (channel_names) {
             const local_channel_names = channel_names;
-            for (let channel_name of local_channel_names) {
+            for (const channel_name of local_channel_names) {
                 const local_channel_name = channel_name;
                 // check for a name partial match
                 const includes = local_channel_name

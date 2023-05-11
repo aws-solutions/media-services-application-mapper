@@ -31,6 +31,7 @@ class TestCloudWatchAlarm(unittest.TestCase):
         with patch.object(cloudwatch_alarm.ALARMS_TABLE, 'query', side_effect=[{"Items":[{"ResourceArn": ARN}], "LastEvaluatedKey": "token"},
             {"Items":[{"ResourceArn": ARN}]}]):
             cloudwatch_alarm.subscribers_to_alarm("RegionAlarmName")
+            self.assertEqual(cloudwatch_alarm.ALARMS_TABLE.query.call_count, 2)
         
         with patch.object(cloudwatch_alarm.ALARMS_TABLE, 'query', side_effect=CLIENT_ERROR):
             cloudwatch_alarm.subscribers_to_alarm("RegionAlarmName")
@@ -48,7 +49,10 @@ class TestCloudWatchAlarm(unittest.TestCase):
         with patch.object(cloudwatch_alarm, 'subscribers_to_alarm', return_value=[ARN]):
             with patch.object(cloudwatch_alarm.ALARMS_TABLE, 'update_item', return_value={}):
                 cloudwatch_alarm.lambda_handler(mocked_event, MagicMock())
-        
+                cloudwatch_alarm.boto3.resource.return_value.Alarm.assert_called_once_with('alarmName')
+                cloudwatch_alarm.ALARMS_TABLE.update_item.assert_called_once()
+                self.assertTrue(cloudwatch_alarm.ALARMS_TABLE.update_item.call_args.kwargs['UpdateExpression'] == 'SET StateValue = :state, Updated = :updated, StateUpdated = :stateupdated')
+                self.assertTrue(cloudwatch_alarm.ALARMS_TABLE.update_item.call_args.kwargs['Key'] == {'RegionAlarmName': 'us-east-1:alarmName', 'ResourceArn': ARN})
         patched_resource.return_value.Alarm.side_effect = CLIENT_ERROR
         cloudwatch_alarm.lambda_handler(mocked_event, MagicMock())
         self.assertRaises(ClientError)

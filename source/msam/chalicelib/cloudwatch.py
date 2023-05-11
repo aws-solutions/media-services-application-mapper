@@ -306,8 +306,23 @@ def get_cloudwatch_events_resource(resource_arn, start_time=0, end_time=0, limit
         print(error)
     return cw_events
 
+def handle_subscribers(subscribers, ddb_table, region_alarm_name, namespace, updated, state, updated_timestamp):
+    """
+    helper to record alarm subscribers
+    """
+    for resource_arn in subscribers:
+        item = {
+            "RegionAlarmName": region_alarm_name,
+            "ResourceArn": resource_arn,
+            "Namespace": namespace[0] if namespace else None,
+            "StateUpdated": int(datetime.datetime.strptime(updated[0], '%Y-%m-%dT%H:%M:%S.%f%z').timestamp()) if updated else None,
+            "StateValue": state[0] if state else None,
+            "Updated": updated_timestamp
+        }
+        ddb_table.put_item(Item=item)
+        print(f"{resource_arn} updated via alarm notification")
 
-def incoming_cloudwatch_alarm(event, _):    # NOSONAR
+def incoming_cloudwatch_alarm(event, _):
     """
     Standard AWS Lambda entry point for receiving CloudWatch alarm notifications.
     """
@@ -338,26 +353,7 @@ def incoming_cloudwatch_alarm(event, _):    # NOSONAR
             region_alarm_name = f"{region}:{alarm_name[0] if alarm_name else None}"
             subscribers = subscribers_to_alarm(
                 alarm_name[0] if alarm_name else None, region)
-            for resource_arn in subscribers:
-                item = {
-                    "RegionAlarmName":
-                    region_alarm_name,
-                    "ResourceArn":
-                    resource_arn,
-                    "Namespace":
-                    namespace[0] if namespace else None,
-                    "StateUpdated":
-                    int(
-                        datetime.datetime.strptime(
-                            updated[0], '%Y-%m-%dT%H:%M:%S.%f%z').timestamp())
-                    if updated else None,
-                    "StateValue":
-                    state[0] if state else None,
-                    "Updated":
-                    updated_timestamp
-                }
-                ddb_table.put_item(Item=item)
-                print(f"{resource_arn} updated via alarm notification")
+            handle_subscribers(subscribers, ddb_table, region_alarm_name, namespace, updated, state, updated_timestamp)
     except ClientError as error:
         print(error)
     return True

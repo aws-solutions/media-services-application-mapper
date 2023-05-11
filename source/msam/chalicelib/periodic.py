@@ -132,7 +132,7 @@ def update_nodes_generic(update_global_func, update_regional_func,
             next_region = inventory_regions[0]
         region_name = next_region
         # proceed only if we have a region
-        if not region_name is None:
+        if region_name is not None:
             # store the region for the next invocation
             try:
                 # use two copies in case we roll off the end
@@ -166,8 +166,35 @@ def update_from_tags():
     tags.update_diagrams()
     tags.update_tiles()
 
-
-def ssm_run_command():      # NOSONAR
+def apply_node_command(ssm_client, instance_ids, document_names):
+    """
+    Helper to loop over all instances and run applicable commands based on node type
+    """
+    for instance_id, id_type in instance_ids.items():
+        for name, doc_type in document_names.items():
+            if id_type in doc_type:
+                # maybe eventually doc type could be comma-delimited string if doc applies to more than one type?
+                print(f"running command: {name} on {instance_id}")
+                try:
+                    response = ssm_client.send_command(
+                        InstanceIds=[
+                            instance_id,
+                        ],
+                        DocumentName=name,
+                        TimeoutSeconds=600,
+                        Parameters={},
+                        MaxConcurrency='50',
+                        MaxErrors='0',
+                        CloudWatchOutputConfig={
+                            'CloudWatchLogGroupName': SSM_LOG_GROUP_NAME,
+                            'CloudWatchOutputEnabled': True
+                        })
+                    print(response)
+                except ClientError as error:
+                    print(error)
+                    if error.response['Error']['Code'] == "InvalidInstanceId":
+                        continue
+def ssm_run_command():
     """
     Runs all applicable SSM document commands on a given managed instance.
     """
@@ -231,44 +258,71 @@ def ssm_run_command():      # NOSONAR
             document_ids.append(document_list['DocumentIdentifiers'])
 
         document_names = {}
-        for document in document_ids:
+        for (document, tag) in [(document, tag) for document in document_ids if "Tags" in document for tag in document["Tags"] if "Key" in tag]:
             print("document")
-            if "Tags" in document:
-                for tag in document["Tags"]:
-                    if tag['Key'] == "MSAM-NodeType":
-                        document_names[document["Name"]] = tag['Value']
+            if tag['Key'] == "MSAM-NodeType":
+                document_names[document["Name"]] = tag['Value']
 
         # loop over all instances and run applicable commands based on node type
-        for instance_id, id_type in instance_ids.items():
-            for name, doc_type in document_names.items():
-                if id_type in doc_type:
-                    # maybe eventually doc type could be comma-delimited string if doc applies to more than one type?
-                    print(f"running command: {name} on {instance_id}")
-                    try:
-                        response = ssm_client.send_command(
-                            InstanceIds=[
-                                instance_id,
-                            ],
-                            DocumentName=name,
-                            TimeoutSeconds=600,
-                            Parameters={},
-                            MaxConcurrency='50',
-                            MaxErrors='0',
-                            CloudWatchOutputConfig={
-                                'CloudWatchLogGroupName': SSM_LOG_GROUP_NAME,
-                                'CloudWatchOutputEnabled': True
-                            })
-                        print(response)
-                    except ClientError as error:
-                        print(error)
-                        if error.response['Error'][
-                                'Code'] == "InvalidInstanceId":
-                            continue
+        apply_node_command(ssm_client, instance_ids, document_names)
     except ClientError as error:
         print(error)
 
 
-def process_ssm_run_command(event):     # NOSONAR
+def handle_success(command_name, response, p_metric_name, p_status):
+    """
+    Helper to handle success cases resutls from SSM
+    """
+    # process document name (command)
+    metric_name = p_metric_name
+    status = p_status
+    if "MSAMElementalLiveStatus" in command_name:
+        metric_name = "MSAMElementalLiveStatus"
+        status = 1 if any("running" in log_event['message'] for log_event in response['events']) else status
+    elif "MSAMSsmSystemStatus" in command_name:
+        metric_name = "MSAMSsmSystemStatus"
+        status = 1
+    elif "MSAMElementalLiveActiveAlerts" in command_name:
+        metric_name = "MSAMElementalLiveActiveAlerts"
+        root = ET.fromstring(response['events'][0]['message'])
+        status = len(list(root))
+        if status == 1 and root[0].tag == "empty":
+            status = 0
+    else:
+        if "MSAMElementalLiveCompletedEvents" in command_name:
+            metric_name = "MSAMElementalLiveCompletedEvents"
+        elif "MSAMElementalLiveErroredEvents" in command_name:
+            metric_name = "MSAMElementalLiveErroredEvents"
+        elif "MSAMElementalLiveRunningEvents" in command_name:
+            metric_name = "MSAMElementalLiveRunningEvents"
+        root = ET.fromstring(response['events'][0]['message'])
+        status = len(root.findall("./live_event"))
+    return metric_name, status
+
+def handle_failure(command_status, command_name, response, instance_id, p_metric_name, p_status):
+    """
+    Helper to handle failure cases resutls from SSM
+    """
+    metric_name = p_metric_name
+    status = p_status
+    # for the elemental live status, the command itself returns a failure if process is not running at all
+    # which is different than when a command fails to execute altogether
+    if command_status == "Failed" and "MSAMElementalLiveStatus" in command_name:
+        for log_event in response['events']:
+            if "Not Running" in log_event['message'] or "Active: failed" in log_event['message']:
+                metric_name = "MSAMElementalLiveStatus"
+                break
+    else:
+        # log if command has timed out or failed
+        print(
+            f"SSM Command Status: Command {command_name} sent to instance {instance_id} has {command_status}"
+        )
+        # create a metric for it
+        status = 1
+        metric_name = "MSAMSsmCommand" + command_status
+    return metric_name, status
+
+def process_ssm_run_command(event):
     """
     Processes the results from running an SSM command on a managed instance.
     """
@@ -293,49 +347,9 @@ def process_ssm_run_command(event):     # NOSONAR
         )
         #print(response)
         if command_status == "Success":
-            # process document name (command)
-            if "MSAMElementalLiveStatus" in command_name:
-                metric_name = "MSAMElementalLiveStatus"
-                for log_event in response['events']:
-                    if "running" in log_event['message']:
-                        status = 1
-                        break
-            elif "MSAMSsmSystemStatus" in command_name:
-                metric_name = "MSAMSsmSystemStatus"
-                status = 1
-            elif "MSAMElementalLiveActiveAlerts" in command_name:
-                metric_name = "MSAMElementalLiveActiveAlerts"
-                root = ET.fromstring(response['events'][0]['message'])
-                status = len(list(root))
-                if status == 1 and root[0].tag == "empty":
-                    status = 0
-            else:
-                if "MSAMElementalLiveCompletedEvents" in command_name:
-                    metric_name = "MSAMElementalLiveCompletedEvents"
-                elif "MSAMElementalLiveErroredEvents" in command_name:
-                    metric_name = "MSAMElementalLiveErroredEvents"
-                elif "MSAMElementalLiveRunningEvents" in command_name:
-                    metric_name = "MSAMElementalLiveRunningEvents"
-                root = ET.fromstring(response['events'][0]['message'])
-                status = len(root.findall("./live_event"))
+            metric_name, status = handle_success(command_name, response, metric_name, status)
         else:
-            # for the elemental live status, the command itself returns a failure if process is not running at all
-            # which is different than when a command fails to execute altogether
-            if command_status == "Failed" and "MSAMElementalLiveStatus" in command_name:
-                for log_event in response['events']:
-                    if "Not Running" in log_event[
-                            'message'] or "Active: failed" in log_event[
-                                'message']:
-                        metric_name = "MSAMElementalLiveStatus"
-                        break
-            else:
-                # log if command has timed out or failed
-                print(
-                    f"SSM Command Status: Command {command_name} sent to instance {instance_id} has {command_status}"
-                )
-                # create a metric for it
-                status = 1
-                metric_name = "MSAMSsmCommand" + command_status
+            metric_name, status = handle_failure(command_status, command_name, response, instance_id, metric_name, status)
 
         cw_client.put_metric_data(Namespace=SSM_LOG_GROUP_NAME,
                                   MetricData=[{

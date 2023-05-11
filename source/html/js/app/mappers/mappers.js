@@ -11,7 +11,7 @@ import * as node_user_defined_node from "./nodes/user_defined_node.js";
 import * as node_mediatailor from "./nodes/mediatailor.js";
 import * as node_ec2 from "./nodes/ec2.js";
 import * as node_ssm_managed_instance from "./nodes/ssm_managed_instance.js";
-import * as node_mediaconnect from "./nodes/mediaconnect.js"
+import * as node_mediaconnect from "./nodes/mediaconnect.js";
 
 export const nodes = [
     node_cloudfront,

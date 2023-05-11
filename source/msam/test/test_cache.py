@@ -37,6 +37,7 @@ class TestCache(unittest.TestCase):
     This class extends TestCase with testing functions
     """
 
+
     def setUp(self):
         TESTCASE_STATE['exception_raised'] = False
 
@@ -50,6 +51,9 @@ class TestCache(unittest.TestCase):
         """
         from chalicelib import cache
         cache.cached_by_service(SERVICE)
+        cache.boto3.resource.assert_called_once()
+        cache.boto3.resource.return_value.Table.assert_called_once_with('content_table')
+        cache.boto3.resource.return_value.Table.return_value.query.assert_called_once()
 
     @patch('os.environ')
     @patch('boto3.session.Session.resource', new=boto_resource_error)
@@ -73,6 +77,9 @@ class TestCache(unittest.TestCase):
         """
         from chalicelib import cache
         cache.cached_by_service_region(SERVICE, REGION)
+        cache.boto3.resource.assert_called_once()
+        cache.boto3.resource.return_value.Table.assert_called_once_with('content_table')
+        cache.boto3.resource.return_value.Table.return_value.query.assert_called_once()
 
     @patch('os.environ')
     @patch('boto3.session.Session.resource', new=boto_resource_error)
@@ -95,6 +102,9 @@ class TestCache(unittest.TestCase):
         """
         from chalicelib import cache
         cache.cached_by_arn(ARN)
+        cache.boto3.resource.assert_called_once()
+        cache.boto3.resource.return_value.Table.assert_called_once_with('content_table')
+        cache.boto3.resource.return_value.Table.return_value.query.assert_called_once()
 
     @patch('os.environ')
     @patch('boto3.session.Session.resource', new=boto_resource_error)
@@ -116,6 +126,8 @@ class TestCache(unittest.TestCase):
         """
         from chalicelib import cache
         cache.regions()
+        cache.boto3.client.assert_called_once()
+        cache.boto3.client.return_value.describe_regions.assert_called_once()
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -128,6 +140,8 @@ class TestCache(unittest.TestCase):
         request_obj = MagicMock()
         request_obj.json_body = [{"expires": 1657658393, "updated": 1657658399}]
         cache.put_cached_data(request_obj)
+        cache.boto3.resource.assert_called_once()
+        cache.boto3.resource.return_value.Table.assert_called_once_with('content_table')
         
     @patch('os.environ')
     @patch('boto3.session.Session.resource', new=boto_resource_error)
@@ -150,6 +164,9 @@ class TestCache(unittest.TestCase):
         """
         from chalicelib import cache
         cache.delete_cached_data(ARN)
+        cache.boto3.resource.assert_called_once()
+        cache.boto3.resource.return_value.Table.assert_called_once_with('content_table')
+        cache.boto3.resource.return_value.Table.return_value.delete_item.assert_called_once()
 
     @patch('os.environ')
     @patch('boto3.session.Session.resource', new=boto_resource_error)
@@ -160,3 +177,4 @@ class TestCache(unittest.TestCase):
         """
         from chalicelib import cache
         cache.delete_cached_data(ARN)
+        self.assertTrue(internal_exception_raised())

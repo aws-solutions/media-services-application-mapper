@@ -20,16 +20,16 @@ const configurationStateMachine = new machina.Fsm({
         },
         "get-saved-connection": {
             _onEnter: function () {
-                var current_connection = connections.get_current();
+                const current_connection = connections.get_current();
                 if (null === current_connection) {
                     console.log("no connection history");
                     this.noSavedConnection();
                 } else {
                     console.log("testing last connection used");
                     // test current connection with api-ping
-                    var endpoint = current_connection[0];
-                    var api_key = current_connection[1];
-                    var instance = this;
+                    const endpoint = current_connection[0];
+                    const api_key = current_connection[1];
+                    const instance = this;
                     api_check
                         .ping(endpoint, api_key)
                         .then(function (response) {
@@ -125,9 +125,9 @@ const modelDataStateMachine = new machina.Fsm({
         },
         "get-model-data": {
             _onEnter: async function () {
-                var ref = this;
+                const ref = this;
                 // create a closed callback
-                var f = (function () {
+                const f = (function () {
                     return function () {
                         ref.handle("modelDataReady");
                     };
@@ -214,7 +214,7 @@ const toolStateMachine = new machina.Fsm({
                 alarms.deferred_init();
                 const events = await import("./events.js");
                 events.deferred_init();
-                await import("./ui/notes_menu.js")
+                await import("./ui/notes_menu.js");
                 // show the tiles tab
                 $("#channel-tiles-tab").tab("show");
             },

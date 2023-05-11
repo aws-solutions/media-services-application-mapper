@@ -18,6 +18,11 @@ class TestChannels(unittest.TestCase):
     """
     This class extends TestCase with testing functions
     """
+
+    def tearDown(self):
+        from chalicelib import channels
+        channels.DYNAMO_RESOURCE.reset_mock()
+
     @patch('os.environ')
     @patch('boto3.resource')
     @patch('boto3.client')
@@ -38,6 +43,8 @@ class TestChannels(unittest.TestCase):
         # test CHANNEL_NAME not in list
         with patch.object(settings, 'get_setting', return_value=[CHANNEL_NAME]):
             channels.delete_channel_nodes(CHANNEL_NAME)
+            self.assertTrue(channels.DYNAMO_RESOURCE.Table.return_value.delete_item.call_count == 0)
+
         
         mock_table.query.side_effect = ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "query")
         channels.delete_channel_nodes(CHANNEL_NAME)
@@ -59,6 +66,9 @@ class TestChannels(unittest.TestCase):
         """                    
         from chalicelib import channels
         channels.get_channel_list()
+        channels.DYNAMO_RESOURCE.Table.assert_called_once_with('settings_table')
+        channels.DYNAMO_RESOURCE.Table.return_value.get_item.assert_called_once_with(Key={"id": "channels"})
+
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -71,10 +81,25 @@ class TestChannels(unittest.TestCase):
         from chalicelib import channels
         from chalicelib import settings
         channels.set_channel_nodes(CHANNEL_NAME, NODE_IDS)
+        channels.DYNAMO_RESOURCE.Table.assert_any_call('channels_table')
+        channels.DYNAMO_RESOURCE.Table.assert_any_call('settings_table')
+        channels.DYNAMO_RESOURCE.Table.return_value.get_item.assert_called_once_with(Key={'id': 'channels'})
+        channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'A'})
+        channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'B'})
+        channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'C'})
+        channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'Z'})
+        channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'id': 'channels', 'value': ['NO-CHANNEL']})    
+        channels.DYNAMO_RESOURCE.reset_mock()
         # test exception
         with patch.object(settings, 'get_setting', 
                     side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "get_setting")):
             channels.set_channel_nodes(CHANNEL_NAME, NODE_IDS)
+            channels.DYNAMO_RESOURCE.Table.assert_called_once_with('channels_table')
+            channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'A'})
+            channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'B'})
+            channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'C'})
+            channels.DYNAMO_RESOURCE.Table.return_value.put_item.assert_any_call(Item={'channel': 'NO-CHANNEL', 'id': 'Z'})
+
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -90,6 +115,9 @@ class TestChannels(unittest.TestCase):
         mock_table.delete_item.return_value = {}
         patched_resource.return_value.Table.return_value = mock_table
         channels.get_channel_nodes(CHANNEL_NAME)
+        channels.DYNAMO_RESOURCE.Table.assert_called_once_with('channels_table')
+        channels.DYNAMO_RESOURCE.Table.return_value.query.assert_called_once()
+        channels.DYNAMO_RESOURCE.Table.reset_mock()
 
         # mock_table.query.side_effect = ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "query")
         with patch.object(patched_resource, 'query', side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "query")):
@@ -119,6 +147,9 @@ class TestChannels(unittest.TestCase):
         # test CHANNEL_NAME not in list
         with patch.object(settings, 'put_setting', return_value=[CHANNEL_NAME]):
             channels.delete_all_channels()
+            channels.DYNAMO_RESOURCE.Table.assert_called_once_with('channels_table')
+            channels.DYNAMO_RESOURCE.Table.return_value.scan.assert_called_once_with(ProjectionExpression='channel,id')
+            channels.DYNAMO_RESOURCE.Table.reset_mock()
         
         with patch.object(settings, 'put_setting', 
                         side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "put_setting")):

@@ -10,11 +10,11 @@ import * as settings from "../settings.js";
 import * as diagrams from "./diagrams.js";
 import * as confirmation from "./confirmation.js";
 import * as channels_menu from "./channels_menu.js";
-import * as alert from "./alert.js"
+import * as alert from "./alert.js";
 
 const tile_row_div_id = "channel-tile-row-zkjewrvwdqywhwx";
 
-let click_listeners = [];
+const click_listeners = [];
 
 const tile_outer_div = "channel-tiles-outer";
 
@@ -131,7 +131,7 @@ const show_edit_dialog = function (name, members) {
     $("#channel_edit_modal_items").empty();
     let channel_content = "";
     let index = 0;
-    for (let member of members) {
+    for (const member of members) {
         const node = model.nodes.get(member.id);
         const checkbox_id = ui_util.makeid();
         if (node) {
@@ -175,62 +175,66 @@ const show_edit_dialog = function (name, members) {
     $("#channel_edit_modal").modal("show");
 };
 
-const update_tile_info = async function () {    // NOSONAR
+function getCount(cached_events, cached_alarming_subscribers, channel_members) {
+    const resource_count = channel_members.length;
+    let missing_count = 0;
+    let alert_count = 0;
+    let alarm_count = 0;
+    for (const member of channel_members) {
+        if(!model.nodes.get(member.id)){
+            missing_count++;
+        }
+        const filtered_events = _.filter(cached_events.current, {
+            resource_arn: member.id,
+        });
+        alert_count += filtered_events.length;
+        const filtered_alarms = _.filter(
+            cached_alarming_subscribers.current,
+            { ResourceArn: member.id }
+        );
+        alarm_count += filtered_alarms.length;
+    }
+    return {
+        resource_count,
+        missing_count,
+        alert_count,
+        alarm_count,
+    };
+}
+
+const update_tile_info = async function () {
     const cached_events = event_alerts.get_cached_events();
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
     const channel_list = await channels.channel_list();
-    for (let channel_name of channel_list) {
+    for (const channel_name of channel_list) {
         const channel_members = await channels.retrieve_channel(channel_name);
-        if (channel_members) {
-            const query = `[data-channel-name='${channel_name}']`;
-            const tile_id = $(query).attr("id");
-            const resource_count_id = tile_id + "_resources";
-            const missing_count_id = tile_id + "_missing";
-            const event_count_id = tile_id + "_events";
-            const alarm_count_id = tile_id + "_alarms";
-            const resource_count = channel_members.length;
-            let alert_count = 0;
-            let alarm_count = 0;
-            let missing_count = 0;
-            let border_class = "border-success";
-            for (let member of channel_members) {
-                if(!model.nodes.get(member.id)){
-                    missing_count ++;
-                }
-                const filtered_events = _.filter(cached_events.current, {
-                    resource_arn: member.id,
-                });
-                alert_count += filtered_events.length;
-                const filtered_alarms = _.filter(
-                    cached_alarming_subscribers.current,
-                    { ResourceArn: member.id }
-                );
-                alarm_count += filtered_alarms.length;
-            }
-            if (alert_count + alarm_count) {
-                border_class = "border-danger";
-                $("#" + tile_id).removeClass("border-success");
-            } else {
-                $("#" + tile_id).removeClass("border-danger");
-            }
-            if (channel_name == selected()) {
-                border_class = `${border_class} selected-channel-tile`;
-            }
-            $("#" + tile_id).attr("data-alert-count", alert_count);
-            $("#" + tile_id).attr("data-alarm-count", alarm_count);
-            $("#" + tile_id).attr("data-resource-count", resource_count);
-            $("#" + tile_id).attr("data-missing-count", missing_count);
-            $("#" + tile_id).addClass(border_class);
-            $("#" + resource_count_id).html(`${resource_count} cloud resource${resource_count === 1 ? "" : "s"}`);
-            $(`#${missing_count_id}`).html(`<strong>${missing_count} missing resource${missing_count === 1 ? "" : "s"}</strong>`);
-            $("#" + event_count_id).html(
-                `${alert_count} alert event${alert_count === 1 ? "" : "s"}`
-            );
-            $("#" + alarm_count_id).html(
-                `${alarm_count} alarm${alarm_count === 1 ? "" : "s"}`
-            );
-
+        if (!channel_members) {
+            continue;
         }
+        const tile_id = $(`[data-channel-name='${channel_name}']`).attr("id");
+        const {
+            resource_count,
+            missing_count,
+            alert_count,
+            alarm_count,
+        } = getCount(cached_events, cached_alarming_subscribers, channel_members);
+        const border_class = (alert_count + alarm_count) ? "border-danger" : "border-success";
+        const selected_class = (channel_name == selected()) ? "selected-channel-title" : "";
+        $(`#${tile_id}`)
+            .removeClass("border-danger border-success")
+            .addClass(`${border_class} ${selected_class}`)
+            .attr("data-alert-count", alert_count)
+            .attr("data-alarm-count", alarm_count)
+            .attr("data-resource-count", resource_count)
+            .attr("data-missing-count", missing_count);
+        $(`#${tile_id}_resources`).html(`${resource_count} cloud resource${resource_count === 1 ? "" : "s"}`);
+        $(`#${tile_id}_missing`).html(`<strong>${missing_count} missing resource${missing_count === 1 ? "" : "s"}</strong>`);
+        $(`#${tile_id}_events`).html(
+            `${alert_count} alert event${alert_count === 1 ? "" : "s"}`
+        );
+        $(`#${tile_id}_alarms`).html(
+            `${alarm_count} alarm${alarm_count === 1 ? "" : "s"}`
+        );
     }
     sort_tiles();
     filter_tiles();
@@ -246,26 +250,34 @@ const sort_tiles = function () {
         let compB =
             Number.parseInt($(b).attr("data-alert-count")) +
             Number.parseInt($(b).attr("data-alarm-count"));
-        compare = compA < compB ? 1 : compA > compB ? -1 : 0;   // NOSONAR
+        if (compA < compB) {
+            compare = 1;
+        } else if (compA > compB) {
+            compare = -1;
+        }
         if (compare === 0) {
             compA = $(a).attr("data-channel-name");
             compB = $(b).attr("data-channel-name");
-            compare = compA < compB ? -1 : compA > compB ? 1 : 0;   // NOSONAR
+            if (compA < compB) {
+                compare = -1;
+            } else if (compA > compB) {
+                compare = 1;
+            }
         }
         return compare;
     });
-    for (let tile of tiles) {
+    for (const tile of tiles) {
         $("[data-tile-row]").append(tile);
     }
 };
 
 const filter_tiles = function () {
-    let tiles = $("[data-channel-name]");
+    const tiles = $("[data-channel-name]");
     load_tile_view().then(function (tile_settings) {
         update_filter_mode(tile_settings.tile_filter_text);
         const show_alarm_tiles = tile_settings.show_alarm_tiles;
         const show_normal_tiles = tile_settings.show_normal_tiles;
-        for (let tile of tiles) {
+        for (const tile of tiles) {
             const total =
                 Number.parseInt($(tile).attr("data-alert-count")) +
                 Number.parseInt($(tile).attr("data-alarm-count"));
@@ -291,7 +303,132 @@ const filter_tiles = function () {
     });
 };
 
-const redraw_tiles = async function () {    // NOSONAR
+function header_click_closure(
+    hc_console,
+    hc_name,
+    hc_channel_members,
+    hc_click_listeners
+) {
+    return function () {
+        selection_listener(hc_name);
+        $("#nav-data-tab").tab("show");
+        for (const listener of hc_click_listeners) {
+            const local_listener = listener;
+            try {
+                local_listener(hc_name, hc_channel_members);
+            } catch (error) {
+                hc_console.log(error);
+            }
+        }
+    };
+}
+
+function capture_state(channel_members, channel_card_id, channel_name, { header_id, menu_id, dropdown_id }, preferred_diagram_div, preferred_diagram) {
+    $(`#${channel_card_id}_resources,#${channel_card_id}_missing`).click(() => {
+        $(`#${header_id}`).trigger("click");
+    });
+    const node_ids = _.map(channel_members, "id");
+    $(`#${menu_id}`).click(() => {
+        const matches = diagrams.have_any(node_ids, true);
+        console.log(matches);
+        $(`#${dropdown_id}`).empty();
+        if (matches.length) {
+            $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Preferred diagram</h6>`);
+            $(`#${dropdown_id}`).append(`<div id="${preferred_diagram_div}"></div>`);
+            $(`#${dropdown_id}`).append(`<div class="dropdown-divider"></div>`);
+            $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Matching diagrams</h6>`);
+            for (const match of matches) {
+                const menu_item_id = ui_util.makeid();
+                const item = `<a id="${menu_item_id}" class="dropdown-item" tabindex="-1" href="#" style="cursor: pointer;" title="Click to Select, Right-click to set as preferred">${match.diagram} (${match.percent}%)</a>`;
+                if(preferred_diagram != null && preferred_diagram.diagram == match.diagram){
+                    $(`#${preferred_diagram_div}`).append(item);
+                }
+                $(`#${dropdown_id}`).append(item);
+                (function () {
+                    $(`#${menu_item_id}`).click(() => {
+                        const hidden_diagrams = diagrams.get_hidden_diagrams();
+                        const diagram = diagrams.get_by_name(match.diagram);
+                        if (_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
+                            diagrams.add(diagram.name, diagram.view_id, false);
+                        } 
+                        diagram.network.once("afterDrawing", function () {
+                            diagram.network.fit({
+                                nodes: match.found,
+                                animation: true,
+                            });
+                            diagram.blink(10, match.found);
+                        });
+                        $("#view_tile_diagram_dialog").modal("hide");
+                        diagram.show();
+                    });
+                })();
+                (function () {
+                    $(`#${menu_item_id}`).contextmenu(() => {
+                        const html = `Make ${match.diagram} the preferred diagram for ${channel_name}?`;
+                        confirmation.show(html, function () {
+                            settings.put(`${channel_name}-preferred-diagram`, {"diagram": match.diagram});
+                            preferred_diagram = {"diagram": match.diagram};
+                            alert.show(`Preferred diagram set for ${channel_name}`);
+                        });
+                    });
+                })();
+            }
+            $(`#${dropdown_id}`).append(`<div class="dropdown-divider"></div>`);
+        }
+        else {
+            $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">No matching diagrams</h6>`);
+        }
+        const create_id = ui_util.makeid();
+        $(`#${dropdown_id}`).append(`<a id="${create_id}" class="dropdown-item" href="#">Create new diagram</a>`);
+        (function () {
+            $(`#${create_id}`).click(() => {
+                confirmation.show("Create a new diagram from this tile's contents?", function () {
+                    const diagram = diagrams.add(
+                        channel_name,
+                        _.snakeCase(channel_name),
+                        true
+                    );
+                    const callback = function () {
+                        diagram.layout_horizontal(true);
+                    };
+                    diagram.statemachine.on("diagram-ready", callback);
+                    // populate
+                    const nodes = _.compact(model.nodes.get(node_ids));
+                    diagram.nodes.update(nodes);
+                    diagram.show();
+                });
+            });
+        })();
+    });
+}
+
+function get_title_div(border_class, channel_card_id, channel_name, { alert_count, alarm_count, resource_count, missing_count }, { header_id, menu_id, dropdown_id }, abbrev_tile_header) {
+    return `
+            <div draggable="true" class="card ${border_class} ms-4 mb-4 px-0" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${resource_count}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
+                <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${abbrev_tile_header}
+                </div>
+                <div class="card-body text-info my-0 py-1">
+                    <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${alert_count === 1 ? "" : "s"}</h5>
+                    <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${alarm_count === 1 ? "" : "s"}</h5>
+                    <p class="card-text small my-0 py-0" id="${channel_card_id}_resources" style="cursor: pointer;">${resource_count} cloud resource${resource_count === 1 ? "" : "s"}</p>
+                    <p class="d-none card-text small my-0 py-0" id="${channel_card_id}_missing" style="cursor: pointer;"><strong>${missing_count} missing resource${missing_count === 1 ? "" : "s"}</strong></p>
+                </div>
+                <div class="btn-group btn-group-sm" aria-label="Tile Footer" style="height: 14%;">
+                    <div style="position: absolute; top: 0; left: ${tile_width_px - 32}px; cursor: pointer;">
+                        <div class="dropdown">
+                            <button class="btn btn-sm p-0 m-0" type="button" id="${menu_id}" data-bs-toggle="dropdown" style="color: grey;">
+                                <span title="Matching diagrams" class="material-icons">image_aspect_ratio</span>
+                            </button>
+                            <div class="dropdown-menu m-0 p-0" aria-labelledby="${menu_id}" id="${dropdown_id}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+}
+
+const redraw_tiles = async function () {
     $("#" + tile_outer_div).addClass("d-none");
     $("#" + content_div).html(
         `<div id="${tile_row_div_id}" data-tile-row="true" class="row ms-3">`
@@ -299,34 +436,19 @@ const redraw_tiles = async function () {    // NOSONAR
     const channel_list = await channels.channel_list();
     const cached_events = event_alerts.get_cached_events();
     const cached_alarming_subscribers = alarms.get_subscribers_with_alarms();
-    for (let channel_name of channel_list) {
+    for (const channel_name of channel_list) {
         const local_channel_name = channel_name;
-        let preferred_diagram = await settings.get(`${local_channel_name}-preferred-diagram`);
-        let border_class = "border-success";
+        const preferred_diagram = await settings.get(`${local_channel_name}-preferred-diagram`);
         const channel_members = await channels.retrieve_channel(
             local_channel_name
         );
-        const resource_count = channel_members.length;
-        let alert_count = 0;
-        let alarm_count = 0;
-        let missing_count = 0;
-        for (let member of channel_members) {
-            if(!model.nodes.get(member.id)){
-                missing_count ++;
-            }
-            const filtered_events = _.filter(cached_events.current, {
-                resource_arn: member.id,
-            });
-            alert_count += filtered_events.length;
-            const filtered_alarms = _.filter(
-                cached_alarming_subscribers.current,
-                { ResourceArn: member.id }
-            );
-            alarm_count += filtered_alarms.length;
-        }
-        if (alert_count + alarm_count) {
-            border_class = "border-danger";
-        }
+        const {
+            alert_count,
+            alarm_count,
+            missing_count,
+            resource_count,
+        } = getCount(cached_events, cached_alarming_subscribers, channel_members);
+        let border_class = alert_count + alarm_count ? "border-danger" : "border-success";
         if (local_channel_name == selected()) {
             border_class = `${border_class} selected-channel-tile`;
         }
@@ -338,131 +460,30 @@ const redraw_tiles = async function () {    // NOSONAR
         const preferred_diagram_div = channel_card_id + "_preferred";
         const abbrev_tile_header = (local_channel_name.length > 40) ? 
                     `${local_channel_name.slice(0, 25)}...` : local_channel_name;
-        const tile = `
-                        <div draggable="true" class="card ${border_class} ms-4 mb-4 px-0" id="${channel_card_id}" data-alert-count="${alert_count}" data-alarm-count="${alarm_count}" data-channel-name="${channel_name}" data-tile-name="${channel_name}" data-resource-count="${channel_members.length}" data-missing-count="${missing_count}" style="border-width: 3px; width: ${tile_width_px}px; min-width: ${tile_width_px}px; max-width: ${tile_width_px}px; height: ${tile_height_px}px; min-height: ${tile_height_px}px; max-height: ${tile_height_px}px;">
-                            <div class="card-header" style="cursor: pointer;" title="Click to Select, Doubleclick to Edit" id="${header_id}">${abbrev_tile_header}
-                            </div>
-                            <div class="card-body text-info my-0 py-1">
-                                <h5 class="card-title my-0 py-0" id="${channel_card_id}_events">${alert_count} alert event${alert_count === 1 ? "" : "s"}</h5>
-                                <h5 class="card-title my-0 py-0" id="${channel_card_id}_alarms">${alarm_count} alarm${alarm_count === 1 ? "" : "s"}</h5>
-                                <p class="card-text small my-0 py-0" id="${channel_card_id}_resources" style="cursor: pointer;">${resource_count} cloud resource${resource_count === 1 ? "" : "s"}</p>
-                                <p class="d-none card-text small my-0 py-0" id="${channel_card_id}_missing" style="cursor: pointer;"><strong>${missing_count} missing resource${missing_count === 1 ? "" : "s"}</strong></p>
-                            </div>
-                            <div class="btn-group btn-group-sm" aria-label="Tile Footer" style="height: 14%;">
-                                <div style="position: absolute; top: 0; left: ${tile_width_px - 32}px; cursor: pointer;">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm p-0 m-0" type="button" id="${menu_id}" data-bs-toggle="dropdown" style="color: grey;">
-                                            <span title="Matching diagrams" class="material-icons">image_aspect_ratio</span>
-                                        </button>
-                                        <div class="dropdown-menu m-0 p-0" aria-labelledby="${menu_id}" id="${dropdown_id}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+        const tile = get_title_div(
+            border_class,
+            channel_card_id,
+            channel_name,
+            {
+                alert_count,
+                alarm_count,
+                resource_count,
+                missing_count,
+            },
+            {
+                header_id,
+                menu_id,
+                dropdown_id,
+            },
+            abbrev_tile_header,
+        );
         $("#" + tile_row_div_id).append(tile);
         if (missing_count) {
             $(`#${channel_card_id}_missing`).removeClass("d-none");
         }
         // closure to capture state
-        (function () {
-            $(`#${channel_card_id}_resources,#${channel_card_id}_missing`).click(() => {
-                $(`#${header_id}`).trigger("click");
-            });
-            const node_ids = _.map(channel_members, "id");
-            $(`#${menu_id}`).click(() => {
-                const matches = diagrams.have_any(node_ids, true);
-                console.log(matches);
-                $(`#${dropdown_id}`).empty();
-                if (matches.length) {
-                    $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Preferred diagram</h6>`);
-                    $(`#${dropdown_id}`).append(`<div id="${preferred_diagram_div}"></div>`);
-                    $(`#${dropdown_id}`).append(`<div class="dropdown-divider"></div>`);
-                    $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">Matching diagrams</h6>`);
-                    for (let match of matches) {
-                        const menu_item_id = ui_util.makeid();
-                        const item = `<a id="${menu_item_id}" class="dropdown-item" tabindex="-1" href="#" style="cursor: pointer;" title="Click to Select, Right-click to set as preferred">${match.diagram} (${match.percent}%)</a>`;
-                        if(preferred_diagram != null && preferred_diagram.diagram == match.diagram){
-                            $(`#${preferred_diagram_div}`).append(item);
-                        }
-                        $(`#${dropdown_id}`).append(item);
-                        (function () {
-                            $(`#${menu_item_id}`).click(() => {
-                                let hidden_diagrams = diagrams.get_hidden_diagrams();
-                                var diagram = diagrams.get_by_name(match.diagram);
-                                if (_.find(hidden_diagrams, {'hidden_diagram': diagram.name})){
-                                    diagrams.add(diagram.name, diagram.view_id, false);
-                                } 
-                                diagram.network.once("afterDrawing", function () {
-                                    diagram.network.fit({
-                                        nodes: match.found,
-                                        animation: true,
-                                    });
-                                    diagram.blink(10, match.found);
-                                });
-                                $("#view_tile_diagram_dialog").modal("hide");
-                                diagram.show();
-                            });
-                        })();
-                        (function () {
-                            $(`#${menu_item_id}`).contextmenu(() => {
-                                let html = `Make ${match.diagram} the preferred diagram for ${channel_name}?`;
-                                confirmation.show(html, function () {
-                                    settings.put(`${channel_name}-preferred-diagram`, {"diagram": match.diagram});
-                                    preferred_diagram = {"diagram": match.diagram};
-                                    alert.show(`Preferred diagram set for ${channel_name}`);
-                                });
-                            });
-                        })();
-                    }
-                    $(`#${dropdown_id}`).append(`<div class="dropdown-divider"></div>`);
-                }
-                else {
-                    $(`#${dropdown_id}`).append(`<h6 class="dropdown-header">No matching diagrams</h6>`);
-                }
-                const create_id = ui_util.makeid();
-                $(`#${dropdown_id}`).append(`<a id="${create_id}" class="dropdown-item" href="#">Create new diagram</a>`);
-                (function () {
-                    $(`#${create_id}`).click(() => {
-                        confirmation.show("Create a new diagram from this tile's contents?", function () {
-                            const diagram = diagrams.add(
-                                local_channel_name,
-                                _.snakeCase(local_channel_name),
-                                true
-                            );
-                            const callback = function () {
-                                diagram.layout_horizontal(true);
-                            };
-                            diagram.statemachine.on("diagram-ready", callback);
-                            // populate
-                            const nodes = _.compact(model.nodes.get(node_ids));
-                            diagram.nodes.update(nodes);
-                            diagram.show();
-                        });
-                    });
-                })();
-            });
-        })();
-        const header_click_closure = function (
-            hc_console,
-            hc_name,
-            hc_channel_members,
-            hc_click_listeners
-        ) {
-            return function () {
-                selection_listener(hc_name);
-                $("#nav-data-tab").tab("show");
-                for (let listener of hc_click_listeners) {
-                    const local_listener = listener;
-                    try {
-                        local_listener(hc_name, hc_channel_members);
-                    } catch (error) {
-                        hc_console.log(error);
-                    }
-                }
-            };
-        };
+        capture_state(channel_members, channel_card_id, channel_name, { header_id, menu_id, dropdown_id }, preferred_diagram_div, preferred_diagram);
+
         $("#" + header_id).on(
             "click",
             header_click_closure(
@@ -528,7 +549,7 @@ $("#save_channel_edit").on("click", function () {
         .then(function () {
             console.log("removed channel members");
             const members = [];
-            for (let item of member_checkboxes) {
+            for (const item of member_checkboxes) {
                 if (item.checked === false) {
                     members.push(item.value);
                 }
@@ -569,7 +590,7 @@ $("#tiles_edit_selected_tile_button").on("click", function () {
 $("#tiles_delete_selected_tile_button").on("click", function () {
     const tile_name = selected();
     if (shown() && tile_name && tile_name !== "") {
-        let html = `Delete the tile named ${tile_name}?`;
+        const html = `Delete the tile named ${tile_name}?`;
         confirmation.show(html, function () {
             channels.delete_channel(tile_name).then(function () {
                 redraw_tiles();

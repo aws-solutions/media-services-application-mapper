@@ -10,7 +10,7 @@ export const match_type = "MediaConnect Flow";
 
 const decorate_alarms = function (drawing, font_size, width, height, id) {
     let alarm_count = 0;
-    for (let item of alarms.get_subscribers_with_alarms().current) {
+    for (const item of alarms.get_subscribers_with_alarms().current) {
         if (item.ResourceArn == id) {
             alarm_count += item.AlarmCount;
         }
@@ -34,7 +34,7 @@ const decorate_information = function (drawing, font_size, width, height, id) {
 
 const decorate_alerts = function (drawing, font_size, width, height, id) {
     let alert_count = 0;
-    for (let item of alert_events.get_cached_events().current_mediaconnect) {
+    for (const item of alert_events.get_cached_events().current_mediaconnect) {
         if (item.resource_arn == id) {
             alert_count += 1;
         }

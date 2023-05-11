@@ -9,7 +9,7 @@ export const match_type = "EC2 Instance";
 
 const decorate_alarms = function (drawing, font_size, width, height, id) {
     let alarm_count = 0;
-    for (let item of alarms.get_subscribers_with_alarms().current) {
+    for (const item of alarms.get_subscribers_with_alarms().current) {
         if (item.ResourceArn == id) {
             alarm_count += item.AlarmCount;
         }
@@ -21,7 +21,7 @@ const decorate_information = function (drawing, font_size, width, height, id) {
     const node = model.nodes.get(id);
     if (node) {
         if (node.data.Tags.Name) {
-            let computer_name = node.data.Tags.Name;
+            const computer_name = node.data.Tags.Name;
             tools.set_info_text(
                 computer_name,
                 drawing,

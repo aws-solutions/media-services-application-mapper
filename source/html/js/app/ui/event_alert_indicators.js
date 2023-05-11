@@ -65,7 +65,7 @@ const updateUIHandler = (node, alertState = true, dataSet = "nodes") => {
         matches = diagrams.have_all([node.from, node.to]);
     }
 
-    for (let diagram of matches) {
+    for (const diagram of matches) {
         // update the diagrams state
         diagram[dataSet].update(node);
         diagram.alert(alertState);
@@ -135,14 +135,51 @@ const updateAlertHandler = (node, active_alert = true, alert_details = {}) => {
     });
 };
 
-const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSONAR
+function updateAlertHelper(node, item, is_running) {
+    if (_.has(item, "detail") === false || _.has(item.detail, "pipeline") === false) {
+        node.degraded = false;
+        updateAlertHandler(node, !is_running, item.detail);
+        return;
+    }
+    // create the attribute if its not there
+    if (!_.isArray(node.running_pipelines)) {
+        if (
+            _.has(node.data, "ChannelClass") &&
+            node.data.ChannelClass === "SINGLE_PIPELINE"
+        ) {
+            node.running_pipelines = new Array(1);
+        } else if (
+            _.has(node.data, "ChannelClass") &&
+            node.data.ChannelClass === "STANDARD"
+        ) {
+            node.running_pipelines = new Array(2);
+        } else if (_.has(node.data, "PipelinesRunningCount")) {
+            const count = Number.parseInt(
+                node.data.PipelinesRunningCount
+            );
+            node.running_pipelines = new Array(count);
+        } else {
+            node.running_pipelines = new Array(1);
+        }
+        node.running_pipelines.fill(1);
+    }
+    const index = Number.parseInt(item.detail.pipeline);
+    node.running_pipelines[index] = is_running ? 1 : 0;
+    node.degraded =
+        _.sum(node.running_pipelines) > 0 &&
+        _.sum(node.running_pipelines) <
+        node.running_pipelines.length;
+    updateAlertHandler(node, !is_running, item.detail);
+}
+
+const updateEventAlertState = (current_alerts, previous_alerts) => {
     /** iterate through current 'set' alerts */
-    let alerting_nodes = new Set();
+    const alerting_nodes = new Set();
 
     // we only need one unique alert per arn/pipeline
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
 
-    let filter = (item) => {
+    const filter = (item) => {
         if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
             return `${item.resource_arn}:${item.detail.pipeline}`;
         } else {
@@ -150,59 +187,28 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSON
         }
     };
 
-    let uniq_current_alerts = _.uniqBy(current_alerts, filter);
-    let uniq_previous_alerts = _.uniqBy(previous_alerts, filter);
+    const uniq_current_alerts = _.uniqBy(current_alerts, filter);
+    const uniq_previous_alerts = _.uniqBy(previous_alerts, filter);
 
     // use the filtered lists
     current_alerts = uniq_current_alerts;
     previous_alerts = uniq_previous_alerts;
 
-    for (let item of current_alerts) {
+    for (const item of current_alerts) {
         const node = model.nodes.get(item.resource_arn);
-        if (node) {
-            node.alerting = true;
-            alerting_nodes.add(node.id);
-            // track which pipelines are down on the model item
-            if (_.has(item, "detail") && _.has(item.detail, "pipeline")) {
-                // create the attribute if its not there
-                if (!_.isArray(node.running_pipelines)) {
-                    if (
-                        _.has(node.data, "ChannelClass") &&
-                        node.data.ChannelClass === "SINGLE_PIPELINE"
-                    ) {
-                        node.running_pipelines = new Array(1);
-                    } else if (
-                        _.has(node.data, "ChannelClass") &&
-                        node.data.ChannelClass === "STANDARD"
-                    ) {
-                        node.running_pipelines = new Array(2);
-                    } else if (_.has(node.data, "PipelinesRunningCount")) {
-                        let count = Number.parseInt(
-                            node.data.PipelinesRunningCount
-                        );
-                        node.running_pipelines = new Array(count);
-                    } else {
-                        node.running_pipelines = new Array(1);
-                    }
-                    node.running_pipelines.fill(1);
-                }
-                let index = Number.parseInt(item.detail.pipeline);
-                node.running_pipelines[index] = 0;
-                node.degraded =
-                    _.sum(node.running_pipelines) > 0 &&
-                    _.sum(node.running_pipelines) <
-                    node.running_pipelines.length;
-            } else {
-                node.degraded = false;
-            }
-            updateAlertHandler(node, true, item.detail);
+        if (!node) {
+            continue;
         }
+        node.alerting = true;
+        alerting_nodes.add(node.id);
+        // track which pipelines are down on the model item
+        updateAlertHelper(node, item, false);
     }
 
     // filter out multiple alerts for either: same arn/pipeline or same arn (if no pipeline)
     // cleared alerts are present in the previous list and not in the current list
 
-    let uniq_cleared_alerts = _.differenceBy(
+    const uniq_cleared_alerts = _.differenceBy(
         previous_alerts,
         current_alerts,
         filter
@@ -210,47 +216,16 @@ const updateEventAlertState = (current_alerts, previous_alerts) => {    // NOSON
 
     console.log(`unique cleared alerts: ${uniq_cleared_alerts.length}`);
 
-    for (let cleared of uniq_cleared_alerts) {
-        let node = model.nodes.get(cleared.resource_arn);
-        if (node) {
-            if (!alerting_nodes.has(node.id)) {
-                node.alerting = false;
-            }
-            // track which pipelines are up on the model item
-            if (_.has(cleared, "detail") && _.has(cleared.detail, "pipeline")) {
-                // create the attribute if its not there
-                if (!_.isArray(node.running_pipelines)) {
-                    if (
-                        _.has(node.data, "ChannelClass") &&
-                        node.data.ChannelClass === "SINGLE_PIPELINE"
-                    ) {
-                        node.running_pipelines = new Array(1);
-                    } else if (
-                        _.has(node.data, "ChannelClass") &&
-                        node.data.ChannelClass === "STANDARD"
-                    ) {
-                        node.running_pipelines = new Array(2);
-                    } else if (_.has(node.data, "PipelinesRunningCount")) {
-                        let count = Number.parseInt(
-                            node.data.PipelinesRunningCount
-                        );
-                        node.running_pipelines = new Array(count);
-                    } else {
-                        node.running_pipelines = new Array(1);
-                    }
-                    node.running_pipelines.fill(1);
-                }
-                let index = Number.parseInt(cleared.detail.pipeline);
-                node.running_pipelines[index] = 1;
-                node.degraded =
-                    _.sum(node.running_pipelines) > 0 &&
-                    _.sum(node.running_pipelines) <
-                    node.running_pipelines.length;
-            } else {
-                node.degraded = false;
-            }
-            updateAlertHandler(node, false, cleared.detail);
+    for (const cleared of uniq_cleared_alerts) {
+        const node = model.nodes.get(cleared.resource_arn);
+        if (!node) {
+            continue;
         }
+        if (!alerting_nodes.has(node.id)) {
+            node.alerting = false;
+        }
+        // track which pipelines are up on the model item
+        updateAlertHelper(node, cleared, true);
     }
 };
 

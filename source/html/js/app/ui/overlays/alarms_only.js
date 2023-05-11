@@ -8,7 +8,7 @@ export const match_type = "Default Overlay for Alarms";
 
 const decorate_alarms = function (drawing, font_size, width, height, id) {
     let alarm_count = 0;
-    for (let item of alarms.get_subscribers_with_alarms().current) {
+    for (const item of alarms.get_subscribers_with_alarms().current) {
         if (item.ResourceArn == id) {
             alarm_count += item.AlarmCount;
         }

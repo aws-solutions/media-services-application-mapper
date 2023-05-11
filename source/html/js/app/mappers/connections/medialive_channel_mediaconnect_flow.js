@@ -13,7 +13,7 @@ export const update = () => {
         server
             .get(`${url}/cached/medialive-channel-mediaconnect-flow`, api_key)
             .then((results) => {
-                for (let connection of results) {
+                for (const connection of results) {
                     const data = JSON.parse(connection.data);
                     items.push({
                         id: connection.arn,

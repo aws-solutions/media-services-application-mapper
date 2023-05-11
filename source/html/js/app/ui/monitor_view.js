@@ -9,17 +9,17 @@ import * as diagrams from "./diagrams.js";
 import * as alarms from "../alarms.js";
 import * as confirmation from "./confirmation.js";
 
-var last_displayed;
+let last_displayed;
 
-var consoleIcon = function () {
+const consoleIcon = function () {
     return `<i class='fa fa-desktop'></i>`;
 };
 
-var trashIcon = function () {
+const trashIcon = function () {
     return `<i class='fa fa-trash'></i>`;
 };
 
-var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
+const alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
     placeholder: "No Recent Alerts",
     tooltips: true,
     selectable: false,
@@ -55,7 +55,7 @@ var alert_tabulator = new Tabulator("#nav-monitor-alerts-text", {
     ],
 });
 
-var alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
+const alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
     placeholder: "No Alarm Subscriptions",
     tooltips: true,
     selectable: true,
@@ -116,15 +116,15 @@ var alarm_tabulator = new Tabulator("#nav-monitor-alarms-text", {
 });
 
 //custom header filter
-var dateFilterEditor = function (cell, onRendered, success, cancel) {
-    var container = $("<span></span>");
+const dateFilterEditor = function (cell, onRendered, success, cancel) {
+    const container = $("<span></span>");
     //create and style input
-    var start = $("<input type='text' placeholder='Start'/>");
-    var end = $("<input type='text' placeholder='End'/>");
+    const start = $("<input type='text' placeholder='Start'/>");
+    const end = $("<input type='text' placeholder='End'/>");
 
     container.append(start).append(end);
 
-    var inputs = $("input", container);
+    const inputs = $("input", container);
 
     inputs
         .css({
@@ -167,14 +167,14 @@ function dateFilterFunction(headerValue, rowValue) {
     //rowData - the data for the row being filtered
     //filterParams - params object passed to the headerFilterFuncParams property
 
-    var start = moment(headerValue.start);
-    var end = moment(headerValue.end);
+    const start = moment(headerValue.start);
+    const end = moment(headerValue.end);
     if (rowValue) {
-        var current_row_millis = new Date(rowValue);
+        const current_row_millis = new Date(rowValue);
         console.log("current_row_millis: ");
         console.log(current_row_millis);
-        var start_millis = 0;
-        var end_millis = 0;
+        let start_millis = 0;
+        let end_millis = 0;
         if (start.isValid()) {
             if (end.isValid()) {
                 start_millis = new Date(start);
@@ -206,7 +206,7 @@ function dateFilterFunction(headerValue, rowValue) {
     return true; //must return a boolean, true if it passes the filter.
 }
 
-var events_tabulator = new Tabulator("#nav-monitor-events-text", {
+const events_tabulator = new Tabulator("#nav-monitor-events-text", {
     placeholder: "No Recent CloudWatch Events",
     selectable: true,
     height: 250,
@@ -251,10 +251,10 @@ var events_tabulator = new Tabulator("#nav-monitor-events-text", {
     ],
 });
 
-var display_selected_node = async function (node_id) {
-    var node = model.nodes.get(node_id);
+const display_selected_node = async function (node_id) {
+    const node = model.nodes.get(node_id);
     last_displayed = node_id;
-    var data = [];
+    const data = [];
     $("#nav-alarms-selected-item").html(node.header);
     const link = (node.alerts_link || node.console_link)();
     const consoleAnchor = `<a href="${link}" target="_blank" title="Navigate to Resource">${consoleIcon()}</a>`;
@@ -264,7 +264,7 @@ var display_selected_node = async function (node_id) {
     $("#nav-events-selected-item").html(node.header);
 
     // event alerts
-    for (let event_value of event_alerts.get_cached_events().current) {
+    for (const event_value of event_alerts.get_cached_events().current) {
         if (event_value.resource_arn == node.id) {
             event_value.detail.name = node.name;
             event_value.detail.resource_arn = event_value.resource_arn;
@@ -273,7 +273,7 @@ var display_selected_node = async function (node_id) {
     }
     alert_tabulator.replaceData(data);
     alarms.alarms_for_subscriber(node.id).then(function (subscriptions) {
-        for (let subscription of subscriptions) {
+        for (const subscription of subscriptions) {
             if (Number.isInteger(subscription.StateUpdated)) {
                 subscription.StateUpdated = new Date(
                     subscription.StateUpdated * 1000
@@ -288,64 +288,66 @@ var display_selected_node = async function (node_id) {
     });
     // cloudwatch events
     cw_events.get_cloudwatch_events(node.id).then(function (events) {
-        for (let event of events) {
+        for (const event of events) {
             event.timestamp = new Date(event.timestamp).toISOString();
         }
         events_tabulator.replaceData(events);
     });
 };
 
-var display_selected_tile = function (name, members) {  // NOSONAR
-    var alert_data = [];
-    var alarm_data = [];
-    var promises = [];
+function alarm_subscription_update_promises(
+    local_member_value,
+    local_node,
+    local_alarm_data,
+    local_promises
+) {
+    local_promises.push(
+        new Promise(function (resolve) {
+            const local_node_id = local_member_value.id;
+            const local_node_name = local_node.name;
+            alarms
+                .alarms_for_subscriber(local_node_id)
+                .then(function (subscriptions) {
+                    for (const subscription of subscriptions) {
+                        if (
+                            Number.isInteger(
+                                subscription.StateUpdated
+                            )
+                        ) {
+                            subscription.StateUpdated =
+                                new Date(
+                                    subscription.StateUpdated *
+                                    1000
+                                ).toISOString();
+                        }
+                        subscription.ARN = local_node_id;
+                        subscription.name = local_node_name;
+                    }
+                    local_alarm_data =
+                        local_alarm_data.concat(subscriptions);
+                    resolve();
+                });
+        })
+    );
+}
+
+const display_selected_tile = function (name, members) {
+    const alert_data = [];
+    const alarm_data = [];
+    const promises = [];
     $("#nav-alarms-selected-item").html("Tile: ".concat(name));
     $("#nav-alerts-selected-item").html("Tile: ".concat(name));
-    for (let member_value of members) {
-        var node = model.nodes.get(member_value.id);
+    for (const member_value of members) {
+        const node = model.nodes.get(member_value.id);
         if (node) {
-            for (let event_value of event_alerts.get_cached_events().current) {
+            for (const event_value of event_alerts.get_cached_events().current) {
                 if (member_value.id == event_value.resource_arn) {
                     event_value.detail.name = node.name;
                     event_value.detail.resource_arn = event_value.resource_arn;
                     alert_data.push(event_value.detail);
                 }
             }
-            (function (
-                local_member_value,
-                local_node,
-                local_alarm_data,
-                local_promises
-            ) {
-                local_promises.push(
-                    new Promise(function (resolve) {
-                        var local_node_id = local_member_value.id;
-                        var local_node_name = local_node.name;
-                        alarms
-                            .alarms_for_subscriber(local_node_id)
-                            .then(function (subscriptions) {
-                                for (let subscription of subscriptions) {
-                                    if (
-                                        Number.isInteger(
-                                            subscription.StateUpdated
-                                        )
-                                    ) {
-                                        subscription.StateUpdated =
-                                            new Date(
-                                                subscription.StateUpdated *
-                                                1000
-                                            ).toISOString();
-                                    }
-                                    subscription.ARN = local_node_id;
-                                    subscription.name = local_node_name;
-                                }
-                                local_alarm_data =
-                                    local_alarm_data.concat(subscriptions);
-                                resolve();
-                            });
-                    })
-                );
-            })(member_value, node, alarm_data, promises);
+            alarm_subscription_update_promises(member_value, node, alarm_data, promises);
         }
     }
     Promise.all(promises).then(function () {
@@ -356,7 +358,7 @@ var display_selected_tile = function (name, members) {  // NOSONAR
     });
 };
 
-var tile_view_click_listener = function (name, members) {
+const tile_view_click_listener = function (name, members) {
     if (tile_view.selected()) {
         last_displayed = {
             name: name,
@@ -366,7 +368,7 @@ var tile_view_click_listener = function (name, members) {
     }
 };
 
-var event_alert_listener = function () {
+const event_alert_listener = function () {
     refresh();
 };
 
@@ -388,9 +390,9 @@ $("#monitor-subscribe-alarms-button").click(async function () {
 });
 
 $("#monitor-unsubscribe-alarms-button").click(function () {
-    var selected_alarms = alarm_tabulator.getSelectedData();
-    var diagram = diagrams.shown();
-    var selected_nodes = diagram.network.getSelectedNodes();
+    const selected_alarms = alarm_tabulator.getSelectedData();
+    const diagram = diagrams.shown();
+    const selected_nodes = diagram.network.getSelectedNodes();
     confirmation.show(
         "Unsubscribe selected node" +
             (selected_nodes.length == 1 ? "" : "s") +
@@ -400,8 +402,8 @@ $("#monitor-unsubscribe-alarms-button").click(function () {
             (selected_alarms.length == 1 ? "" : "s") +
             "?",
         function () {
-            var promises = [];
-            for (let alarm of selected_alarms) {
+            const promises = [];
+            for (const alarm of selected_alarms) {
                 promises.push(
                     alarms.unsubscribe_from_alarm(
                         alarm.Region,
@@ -419,7 +421,7 @@ $("#monitor-unsubscribe-alarms-button").click(function () {
 
 function unsubscribe_alarm(row) {
     console.log(row);
-    var node = model.nodes.get(row.ARN);
+    const node = model.nodes.get(row.ARN);
     if (node) {
         // prompt if the node still exists
         confirmation.show(
@@ -453,8 +455,8 @@ function navigate_to_alarm(row) {
 function show_formatted_cloudwatch_event_data(row) {
     console.log(row);
     renderjson.set_show_to_level(1);
-    var data = JSON.parse(row.data);
-    var formatted_json = renderjson(data);
+    const data = JSON.parse(row.data);
+    const formatted_json = renderjson(data);
     $("#cloudwatch_event_data_json").html(formatted_json);
     $("#cloudwatch_event_data_view_modal").modal("show");
 }

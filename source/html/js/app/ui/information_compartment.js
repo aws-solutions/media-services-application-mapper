@@ -4,7 +4,7 @@
 import * as settings from "../settings.js";
 
 let compartment_state = "max";
-let settings_key = "info-compartment-state";
+const settings_key = "info-compartment-state";
 
 $("#information-compartment-up-down-button").click(() => {
     try {
@@ -19,7 +19,7 @@ $("#information-compartment-up-down-button").click(() => {
     $("#information-compartment-up-down-button").blur();
 });
 
-let maximize_compartment = () => {
+const maximize_compartment = () => {
     $("#information").fadeToggle("fast");
     $("#information-compartment-flex").fadeToggle("fast");
     $("#info-nav-flex").removeClass("border-bottom");
@@ -28,7 +28,7 @@ let maximize_compartment = () => {
     settings.put(settings_key, { state: compartment_state });
 };
 
-let minimize_compartment = () => {
+const minimize_compartment = () => {
     $("#information").fadeToggle("fast");
     $("#information-compartment-flex").fadeToggle("fast");
     $("#info-nav-flex").addClass("border-bottom");
@@ -37,9 +37,9 @@ let minimize_compartment = () => {
     settings.put(settings_key, { state: compartment_state });
 };
 
-let restore_state = async () => {
+const restore_state = async () => {
     try {
-        let value = await settings.get(settings_key);
+        const value = await settings.get(settings_key);
         console.log(`saved info compartment state = ${JSON.stringify(value)}`);
         if (value === null) {
             // no setting, keep the default state of maximized

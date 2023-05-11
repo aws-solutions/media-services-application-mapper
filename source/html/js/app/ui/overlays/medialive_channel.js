@@ -11,7 +11,7 @@ const decorate_alarms = function (drawing, font_size, width, height, id) {
     let alarm_count = 0;
     const cached_alarms = alarms.get_subscribers_with_alarms();
 
-    for (let item of cached_alarms.current) {
+    for (const item of cached_alarms.current) {
         if (item.ResourceArn == id) {
             alarm_count += item.AlarmCount;
         }
@@ -22,7 +22,7 @@ const decorate_alarms = function (drawing, font_size, width, height, id) {
 const decorate_events = function (drawing, font_size, width, height, id, data) {
     const isSinglePipeline = tools.has_single_pipeline(id, data);
     let pipeline_alerts = isSinglePipeline ? 0 : [0, 0];
-    for (let item of alert_events.get_cached_events().current_medialive) {
+    for (const item of alert_events.get_cached_events().current_medialive) {
         if (item.resource_arn == id) {
             if (isSinglePipeline) pipeline_alerts += 1;
             else pipeline_alerts[parseInt(item.detail.pipeline)] += 1;

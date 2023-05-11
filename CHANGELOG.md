@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - May 2023
+
+### Added
+
+* Integrated CDK into the solution to build CloudFormation templates
+* Integrated Service Catalog AppRegistry Application into the solution
+
+### Changed
+
+* Updated S3 Buckets versioning and enforceSSL to true for MSAMBrowserApp Stack
+
+### Removed
+
+* Removed existing CloudFormation templates from source/msam/build, source/events, and source/web-cloudformation directories
+* Updated Github Workflows
+
+### Contributors
+
+* @dch90
+
 ## [1.11.1] - April 2023
 
 ### Changed

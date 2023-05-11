@@ -66,3 +66,13 @@ npm test
 # fix the source file paths
 sed -i -- 's/SF:/SF:source\/html\//g' lcov.info
 echo coverage report is at $source_dir/html/lcov.info
+
+echo
+echo ---------------------------------
+echo CDK UNIT TESTS
+echo ---------------------------------
+echo
+cd $source_dir/cdk
+rm -rf node_modules
+npm test
+echo coverage report is at $source_dir/cdk/coverage/lcov.info
