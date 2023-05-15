@@ -1,6 +1,6 @@
 **[🚀 Solution Landing Page](https://aws.amazon.com/solutions/implementations/media-services-application-mapper/)** | **[🚧 Feature request](https://github.com/awslabs/aws-media-services-application-mapper/issues/new?assignees=&labels=feature-request%2C+enhancement&template=feature_request.md&title=)** | **[🐛 Bug Report](https://github.com/awslabs/aws-media-services-application-mapper/issues/new?assignees=&labels=bug%2C+triage&template=bug_report.md&title=)**
 
-Note: If you want to use the solution without building from source, navigate to Solution Landing Page
+Note: If you want to use the solution without building from source, navigate to Solution Landing Page 
 
 ## Table of contents
 
@@ -14,8 +14,8 @@ Note: If you want to use the solution without building from source, navigate to 
   - [Deploy](#deploy)
 - [File structure](#file-structure)
 - [License](#license)
+- [Anonymous Metrics](#anonymous-metrics)
   - [Navigate](#navigate)
-- [Anonymous Metrics](#metrics)
 
 <a name="solution-overview"></a>
 # Solution Overview
