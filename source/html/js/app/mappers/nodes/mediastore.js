@@ -17,7 +17,7 @@ export const update = function () {
         server
             .get(url + "/cached/mediastore-container", api_key)
             .then((cache_entries) => {
-                for (let cache_entry of cache_entries) {
+                for (const cache_entry of cache_entries) {
                     const container = JSON.parse(cache_entry.data);
                     const name = container.Name;
                     const id = container.ARN;

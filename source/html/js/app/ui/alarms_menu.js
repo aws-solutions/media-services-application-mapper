@@ -216,7 +216,7 @@ $("#subscribe_to_alarms_save").on("click", function () {
         $("#subscribe_to_alarms_modal").attr("data-node-ids")
     );
     const promises = [];
-    for (let alarm of selected_alarm_data) {
+    for (const alarm of selected_alarm_data) {
         promises.push(
             alarms.subscribe_to_alarm(
                 selected_alarm_region,
@@ -246,7 +246,7 @@ $("#subscribe_to_alarms_cancel").on("click", function () {
 // configure alarm subscription dialog
 regions.refresh().then(function (module) {
     $("#subscribe_to_alarms_region_dropdown").empty();
-    for (let region of module.get_available()) {
+    for (const region of module.get_available()) {
         const id = `alarm_subscribe_region_${region.RegionName}`;
         const button_html = `<a class="dropdown-item" href="#" id="${id}">${region.RegionName}</button><br>`;
         $("#subscribe_to_alarms_region_dropdown").append(button_html);

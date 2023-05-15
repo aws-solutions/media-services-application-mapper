@@ -1,0 +1,4465 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`msam-core snapshot test 1`] = `
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Media Services Application Mapper REST API and Tasks %%VERSION%%",
+  "Outputs": {
+    "APIHandlerArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "APIHandler",
+          "Arn",
+        ],
+      },
+    },
+    "APIHandlerName": {
+      "Value": {
+        "Ref": "APIHandler",
+      },
+    },
+    "EndpointURL": {
+      "Value": {
+        "Fn::Sub": "https://\${RestAPI}.execute-api.\${AWS::Region}.\${AWS::URLSuffix}/msam/",
+      },
+    },
+    "MediaServicesApplicationMapperCoreModuleStackAPIKey9BCD1F3FRef": {
+      "Value": {
+        "Ref": "APIKeyF5CDB6B6",
+      },
+    },
+    "MediaServicesApplicationMapperCoreModuleStackRestAPI418838E7Ref": {
+      "Value": {
+        "Ref": "RestAPI",
+      },
+    },
+    "RestAPIId": {
+      "Value": {
+        "Ref": "RestAPI",
+      },
+    },
+  },
+  "Parameters": {
+    "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef": {
+      "Type": "String",
+    },
+    "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn": {
+      "Type": "String",
+    },
+  },
+  "Resources": {
+    "APIHandler": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for handling API requests",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": {
+              "Ref": "DeleteAllResourceNotes",
+            },
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef",
+            },
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Handler": "app.app",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "APIHandlerInvokePermission": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Ref": "APIHandler",
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Sub": [
+            "arn:\${AWS::Partition}:execute-api:\${AWS::Region}:\${AWS::AccountId}:\${RestAPIId}/*",
+            {
+              "RestAPIId": {
+                "Ref": "RestAPI",
+              },
+            },
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "APIKeyF5CDB6B6": {
+      "Properties": {
+        "Description": "MSAM default API key",
+        "Enabled": true,
+      },
+      "Type": "AWS::ApiGateway::ApiKey",
+    },
+    "DeleteAllResourceNotes": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for handling deletion of all resource notes",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackResourceNotes46EADC5ERef",
+            },
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "STACKNAME": {
+              "Ref": "AWS::StackName",
+            },
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Handler": "app.delete_all_resource_notes",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "GenerateMetrics": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for periodically emitting metrics to multiple targets",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "STACKNAME": {
+              "Ref": "AWS::StackName",
+            },
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "GenerateMetricsEvent": {
+            "Properties": {
+              "Schedule": "rate(1 hour)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.generate_metrics",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "IncomingCloudwatchAlarm": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for handling CloudWatch alarm notifications",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Handler": "app.incoming_cloudwatch_alarm",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "MSAMElementalLiveActiveAlerts": {
+      "Properties": {
+        "Content": {
+          "description": "How many alerts are currently active on the encoder?",
+          "runtimeConfig": {
+            "aws:runShellScript": {
+              "properties": [
+                {
+                  "id": "0.aws:runShellScript",
+                  "runCommand": [
+                    "curl http://localhost/api/alerts.xml?filter=Active",
+                  ],
+                },
+              ],
+            },
+          },
+          "schemaVersion": "1.2",
+        },
+        "Tags": [
+          {
+            "Key": "MSAM-NodeType",
+            "Value": "ElementalLive",
+          },
+        ],
+      },
+      "Type": "AWS::SSM::Document",
+    },
+    "MSAMElementalLiveCompletedEvents": {
+      "Properties": {
+        "Content": {
+          "description": "How many Elemental Live events have completed?",
+          "runtimeConfig": {
+            "aws:runShellScript": {
+              "properties": [
+                {
+                  "id": "0.aws:runShellScript",
+                  "runCommand": [
+                    "curl -H "Accept: application/xml" http://localhost/api/live_events?filter=complete",
+                  ],
+                },
+              ],
+            },
+          },
+          "schemaVersion": "1.2",
+        },
+        "Tags": [
+          {
+            "Key": "MSAM-NodeType",
+            "Value": "ElementalLive",
+          },
+        ],
+      },
+      "Type": "AWS::SSM::Document",
+    },
+    "MSAMElementalLiveErroredEvents": {
+      "Properties": {
+        "Content": {
+          "description": "How many Elemental Live events have errored?",
+          "runtimeConfig": {
+            "aws:runShellScript": {
+              "properties": [
+                {
+                  "id": "0.aws:runShellScript",
+                  "runCommand": [
+                    "curl -H "Accept: application/xml" http://localhost/api/live_events?filter=error",
+                  ],
+                },
+              ],
+            },
+          },
+          "schemaVersion": "1.2",
+        },
+        "Tags": [
+          {
+            "Key": "MSAM-NodeType",
+            "Value": "ElementalLive",
+          },
+        ],
+      },
+      "Type": "AWS::SSM::Document",
+    },
+    "MSAMElementalLiveRunningEvents": {
+      "Properties": {
+        "Content": {
+          "description": "How many Elemental Live events have been running?",
+          "runtimeConfig": {
+            "aws:runShellScript": {
+              "properties": [
+                {
+                  "id": "0.aws:runShellScript",
+                  "runCommand": [
+                    "curl -H "Accept: application/xml" http://localhost/api/live_events?filter=running",
+                  ],
+                },
+              ],
+            },
+          },
+          "schemaVersion": "1.2",
+        },
+        "Tags": [
+          {
+            "Key": "MSAM-NodeType",
+            "Value": "ElementalLive",
+          },
+        ],
+      },
+      "Type": "AWS::SSM::Document",
+    },
+    "MSAMElementalLiveStatus": {
+      "Properties": {
+        "Content": {
+          "description": "Is the Elemental Live process running?",
+          "runtimeConfig": {
+            "aws:runShellScript": {
+              "properties": [
+                {
+                  "id": "0.aws:runShellScript",
+                  "runCommand": [
+                    "sudo /etc/init.d/elemental_se status || sudo systemctl status elemental_se",
+                  ],
+                },
+              ],
+            },
+          },
+          "schemaVersion": "1.2",
+        },
+        "Tags": [
+          {
+            "Key": "MSAM-NodeType",
+            "Value": "ElementalLive",
+          },
+        ],
+      },
+      "Type": "AWS::SSM::Document",
+    },
+    "MSAMSsmSystemStatus": {
+      "Properties": {
+        "Content": {
+          "description": "Is this instance reachable?",
+          "runtimeConfig": {
+            "aws:runShellScript": {
+              "properties": [
+                {
+                  "id": "0.aws:runShellScript",
+                  "runCommand": [
+                    "date",
+                  ],
+                },
+              ],
+            },
+          },
+          "schemaVersion": "1.2",
+        },
+        "Tags": [
+          {
+            "Key": "MSAM-NodeType",
+            "Value": "SsmSystem",
+          },
+        ],
+      },
+      "Type": "AWS::SSM::Document",
+    },
+    "ProcessSsmRunCommand": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for processing outputs from running a command on a managed instance",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "ProcessSsmRunCommandEvent": {
+            "Properties": {
+              "Pattern": {
+                "detail": {
+                  "status": [
+                    "Success",
+                    "Failed",
+                    "TimedOut",
+                  ],
+                },
+                "detail-type": [
+                  "EC2 Command Invocation Status-change Notification",
+                ],
+                "source": [
+                  "aws.ssm",
+                ],
+              },
+            },
+            "Type": "CloudWatchEvent",
+          },
+        },
+        "Handler": "app.process_ssm_run_command",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "ReportMetrics": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for periodically emitting metrics to multiple targets",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "STACKNAME": {
+              "Ref": "AWS::StackName",
+            },
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "ReportMetricsEvent": {
+            "Properties": {
+              "Schedule": "rate(24 hours)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.report_metrics",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "RestAPI": {
+      "Properties": {
+        "DefinitionBody": {
+          "definitions": {
+            "Empty": {
+              "title": "Empty Schema",
+              "type": "object",
+            },
+          },
+          "info": {
+            "title": "msam",
+            "version": "1.0",
+          },
+          "paths": {
+            "/cached": {
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to add items to the cache.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "put": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to add items to the cache.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+            "/cached/arn/{arn}": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to delete items from the cache.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve items from the cache by arn.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cached/{service}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "service",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve items from the cache under the service.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cached/{service}/{region}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "service",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve items from the cache under the service and region name.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/channel/{name}": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "name",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to delete a channel.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "name",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to get the nodes for a given channel name.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,GET,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "name",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to set the nodes for a given channel name.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "put": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "name",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to set the nodes for a given channel name.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+            "/channels": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to delete all tiles.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return all the current channel names.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/alarm/{alarm_name}/region/{region}/subscribe": {
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "alarm_name",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "put": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "alarm_name",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to subscribe one or more nodes to a CloudWatch alarm in a region.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+            "/cloudwatch/alarm/{alarm_name}/region/{region}/subscribers": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "alarm_name",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return subscribed nodes of a CloudWatch alarm in a region.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/alarm/{alarm_name}/region/{region}/unsubscribe": {
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "alarm_name",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "put": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "alarm_name",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to unsubscribe one or more nodes to a CloudWatch alarm in a region.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+            "/cloudwatch/alarms/all/{region}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "region",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve all CloudWatch alarms for a given region.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/alarms/subscribed": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to delete all alarm subscriptions.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return a unique list of all subscribed alarms in the database.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/alarms/subscriber/{resource_arn}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return all alarms subscribed to by a node.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/alarms/{alarm_state}/subscribers": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "alarm_state",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return nodes subscribed to alarms in a given alarm state (OK, ALARM, INSUFFICIENT_DATA).",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/events/all/{resource_arn}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return all CloudWatch events related to a node.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/events/state/{state}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "state",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve all alert events in a given state (set, clear).",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/events/state/{state}/{source}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "state",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "source",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve all alert events in a given state (set, clear) from a specific source.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/events/{resource_arn}/{start_time}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "start_time",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return all CloudWatch events related to a node from start_time to now.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/cloudwatch/events/{resource_arn}/{start_time}/{end_time}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "start_time",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "end_time",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return all CloudWatch events related to a node for a given time range.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/layout/nodes": {
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'PUT,POST,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "put": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point for setting nodes in a view. This adds new nodes and overwrites existing nodes. It does not replace the entire set.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+            "/layout/nodes/{view}/{node_id}": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "view",
+                    "required": true,
+                    "type": "string",
+                  },
+                  {
+                    "in": "path",
+                    "name": "node_id",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point for removing nodes from a view.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/layout/view/{view}": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "view",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point for retrieving all item positions in a view.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/layout/views": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to delete all views (diagrams).",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/notes": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return notes for a given resource.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return notes for all resource.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/notes/{resource_arn}": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return notes for a given resource.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to return notes for a given resource.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "text/plain",
+                  "application/json",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "resource_arn",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to update notes of a given resource.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+            "/ping": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to test the API key authentication and retrieve the build timestamp.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/regions": {
+              "get": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to retrieve all regions based on EC2.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+            },
+            "/settings/{item_key}": {
+              "delete": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "item_key",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to get or set the object value for a setting.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "get": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "item_key",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to get or set the object value for a setting.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "options": {
+                "consumes": [
+                  "application/json",
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "headers": {
+                      "Access-Control-Allow-Headers": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Methods": {
+                        "type": "string",
+                      },
+                      "Access-Control-Allow-Origin": {
+                        "type": "string",
+                      },
+                    },
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "passthroughBehavior": "when_no_match",
+                  "requestTemplates": {
+                    "application/json": "{"statusCode": 200}",
+                  },
+                  "responses": {
+                    "default": {
+                      "responseParameters": {
+                        "method.response.header.Access-Control-Allow-Headers": "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token,X-Api-Key'",
+                        "method.response.header.Access-Control-Allow-Methods": "'GET,PUT,POST,DELETE,OPTIONS'",
+                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      },
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "mock",
+                },
+              },
+              "post": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "item_key",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to get or set the object value for a setting.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+              "put": {
+                "consumes": [
+                  "application/json",
+                  "application/x-www-form-urlencoded",
+                ],
+                "parameters": [
+                  {
+                    "in": "path",
+                    "name": "item_key",
+                    "required": true,
+                    "type": "string",
+                  },
+                ],
+                "produces": [
+                  "application/json",
+                ],
+                "responses": {
+                  "200": {
+                    "description": "200 response",
+                    "schema": {
+                      "$ref": "#/definitions/Empty",
+                    },
+                  },
+                },
+                "security": [
+                  {
+                    "api_key": [],
+                  },
+                ],
+                "summary": "API entry point to get or set the object value for a setting.",
+                "x-amazon-apigateway-integration": {
+                  "contentHandling": "CONVERT_TO_TEXT",
+                  "httpMethod": "POST",
+                  "passthroughBehavior": "when_no_match",
+                  "responses": {
+                    "default": {
+                      "statusCode": "200",
+                    },
+                  },
+                  "type": "aws_proxy",
+                  "uri": {
+                    "Fn::Sub": "arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/\${APIHandler.Arn}/invocations",
+                  },
+                },
+              },
+            },
+          },
+          "schemes": [
+            "https",
+          ],
+          "securityDefinitions": {
+            "api_key": {
+              "in": "header",
+              "name": "x-api-key",
+              "type": "apiKey",
+            },
+          },
+          "swagger": "2.0",
+          "x-amazon-apigateway-binary-media-types": [
+            "application/octet-stream",
+            "application/x-tar",
+            "application/zip",
+            "audio/basic",
+            "audio/ogg",
+            "audio/mp4",
+            "audio/mpeg",
+            "audio/wav",
+            "audio/webm",
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+            "image/gif",
+            "video/ogg",
+            "video/mpeg",
+            "video/webm",
+          ],
+        },
+        "EndpointConfiguration": "EDGE",
+        "StageName": "msam",
+      },
+      "Type": "AWS::Serverless::Api",
+    },
+    "SsmRunCommand": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for running all applicable commands for a given managed instance",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "SsmRunCommandEvent": {
+            "Properties": {
+              "Schedule": "rate(1 minute)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.ssm_run_command",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "UpdateConnections": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for periodically updating the connection cache",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "UpdateConnectionsEvent": {
+            "Properties": {
+              "Schedule": "rate(5 minutes)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.update_connections",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "UpdateFromTags": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for handling diagram and tile updates from tags",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "UpdateFromTagsEvent": {
+            "Properties": {
+              "Schedule": "rate(5 minutes)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.update_from_tags",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "UpdateNodes": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for periodically updating the node cache",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "UpdateNodesEvent": {
+            "Properties": {
+              "Schedule": "rate(5 minutes)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.update_nodes",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "UpdateSsmNodes": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W58",
+              "reason": "Role with CloudWatch Logs permissions defined in different template.",
+            },
+            {
+              "id": "W89",
+              "reason": "Lambda does not need to be in a VPC.",
+            },
+            {
+              "id": "W92",
+              "reason": "Lambda does not need ReservedConcurrentExecutions.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "CodeUri": {
+          "Bucket": {
+            "Fn::Join": [
+              "",
+              [
+                "%%BUCKET_NAME%%-",
+                {
+                  "Ref": "AWS::Region",
+                },
+              ],
+            ],
+          },
+          "Key": "%%SOLUTION_NAME%%/%%VERSION%%/core_DEV_0_0_0.zip",
+        },
+        "Description": "MSAM Lambda for periodically updating the managed instances node cache",
+        "Environment": {
+          "Variables": {
+            "ALARMS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackAlarmsF6F9E932Ref",
+            },
+            "BUILD_STAMP": "DEV_0_0_0",
+            "CACHE_ITEM_TTL": {
+              "Ref": "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref",
+            },
+            "CHANNELS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackChannels0905569CRef",
+            },
+            "CLOUDWATCH_EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackCloudWatchEvents6ACDEB1ARef",
+            },
+            "CONTENT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackContent622D5AD1Ref",
+            },
+            "DELETE_NOTES_FUNCTION": "delete_notes_function",
+            "EVENTS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackEventsFE64F5A1Ref",
+            },
+            "LAYOUT_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackLayout9C4BCC32Ref",
+            },
+            "NOTES_TABLE_NAME": "media-services-application-mapper-resourcenotes",
+            "SETTINGS_TABLE_NAME": {
+              "Ref": "referencetoMediaServicesApplicationMapperDynamoDBModuleStackNestedStackDynamoDBModuleStackNestedStackResource588058D0OutputsMediaServicesApplicationMapperDynamoDBModuleStackSettingsDBCDD26FRef",
+            },
+            "SOLUTION_ID": "AwsSolution/SO0048/%%VERSION%%",
+            "VERSION": "%%VERSION%%",
+          },
+        },
+        "Events": {
+          "UpdateSsmNodesEvent": {
+            "Properties": {
+              "Schedule": "rate(5 minutes)",
+            },
+            "Type": "Schedule",
+          },
+        },
+        "Handler": "app.update_ssm_nodes",
+        "MemorySize": 2560,
+        "Role": {
+          "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
+        },
+        "Runtime": "python3.9",
+        "Tags": {
+          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+        },
+        "Timeout": 300,
+        "Tracing": "PassThrough",
+      },
+      "Type": "AWS::Serverless::Function",
+    },
+    "UsagePlanC18B28F1": {
+      "Properties": {
+        "Description": "MSAM default usage plan",
+        "UsagePlanName": "MSAM Usage Plan",
+      },
+      "Type": "AWS::ApiGateway::UsagePlan",
+    },
+    "UsagePlanKeyAssociation": {
+      "Properties": {
+        "KeyId": {
+          "Ref": "APIKeyF5CDB6B6",
+        },
+        "KeyType": "API_KEY",
+        "UsagePlanId": {
+          "Ref": "UsagePlanC18B28F1",
+        },
+      },
+      "Type": "AWS::ApiGateway::UsagePlanKey",
+    },
+  },
+  "Transform": "AWS::Serverless-2016-10-31",
+}
+`;

@@ -17,7 +17,7 @@ export const update = function () {
         server
             .get(url + "/cached/s3", api_key)
             .then(function (cache_entries) {
-                for (let cache_entry of cache_entries) {
+                for (const cache_entry of cache_entries) {
                     const bucket = JSON.parse(cache_entry.data);
                     bucket.Arn = "arn:aws:s3:::" + bucket.Name;
                     const name = bucket.Name;

@@ -34,6 +34,15 @@ class TestTags(unittest.TestCase):
                     side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "get_setting")):
             tags.update_diagrams()
             self.assertRaises(ClientError)
+        self.assertEqual(tags.boto3.resource.call_count, 3)
+        tags.boto3.resource.assert_any_call('dynamodb', config=tags.MSAM_BOTO3_CONFIG)
+        self.assertEqual(tags.boto3.resource.return_value.Table.call_count, 3)
+        tags.boto3.resource.return_value.Table.assert_any_call('content_table')
+        self.assertEqual(tags.boto3.resource.return_value.Table.return_value.scan.call_count, 3)
+        tags.boto3.resource.return_value.Table.return_value.scan.assert_any_call(
+            FilterExpression="contains(#data, :tagname)",
+            ExpressionAttributeNames={"#data": "data"},
+            ExpressionAttributeValues={":tagname": "MSAM-Diagram"})
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -50,10 +59,18 @@ class TestTags(unittest.TestCase):
         patched_resource.return_value.Table.return_value = mock_table
         tags.update_tiles()
 
-        # 
         with patch.object(channels, 'get_channel_nodes', return_value = [{"name": "new-tile", "id": "newtile"}]):
             tags.update_tiles()
         with patch.object(channels, 'get_channel_nodes', 
                     side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "get_channel_nodes")):
             tags.update_tiles()
             self.assertRaises(ClientError)
+        self.assertEqual(tags.boto3.resource.call_count, 3)
+        tags.boto3.resource.assert_any_call('dynamodb', config=tags.MSAM_BOTO3_CONFIG)
+        self.assertEqual(tags.boto3.resource.return_value.Table.call_count, 3)
+        tags.boto3.resource.return_value.Table.assert_any_call('content_table')
+        self.assertEqual(tags.boto3.resource.return_value.Table.return_value.scan.call_count, 3)
+        tags.boto3.resource.return_value.Table.return_value.scan.assert_any_call(
+            FilterExpression="contains(#data, :tagname)",
+            ExpressionAttributeNames={"#data": "data"},
+            ExpressionAttributeValues={":tagname": "MSAM-Tile"})

@@ -5,10 +5,10 @@ import * as server from "./server.js";
 import * as connections from "./connections.js";
 
 export function get_cloudwatch_events(arn) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/cloudwatch/events/all/${encodeURIComponent(
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/cloudwatch/events/all/${encodeURIComponent(
         arn
     )}`;
     return new Promise(function (resolve, reject) {

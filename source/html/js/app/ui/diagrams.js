@@ -5,13 +5,13 @@ import * as settings from "../settings.js";
 import * as diagram_factory from "./diagram_factory.js";
 import * as alert from "./alert.js";
 
-var diagrams = {};
+const diagrams = {};
 
-var selection_callbacks = [];
+const selection_callbacks = [];
 
-var shown_diagram = function () {
-    var shown = null;
-    for (let d of Object.values(diagrams)) {
+const shown_diagram = function () {
+    let shown = null;
+    for (const d of Object.values(diagrams)) {
         if (d.shown()) {
             shown = d;
             break;
@@ -20,25 +20,25 @@ var shown_diagram = function () {
     return shown;
 };
 
-var get_all = function () {
+const get_all = function () {
     return diagrams;
 };
 
-var add_selection_callback = function (callback) {
+const add_selection_callback = function (callback) {
     if (!selection_callbacks.includes(callback)) {
         selection_callbacks.push(callback);
     }
 };
 
-var add_diagram = function (name, view_id, save) {
+const add_diagram = function (name, view_id, save) {
     let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
-    var new_diagram = get_by_name(name);
+    let new_diagram = get_by_name(name);
     if (!new_diagram) {
         new_diagram = diagram_factory.create(name, view_id);
         diagrams[name] = new_diagram;
 
         new_diagram.add_singleclick_callback(function (diagram, event) {
-            for (let callback of selection_callbacks) {
+            for (const callback of selection_callbacks) {
                 try {
                     callback(diagram, event);
                 } catch (error) {
@@ -56,7 +56,7 @@ var add_diagram = function (name, view_id, save) {
     settings.get("max-number-displayed-diagrams").then(function (max_number_diagrams) {
         if (diagrams_shown > max_number_diagrams) {
             console.log("exceeded number of diagrams to show");
-            let diagram_to_hide = oldest_viewed_diagram();
+            const diagram_to_hide = oldest_viewed_diagram();
             hide_diagram(diagrams[diagram_to_hide.name], false, true);
         }
     });
@@ -64,20 +64,20 @@ var add_diagram = function (name, view_id, save) {
 };
 
 // hides the tab of the diagram
-var hide_diagram = function (diagram, show_tile, decrement) {
+const hide_diagram = function (diagram, show_tile, decrement) {
     $("#" + diagram.tab_id).hide();
     if (show_tile) {
         $("#channel-tiles-tab").tab("show");
     }
     if (decrement) {
-        let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
+        const diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
         window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown - 1);
     }
     window.localStorage.setItem(diagram.name, 'HIDDEN');
     alert.show(`${diagram.name} hidden`);
 };
 
-var remove_diagram = function (name) {
+const remove_diagram = function (name) {
     const view_id = diagrams[name].view_id;
     // remove page elements
     diagrams[name].remove();
@@ -93,17 +93,17 @@ var remove_diagram = function (name) {
     // remove from local storage
     window.localStorage.removeItem(name);
     // decrement number of diagrams shown
-    let diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
+    const diagrams_shown = parseInt(window.localStorage.getItem("DIAGRAMS_SHOWN"));
     window.localStorage.setItem("DIAGRAMS_SHOWN", diagrams_shown - 1);
     window.localStorage.removeItem(name);
 };
 
-var get_by_name = function (name) {
+const get_by_name = function (name) {
     return diagrams[name];
 };
 
-var save_diagrams = function () {
-    var diagram_map = _.map(Object.values(diagrams), function (item) {
+const save_diagrams = function () {
+    const diagram_map = _.map(Object.values(diagrams), function (item) {
         return {
             name: item.name,
             view_id: item.view_id,
@@ -119,16 +119,16 @@ var save_diagrams = function () {
         });
 };
 
-var load_diagrams = function () {
+const load_diagrams = function () {
     return new Promise((resolve) => {
-        let diagrams_shown = localStorage.getItem('DIAGRAMS_SHOWN');
+        const diagrams_shown = localStorage.getItem('DIAGRAMS_SHOWN');
         if (!diagrams_shown) {  // first load of the app, and no diagrams are being tracked yet
             localStorage.setItem('DIAGRAMS_SHOWN', 0);
             // load diagram names from the cloud on initialization
             settings.get("diagrams").then(function (saved_diagrams) {
                 console.log("load user-defined diagrams: " + JSON.stringify(saved_diagrams));
                 if (Array.isArray(saved_diagrams) && saved_diagrams.length > 0) {
-                    for (let diagram of saved_diagrams) {
+                    for (const diagram of saved_diagrams) {
                         add_diagram(diagram.name, diagram.view_id, false);
                     }
                 } else {
@@ -149,13 +149,13 @@ var load_diagrams = function () {
 };
 
 function have_all(node_ids) {
-    var results = [];
+    const results = [];
     if (!Array.isArray(node_ids)) {
         node_ids = [node_ids];
     }
-    for (let name in diagrams) {
-        var diagram = diagrams[name];
-        var found = _.compact(diagram.nodes.get(node_ids));
+    for (const name in diagrams) {
+        const diagram = diagrams[name];
+        const found = _.compact(diagram.nodes.get(node_ids));
         if (found.length === node_ids.length) {
             results.push(diagram);
         }
@@ -164,14 +164,14 @@ function have_all(node_ids) {
 }
 
 function have_any(node_ids, match_sort = false) {
-    var results = [];
+    const results = [];
     node_ids = node_ids || [];
     if (!Array.isArray(node_ids)) {
         node_ids = [node_ids];
     }
     node_ids = node_ids.sort();
-    for (let diagram of Object.values(diagrams)) {
-        var intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids);
+    for (const diagram of Object.values(diagrams)) {
+        const intersect = _.intersection(diagram.nodes.getIds().sort(), node_ids);
         if (intersect.length > 0) {
             results.push({
                 diagram: diagram.name,
@@ -189,8 +189,8 @@ function have_any(node_ids, match_sort = false) {
 }
 
 function get_hidden_diagrams() {
-    let hidden_diagrams = []
-    for (let [key, value] of Object.entries(localStorage)) {
+    const hidden_diagrams = [];
+    for (const [key, value] of Object.entries(localStorage)) {
         if (key != "DIAGRAMS_SHOWN" && value == "HIDDEN") {
             hidden_diagrams.push({ "hidden_diagram": key });
         }
@@ -201,10 +201,10 @@ function get_hidden_diagrams() {
 async function restore_diagrams() {
     // zero out the number of diagrams shown and start the count over
     localStorage.setItem('DIAGRAMS_SHOWN', 0);
-    let hidden_diagrams = get_hidden_diagrams();
+    const hidden_diagrams = get_hidden_diagrams();
     settings.get("diagrams").then(function (saved_diagrams) {
-        for (let diagram of saved_diagrams) {
-            let this_diagram = add_diagram(diagram.name, diagram.view_id, false);
+        for (const diagram of saved_diagrams) {
+            const this_diagram = add_diagram(diagram.name, diagram.view_id, false);
             if (_.find(hidden_diagrams, { 'hidden_diagram': diagram.name })) {
                 hide_diagram(this_diagram, false, true);
             }
@@ -215,20 +215,20 @@ async function restore_diagrams() {
 }
 
 function oldest_viewed_diagram() {
-    let displayed_diagrams = [];
+    const displayed_diagrams = [];
     const local_lodash = _;
-    for (let [key, value] of Object.entries(localStorage)) {
+    for (const [key, value] of Object.entries(localStorage)) {
         if (key != "DIAGRAMS_SHOWN") {
             displayed_diagrams.push({ "name": key, "time": value });
         }
     }
-    let sorted_diagrams = local_lodash.sortBy(displayed_diagrams, ['time']);
+    const sorted_diagrams = local_lodash.sortBy(displayed_diagrams, ['time']);
     return (sorted_diagrams.shift());
 }
 
 const update_lock_visibility = () => {
     // are we showing a diagram or tiles?
-    let diagram = shown_diagram();
+    const diagram = shown_diagram();
     if (diagram) {
         // show the lock
         window.localStorage.setItem(diagram.name, Date.now());
@@ -242,7 +242,7 @@ const update_lock_visibility = () => {
 
 const update_hide_visibility = () => {
     // are we showing a diagram or tiles?
-    let diagram = shown_diagram();
+    const diagram = shown_diagram();
     if (diagram) {
         $("#diagram-hide-button").removeClass("d-none");
     } else {
@@ -265,7 +265,7 @@ const update_lock_state = () => {
         "diagram_remove_diagram",
     ];
     // only update if we're showing a diagram
-    let diagram = shown_diagram();
+    const diagram = shown_diagram();
     if (diagram) {
         // update the date of the diagram
         window.localStorage.setItem(diagram.name, Date.now());
@@ -285,7 +285,7 @@ const update_lock_state = () => {
             };
             diagram.network.setOptions(options);
             // update menu items for diagrams
-            for (let id of menu_ids) {
+            for (const id of menu_ids) {
                 if (locked) {
                     $(`#${id}`).addClass("disabled");
                 } else {
@@ -311,7 +311,7 @@ const refresh_hide_compartment = () => {
     const buttonContent = `<div id="diagram-hide-button" style="${style}"><span title="Hide Diagram" id="diagram-hide-icon" class="material-icons">cancel_presentation</span></div>`;
     buttonDiv.replaceWith(buttonContent);
     $("#diagram-hide-button").click(() => {
-        let diagram = shown_diagram();
+        const diagram = shown_diagram();
         if (diagram) {
             hide_diagram(diagram, true, true);
         }
@@ -362,8 +362,8 @@ const hidden_diagrams_tabulator = new Tabulator(
                 field: "hidden_diagram",
                 headerFilter: true,
                 cellClick: function (e, cell) {
-                    let name = cell.getRow()._row.data.hidden_diagram;
-                    let this_diagram = add_diagram(name, _.snakeCase(name), false);
+                    const name = cell.getRow()._row.data.hidden_diagram;
+                    const this_diagram = add_diagram(name, _.snakeCase(name), false);
                     this_diagram.show();
                     $("#hidden_diagrams").offcanvas("hide");
                 }
@@ -388,7 +388,7 @@ const load_hidden_diagrams_list = () => {
     $("#diagram-list-button").click(() => {
         $("#hidden_diagrams_lg").empty();
         // populate div inside the offcanvas with list of hidden diagrams
-        let hidden_diagrams_list = get_hidden_diagrams();
+        const hidden_diagrams_list = get_hidden_diagrams();
         hidden_diagrams_tabulator.replaceData(hidden_diagrams_list);
         $("#hidden_diagrams").offcanvas("show");
     });
@@ -412,11 +412,11 @@ load_diagrams().then(() => {
         update_lock_state();
         update_hide_visibility();
     });
-    var current_url = new URL(window.location);
-    var override_diagram = current_url.searchParams.get("diagram");
+    const current_url = new URL(window.location);
+    const override_diagram = current_url.searchParams.get("diagram");
     if (override_diagram) {
         console.log("Show diagram " + override_diagram + " on start");
-        var diagram = get_by_name(override_diagram);
+        const diagram = get_by_name(override_diagram);
         diagram.show();
     }
 });

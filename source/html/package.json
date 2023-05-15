@@ -1,4 +1,6 @@
 {
+  "license": "Apache-2.0",
+  "description": "Media Services Application Mapper Browser Application",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "bootstrap": "^5.1.3",

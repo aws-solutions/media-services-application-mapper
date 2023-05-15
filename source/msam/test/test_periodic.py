@@ -26,11 +26,13 @@ class TestPeriodic(unittest.TestCase):
         """
         from chalicelib import periodic
         from chalicelib import cloudwatch
-        periodic.update_alarms()
+        result = periodic.update_alarms()
+        self.assertTrue(result)
         # with actual return values
         with patch.object(cloudwatch, 'all_subscribed_alarms',
                             return_value=[{'Region': 'us-east-1', 'AlarmName': 'this-alarm'}]):
-            periodic.update_alarms()
+            result = periodic.update_alarms()
+            self.assertTrue(result)
         # test with Exception
         with patch.object(cloudwatch, 'all_subscribed_alarms',  
                             side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "all_subscribed_alarms")):
@@ -47,7 +49,8 @@ class TestPeriodic(unittest.TestCase):
         """
         from chalicelib import periodic
         from chalicelib import connections
-        periodic.update_connections()
+        result = periodic.update_connections()
+        self.assertTrue(result)
         with patch.object(connections, 'update_connection_ddb_items', 
                             side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "update_connections")):
             periodic.update_connections()
@@ -63,7 +66,11 @@ class TestPeriodic(unittest.TestCase):
         Test the update_nodes function
         """
         from chalicelib import periodic
+        original_function = periodic.update_nodes_generic
+        periodic.update_nodes_generic = MagicMock()
         periodic.update_nodes()
+        periodic.update_nodes_generic.assert_called_once()
+        periodic.update_nodes_generic = original_function
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -74,7 +81,11 @@ class TestPeriodic(unittest.TestCase):
         Test the update_ssm_nodes function
         """
         from chalicelib import periodic
+        original_function = periodic.update_nodes_generic
+        periodic.update_nodes_generic = MagicMock()
         periodic.update_ssm_nodes()
+        periodic.update_nodes_generic.assert_called_once()
+        periodic.update_nodes_generic = original_function
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -86,11 +97,13 @@ class TestPeriodic(unittest.TestCase):
         """
         from chalicelib import periodic
         from chalicelib import settings
-        periodic.update_nodes_generic("function1", "function2", "some_key")
+        result = periodic.update_nodes_generic("function1", "function2", "some_key")
+        self.assertIsNone(result)
 
         # None 
         with patch.object(settings, 'get_setting', return_value=None):
-            periodic.update_nodes_generic("function1", "function2", "some_key")
+            result = periodic.update_nodes_generic("function1", "function2", "some_key")
+            self.assertIsNone(result)
 
         # actual returned regions
         with patch.object(settings, 'get_setting', return_value=['global', 'us-west-2']):
@@ -100,7 +113,8 @@ class TestPeriodic(unittest.TestCase):
         # Exception
         with patch.object(settings, 'get_setting',
                 side_effect=ClientError({"Error": {"Code": "400", "Message": "SomeClientError"}}, "update_nodes_generic")):
-            periodic.update_nodes_generic("function1", "function2", "some_key")
+            result = periodic.update_nodes_generic("function1", "function2", "some_key")
+            self.assertIsNone(result)
 
     @patch('os.environ')
     @patch('boto3.resource')
@@ -111,7 +125,12 @@ class TestPeriodic(unittest.TestCase):
         Test the update_from_tags function
         """
         from chalicelib import periodic
+        tags = periodic.tags
+        periodic.tags = MagicMock()
         periodic.update_from_tags()
+        periodic.tags.update_diagrams.assert_called_once()
+        periodic.tags.update_tiles.assert_called_once()
+        periodic.tags = tags
 
     @patch('boto3.client')
     @patch('boto3.resource')
@@ -123,18 +142,21 @@ class TestPeriodic(unittest.TestCase):
         """
         from chalicelib import periodic
         
-        doc_ids = {"DocumentIdentifiers": [{"Name": "DocName", "Tags": [{"Key": "MSAM-NodeType", "Value": "stuff"}]}]}
+        doc_ids = {"DocumentIdentifiers": [{"Name": "DocName", "Tags": [{"Key": "MSAM-NodeType", "Value": "ElementalLive"}]}]}
         patched_client.return_value.list_documents.return_value = doc_ids
         patched_client.return_value.send_command.return_value = {}
         patched_resource.return_value.Table.return_value.query.return_value.get.return_value = \
             [{"data": "{\"Tags\": {\"MSAM-NodeType\": \"ElementalLive\"}, \"Id\": \"someid\"}"}]
-        periodic.ssm_run_command()
+        result = periodic.ssm_run_command()
+        self.assertIsNone(result)
         
         patched_client.return_value.list_documents.side_effect = CLIENT_ERROR
         periodic.ssm_run_command()
-
+        self.assertRaises(ClientError)
+        patched_client.return_value.list_documents.side_effect = None
         patched_client.return_value.send_command.side_effect = CLIENT_ERROR
         periodic.ssm_run_command()
+        self.assertRaises(ClientError)
 
 
     @patch('boto3.resource')
@@ -174,9 +196,12 @@ class TestPeriodic(unittest.TestCase):
             print(item)
             mocked_event.to_dict.return_value = item
             periodic.process_ssm_run_command(mocked_event)
-    
+            print()
+        self.assertEqual(periodic.boto3.client.return_value.put_metric_data.call_count, len(return_values))
+        periodic.boto3.client.return_value.put_metric_data.reset_mock()
         mock_obj.get_log_events.side_effect = CLIENT_ERROR
         periodic.process_ssm_run_command(mocked_event)
+        self.assertEqual(periodic.boto3.client.return_value.put_metric_data.call_count, 0)
             
     @patch('os.environ')
     @patch('boto3.resource')
@@ -188,6 +213,7 @@ class TestPeriodic(unittest.TestCase):
         """
         from chalicelib import periodic
         periodic.generate_metrics("stack_name")
+        self.assertEqual(periodic.boto3.client.return_value.put_metric_data.call_count, len(periodic.MONITORED_SERVICES))
 
     @patch('boto3.client')
     @patch('boto3.resource')
@@ -202,6 +228,7 @@ class TestPeriodic(unittest.TestCase):
         # invalid uuid
         with patch.object(settings, 'get_setting', return_value="invalid-uuid"):
             periodic.report_metrics("stack_name", 1)
+            self.assertEqual(periodic.boto3.resource.return_value.Metric.return_value.get_statistics.call_count, 0)
         
         # valid uuid
         mock_req = MagicMock()
@@ -210,3 +237,4 @@ class TestPeriodic(unittest.TestCase):
             with patch.object(requests, 'post', return_value=mock_req):
                 periodic.SOLUTION_ID = "AwsSolution/SO0048/v1.0.0"
                 periodic.report_metrics("stack_name", 1)
+                self.assertEqual(periodic.boto3.resource.return_value.Metric.return_value.get_statistics.call_count, 14)

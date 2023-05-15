@@ -70,18 +70,29 @@ template_dir="$PWD" # /deployment
 template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets"
 source_dir="$template_dir/../source"
+msam_core_dist_dir="$source_dir/cdk/dist"
 
 echo "------------------------------------------------------------------------------"
 echo "[Init] Clean old dist, node_modules and bower_components folders"
 echo "------------------------------------------------------------------------------"
+
+# <root_dir>/deployment/global-s3-assets
 echo "rm -rf $template_dist_dir"
 rm -rf $template_dist_dir
 echo "mkdir -p $template_dist_dir"
 mkdir -p $template_dist_dir
+
+# <root_dir>/deployment/regional-s3-assets
 echo "rm -rf $build_dist_dir"
 rm -rf $build_dist_dir
 echo "mkdir -p $build_dist_dir"
 mkdir -p $build_dist_dir
+
+# <root_dir>/source/cdk/dist
+echo "rm -rf $msam_core_dist_dir"
+rm -rf "$msam_core_dist_dir"
+echo "mkdir -p $msam_core_dist_dir"
+mkdir -p "$msam_core_dist_dir"
 
 # date stamp for this build
 STAMP=`date +%s`
@@ -97,19 +108,16 @@ echo ------------------------------------
 echo
 
 cd msam
-chalice package --merge-template merge_template.json build/
+chalice package $msam_core_dist_dir
 if [ $? -ne 0 ]; then
   echo "ERROR: running chalice package"
   exit 1
 fi
-cd build/
+cd $msam_core_dist_dir
 # mv zip file to regional asset dir
 mv deployment.zip $build_dist_dir/core_$STAMP.zip
 # rename sam.json
 mv sam.json msam-core-release.template
-# cp all the templates in build to templates dir
-echo "copying all templates in msam/build dir to $template_dist_dir"
-cp *.template $template_dist_dir
 
 # MSAM event collector template
 echo
@@ -136,7 +144,6 @@ zip -r9 ../$EVENTS_ZIP .
 cd ../
 zip -g9 $EVENTS_ZIP cloudwatch_alarm.py media_events.py
 mv $EVENTS_ZIP $build_dist_dir/events_$STAMP.zip
-cp msam-events-release.template $template_dist_dir
 
 # MSAM database custom resource
 echo
@@ -199,7 +206,57 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 mv webcontent_resource.zip $build_dist_dir/webcontent_resource_$STAMP.zip
-cp msam-browser-app-release.template $template_dist_dir
+
+echo
+echo ------------------------------------
+echo Synthesize CDK
+echo ------------------------------------
+echo
+
+# install npm package dependencies
+cd $source_dir/cdk
+
+echo "cdk synth"
+npm run synth
+
+# remove all output except cfn template files
+echo "removing unnecessary cdk output files..."
+cd cdk.out
+rm manifest.json tree.json *.assets.json
+
+# rename and copy output root cfn template to <root_dir>/deployment/global-s3-assets
+echo "renaming and moving root cfn template to deployment/global-s3-assets..."
+mv \
+  MediaServicesApplicationMapper.template.json \
+  "${template_dist_dir}/aws-media-services-application-mapper-release.template"
+
+# rename and copy output nested cfn templates to <root_dir>/deployment/global-s3-assets
+echo "renaming and moving nested cfn templates to deployment/global-s3-assets..."
+declare -ar nested_stacks_names_src=( \
+  BrowserAppModuleStack \
+  CoreModuleStack \
+  DynamoDBModuleStack \
+  EventsModuleStack \
+  IAMModuleStack \
+)
+declare -ar nested_stacks_names_dst=( \
+  browser-app \
+  core \
+  dynamodb \
+  events \
+  iam-roles \
+)
+
+for i in `seq 0 $((${#nested_stacks_names_src[@]} - 1))`; do
+  mv \
+    *${nested_stacks_names_src[$i]}????????.nested.template.json \
+    "${template_dist_dir}/msam-${nested_stacks_names_dst[$i]}-release.template"
+done
+
+# run cdk solution helper
+echo "running deployment/cdk-solution-helper/index.js..."
+cd $template_dir/cdk-solution-helper
+node index.js
 
 # update symbols in templates
 echo "updating template symbols"

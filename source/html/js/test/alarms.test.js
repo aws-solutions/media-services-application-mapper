@@ -7,7 +7,6 @@ import { jest } from '@jest/globals';
 import * as alarms from "../app/alarms.js";
 import * as server from "../app/server.js";
 import * as connections from "../app/connections.js";
-import * as settings from "../app/settings.js";
 
 const internals = alarms.exported_for_unit_tests;
 
@@ -24,7 +23,7 @@ test('get_subscribers_with_alarms', () => {
 });
 
 test('add_callback', () => {
-    let caller = jest.fn();
+    const caller = jest.fn();
     alarms.add_callback(caller);
     expect(internals.listeners).toContain(caller);
 });

@@ -55,7 +55,7 @@ const create = (
 
     const lines = wordWrap(node_name, max_line_length);
 
-    for (let value of lines) {
+    for (const value of lines) {
         const nameLabel = drawing.text(value).y(pos_y);
         nameLabel.font({ family: font_family, size: font_size });
         nameLabel.cx(width / 2);
@@ -64,7 +64,7 @@ const create = (
 
     // give matching overlays a chance to supplement 'drawing'
     let found = false;
-    for (let overlay of overlays.all) {
+    for (const overlay of overlays.all) {
         if (overlay.match_type == (generic_type_name || type_name)) {
             overlay.decorate(drawing, font_size, width, height, id, data);
             found = true;
@@ -73,7 +73,7 @@ const create = (
 
     // use the default overlay if needed
     if (!found) {
-        let overlay = overlays.default_overlay;
+        const overlay = overlays.default_overlay;
         overlay.decorate(drawing, font_size, width, height, id, data);
     }
 

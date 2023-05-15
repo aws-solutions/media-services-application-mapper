@@ -11,6 +11,7 @@ deployment/test_venv
 **/global-s3-assets
 **/regional-s3-assets
 **/assets
+**/open-source
 **/*.zip
 **/package/
 
@@ -21,3 +22,24 @@ node_modules/
 coverage.lcov
 coverage.xml*
 .coverage
+
+source/cdk/*.js
+!source/cdk/jest.config.js
+source/cdk/*.d.ts
+source/cdk/node_modules
+source/cdk/coverage
+
+# CDK asset staging directory
+source/cdk/.cdk.staging
+source/cdk/cdk.out
+source/cdk/lib/*.d.ts
+source/cdk/test/*.d.ts
+source/cdk/bin/*.d.ts
+source/cdk/lib/*.js
+source/cdk/test/*.js
+source/cdk/bin/*.js
+cdk.context.json
+source/cdk/dist/*
+
+test_venv
+trufflehog

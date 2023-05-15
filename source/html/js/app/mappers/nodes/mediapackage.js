@@ -16,7 +16,7 @@ const update_channels = function (items) {
         server
             .get(url + "/cached/mediapackage-channel", api_key)
             .then((channels) => {
-                for (let cache_entry of channels) {
+                for (const cache_entry of channels) {
                     const channel = JSON.parse(cache_entry.data);
                     const name = channel.Id;
                     const id = channel.Arn;
@@ -131,7 +131,7 @@ const update_endpoints = function (items) {
         server
             .get(url + "/cached/mediapackage-origin-endpoint", api_key)
             .then((origin_endpoints) => {
-                for (let cache_entry of origin_endpoints) {
+                for (const cache_entry of origin_endpoints) {
                     const endpoint = JSON.parse(cache_entry.data);
                     const name = endpoint.Id;
                     const id = endpoint.Arn;
@@ -150,12 +150,12 @@ const update_endpoints = function (items) {
                         name: name,
                         size: 55,
                         render: {
-                            normal_unselected: (function () {   // NOSONAR
+                            normal_unselected: (function () {
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_rgb = rgb;
                                 const local_id = id;
-                                return function () {    // NOSONAR
+                                return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
                                         local_name,
@@ -164,12 +164,12 @@ const update_endpoints = function (items) {
                                     );
                                 };
                             })(),
-                            normal_selected: (function () { // NOSONAR
+                            normal_selected: (function () {
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_rgb = rgb;
                                 const local_id = id;
-                                return function () {    // NOSONAR
+                                return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
                                         local_name,
@@ -178,11 +178,11 @@ const update_endpoints = function (items) {
                                     );
                                 };
                             })(),
-                            alert_unselected: (function () {    // NOSONAR
+                            alert_unselected: (function () {
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_id = id;
-                                return function () {    // NOSONAR
+                                return function () {
                                     return local_svg_node.unselected(
                                         local_node_type,
                                         local_name,
@@ -191,11 +191,11 @@ const update_endpoints = function (items) {
                                     );
                                 };
                             })(),
-                            alert_selected: (function () {  // NOSONAR
+                            alert_selected: (function () {
                                 const local_node_type = node_type;
                                 const local_name = name;
                                 const local_id = id;
-                                return function () {    // NOSONAR
+                                return function () {
                                     return local_svg_node.selected(
                                         local_node_type,
                                         local_name,

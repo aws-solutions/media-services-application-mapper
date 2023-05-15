@@ -68,7 +68,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 's3_buckets', return_value=[{"Name": "mybucket"}]):
-            nodes.s3_bucket_ddb_items()
+            items = nodes.s3_bucket_ddb_items()
+            self.assertEqual(len(items), 1)
 
 
     def test_cloudfront_distribution_ddb_items(self, patched_env, patched_resource,
@@ -78,7 +79,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'cloudfront_distributions', return_value=[{"ARN": "some-arn"}]):
-            nodes.cloudfront_distribution_ddb_items()
+            items = nodes.cloudfront_distribution_ddb_items()
+            self.assertEqual(len(items), 1)
 
     def test_medialive_channel_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -87,7 +89,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'medialive_channels', return_value=[{"Arn": "some-arn"}]):
-            nodes.medialive_channel_ddb_items("us-east-1")
+            items = nodes.medialive_channel_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_medialive_input_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -96,7 +99,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'medialive_inputs', return_value=[{"Arn": "some-arn"}]):
-            nodes.medialive_input_ddb_items("us-east-1")
+            items = nodes.medialive_input_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_medialive_multiplex_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -105,7 +109,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'medialive_multiplexes', return_value=[{"Arn": "some-arn"}]):
-            nodes.medialive_multiplex_ddb_items("us-east-1")
+            items = nodes.medialive_multiplex_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_mediapackage_channel_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -114,7 +119,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'mediapackage_channels', return_value=[{"Arn": "some-arn"}]):
-            nodes.mediapackage_channel_ddb_items("us-east-1")
+            items = nodes.mediapackage_channel_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_mediapackage_origin_endpoint_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -123,7 +129,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'mediapackage_origin_endpoints', return_value=[{"Arn": "some-arn"}]):
-            nodes.mediapackage_origin_endpoint_ddb_items("us-east-1")
+            items = nodes.mediapackage_origin_endpoint_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_mediastore_container_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -132,7 +139,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'mediastore_containers', return_value=[{"ARN": "some-arn"}]):
-            nodes.mediastore_container_ddb_items("us-east-1")
+            items = nodes.mediastore_container_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_mediaconnect_flow_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -141,7 +149,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'mediaconnect_flows', return_value=[{"FlowArn": "some-arn"}]):
-            nodes.mediaconnect_flow_ddb_items("us-east-1")
+            items = nodes.mediaconnect_flow_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
 
     def test_mediatailor_configuration_ddb_items(self, patched_env, patched_resource,
@@ -151,7 +160,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'mediatailor_configurations', return_value=[{"PlaybackConfigurationArn": "some-arn"}]):
-            nodes.mediatailor_configuration_ddb_items("us-east-1")
+            items = nodes.mediatailor_configuration_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_ssm_managed_instance_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -160,7 +170,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'ssm_managed_instances', return_value=[{"Id": "some-arn"}]):
-            nodes.ssm_managed_instance_ddb_items("us-east-1")
+            items = nodes.ssm_managed_instance_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_ec2_instance_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -169,7 +180,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'ec2_instances', return_value=[{"InstanceId": "some-arn"}]):
-            nodes.ec2_instance_ddb_items("us-east-1")
+            items = nodes.ec2_instance_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_link_device_ddb_items(self, patched_env, patched_resource,
                                        patched_client):
@@ -178,7 +190,8 @@ class TestNodes(unittest.TestCase):
         """
         from chalicelib import nodes
         with patch.object(nodes, 'link_devices', return_value=[{"Arn": "some-arn"}]):
-            nodes.link_device_ddb_items("us-east-1")
+            items = nodes.link_device_ddb_items("us-east-1")
+            self.assertEqual(len(items), 1)
 
     def test_node_to_ddb_item(self, patched_env, patched_resource,
                                        patched_client):
@@ -186,7 +199,11 @@ class TestNodes(unittest.TestCase):
         Test the node_to_ddb_item function
         """
         from chalicelib import nodes
-        nodes.node_to_ddb_item("this-arn", "medialive", "us-east-1", {"data": "value"})
+        item = nodes.node_to_ddb_item("this-arn", "medialive", "us-east-1", {"data": "value"})
+        self.assertEqual(item['arn'], 'this-arn')
+        self.assertEqual(item['region'], 'us-east-1')
+        self.assertEqual(item['service'], 'medialive')
+        self.assertEqual(item['data'], '{"data": "value"}')
 
     def test_cloudfront_distributions(self, patched_env, patched_resource,
                                        patched_client):
@@ -196,10 +213,12 @@ class TestNodes(unittest.TestCase):
         from chalicelib import nodes
         patched_client.return_value.list_distributions.return_value = {"DistributionList": {"Items": [{"ARN": ARN, "LastModifiedTime": "time"}]}}
         patched_client.return_value.list_tags_for_resource.return_value = {'Tags': {'Items': [{'Key': 'string', 'Value': 'string'}]}}
-        nodes.cloudfront_distributions()
+        items = nodes.cloudfront_distributions()
+        self.assertEqual(len(items), 1)
 
         patched_client.return_value.list_tags_for_resource.side_effect = CLIENT_ERROR
-        nodes.cloudfront_distributions()
+        items = nodes.cloudfront_distributions()
+        self.assertEqual(len(items), 1)
 
     def test_s3_buckets(self, patched_env, patched_resource,
                                        patched_client):
@@ -209,10 +228,12 @@ class TestNodes(unittest.TestCase):
         from chalicelib import nodes
         patched_client.return_value.list_buckets.return_value = {"Buckets": [{"Name": "BucketName", "CreationDate": "time"}]}
         patched_client.return_value.get_bucket_tagging.return_value = {'TagSet': [{'Key': 'string', 'Value': 'string'}]}
-        nodes.s3_buckets()
+        buckets = nodes.s3_buckets()
+        self.assertEqual(len(buckets), 1)
 
         patched_client.return_value.get_bucket_tagging.side_effect = CLIENT_ERROR
-        nodes.s3_buckets()
+        buckets = nodes.s3_buckets()
+        self.assertEqual(len(buckets), 1)
 
     def test_mediapackage_channels(self, patched_env, patched_resource,
                                        patched_client):
@@ -224,7 +245,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_channels.side_effect =[{"Channels": ["channelA"], "NextToken": "token"},
                 {"Channels": ["channelA"]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.mediapackage_channels(REGION)
+            items = nodes.mediapackage_channels(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_mediapackage_origin_endpoints(self, patched_env, patched_resource,
                                        patched_client):
@@ -236,7 +258,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_origin_endpoints.side_effect = [{"OriginEndpoints": ["channelA"], "NextToken": "token"},
         {"OriginEndpoints": ["channelA"]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.mediapackage_origin_endpoints(REGION)
+            items = nodes.mediapackage_origin_endpoints(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_medialive_channels(self, patched_env, patched_resource,
                                        patched_client):
@@ -248,7 +271,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_channels.side_effect = [{"Channels": ["channelA"], "NextToken": "token"},
             {"Channels": ["channelA"]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.medialive_channels(REGION)
+            items = nodes.medialive_channels(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_medialive_inputs(self, patched_env, patched_resource,
                                        patched_client):
@@ -260,7 +284,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_inputs.side_effect = [{"Inputs": ["channelA"], "NextToken": "token"},
             {"Inputs": ["channelA"]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.medialive_inputs(REGION)
+            items = nodes.medialive_inputs(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_medialive_multiplexes(self, patched_env, patched_resource,
                                        patched_client):
@@ -273,7 +298,8 @@ class TestNodes(unittest.TestCase):
             {"Multiplexes": [{"Id": "channelA"}]}]
         patched_client.return_value.describe_multiplex.side_effect = [{"ResponseMetadata":"data"}, {"ResponseMetadata":"data"}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.medialive_multiplexes(REGION)
+            items = nodes.medialive_multiplexes(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_mediastore_containers(self, patched_env, patched_resource,
                                        patched_client):
@@ -285,7 +311,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_containers.side_effect = [{"Containers": [{"ARN": ARN, "CreationTime": "time"}], "NextToken": "token"},
             {"Containers": [{"ARN": ARN , "CreationTime": "time"}]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.mediastore_containers(REGION)
+            items = nodes.mediastore_containers(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_mediaconnect_flows(self, patched_env, patched_resource,
                                        patched_client):
@@ -297,7 +324,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_flows.side_effect =  [{"Flows": [{"FlowArn": ARN}], "NextToken": "token"},
             {"Flows": [{"FlowArn": ARN}]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.mediaconnect_flows(REGION)
+            items = nodes.mediaconnect_flows(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_mediatailor_configurations(self, patched_env, patched_resource,
                                        patched_client):
@@ -309,7 +337,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_playback_configurations.side_effect =  [{"Items": [{"Name": ARN}], "NextToken": "token"},
             {"Items": [{"Name": ARN}]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.mediatailor_configurations(REGION)
+            items = nodes.mediatailor_configurations(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_ssm_managed_instances(self, patched_env, patched_resource,
                                        patched_client):
@@ -321,7 +350,8 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.get_inventory.side_effect =  [{"Entities": [{"Id": "mi-instance"}], "NextToken": "token"},
             {"Entities": [{"Id": "mi-instance"}]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.ssm_managed_instances(REGION)
+            items = nodes.ssm_managed_instances(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_ec2_instances(self, patched_env, patched_resource,
                                        patched_client):
@@ -352,7 +382,8 @@ class TestNodes(unittest.TestCase):
             }]
         }]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.ec2_instances(REGION)
+            items = nodes.ec2_instances(REGION)
+            self.assertEqual(len(items), 2)
 
     def test_link_devices(self, patched_env, patched_resource,
                                        patched_client):
@@ -364,4 +395,5 @@ class TestNodes(unittest.TestCase):
         patched_client.return_value.list_input_devices.side_effect =  [{"InputDevices": [{"Id": "mi-instance"}], "NextToken": "token"},
             {"InputDevices": [{"Id": "mi-instance"}]}]
         with patch.object(boto3.Session, 'get_available_regions', return_value = [REGION]):
-            nodes.link_devices(REGION)
+            items = nodes.link_devices(REGION)
+            self.assertEqual(len(items), 2)

@@ -3,20 +3,21 @@
 
 import * as server from "../../server.js";
 import * as connections from "../../connections.js";
+import { checkAdditionalConnections } from "./helper.js";
 
 export const update = () => {
     const current = connections.get_current();
     const url = current[0];
     const api_key = current[1];
     const items = [];
-    return new Promise((resolve) => {   // NOSONAR
+    return new Promise((resolve) => {
         server
             .get(
                 `${url}/cached/medialive-channel-mediapackage-channel`,
                 api_key
             )
             .then((results) => {
-                for (let connection of results) {
+                for (const connection of results) {
                     const data = JSON.parse(connection.data);
                     const options = {
                         id: connection.arn,
@@ -28,24 +29,7 @@ export const update = () => {
                         color: { color: "black" },
                         dashes: false,
                     };
-                    const hasMoreConnections = _.filter(
-                        results,
-                        (function (local_connection) {
-                            return function (o) {
-                                if (
-                                    o.from === local_connection.from &&
-                                    o.to === local_connection.to
-                                ) {
-                                    let shouldEndWith = "0";
-                                    if (local_connection.arn.endsWith("0"))
-                                        shouldEndWith = "1";
-                                    if (o.arn.endsWith(shouldEndWith))
-                                        return true;
-                                }
-                                return false;
-                            };
-                        })(connection)
-                    );
+                    const hasMoreConnections = checkAdditionalConnections(results, connection);
 
                     if (hasMoreConnections.length) {
                         /** curve it */

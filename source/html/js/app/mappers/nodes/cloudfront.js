@@ -17,7 +17,7 @@ export const update = function () {
         server
             .get(url + "/cached/cloudfront-distribution", api_key)
             .then(async (cache_entries) => {
-                for (let cache_entry of cache_entries) {
+                for (const cache_entry of cache_entries) {
                     const item = JSON.parse(cache_entry.data);
                     const name = item.Id;
                     const id = item.ARN;

@@ -11,7 +11,7 @@ import * as confirmation from "./confirmation.js";
 const history_to_buttons = function (history) {
     const local_jq = $;
     let index = 0;
-    for (let item of history) {
+    for (const item of history) {
         const id = util.makeid();
         const url = item[0];
         const apiKey = item[1];
@@ -24,8 +24,8 @@ const history_to_buttons = function (history) {
         // add event handlers to each item to populate dialog fields
         $("#" + id).click(
             (function () {
-                let u = url;
-                let k = apiKey;
+                const u = url;
+                const k = apiKey;
                 return function () {
                     local_jq("#input_endpoint_url").val(u);
                     local_jq("#input_endpoint_key").val(k);
@@ -222,7 +222,7 @@ $("#save_region_selections").on("click", () => {
         .then(function (module) {
             const toggles = $(".region-button");
             const selected = [];
-            for (let button of toggles) {
+            for (const button of toggles) {
                 if (button.attributes["aria-pressed"].value == "true") {
                     selected.push(button.textContent);
                 }
@@ -284,7 +284,7 @@ $("#advanced_settings_button").on("click", async function () {
         $("#advanced-inventory-global").empty();
         $("#advanced-inventory-regions").empty();
         const all_regions = module.get_available();
-        for (let item of all_regions) {
+        for (const item of all_regions) {
             const id = item.RegionName == "global" ? "#advanced-inventory-global" : "#advanced-inventory-regions";
             const checkbox = `<label class="border-0 mx-2" style="cursor: pointer;">
                     <input id="${util.makeid()}" type="checkbox" ${inventory_regions.indexOf(item.RegionName) != -1 ? "checked" : ""} value="${item.RegionName}">
@@ -384,8 +384,8 @@ $("#advanced_settings_modal_cancel").on("click", function () {
 
 $("#bulk-delete-all-diagrams-button").click(async function () {
     $("#advanced_settings_modal").modal("hide");
-    let diagrams = await settings.get("diagrams");
-    let count = diagrams.length;
+    const diagrams = await settings.get("diagrams");
+    const count = diagrams.length;
     confirmation.show(
         `< p > This action will delete ${count} diagram${count == 1 ? "" : "s"
         }. The browser will reload after completion.Continue ?</p > `,
@@ -399,8 +399,8 @@ $("#bulk-delete-all-diagrams-button").click(async function () {
 
 $("#bulk-delete-all-tiles-button").click(async function () {
     $("#advanced_settings_modal").modal("hide");
-    let channels = await settings.get("channels");
-    let count = channels.length;
+    const channels = await settings.get("channels");
+    const count = channels.length;
     confirmation.show(
         `< p > This action will delete ${count} tile${count == 1 ? "" : "s"
         }. The browser will reload after completion.Continue ?</p > `,
@@ -438,10 +438,10 @@ $("#bulk-delete-all-notes-button").click(async function () {
 
 $("#bulk-delete-all-button").click(async function () {
     $("#advanced_settings_modal").modal("hide");
-    let channels = await settings.get("channels");
-    let channel_count = channels.length;
-    let diagrams = await settings.get("diagrams");
-    let diagram_count = diagrams.length;
+    const channels = await settings.get("channels");
+    const channel_count = channels.length;
+    const diagrams = await settings.get("diagrams");
+    const diagram_count = diagrams.length;
     confirmation.show(
         `<p> This action will delete ${diagram_count} diagram${diagram_count == 1 ? "" : "s"
         }, ${channel_count} tile${channel_count == 1 ? "" : "s"

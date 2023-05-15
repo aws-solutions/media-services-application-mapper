@@ -5,38 +5,38 @@ import * as server from "../server.js";
 import * as connections from "../connections.js";
 import * as alert from "./alert.js";
 
-var retrieve_layout = function (diagram) {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/layout/view/${encodeURIComponent(
+const retrieve_layout = function (diagram) {
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/layout/view/${encodeURIComponent(
         diagram.view_id
     )}`;
     return server.get(current_endpoint, api_key);
 };
 
-var delete_layout = function (diagram, node_ids) {
+const delete_layout = function (diagram, node_ids) {
     node_ids = node_ids || diagram.nodes.getIds();
     alert.show("Deleting layout");
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    for (let node_id of node_ids) {
-        var current_endpoint = `${url}/layout/nodes/${encodeURIComponent(
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    for (const node_id of node_ids) {
+        const current_endpoint = `${url}/layout/nodes/${encodeURIComponent(
             diagram.view_id
         )}/${encodeURIComponent(node_id)}`;
         server.delete_method(current_endpoint, api_key);
     }
 };
 
-var save_layout = function (diagram, node_ids) {
+const save_layout = function (diagram, node_ids) {
     node_ids = node_ids || diagram.nodes.getIds();
     alert.show("Saving layout");
-    var network = diagram.network;
-    var positions = network.getPositions(node_ids);
-    var layout = [];
-    for (let key of Object.keys(positions)) {
-        var entry = {
+    const network = diagram.network;
+    const positions = network.getPositions(node_ids);
+    const layout = [];
+    for (const key of Object.keys(positions)) {
+        const entry = {
             view: diagram.view_id,
             id: key,
             x: positions[key].x,
@@ -44,10 +44,10 @@ var save_layout = function (diagram, node_ids) {
         };
         layout.push(entry);
     }
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/layout/nodes`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/layout/nodes`;
     server
         .post(current_endpoint, api_key, layout)
         .then(function () {
@@ -60,10 +60,10 @@ var save_layout = function (diagram, node_ids) {
 };
 
 function delete_all() {
-    var current_connection = connections.get_current();
-    var url = current_connection[0];
-    var api_key = current_connection[1];
-    var current_endpoint = `${url}/layout/views`;
+    const current_connection = connections.get_current();
+    const url = current_connection[0];
+    const api_key = current_connection[1];
+    const current_endpoint = `${url}/layout/views`;
     return new Promise((resolve, reject) => {
         server
             .delete_method(current_endpoint, api_key)

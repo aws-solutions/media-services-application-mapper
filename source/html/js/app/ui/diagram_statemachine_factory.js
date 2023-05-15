@@ -5,9 +5,181 @@ import * as vis_options from "./vis_options.js";
 import * as layout from "./layout.js";
 import * as alert from "./alert.js";
 
+function nodesOnHook(my_diagram) {
+    my_diagram.nodes.on(
+        "*",
+        (function () {
+            return function (event, properties, senderId) {
+                // take a copy of the one-shots in case more get added during event handling
+                const one_time = Array.from(
+                    my_diagram.node_dataset_callbacks_once
+                );
+                my_diagram.node_dataset_callbacks_once = [];
+                for (const callback of one_time) {
+                    callback(event, properties, senderId);
+                }
+                for (const callback of my_diagram.node_dataset_callbacks) {
+                    callback(event, properties, senderId);
+                }
+            };
+        })()
+    );
+}
+
+function networkOnHook(my_diagram) {
+    my_diagram.network.on(
+        "click",
+        (function () {
+            return function (event) {
+                if (event.nodes.length > 0) {
+                    alert.show(
+                        event.nodes.length + " selected"
+                    );
+                }
+                // take a copy of the one-shots in case more get added during event handling
+                const one_time = Array.from(
+                    my_diagram.click_callbacks_once
+                );
+                my_diagram.click_callbacks_once = [];
+                for (const callback of one_time) {
+                    callback(my_diagram, event);
+                }
+                for (const callback of my_diagram.click_callbacks) {
+                    callback(my_diagram, event);
+                }
+            };
+        })()
+    );
+    my_diagram.network.on(
+        "doubleClick",
+        (function () {
+            return function (event) {
+                console.log(
+                    my_diagram.name + " diagram doubleClick"
+                );
+                // take a copy of the one-shots in case more get added during event handling
+                const one_time = Array.from(
+                    my_diagram.doubleclick_callbacks_once
+                );
+                my_diagram.doubleclick_callbacks_once = [];
+                for (const callback of one_time) {
+                    callback(my_diagram, event);
+                }
+                for (const callback of my_diagram.doubleclick_callbacks) {
+                    callback(my_diagram, event);
+                }
+                // zoom
+                if (event.nodes.length > 0) {
+                    my_diagram.fit_to_nodes([event.nodes]);
+                } else if (
+                    event.nodes.length == 0 &&
+                    event.edges.length == 0
+                ) {
+                    const click_x = event.pointer.canvas.x;
+                    const click_y = event.pointer.canvas.y;
+                    my_diagram.fit_to_nearest(
+                        click_x,
+                        click_y
+                    );
+                }
+            };
+        })()
+    );
+    my_diagram.network.on("dragEnd", function (event) {
+        if (event.nodes.length) {
+            layout.save_layout(my_diagram, event.nodes);
+        }
+    });
+}
+
+function dragContainerOnHook(my_diagram) {
+    my_diagram.drag_container.on("mousemove", function (e) {
+        if (my_diagram.drag) {
+            my_diagram.restore_drawing_surface();
+            my_diagram.drag_rect.w =
+                e.pageX -
+                this.offsetLeft -
+                my_diagram.drag_rect.startX;
+            my_diagram.drag_rect.h =
+                e.pageY -
+                this.offsetTop -
+                my_diagram.drag_rect.startY;
+            my_diagram.drag_ctx.setLineDash([5]);
+            my_diagram.drag_ctx.strokeStyle =
+                "rgb(0, 102, 0)";
+            my_diagram.drag_ctx.strokeRect(
+                my_diagram.drag_rect.startX,
+                my_diagram.drag_rect.startY,
+                my_diagram.drag_rect.w,
+                my_diagram.drag_rect.h
+            );
+            my_diagram.drag_ctx.setLineDash([]);
+            my_diagram.drag_ctx.fillStyle =
+                "rgba(0, 255, 0, 0.2)";
+            my_diagram.drag_ctx.fillRect(
+                my_diagram.drag_rect.startX,
+                my_diagram.drag_rect.startY,
+                my_diagram.drag_rect.w,
+                my_diagram.drag_rect.h
+            );
+        }
+        if (e.pageX < 100) {
+            $("#inventory-drawer-div").animate(
+                {
+                    width: "25%",
+                },
+                500,
+                function () {
+                    // Animation complete.
+                }
+            );
+        }
+    });
+    my_diagram.drag_container.on("mousedown", function (e) {
+        if (e.button == 2) {
+            my_diagram.save_drawing_surface();
+            my_diagram.drag_rect.startX =
+                e.pageX - this.offsetLeft;
+            my_diagram.drag_rect.startY =
+                e.pageY - this.offsetTop;
+            my_diagram.drag = true;
+            my_diagram.drag_container[0].style.cursor =
+                "crosshair";
+        }
+    });
+    my_diagram.drag_container.on("mouseup", function (e) {
+        if (e.button == 2) {
+            my_diagram.restore_drawing_surface();
+            my_diagram.drag = false;
+            my_diagram.drag_container[0].style.cursor =
+                "default";
+            my_diagram.select_nodes_from_highlight();
+        }
+    });
+}
+
+function connectEventHandlerOnEnter(my_diagram) {
+    return function () {
+        nodesOnHook(my_diagram);
+        networkOnHook(my_diagram);
+        $("#" + my_diagram.tab_id).on(
+            "show.bs.tab",
+            (function () {
+                return function () {
+                    console.log(
+                        my_diagram.name + " diagram show.bs.tab"
+                    );
+                };
+            })()
+        );
+        dragContainerOnHook(my_diagram);
+        this.transition("restore-nodes");
+    };
+}
+
 export function create(diagram) {
-    return (function () {   // NOSONAR
-        var my_diagram = diagram;
+    return (function () {
+        const my_diagram = diagram;
         return new machina.Fsm({
             namespace: my_diagram.name,
             initialState: "uninitialized",
@@ -21,22 +193,22 @@ export function create(diagram) {
                 "create-page-container": {
                     _onEnter: function () {
                         // create the html
-                        var tab = `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-bs-toggle="tab" data-bs-target="#${my_diagram.diagram_id}" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons ps-1 small">image_aspect_ratio</i></a>`;
-                        var diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
+                        const tab = `<a class="nav-item nav-link" id="${my_diagram.tab_id}" title="Click or Drag to a Diagram or Tile" data-diagram-name="${my_diagram.name}" draggable="true" data-bs-toggle="tab" data-bs-target="#${my_diagram.diagram_id}" href="#${my_diagram.diagram_id}" role="tab" aria-controls="${my_diagram.diagram_id}" aria-selected="false">${my_diagram.name}<i id="${my_diagram.tab_icon_id}" class="material-icons ps-1 small">image_aspect_ratio</i></a>`;
+                        const diagram_div = `<div id="${my_diagram.diagram_id}" class="tab-pane fade" role="tabpanel" aria-labelledby="${my_diagram.tab_id}" style="height: inherit; width: inherit;"></div>`;
                         // add to containers
                         // skip Tiles tab
-                        var existing_tabs = $(
+                        const existing_tabs = $(
                             "#" +
                                 my_diagram.tab_container_id +
                                 " a[data-diagram-name]"
                         );
-                        var added = false;
-                        for (let item of existing_tabs) {
+                        let added = false;
+                        for (const item of existing_tabs) {
                             if (
                                 $(item).attr("data-diagram-name") >
                                 my_diagram.name
                             ) {
-                                var id = filterXSS($(item).attr("id"));
+                                const id = filterXSS($(item).attr("id"));
                                 $("#" + id).before(tab);
                                 added = true;
                                 break;
@@ -74,164 +246,7 @@ export function create(diagram) {
                     },
                 },
                 "connect-event-handlers": {
-                    _onEnter: function () {
-                        my_diagram.nodes.on(
-                            "*",
-                            (function () {
-                                return function (event, properties, senderId) {
-                                    // take a copy of the one-shots in case more get added during event handling
-                                    var one_time = Array.from(
-                                        my_diagram.node_dataset_callbacks_once
-                                    );
-                                    my_diagram.node_dataset_callbacks_once = [];
-                                    for (let callback of one_time) {
-                                        callback(event, properties, senderId);
-                                    }
-                                    for (let callback of my_diagram.node_dataset_callbacks) {
-                                        callback(event, properties, senderId);
-                                    }
-                                };
-                            })()
-                        );
-                        my_diagram.network.on(
-                            "click",
-                            (function () {
-                                return function (event) {
-                                    if (event.nodes.length > 0) {
-                                        alert.show(
-                                            event.nodes.length + " selected"
-                                        );
-                                    }
-                                    // take a copy of the one-shots in case more get added during event handling
-                                    var one_time = Array.from(
-                                        my_diagram.click_callbacks_once
-                                    );
-                                    my_diagram.click_callbacks_once = [];
-                                    for (let callback of one_time) {
-                                        callback(my_diagram, event);
-                                    }
-                                    for (let callback of my_diagram.click_callbacks) {
-                                        callback(my_diagram, event);
-                                    }
-                                };
-                            })()
-                        );
-                        my_diagram.network.on(
-                            "doubleClick",
-                            (function () {
-                                return function (event) {
-                                    console.log(
-                                        my_diagram.name + " diagram doubleClick"
-                                    );
-                                    // take a copy of the one-shots in case more get added during event handling
-                                    var one_time = Array.from(
-                                        my_diagram.doubleclick_callbacks_once
-                                    );
-                                    my_diagram.doubleclick_callbacks_once = [];
-                                    for (let callback of one_time) {
-                                        callback(my_diagram, event);
-                                    }
-                                    for (let callback of my_diagram.doubleclick_callbacks) {
-                                        callback(my_diagram, event);
-                                    }
-                                    // zoom
-                                    if (event.nodes.length > 0) {
-                                        my_diagram.fit_to_nodes([event.nodes]);
-                                    } else if (
-                                        event.nodes.length == 0 &&
-                                        event.edges.length == 0
-                                    ) {
-                                        var click_x = event.pointer.canvas.x;
-                                        var click_y = event.pointer.canvas.y;
-                                        my_diagram.fit_to_nearest(
-                                            click_x,
-                                            click_y
-                                        );
-                                    }
-                                };
-                            })()
-                        );
-                        my_diagram.network.on("dragEnd", function (event) {
-                            if (event.nodes.length) {
-                                layout.save_layout(my_diagram, event.nodes);
-                            }
-                        });
-
-                        $("#" + my_diagram.tab_id).on(
-                            "show.bs.tab",
-                            (function () {
-                                return function () {
-                                    console.log(
-                                        my_diagram.name + " diagram show.bs.tab"
-                                    );
-                                };
-                            })()
-                        );
-                        my_diagram.drag_container.on("mousemove", function (e) {
-                            if (my_diagram.drag) {
-                                my_diagram.restore_drawing_surface();
-                                my_diagram.drag_rect.w =
-                                    e.pageX -
-                                    this.offsetLeft -
-                                    my_diagram.drag_rect.startX;
-                                my_diagram.drag_rect.h =
-                                    e.pageY -
-                                    this.offsetTop -
-                                    my_diagram.drag_rect.startY;
-                                my_diagram.drag_ctx.setLineDash([5]);
-                                my_diagram.drag_ctx.strokeStyle =
-                                    "rgb(0, 102, 0)";
-                                my_diagram.drag_ctx.strokeRect(
-                                    my_diagram.drag_rect.startX,
-                                    my_diagram.drag_rect.startY,
-                                    my_diagram.drag_rect.w,
-                                    my_diagram.drag_rect.h
-                                );
-                                my_diagram.drag_ctx.setLineDash([]);
-                                my_diagram.drag_ctx.fillStyle =
-                                    "rgba(0, 255, 0, 0.2)";
-                                my_diagram.drag_ctx.fillRect(
-                                    my_diagram.drag_rect.startX,
-                                    my_diagram.drag_rect.startY,
-                                    my_diagram.drag_rect.w,
-                                    my_diagram.drag_rect.h
-                                );
-                            }
-                            if (e.pageX < 100) {
-                                $("#inventory-drawer-div").animate(
-                                    {
-                                        width: "25%",
-                                    },
-                                    500,
-                                    function () {
-                                        // Animation complete.
-                                    }
-                                );
-                            }
-                        });
-                        my_diagram.drag_container.on("mousedown", function (e) {
-                            if (e.button == 2) {
-                                my_diagram.save_drawing_surface();
-                                my_diagram.drag_rect.startX =
-                                    e.pageX - this.offsetLeft;
-                                my_diagram.drag_rect.startY =
-                                    e.pageY - this.offsetTop;
-                                my_diagram.drag = true;
-                                my_diagram.drag_container[0].style.cursor =
-                                    "crosshair";
-                            }
-                        });
-                        my_diagram.drag_container.on("mouseup", function (e) {
-                            if (e.button == 2) {
-                                my_diagram.restore_drawing_surface();
-                                my_diagram.drag = false;
-                                my_diagram.drag_container[0].style.cursor =
-                                    "default";
-                                my_diagram.select_nodes_from_highlight();
-                            }
-                        });
-                        this.transition("restore-nodes");
-                    },
+                    _onEnter: connectEventHandlerOnEnter(my_diagram),
                 },
                 "restore-nodes": {
                     _onEnter: function () {
