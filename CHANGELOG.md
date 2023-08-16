@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - August 2023
+
+### Added
+
+* Added functionality to opt out of Anonymized Data Reporting before deploying the solution
+
+### Changed
+
+* Updated Cloudfront distribution to L2 construct in browser stack
+
+### Fixed
+
+* Fixed VPC inputs from throwing an exception when the Source is an Entitlement and there is a VPC Interface attached that is used for output only
+
+### Removed
+
+* Removed fuzzywuzzy library and replaced its usage with built-in python functions
+
 ## [1.12.0] - May 2023
 
 ### Added

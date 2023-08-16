@@ -4,6 +4,7 @@
 import {
     Aws,
     aws_cloudfront as cloudfront,
+    aws_cloudfront_origins as origins,
     aws_iam as iam,
     aws_lambda as lambda,
     aws_s3 as s3,
@@ -91,114 +92,42 @@ export class MsamBrowserApp extends NestedStack {
             Aws.REGION,
         ]);
 
-        // CloudFront OriginAccessIdentity
-        const cloudfrontOriginAccessIdentity = new cloudfront.OriginAccessIdentity(this, 'MSAMAppBucketOriginAccessIdentity', {
-            comment: Fn.join('', [
-                'Origin Access Identity for ',
-                s3BucketBrowserApp.bucketName,
-            ])
-        });
-
-        // Browser App S3 Bucket Policy
-        const s3BucketAppPolicy = this.createS3BucketPolicy('MSAMBrowserAppBucketPolicy', {
-            bucket: s3BucketBrowserApp.bucketName,
-            policyDocument: new iam.PolicyDocument({
-                statements: [
-                    new iam.PolicyStatement({
-                        effect: iam.Effect.ALLOW,
-                        principals: [new iam.CanonicalUserPrincipal(cloudfrontOriginAccessIdentity.cloudFrontOriginAccessIdentityS3CanonicalUserId)],
-                        actions: ['s3:GetObject'],
-                        resources: [
-                            Fn.join('', [
-                                s3BucketBrowserApp.bucketArn,
-                                '/*',
-                            ]),
-                        ],
-                    }),
-                ],
-            }),
-        });
-
-        utils.setNagSuppressRules(s3BucketAppPolicy,
-            {
-                id: 'AwsSolutions-S10',
-                reason: 'HTTPS requirement not supported at this time.',
-            }
-        )
-
         // CloudFront Distribution
-        /**
-         * Distribution L2 construct is available for use
-         * The solution, however, requires many cloudfront propeties not supported in L2 construct's native props
-         * Thus, the L1 CfnCloudfront is used instead.
-         */
-        const cloudfrontDistribution = new cloudfront.CfnDistribution(this, 'MSAMAppBucketCloudFrontDistribution', {
-            distributionConfig: {
-                comment: Fn.join('', [
-                    'CDN for ',
-                    s3BucketBrowserApp.bucketName,
-                ]),
-                defaultCacheBehavior: {
-                    targetOriginId: s3BucketBrowserApp.bucketName,
-                    viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-                    minTtl: 3600,
-                    defaultTtl: 7200,
-                    maxTtl: 86400,
-                    allowedMethods: [
-                        'HEAD',
-                        'GET',
-                        'OPTIONS',
-                    ],
-                    cachedMethods: [
-                        'HEAD',
-                        'GET',
-                        'OPTIONS',
-                    ],
-                    compress: true,
-                    forwardedValues: {
-                        queryString: false,
-                        cookies: {
-                            forward: 'none',
-                        },
-                        headers: [
-                            'Origin',
-                            'Access-Control-Request-Method',
-                            'Access-Control-Request-Headers',
-                        ],
-                    },
-                },
-                defaultRootObject: 'index.html',
-                enabled: true,
-                origins: [{
-                    domainName: s3BucketBrowserApp.bucketRegionalDomainName,
-                    id: s3BucketBrowserApp.bucketName,
-                    s3OriginConfig: {
-                        originAccessIdentity: Fn.join('', [
-                            'origin-access-identity/cloudfront/',
-                            cloudfrontOriginAccessIdentity.originAccessIdentityId,
-                        ]),
-                    },
-                }],
-                priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
-                restrictions: {
-                    geoRestriction: {
-                        restrictionType: 'none',
-                        locations: [],
-                    },
-                },
-                viewerCertificate: {
-                    cloudFrontDefaultCertificate: true,
-                    minimumProtocolVersion: 'TLSv1.2_2019',
-                },
-                logging: {
-                    bucket: s3BucketbrowserAppLogs.bucketRegionalDomainName,
-                    prefix: 'cloudfront/',
-                },
-            }
+        const cloudfrontDistribution = new cloudfront.Distribution(this, 'MSAMAppBucketCloudFrontDistribution', {
+            enabled: true,
+            defaultBehavior: {
+                origin: new origins.S3Origin(s3BucketBrowserApp),
+                viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
+                cachePolicy: new cloudfront.CachePolicy(this, 'MSAMAppBucketCloudFrontCachePolicy', {
+                    minTtl: Duration.seconds(3600),
+                    defaultTtl: Duration.seconds(7200),
+                    maxTtl: Duration.seconds(86400),
+                    headerBehavior: cloudfront.CacheHeaderBehavior.allowList(
+                        'Origin',
+                        'Access-Control-Request-Method',
+                        'Access-Control-Request-Headers',
+                    ),
+                    queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
+                }),
+                allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+                cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+                compress: true,
+            },
+            comment: Fn.join('', [
+                'CDN for ',
+                s3BucketBrowserApp.bucketName,
+            ]),
+            defaultRootObject: 'index.html',
+            priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
+            minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019,
+            enableLogging: true,
+            logBucket: s3BucketbrowserAppLogs,
+            logFilePrefix: 'cloudfront/',
         });
+
         this.MSAMBrowserURL = Fn.join('', [
             'https://',
-            cloudfrontDistribution.attrDomainName,
+            cloudfrontDistribution.domainName,
         ]);
         utils.setNagSuppressRules(cloudfrontDistribution,
             {
@@ -235,7 +164,7 @@ export class MsamBrowserApp extends NestedStack {
             description: 'MSAM Lambda for custom CloudFormation resource for loading web application',
             memorySize: 2560,
             role: props.WebIAMRole,
-            runtime: lambda.Runtime.PYTHON_3_8,
+            runtime: lambda.Runtime.PYTHON_3_10,
             timeout: Duration.seconds(900),
         });
         utils.setNagSuppressRules(webContentLambda,
@@ -250,10 +179,6 @@ export class MsamBrowserApp extends NestedStack {
             {
                 id: 'W92',
                 reason: 'Lambda does not need ReservedConcurrentExecutions.'
-            },
-            {
-                id: 'AwsSolutions-L1',
-                reason: 'Latest runtime version not supported at this time.',
             },
         )
 
@@ -287,7 +212,7 @@ export class MsamBrowserApp extends NestedStack {
             description: 'MSAM Lambda for custom resource for invalidating CloudFront after update',
             memorySize: 2560,
             role: props.WebIAMRole,
-            runtime: lambda.Runtime.PYTHON_3_8,
+            runtime: lambda.Runtime.PYTHON_3_10,
             timeout: Duration.seconds(300),
         });
         utils.setNagSuppressRules(webInvalidationResourceLambda,
@@ -303,10 +228,6 @@ export class MsamBrowserApp extends NestedStack {
                 id: 'W92',
                 reason: 'Lambda does not need ReservedConcurrentExecutions.'
             },
-            {
-                id: 'AwsSolutions-L1',
-                reason: 'Latest runtime version not supported at this time.',
-            },
         );
 
         // Web Invalidator Custom Resource
@@ -317,7 +238,7 @@ export class MsamBrowserApp extends NestedStack {
                 StackName: Aws.STACK_NAME,
                 BUILD_STAMP: 'DEV_0_0_0',
                 ZIP_DIGEST: 'ZIP_DIGEST_VALUE',
-                DistributionId: cloudfrontDistribution.attrId,
+                DistributionId: cloudfrontDistribution.distributionId,
             },
         });
     }

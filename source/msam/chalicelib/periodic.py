@@ -405,7 +405,7 @@ def generate_metrics(stackname):
 
 def report_metrics(stackname, hours):
     """
-    This function is responsible for reporting anonymous resource counts.
+    This function is responsible for reporting anonymized resource counts.
     """
     cloudwatch = boto3.resource('cloudwatch', config=MSAM_BOTO3_CONFIG)
     uuid = msam_settings.get_setting('uuid')

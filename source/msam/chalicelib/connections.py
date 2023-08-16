@@ -11,7 +11,7 @@ import time
 from urllib.parse import urlparse
 
 from botocore.exceptions import ClientError
-from fuzzywuzzy import fuzz
+from difflib import SequenceMatcher
 from jsonpath_ng import parse
 
 from chalicelib import cache
@@ -680,8 +680,7 @@ def mediapackage_endpoint_cloudfront_distribution_by_origin_url_ddb_items():
                 origin_partial_url = f'{item["DomainName"]}/{item["OriginPath"]}'
                 for mp_endpoint in mediapackage_ep_cached:
                     mp_endpoint_data = json.loads(mp_endpoint["data"])
-                    ratio = fuzz.ratio(origin_partial_url,
-                                       mp_endpoint_data["Url"])
+                    ratio = round(SequenceMatcher(None, origin_partial_url, mp_endpoint_data["Url"]).ratio() * 100)
                     if ratio >= min_ratio:
                         config = {
                             "from": mp_endpoint["arn"],
@@ -909,6 +908,9 @@ def mediaconnect_flow_mediaconnect_flow_ddb_items():
                                 inner_flow_data["FlowArn"],
                                 outer_flow_data["FlowArn"],
                                 connection_type, config))
+                        # if the source is entitlement, there won't be any matching inner flows
+                        # and this Flow won't have a VPC source - bail early
+                        continue
                 # More Info: https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
                 except Exception: #nosec
                     pass

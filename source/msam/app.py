@@ -480,7 +480,7 @@ def generate_metrics(_):
 @app.schedule(Rate(METRICS_REPORTING_RATE_HOURS, unit=Rate.HOURS))
 def report_metrics(_):
     """
-    Entry point for the CloudWatch scheduled task to report anonymous resource metrics.
+    Entry point for the CloudWatch scheduled task to report anonymized resource metrics.
     """
     return periodic_handlers.report_metrics(STACKNAME, METRICS_REPORTING_RATE_HOURS)
 

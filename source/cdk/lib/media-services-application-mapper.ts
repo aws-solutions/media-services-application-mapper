@@ -40,6 +40,17 @@ export class MediaServicesApplicationMapper extends Stack {
         });
 
         /**
+         * Cfn Mapping
+         */
+        utils.createCfnMapping(this, 'AnonymizedData', {
+            mapping: {
+                SendAnonymizedData: {
+                    Data: 'Yes',
+                },
+            },
+        });
+
+        /**
          * Nested Stacks
          */
 
@@ -84,6 +95,9 @@ export class MediaServicesApplicationMapper extends Stack {
             NotesTableName: dynamoDBModuleStack.NotesTable,
             CacheItemTTL: cacheItemTTL.valueAsString,
             RootStackName: Aws.STACK_NAME,
+            parameters: {
+                SendAnonymizedData: Fn.findInMap('AnonymizedData', 'SendAnonymizedData', 'Data'),
+            },
         });
         utils.addTemplateUrl(
             coreModuleStack,

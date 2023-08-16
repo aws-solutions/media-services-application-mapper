@@ -6,13 +6,16 @@ export const makeid = function (id_len = 10) {
     const possible =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i = 0; i < id_len; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+        text += possible.charAt(get_random_number(possible.length));
     }
     return text;
 };
 
 export function get_random_number(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+    const randomBuffer = new Uint32Array(1);
+    crypto.getRandomValues(randomBuffer);
+    const randomNumber = randomBuffer[0] / (0xffffffff + 1);
+    return Math.floor(randomNumber * (max));
 }
 
 export function vary(value, limit) {

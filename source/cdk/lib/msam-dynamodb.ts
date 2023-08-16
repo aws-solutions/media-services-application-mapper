@@ -96,7 +96,7 @@ export class MsamDynamoDB extends NestedStack {
                 SOLUTION_ID: 'AwsSolution/SO0048/%%VERSION%%',
             },
             role: props.DynamoDBIAMRole,
-            runtime: lambda.Runtime.PYTHON_3_8,
+            runtime: lambda.Runtime.PYTHON_3_10,
             timeout: Duration.seconds(300),
         });
 
@@ -112,10 +112,6 @@ export class MsamDynamoDB extends NestedStack {
             {
                 id: 'W89',
                 reason: 'Lambda does not need to be in a VPC.',
-            },
-            {
-                id: 'AwsSolutions-L1',
-                reason: 'Latest runtime version not supported at this time.',
             },
         );
 

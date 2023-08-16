@@ -3,6 +3,16 @@
 exports[`msam-core snapshot test 1`] = `
 {
   "AWSTemplateFormatVersion": "2010-09-09",
+  "Conditions": {
+    "sendAnonymizedDataCondition": {
+      "Fn::Equals": [
+        {
+          "Ref": "SendAnonymizedData",
+        },
+        "Yes",
+      ],
+    },
+  },
   "Description": "Media Services Application Mapper REST API and Tasks %%VERSION%%",
   "Outputs": {
     "APIHandlerArn": {
@@ -40,6 +50,16 @@ exports[`msam-core snapshot test 1`] = `
     },
   },
   "Parameters": {
+    "SendAnonymizedData": {
+      "AllowedValues": [
+        "Yes",
+        "No",
+      ],
+      "ConstraintDescription": "Please provide a value of Yes or No",
+      "Default": "No",
+      "Description": "Enable or Disable Anonymized Data Reporting",
+      "Type": "String",
+    },
     "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
       "Type": "String",
     },
@@ -786,10 +806,23 @@ exports[`msam-core snapshot test 1`] = `
         },
         "Events": {
           "ReportMetricsEvent": {
-            "Properties": {
-              "Schedule": "rate(24 hours)",
-            },
-            "Type": "Schedule",
+            "Fn::If": [
+              "sendAnonymizedDataCondition",
+              {
+                "Properties": {
+                  "Enabled": true,
+                  "Schedule": "rate(24 hours)",
+                },
+                "Type": "Schedule",
+              },
+              {
+                "Properties": {
+                  "Enabled": false,
+                  "Schedule": "rate(24 hours)",
+                },
+                "Type": "Schedule",
+              },
+            ],
           },
         },
         "Handler": "app.report_metrics",
