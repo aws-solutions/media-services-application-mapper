@@ -8,8 +8,6 @@ import {
     aws_iam as iam,
     aws_lambda as lambda,
     aws_s3 as s3,
-    CfnMapping,
-    CfnMappingProps,
     Duration,
     Fn,
     NestedStack,
@@ -69,7 +67,7 @@ export class MsamEvents extends NestedStack {
         /**
          * Cfn Mapping
          */
-        this.addMapping('SolutionId', {
+        utils.createCfnMapping(this, 'SolutionId', {
             mapping: {
                 UserAgent: {
                     Extra: 'AwsSolution/SO0048/%%VERSION%%',
@@ -85,7 +83,7 @@ export class MsamEvents extends NestedStack {
         const collectorLambda = new lambda.Function(this, 'Collector', {
             handler: 'media_events.lambda_handler',
             description: 'MSAM Lambda for handling CloudWatch event notifications',
-            runtime: lambda.Runtime.PYTHON_3_8,
+            runtime: lambda.Runtime.PYTHON_3_10,
             code: lambda.Code.fromBucket(
                 s3.Bucket.fromBucketName(
                     this,
@@ -120,10 +118,6 @@ export class MsamEvents extends NestedStack {
                 id: 'W89',
                 reason: 'Lambda does not need to be in a VPC.'
             },
-            {
-                id: 'AwsSolutions-L1',
-                reason: 'Latest runtime version not supported at this time.',
-            },
         );
 
         // Collector Lambda Event Rule
@@ -147,7 +141,7 @@ export class MsamEvents extends NestedStack {
         const alarmUpdaterLambda = new lambda.Function(this, 'AlarmUpdater', {
             handler: 'cloudwatch_alarm.lambda_handler',
             description: 'MSAM Lambda for handling CloudWatch alarm state change events.',
-            runtime: lambda.Runtime.PYTHON_3_8,
+            runtime: lambda.Runtime.PYTHON_3_10,
             role: props.EventsIAMRole,
             code: lambda.Code.fromBucket(
                 s3.Bucket.fromBucketName(
@@ -179,10 +173,6 @@ export class MsamEvents extends NestedStack {
                 id: 'W89',
                 reason: 'Lambda does not need to be in a VPC.'
             },
-            {
-                id: 'AwsSolutions-L1',
-                reason: 'Latest runtime version not supported at this time.',
-            },
         );
 
         // Alarm Updater Lambda Event Rule
@@ -195,10 +185,6 @@ export class MsamEvents extends NestedStack {
                 new events_targets.LambdaFunction(alarmUpdaterLambda),
             ],
         });
-    }
-
-    addMapping(id: string, props?: CfnMappingProps) {
-        return new CfnMapping(this, id, props);
     }
 
     addEventRule(id: string, props?: events.RuleProps) {

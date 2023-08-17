@@ -14,8 +14,8 @@ Note: If you want to use the solution without building from source, navigate to 
   - [Deploy](#deploy)
 - [File structure](#file-structure)
 - [License](#license)
+- [Collection of operational metrics](#collection-of-operational-metrics)
   - [Navigate](#navigate)
-- [Anonymous Metrics](#metrics)
 
 <a name="solution-overview"></a>
 # Solution Overview
@@ -170,9 +170,9 @@ See license [here](LICENSE.txt).
 
 
 <a name="metrics"></a>
-# Anonymous Metrics 
+# Collection of operational metrics
 
-This solution collects anonymous operational metrics to help AWS improve the quality of features of the solution. For more information about this capability, please see the [Install Guide](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/collection-of-operational-metrics.html) for details on the data sent, and how to enable and disable this capability.
+This solution collects anonymized operational metrics to help AWS improve the quality of features of the solution. For more information about this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper-on-aws/references.html).
 
 ## Navigate
 Navigate to [Architecture](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/architecture-overview.html) | [Workshop](docs/WORKSHOP.md) | [Install](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/automated-deployment.html) | [Usage](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/using-the-browser-application.html) | [Uninstall](https://docs.aws.amazon.com/solutions/latest/media-services-application-mapper/uninstall-the-solution.html) | [Rest API](docs/REST_API.md) | [Contributing](CONTRIBUTING.md)

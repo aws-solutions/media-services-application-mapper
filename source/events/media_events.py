@@ -9,7 +9,7 @@ each region where Media Services are created.
 import datetime
 import os
 import json
-from random import randint
+import secrets
 from urllib.parse import unquote
 
 import boto3
@@ -126,8 +126,7 @@ def lambda_handler(event, _):
         handle_alerts(event)
         # set the rest of the information needed for storing as regular CWE
         # give timestamp a millisecond precision since it's sort key in CWE table
-        # Bandit B311: randint not used for cryptographic purposes
-        event["timestamp"] = event["timestamp"] * 1000 + randint(1, 999) # nosec
+        event["timestamp"] = event["timestamp"] * 1000 + secrets.randbelow(999) + 1
         event["data"] = json.dumps(event["detail"])
         event["type"] = event["detail-type"]
         if "eventName" in event["detail"]:

@@ -5,6 +5,7 @@ import {
     Aws,
     aws_servicecatalogappregistry as appRegistry,
     CfnMapping,
+    CfnMappingProps,
     CfnResource,
     CfnOutput,
     CfnOutputProps,
@@ -216,4 +217,15 @@ function createCfnResourceAssociation(scope: Construct, id: string, props: appRe
 
 function createCfnAttributeGroupAssociation(scope: Construct, id: string, props: appRegistry.CfnAttributeGroupAssociationProps) {
     return new appRegistry.CfnAttributeGroupAssociation(scope, id, props);
+}
+
+/**
+ * Creates Cfn Mapping
+ * 
+ * @param stack Stack which to apply CfnMappings to
+ * @param id Mapping Id
+ * @param props CfnMapping Properties
+ */
+export function createCfnMapping(stack: Stack, id: string, props?: CfnMappingProps) {
+    return new CfnMapping(stack, id, props);
 }

@@ -159,7 +159,7 @@ def make_default_settings(settings_table):
         print("added default tile-view setting")
     except ClientError:
         print("tile-view setting exists")
-    # stack uuid for anonymous metrics
+    # stack uuid for anonymized metrics
     try:
         table.put_item(Item={
             "id": "uuid",

@@ -277,14 +277,6 @@ exports[`msam-dynamodb snapshot test 1`] = `
     },
     "DefaultSettingsResource66AC9BCF": {
       "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-L1",
-              "reason": "Latest runtime version not supported at this time.",
-            },
-          ],
-        },
         "cfn_nag": {
           "rules_to_suppress": [
             {
@@ -329,7 +321,7 @@ exports[`msam-dynamodb snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackDynamoDBRole0562A431Arn",
         },
-        "Runtime": "python3.8",
+        "Runtime": "python3.10",
         "Timeout": 300,
       },
       "Type": "AWS::Lambda::Function",

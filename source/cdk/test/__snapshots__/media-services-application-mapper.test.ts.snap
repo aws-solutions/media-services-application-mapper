@@ -4,6 +4,11 @@ exports[`media-services-application-mapper snapshot test 1`] = `
 {
   "Description": "(SO0048) Media Services Application Mapper Root Stack %%VERSION%%",
   "Mappings": {
+    "AnonymizedData": {
+      "SendAnonymizedData": {
+        "Data": "Yes",
+      },
+    },
     "Solution": {
       "Data": {
         "AppRegistryApplicationName": "media-services-application-mapper",
@@ -76,7 +81,7 @@ exports[`media-services-application-mapper snapshot test 1`] = `
             {
               "Fn::GetAtt": [
                 "BrowserAppModuleStackNestedStackBrowserAppModuleStackNestedStackResource6F2C1DA7",
-                "Outputs.MediaServicesApplicationMapperBrowserAppModuleStackMSAMAppBucketCloudFrontDistributionA6217434DomainName",
+                "Outputs.MediaServicesApplicationMapperBrowserAppModuleStackMSAMAppBucketCloudFrontDistribution4829FDD0DomainName",
               ],
             },
           ],
@@ -304,6 +309,13 @@ exports[`media-services-application-mapper snapshot test 1`] = `
       "DeletionPolicy": "Delete",
       "Properties": {
         "Parameters": {
+          "SendAnonymizedData": {
+            "Fn::FindInMap": [
+              "AnonymizedData",
+              "SendAnonymizedData",
+              "Data",
+            ],
+          },
           "referencetoMediaServicesApplicationMapperCacheItemTTL6DD8B4F7Ref": {
             "Ref": "CacheItemTTL",
           },
