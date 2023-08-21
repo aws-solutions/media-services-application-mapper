@@ -46,7 +46,7 @@ fs.readdirSync(global_s3_assets).forEach((file) => {
     if (file === 'msam-core-release.template') {
         // Manually add the API Gateway Stage dependency
         //    The API Gateway Stage is generated dynamically in SAM templates,
-        //    therefore the stage is not visible toCDK when synthesizing the template
+        //    therefore the stage is not visible to CDK when synthesizing the template
         //    and throws an exception.
         const [usagePlanKey] = Object.keys(resources).filter(key => /UsagePlan[A-Z\d]{8}/.test(key));
         resources[usagePlanKey].DependsOn = 'RestAPImsamStage';
@@ -56,6 +56,12 @@ fs.readdirSync(global_s3_assets).forEach((file) => {
             },
             Stage: 'msam',
         }];
+
+        // Add AWS:LanguageExtensions Transform to support intrinsic functions
+        // See https://github.com/aws/serverless-application-model/issues/2533 for more details
+        if (typeof template.Transform === 'string') {
+            template.Transform = ['AWS::LanguageExtensions', template.Transform]
+        }
     }
 
     // Remove unnecessary CDK metadata

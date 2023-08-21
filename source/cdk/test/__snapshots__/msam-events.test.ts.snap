@@ -33,14 +33,6 @@ exports[`msam-events snapshot test 1`] = `
   "Resources": {
     "AlarmUpdater6FDC3F1D": {
       "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-L1",
-              "reason": "Latest runtime version not supported at this time.",
-            },
-          ],
-        },
         "cfn_nag": {
           "rules_to_suppress": [
             {
@@ -97,7 +89,7 @@ exports[`msam-events snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn",
         },
-        "Runtime": "python3.8",
+        "Runtime": "python3.10",
         "Timeout": 60,
       },
       "Type": "AWS::Lambda::Function",
@@ -148,14 +140,6 @@ exports[`msam-events snapshot test 1`] = `
     },
     "Collector9EBA7CF5": {
       "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-L1",
-              "reason": "Latest runtime version not supported at this time.",
-            },
-          ],
-        },
         "cfn_nag": {
           "rules_to_suppress": [
             {
@@ -221,7 +205,7 @@ exports[`msam-events snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackEventsRole2AFF40D1Arn",
         },
-        "Runtime": "python3.8",
+        "Runtime": "python3.10",
         "Timeout": 60,
       },
       "Type": "AWS::Lambda::Function",

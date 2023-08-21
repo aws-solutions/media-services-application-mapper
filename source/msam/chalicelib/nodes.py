@@ -597,6 +597,8 @@ def ec2_instances(region):
                     #reformat the tags before appending to data
                     final_tags[tag["Key"]] = tag["Value"]
                     instance['Tags'] = final_tags
+            else:
+                instance['Tags'] = {}
             items.append(instance)
     return items
 

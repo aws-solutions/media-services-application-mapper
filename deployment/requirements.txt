@@ -5,7 +5,6 @@ botocore
 cfn-lint
 crhelper
 defusedxml
-fuzzywuzzy
 jsonpath_ng
 pylint
 requests

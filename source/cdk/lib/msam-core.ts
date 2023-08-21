@@ -8,6 +8,9 @@ import {
     aws_ssm as ssm,
     aws_sam as sam,
     cloudformation_include as cfnInc,
+    CfnCondition,
+    CfnParameter,
+    Fn,
     NestedStack,
     NestedStackProps,
 } from 'aws-cdk-lib';
@@ -64,6 +67,18 @@ export class MsamCore extends NestedStack {
 
         // Core Module Stack
         const coreStack = this.initStackFromTemplate('CoreModuleStack', '../dist/msam-core-release.template');
+
+
+        /**
+         * Parameters
+         */
+        const sendAnonymizedData = new CfnParameter(this, 'SendAnonymizedData', {
+            default: 'No',
+            description: 'Enable or Disable Anonymized Data Reporting',
+            type: 'String',
+            allowedValues: ['Yes', 'No'],
+            constraintDescription: 'Please provide a value of Yes or No'
+        });
 
         /**
          * Resources
@@ -251,6 +266,29 @@ export class MsamCore extends NestedStack {
             },
         };
         reportMetrics.description = 'MSAM Lambda for periodically emitting metrics to multiple targets';
+        // override event enabled setting based on user setting
+        const sendAnonymizedDataCondition = new CfnCondition(this, 'sendAnonymizedDataCondition', {
+            expression: Fn.conditionEquals(sendAnonymizedData, 'Yes'),
+        });
+        reportMetrics.events = {
+            ReportMetricsEvent: Fn.conditionIf(
+                sendAnonymizedDataCondition.logicalId,
+                {
+                    Properties: {
+                        Schedule: "rate(24 hours)",
+                        Enabled: true,
+                    },
+                    Type: 'Schedule'
+                },
+                {
+                    Properties: {
+                        Schedule: "rate(24 hours)",
+                        Enabled: false,
+                    },
+                    Type: 'Schedule'
+                },
+            )
+        };
         this.applyCommonLambdaProperties(reportMetrics, props.CoreIAMRole);
 
         // APIHandler

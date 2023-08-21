@@ -1,6 +1,5 @@
 networkx
 jsonpath_ng
-fuzzywuzzy
 stringcase
 requests
 defusedxml
