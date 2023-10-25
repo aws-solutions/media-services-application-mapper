@@ -169,9 +169,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -283,9 +283,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -376,9 +376,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -458,9 +458,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -724,9 +724,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -830,9 +830,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4104,9 +4104,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4194,9 +4194,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4284,9 +4284,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4374,9 +4374,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",
@@ -4464,9 +4464,9 @@ exports[`msam-core snapshot test 1`] = `
         "Role": {
           "Ref": "referencetoMediaServicesApplicationMapperIAMModuleStackNestedStackIAMModuleStackNestedStackResourceF97053D6OutputsMediaServicesApplicationMapperIAMModuleStackCoreRole5F5FCFE3Arn",
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.10",
         "Tags": {
-          "aws-chalice": "version=1.28.0:stage=dev:app=msam",
+          "aws-chalice": "version=1.29.0:stage=dev:app=msam",
         },
         "Timeout": 300,
         "Tracing": "PassThrough",

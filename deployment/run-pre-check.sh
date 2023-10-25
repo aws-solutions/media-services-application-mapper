@@ -33,7 +33,7 @@ echo "Trufflehog Scan started"
 # if trufflehog already installed locally, skip installation step
 if ! command -v trufflehog &>/dev/null; then
     echo "Installing Trufflehog"
-    git clone https://github.com/trufflesecurity/trufflehog.git
+    git clone https://github.com/trufflesecurity/trufflehog.git --branch v3.54.1
     cd trufflehog; go install
 fi
 cd "$root_dir"
