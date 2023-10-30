@@ -16,7 +16,7 @@ fi
 rm -f $ZIP
 rm -f error.txt
 
-pip install --force-reinstall --target ./package requests crhelper urllib3==1.26.15 2> error.txt
+pip install --force-reinstall --target ./package requests crhelper urllib3==1.26.18 2> error.txt
 RETVAL=$?
 if [ "$RETVAL" -ne "0" ]; then
     echo "ERROR: System package installation failed."
