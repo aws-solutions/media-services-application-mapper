@@ -1,6 +1,6 @@
 id: SO0048
 name: media-services-application-mapper
-version: v1.13.1
+version: v1.13.2
 cloudformation_templates:
   - template: aws-media-services-application-mapper-release.template
     main_template: true
@@ -9,3 +9,5 @@ cloudformation_templates:
   - template: msam-dynamodb-release.template
   - template: msam-events-release.template
   - template: msam-iam-roles-release.template
+build_environment:
+  build_image: "aws/codebuild/standard:7.0"
