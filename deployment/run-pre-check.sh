@@ -33,8 +33,13 @@ echo "Trufflehog Scan started"
 # if trufflehog already installed locally, skip installation step
 if ! command -v trufflehog &>/dev/null; then
     echo "Installing Trufflehog"
+    # fixes error if you try and run this script twice. Remove old directory from git clone.
+    if [ -d "trufflehog" ]; then
+        echo "Removing existing Trufflehog directory"
+        rm -rf trufflehog
+    fi
     git clone https://github.com/trufflesecurity/trufflehog.git --branch v3.54.1
-    cd trufflehog; go install
+    cd trufflehog && go install
 fi
 cd "$root_dir"
 find . ! -path "*trufflehog*" ! -path "*test_venv*" ! -path "*.git*" ! -path "*pkg*" ! -path "." | \
@@ -93,8 +98,9 @@ echo "JsHint Scan finished"
 
 echo -e "\n\n"
 echo "Eslint Scan started"
-npm i -g eslint
+npm i -g eslint@9.0.0
 cd "$source_dir/html"
+export ESLINT_USE_FLAT_CONFIG=false
 eslint -c .eslintrc.json .
 if [ $? -ne 0 ]; then
     echo "ERROR: eslint scan failed"
