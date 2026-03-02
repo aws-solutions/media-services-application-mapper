@@ -246,7 +246,6 @@ def medialive_channel_mediapackage_channel_ddb_items():
             # if setting is empty, we have to connect medialive with mediapackage via channel ID
             if destination["MediaPackageSettings"]:
                 items += ml_to_mp_via_channel_id(ml_channel_data, destination, mediapackage_ch_cached, ml_service_name)
-                break
             # otherwise we check via URL endpoints
             items += ml_to_mp_via_url(ml_channel_data, destination, mediapackage_ch_cached, ml_service_name)
     except ClientError as error:
@@ -766,7 +765,6 @@ def mediaconnect_flow_medialive_input_ddb_items():
                         flow_data["FlowArn"],
                         flow_output["MediaLiveInputArn"],
                         connection_type, config))
-                break
             # for each output, look for the matching MediaLive input
             medialive_in_cached = cache.cached_by_service("medialive-input")
             # iterate over all medialive inputs
